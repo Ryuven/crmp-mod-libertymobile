@@ -1,0 +1,1000 @@
+        BlackJackCardShow[i][12] = TextDrawCreate(298.000000, 124.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][12], 255);
+        TextDrawFont(BlackJackCardShow[i][12], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][12], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][12], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][12], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][12], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][12], 1);
+        TextDrawUseBox(BlackJackCardShow[i][12], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][12], 255);
+        TextDrawTextSize(BlackJackCardShow[i][12], 45.000000, 55.000000);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][13] = TextDrawCreate(313.000000, 124.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][13], 255);
+        TextDrawFont(BlackJackCardShow[i][13], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][13], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][13], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][13], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][13], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][13], 1);
+        TextDrawUseBox(BlackJackCardShow[i][13], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][13], 255);
+        TextDrawTextSize(BlackJackCardShow[i][13], 45.000000, 55.000000);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][14] = TextDrawCreate(328.000000, 124.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][14], 255);
+        TextDrawFont(BlackJackCardShow[i][14], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][14], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][14], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][14], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][14], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][14], 1);
+        TextDrawUseBox(BlackJackCardShow[i][14], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][14], 255);
+        TextDrawTextSize(BlackJackCardShow[i][14], 45.000000, 55.000000);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackGamerShow[i][0] = TextDrawCreate(180.000000, 314.000000, "Empty");
+        TextDrawBackgroundColor(BlackJackGamerShow[i][0], 255);
+        TextDrawFont(BlackJackGamerShow[i][0], 2);
+        TextDrawLetterSize(BlackJackGamerShow[i][0], 0.280000, 1.400000);
+        TextDrawColor(BlackJackGamerShow[i][0], -1);
+        TextDrawSetOutline(BlackJackGamerShow[i][0], 1);
+        TextDrawSetProportional(BlackJackGamerShow[i][0], 1);
+        TextDrawSetSelectable(BlackJackGamerShow[i][0], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackGamerShow[i][1] = TextDrawCreate(342.000000, 314.000000, "Empty");
+        TextDrawBackgroundColor(BlackJackGamerShow[i][1], 255);
+        TextDrawFont(BlackJackGamerShow[i][1], 2);
+        TextDrawLetterSize(BlackJackGamerShow[i][1], 0.280000, 1.400000);
+        TextDrawColor(BlackJackGamerShow[i][1], -1);
+        TextDrawSetOutline(BlackJackGamerShow[i][1], 1);
+        TextDrawSetProportional(BlackJackGamerShow[i][1], 1);
+        TextDrawSetSelectable(BlackJackGamerShow[i][1], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackBetShow[i][0] = TextDrawCreate(132.000000, 314.000000, "_");
+        TextDrawBackgroundColor(BlackJackBetShow[i][0], 255);
+        TextDrawFont(BlackJackBetShow[i][0], 1);
+        TextDrawLetterSize(BlackJackBetShow[i][0], 0.299998, 1.399999);
+        TextDrawColor(BlackJackBetShow[i][0], 16711935);
+        TextDrawSetOutline(BlackJackBetShow[i][0], 1);
+        TextDrawSetProportional(BlackJackBetShow[i][0], 1);
+        TextDrawSetSelectable(BlackJackBetShow[i][0], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackBetShow[i][1] = TextDrawCreate(294.000000, 314.000000, "_");
+        TextDrawBackgroundColor(BlackJackBetShow[i][1], 255);
+        TextDrawFont(BlackJackBetShow[i][1], 1);
+        TextDrawLetterSize(BlackJackBetShow[i][1], 0.300000, 1.399999);
+        TextDrawColor(BlackJackBetShow[i][1], 16711935);
+        TextDrawSetOutline(BlackJackBetShow[i][1], 1);
+        TextDrawSetProportional(BlackJackBetShow[i][1], 1);
+        TextDrawSetSelectable(BlackJackBetShow[i][1], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackPointsShow[i][0] = TextDrawCreate(160.000000, 254.000000, "_");
+        TextDrawBackgroundColor(BlackJackPointsShow[i][0], 255);
+        TextDrawFont(BlackJackPointsShow[i][0], 2);
+        TextDrawLetterSize(BlackJackPointsShow[i][0], 0.380000, 1.400000);
+        TextDrawColor(BlackJackPointsShow[i][0], -1);
+        TextDrawSetOutline(BlackJackPointsShow[i][0], 0);
+        TextDrawSetProportional(BlackJackPointsShow[i][0], 1);
+        TextDrawSetShadow(BlackJackPointsShow[i][0], 1);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackPointsShow[i][1] = TextDrawCreate(322.000000, 254.000000, "_");
+        TextDrawBackgroundColor(BlackJackPointsShow[i][1], 255);
+        TextDrawFont(BlackJackPointsShow[i][1], 2);
+        TextDrawLetterSize(BlackJackPointsShow[i][1], 0.380000, 1.400000);
+        TextDrawColor(BlackJackPointsShow[i][1], -1);
+        TextDrawSetOutline(BlackJackPointsShow[i][1], 0);
+        TextDrawSetProportional(BlackJackPointsShow[i][1], 1);
+        TextDrawSetShadow(BlackJackPointsShow[i][1], 1);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackPointsShow[i][2] = TextDrawCreate(248.000000, 120.000000, "_");
+        TextDrawBackgroundColor(BlackJackPointsShow[i][2], 255);
+        TextDrawFont(BlackJackPointsShow[i][2], 2);
+        TextDrawLetterSize(BlackJackPointsShow[i][2], 0.380000, 1.400000);
+        TextDrawColor(BlackJackPointsShow[i][2], -1);
+        TextDrawSetOutline(BlackJackPointsShow[i][2], 0);
+        TextDrawSetProportional(BlackJackPointsShow[i][2], 1);
+        TextDrawSetShadow(BlackJackPointsShow[i][2], 1);
+    }
+    BlackJackSetBet = TextDrawCreate(160.000000, 343.000000, "Set Bet");
+    TextDrawTextSize(BlackJackSetBet, 224.000000, 14.000000);
+    TextDrawBackgroundColor(BlackJackSetBet, 255);
+    TextDrawFont(BlackJackSetBet, 3);
+    TextDrawLetterSize(BlackJackSetBet, 0.479999, 1.299998);
+    TextDrawColor(BlackJackSetBet, -1);
+    TextDrawSetOutline(BlackJackSetBet, 0);
+    TextDrawSetProportional(BlackJackSetBet, 1);
+    TextDrawSetShadow(BlackJackSetBet, 1);
+    TextDrawSetSelectable(BlackJackSetBet, 1);
+
+    BlackJackHit = TextDrawCreate(302.000000, 343.000000, "Hit");
+    TextDrawTextSize(BlackJackHit, 326.000000, 14.000000);
+    TextDrawBackgroundColor(BlackJackHit, 255);
+    TextDrawFont(BlackJackHit, 3);
+    TextDrawLetterSize(BlackJackHit, 0.499998, 1.299999);
+    TextDrawColor(BlackJackHit, -1);
+    TextDrawSetOutline(BlackJackHit, 0);
+    TextDrawSetProportional(BlackJackHit, 1);
+    TextDrawSetShadow(BlackJackHit, 1);
+    TextDrawSetSelectable(BlackJackHit, 1);
+
+    BlackJackDouble = TextDrawCreate(412.000000, 343.000000, "Double");
+    TextDrawTextSize(BlackJackDouble, 464.000000, 14.000000);
+    TextDrawBackgroundColor(BlackJackDouble, 255);
+    TextDrawFont(BlackJackDouble, 3);
+    TextDrawLetterSize(BlackJackDouble, 0.479999, 1.299999);
+    TextDrawColor(BlackJackDouble, -1);
+    TextDrawSetOutline(BlackJackDouble, 0);
+    TextDrawSetProportional(BlackJackDouble, 1);
+    TextDrawSetShadow(BlackJackDouble, 1);
+    TextDrawSetSelectable(BlackJackDouble, 1);
+
+    BlackJackExit = TextDrawCreate(486.000000, 100.000000, "LD_Beat:cross");
+    TextDrawBackgroundColor(BlackJackExit, 255);
+    TextDrawFont(BlackJackExit, 4);
+    TextDrawLetterSize(BlackJackExit, 0.500000, 1.000000);
+    TextDrawColor(BlackJackExit, -1);
+    TextDrawSetOutline(BlackJackExit, 0);
+    TextDrawSetProportional(BlackJackExit, 1);
+    TextDrawSetShadow(BlackJackExit, 1);
+    TextDrawUseBox(BlackJackExit, 1);
+    TextDrawBoxColor(BlackJackExit, 255);
+    TextDrawTextSize(BlackJackExit, 25.000000, 20.000000);
+    TextDrawSetSelectable(BlackJackExit, 1);
+    //**************************************************************************/
+    BarHouse[0] = CreateDynamicPickup(1239,23,-1046.7697,427.1911,2.0479);
+    Create3DTextLabel( ""SERVER"Бар", -1, -1046.7697,427.1911,2.0479, 16.0, -1);
+    BarHouse[1] = CreateDynamicPickup(1239,23,2457.2644,2647.5317,1511.2830);
+    Create3DTextLabel( ""SERVER"Бар", -1, 2457.2644,2647.5317,1511.2830, 16.0, -1);
+
+    Create3DTextLabel("Военный осмотр",0xFFFFFFFF,1174.2035,1354.4834,10.9219,10.0,0,0);
+    Create3DTextLabel("{009900}Играть в кости:\n{FF8800}/dice", -1, 1133.3717,-1.6181,1000.6797, 20, 1, 1);
+    Create3DTextLabel("Приемная генерала",0xFFFFFFFF,1173.3198,1348.3237,10.9219,10.0,0,0);
+    Create3DTextLabel("Медицинский осмотр",0xFFFFFFFF,1174.2035,1358.4862,10.9219,10.0,0,0);
+    Create3DTextLabel("Используйте - \'ALT\'",0x696969FF,1172.1096,1357.7673,10.9219,2.0,0,0);
+    Create3DTextLabel("/adonate\nАДМИН МАГАЗИН", COLOR_RED, 1538.3015,-1361.0278,170.7159, 25.0, 0, 0);
+
+    Create3DTextLabel("/donate\nДОНАТ-МОНЕТЫ", COLOR_RED, 1214.2622,-1813.3535,16.5938, 25.0, 0, 0);
+
+    CreateDynamicMapIcon(2092.5913,-2283.7986,23.1030, 49, COLOR_WHITE, 0, -1, -1, 300.0);
+    barrrr[0] = CreatePickup(1644,23,159.0831,-1170.7235,1201.7816);
+    barrrr[1] = CreatePickup(1644,23,143.1288,-1157.0287,1200.6801);
+    barrrr[2] = CreatePickup(1644,23,158.9617,-1152.1044,1201.7816);
+
+    Create3DTextLabel("Ночной клуб", 0xFFFFFFFF, 2092.5913,-2283.7986,23.1030, 15.0, 0, 0);
+    enter_barrrr[0] = CreatePickup(19134,23,2092.5913,-2283.7986,23.1030);
+    enter_barrrr[1] = CreatePickup(19134,23,141.3266,-1172.5313,1200.6801);
+
+    realtorInfo = CreatePickup(1239,1,1490.2839,1305.6566,1093.2964, -1); // realtor infos 1490.2839,1305.6566,1093.2964
+    adons = CreatePickup(1210,1,1538.3015,-1361.0278,170.7159, -1); // realtor infos 1490.2839,1305.6566,1093.2964
+    //Донат-Очки
+    donateoch = CreatePickup(1210,1,1214.2622,-1813.3535,16.5938, -1); // realtor infos 1490.2839,1305.6566,1093.2964
+    //
+    realtorFreeBusiness = CreatePickup(1274,1,1496.8921,1309.0562,1093.2916, -1); // 1496.8921,1309.0562,1093.2916
+    realtorFreePickup = CreatePickup(1273,1,1494.6450,1309.0562,1093.2839, -1);
+    RealtorPickupExit = CreatePickup(1318,1,1494.4130,1303.5784,1093.2891, -1); // Выход из риэлтеров
+    //=== Мэрия
+    numberpick = CreatePickup(1239, 23, 690.5201,-13.5015,1201.8580, -1);
+    CreateDynamic3DTextLabel(""SERVER"{FFFFFF}Получить номера\nна личное тс", -1, 690.5201,-13.5015,1201.8580 + 0.5, 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    createfam = CreatePickup(1314, 23, 687.1453,-13.2772,1201.8580, -1);
+    CreateDynamic3DTextLabel("{008000}* {FFFFFF}Создание семьи {008000}*\n{008000}* {FFFFFF}2.000.000 рублей {008000}*", -1, 687.1453,-13.2772,1201.8580 + 0.5, 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    razdevalka_banya = CreatePickup(1275, 23, 429.9175,1779.8209,1082.7069, -1);
+    /*
+    yearpick = CreatePickup(1239,2, 359.3594, -2032.0861, 7.7455, -1);
+    CreateVehicle(522, 376.2288, -2041.9025, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2039.4225, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2037.0825, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2035.0024, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2032.6425, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2030.4025, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2028.0825, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2025.8625, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2023.6425, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2021.2426, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2019.0425, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2016.7825, 7.3911, 90.0000, random(100), random(100), 100);
+    CreateVehicle(522, 376.2088, -2014.4225, 7.3911, 90.0000, random(100), random(100), 100);
+    */
+
+
+    /*
+    CreateDynamicObject(3934,1422.063,-1790.678,32.430,0.0000000,0.0000000,90.0000000); //object(helipad01)(1)
+    CreateDynamicObject(1557,1438.321,-1787.15,32.43,0.0000000,0.0000000,90.0000000); //object(helipad01)(1)
+    //=== дырка в мастерской
+    CreateDynamicObject(3095,603.7069702,-10.4429998,999.9119873,90.0000000,0.0000000,270.0000000); //object(a51_jetdoor) (1)
+    //========================== [ Банк ] ==========================================
+    DoorOpen[0] = CreateObject(2634,2144.178,1627.082,994.2620,0.0000000,0.0000000,180.0000000);
+    CreateObject(3089,2148.5500488,1604.6839600,1006.4979858,0.0000000,0.0000000,180.0000000); //object(ab_casdorlok) (1)
+    CreateObject(3089,2160.4370117,1601.8039551,1000.3029785,0.0000000,0.0000000,90.0000000); //object(ab_casdorlok) (3)
+    CreateObject(3089,2168.5778809,1617.9239502,1000.3070068,0.0000000,0.0000000,90.0000000); //object(ab_casdorlok) (4)
+    CreateObject(16732,2143.1088867,1621.2180176,1002.0479736,0.0000000,0.0000000,0.0000000); //object(a51_ventcover) (1)
+    CreateObject(2986,2129.6030273,1626.2110596,992.7700195,0.0000000,90.0000000,0.0000000); //object(lxr_motelvent) (1)
+    //================================= Заборы у лспд ==========================
+    CreateDynamicObject(970,1541.80004883,-1622.80004883,13.10000038,0.00000000,0.00000000,0.25000000);
+    CreateDynamicObject(970,1539.59997559,-1620.80004883,13.10000038,0.00000000,0.00000000,270.00000000);
+    CreateDynamicObject(970,1539.59997559,-1618.69995117,13.10000038,0.00000000,0.00000000,270.00000000);
+    CreateDynamicObject(970,1545.50000000,-1635.69995117,13.10000038,0.00000000,0.00000000,270.00000000);
+    */
+    //======================[Ворота]=======================
+    // paintball = CreatePickup(1276, 23, 822.0084,1.8883,1004.1797,3);
+    // sportzal[0] = CreatePickup(1318,23,2229.7566,-1721.5988,13.5646);//спортзал ЛС
+    // sportzal[1] = CreatePickup(1318,23,772.4290,-5.0806,1000.7289);//gym
+    lspic[0] = CreatePickup(1318,23,2126.6338,-1962.8394,20.3229); // LSN вход
+    lspic[1] = CreatePickup(1318,23,-2672.5283,-1821.1984,4.1045,-1); // LSN выход
+    lspic[2] = CreatePickup(1318,23,1648.9468,-1641.9387,83.7813); // LSN крыша
+    medpic[0] = CreatePickup(1318,23,1172.4338,-1323.2861,15.4029);//вход
+    medpic[1] = CreatePickup(1318,23,1176.5469,-1330.9290,4001.1001, 1); // Медики LS Выход
+    medpic[2] = CreatePickup(1318,23,1165.1573,-1322.6088,4001.1001, 1); // Медики LS крыша
+    medpic[3] = CreatePickup(1318,23,1161.0642,-1342.9989,26.6233); // Медики LS крыша
+    medpic[4] = CreatePickup(1318,23,1163.2020,-1330.9395,4001.1001, 1);
+    medpic[5] = CreatePickup(1318,23,1162.3298,-1330.9325,4001.1001, 1);
+    // СПАВН
+    P_VOKZALLS[0] = CreatePickup(1318, 1,1730.0175,-1874.9624,13.7828, 0);
+    P_VOKZALLS[1] = CreatePickup(1318, 1,1893.7062,-2093.4875,1000.9810, 1);
+    /// АВИАНОСец
+    // chekmats[0] = CreatePickup(1239,2,-1297.3777,505.1444,11.1953); // пикап1
+    //chekmats[1] = CreatePickup(1239,2,-1405.5594,502.5779,11.1953); // пикап1
+    //chekmats[2] = CreatePickup(1239,2,-1336.0455,500.4789,11.3047); // пикап1
+    //paintvnutrpic = CreatePickup(1318,23,2595.8333,2790.2686,10.8203);// Выход
+    //paintvnutrpic1 = CreatePickup(1318,23,299.9672,-141.9943,1004.0625);// Вход
+    //paintulicpic = CreatePickup(1318,23,2495.4136,2781.5190,10.8203);// Выход
+    //paintulicpic1 = CreatePickup(1318,23,2503.4006,2778.9316,10.8203);// Вход
+    hospital[0] = CreatePickup(1240,23,1168.3625,-1365.2372,4001.1001, 1); // Сердце в госпитале
+    hospital[1] = CreatePickup(1240,23,1171.5605,-1365.4576,4001.1001, 1); // Сердце в госпитале
+    hospital[2] = CreatePickup(1240,23,1156.4827,-1357.8650,4001.1001, 1); // Сердце в госпитале
+    hospital[3] = CreatePickup(1240,23,1156.5234,-1350.9738,4001.1001, 1); // Сердце в госпитале
+    hospital[4] = CreatePickup(1240,23,1173.8329,-1351.1759,4001.1001, 1); // Сердце в госпитале
+    hospital[5] = CreatePickup(1240,23,1173.8367,-1357.9335,4001.1001, 1); // Сердце в госпитале
+    hospital[6] = CreatePickup(1240,23,1156.5062,-1348.0830,4001.1001, 1); // Сердце в госпитале
+    hospital[7] = CreatePickup(1240,23,1156.4901,-1341.1954,4001.1001, 1); // Сердце в госпитале
+    hospital[8] = CreatePickup(1240,23,1173.8180,-1348.2413,4001.1001, 1); // Сердце в госпитале
+    hospital[9] = CreatePickup(1240,23,1173.8123,-1341.4419,4001.1001, 1); // Сердце в госпитале
+    hospital[10] = CreatePickup(1240,23,1161.6763,-1365.5442,4001.1001, 1); // Сердце в госпитале
+    hospital[11] = CreatePickup(1240,23,1158.8669,-1365.3230,4001.1001, 1); // Сердце в госпитале
+    hospital[12] = CreatePickup(1559,23,1175.5060,-1356.2592,4001.1001, 1); // Сердце в госпитале
+    serdce[0] = CreatePickup(1240,23,-778.0333,1544.8420,1139.2369);//сердечко в аш
+    serdce[1] = CreatePickup(1240,23,1467.1392,-1805.4489,2995.6321, 1);//сердечко в мерии
+    serdce[2] = CreatePickup(1240,23,2131.47,-2283.91,20.67);//сердечко на грузчиках
+    serdce[3] = CreatePickup(1240,23,1883.0814,-2106.7578,1001.3329, 1);//сердечко в бомжатнике
+    serdce[4] = CreatePickup(1240,23,1234.9117,-1812.5426,13.6076);//сердечко в бомжатнике 2
+    //  forma1 = CreatePickup(1275, 23, -2034.6027,148.6513,28.8359, -1);
+    gunarm[1] = CreatePickup(353,23,707.5522,-1336.8497,1102.0000,3);//Оружие Армии СФ
+    gunarm[0] = CreatePickup(353,23,707.5522,-1336.8497,1102.0000,2);//Оружие Армии ЛВ
+    JobsDJ[0] = CreatePickup(1239,23,-2634.7278,1409.7086,906.4647,77);// Jizzy
+    JobsDJ[1] = CreatePickup(1239,23,503.0325,-11.7202,1000.6797,73);// Alhambra
+    mast[0] = CreatePickup(1318,23,613.4505,3.7427,1000.9219,0);//
+    mast[1] = CreatePickup(1318,23,613.4505,3.7427,1000.9219,1);//
+    mast[2] = CreatePickup(1318,23,613.4505,3.7427,1000.9219,2);//
+
+    //tserkov[0] = CreatePickup(1318, 23, 1879.8152,1170.2408,30.0091);
+    //tserkov[1] = CreatePickup(1318, 23, 2500.4209,2500.2651,1500.9972);
+    razdevalka[0] = CreatePickup(1275, 23, 542.8753,340.2146,1201.8594,-1); // МВД Г. Арзамас
+    razdevalka[1] = CreatePickup(1275, 23, -2658.6704,-1826.4879,4.1045,-1);
+    razdevalka[2] = CreatePickup(1275, 23, 212.3952,182.1377,1003.0313,122);
+    razdevalka[3] = CreatePickup(1275, 23, 713.8503,-1296.0908,1102.0000,3);
+    razdevalka[4] = CreatePickup(1275, 23, -1824.4492,-1988.2369,-0.5234,-1);
+    razdevalka[5] = CreatePickup(1275, 23, 952.4358,8.1807,1380.9962);
+    razdevalka[6] = CreatePickup(1275, 23, 1286.3888,-203.2567,1201.9819, -1); // fbi
+    razdevalka[7] = CreatePickup(1275, 23, 1159.0010,-1324.1589,4001.1001, 1); // MCHS
+    razdevalka[8] = CreatePickup(1275, 23, 229.3250,168.6987,1003.0234);
+    razdevalka[9] = CreatePickup(1275, 23, -795.2935,1553.9207,1139.2369);
+    razdevalka[10] = CreatePickup(1275, 23, -812.0899,-675.9764,4004.5850);
+    barkazino[0] = CreatePickup(1239,23,16.0059,1000.0524,1300.5625,-1); // Бар казино
+    // barkazino[1] = CreatePickup(1239,23,2199.6467,1603.8728,1005.0625,VW_CALIGULAS); // Бар казино
+    // RACE
+    /*
+    racePickup[0] = CreatePickup(1318,23,-2158.6536,643.1413,1052.3750,43);// пикап выхода в инте
+    racePickup[1] = CreatePickup(1318,23,1778.2397,-1661.6633,14.4365);// пикап входа в инту
+    racePickup[2] = CreatePickup(1276,23,-2158.9663,640.3579,1052.3817,43); // Пикап записи на гоночки
+    racePickup[3] = CreatePickup(1276,23,-2161.2383,640.3594,1052.3817,43); // Пикап записи на гоночки
+    */
+    // БЕЙС
+    //rc
+    /*
+    rc_pickup = CreatePickup(1276,23,-2237.0322,130.1774,1035.4141,33);
+    //
+    BasePic[0] = CreatePickup(1318,23,2186.9199,1113.3633,12.6538); // Пикап входа в инту
+    BasePic[1] = CreatePickup(1318,23,834.6677,7.3224,1004.1870,301); //  Пикап выхода из инты
+    BasePic[2] = CreatePickup(1276,23,822.7521,3.1842,1004.1797,301); // Пикап записи на БейсДжампин
+    */
+    //-------------------------------------------[ 3d тексты]----------------------------------------------
+    Create3DTextLabel("{FFFFFF}Вход в мэрию штата",COLOR_WHITE,1481.055,-1772.040,18.796,10.0,0,1);
+    Create3DTextLabel("~~~~~~~~~~~~~~~~~\nАвтосдача на\nВодительские права\n~~~~~~~~~~~~~~~~~",COLOR_GREEN,-774.1007,1555.5155,1139.2369+0.5,10.0,0,1);
+    Create3DTextLabel("~~~~~~~~~~~~~~~~~\nПриём на\nработу\n~~~~~~~~~~~~~~~~~",COLOR_YELLOW,359.8466,184.7337,1008.3828,10.0,0,1);
+    Create3DTextLabel("~~~~~~~~~~~~~~~\nРазгрузочная\nзона\n~~~~~~~~~~~~~~~",COLOR_GREEN,334.9307,1962.9658,17.6406,10.0,0,1);
+    //---
+    Create3DTextLabel("~~~~~~~~~~~~~~~\nМесто разгрузки\nРусской мафии\n~~~~~~~~~~~~~~~",COLOR_GREEN,967.3965,1684.1112,8.8516,10.0,0,1);
+    Create3DTextLabel("~~~~~~~~~~~~~~~\nМесто разгрузки\nЯкудза\n~~~~~~~~~~~~~~~",COLOR_GREEN,1460.3116,2763.8110,10.8203,10.0,0,1);
+    Create3DTextLabel("~~~~~~~~~~~~~~~\nМесто разгрузки\nЛКН\n~~~~~~~~~~~~~~~",COLOR_GREEN,1454.3406,758.1638,11.0234,10.0,0,1);
+
+    Create3DTextLabel("Используйте сигнал(H) что бы открыть ворота",COLOR_GREEN,-1195.4439697,-1038.7869873,130.9980011,10.0,0,1);
+    //---
+    Create3DTextLabel("Клуб Alhambra\n{FF4500}Стойка для работы DJ.\n{33AA33}Введите /dj",COLOR_GREEN,487.35198974609,-2.1640000343323,1002.3829956055,10.0,73);
+    Create3DTextLabel("Клуб Jizzy\n{FF4500}Стойка для работы DJ.\n{33AA33}Введите /dj",COLOR_GREEN,-2648.001953125,1422.7509765625,906.46099853516,10.0,77);
+    //---
+    CreatePickup(1239, 2, 2147.2971,1637.2709,993.5759,3); //пикап
+    Create3DTextLabel( "Взлома сейфа\n{FF4500}/robbank", COLOR_YELLOW, 2147.2971,1637.2709,993.5759, 16.0, 3);
+    Create3DTextLabel( "Электропитание\n{FF4500}/light", COLOR_YELLOW, 2143.0061,1620.307,1000.969, 20.0, 3);
+    Create3DTextLabel( "Взлома двери\n{FF4500}/bankdoor", COLOR_YELLOW, 2144.178,1627.082,994.2620, 13.0, 3);
+    //окна банка
+    CreateDynamic3DTextLabel("{42e004}Банковские услуги\n{ed9905}/bank", 0xFFFFFFFF, -99.3043,711.8790,1600.2032, 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+    CreateDynamic3DTextLabel("{42e004}Банковские услуги\n{ed9905}/bank", 0xFFFFFFFF, -101.3860,711.8343,1600.2032, 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+    CreateDynamic3DTextLabel("{42e004}Банковские услуги\n{ed9905}/bank", 0xFFFFFFFF, -103.4569,712.0463,1600.2032, 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+    CreateDynamic3DTextLabel("{42e004}Банковские услуги\n{ed9905}/bank", 0xFFFFFFFF, -105.4870,711.9747,1600.1958, 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+    CreateDynamic3DTextLabel("{42e004}Банковские услуги\n{ed9905}/bank", 0xFFFFFFFF, 2904.1794,2511.7959,1051.0000, 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+
+    /*
+    Create3DTextLabel( "Чтобы выйти через черный выход\n{FF4500}нажмите ALT", COLOR_YELLOW,2129.9822,1626.2155,993.6882,18.0, 3);
+    //---
+    Create3DTextLabel ("[ - - - - - - - - - - - - - - ]\n Закупка продуктов\nВведите: /load\n[ - - - - - - - - - - - - - - ]",COLOR_YELLOW,-18.9035,-269.3631,5.4297 + 0.6,20,0);
+    Create3DTextLabel ("[ - - - - - - - - - - - - - - ]\n Закупка бензина\nВведите: /load\n[ - - - - - - - - - - - - - - ]",COLOR_YELLOW,-1037.3811,-625.9559,32.0078 + 0.6,20,0);
+    */
+    //------------------------------------------------------------[Пикапы входы/выходы]--------------------------------------------------
+    ///////////////////// Алкоголь /////////////////////////
+    /*
+    CreatePickup(1239, 23, 2757.7693,-1176.0519,69.4070, 0); // Vagos pic
+    Create3DTextLabel("{FFFFFF}Место для разгрузки алкоголя.\n{FF4500}Введите /unloadalko",0xC2A2DAFF,2757.7693,-1176.0519,69.4070,20.0,0);
+    CreatePickup(1239, 23, 2005.6473,-1121.6650,26.6733, 0); // Ballas pic
+    Create3DTextLabel("{FFFFFF}Место для разгрузки алкоголя.\n{FF4500}Введите /unloadalko",0xC2A2DAFF,2005.6473,-1121.6650,26.6733,20.0,0);
+    CreatePickup(1239, 23, 1673.3033,-2108.5610,13.5469, 0); // Aztec pic
+    Create3DTextLabel("{FFFFFF}Место для разгрузки алкоголя.\n{FF4500}Введите /unloadalko",0xC2A2DAFF,1673.3033,-2108.5610,13.5469,20.0,0);
+    CreatePickup(1239, 23, 2188.7148,-1812.3773,13.5469, 0); // Rifa pic
+    Create3DTextLabel("{FFFFFF}Место для разгрузки алкоголя.\n{FF4500}Введите /unloadalko",0xC2A2DAFF,2188.7148,-1812.3773,13.5469,20.0,0);
+    CreatePickup(1239, 23, 2498.8372,-1686.5349,13.4772, 0); // Grove pic
+    Create3DTextLabel("{FFFFFF}Место для разгрузки алкоголя.\n{FF4500}Введите /unloadalko",0xC2A2DAFF,2498.8372,-1686.5349,13.4772,20.0,0);
+    CreatePickup(1239, 23, 2845.4294,948.4973,10.7500, 0); // Закупка алкоголя
+    Create3DTextLabel("{FFFFFF}Для загрузки алкогольной продукции введите\n{FF4500}/loadalko [кол-во]",0xFFFF00FF,2845.4294,948.4973,10.7500,10.0,0,1);
+    */
+    /*
+    Create3DTextLabel("{DBD604}Бар банды Vagos Gang\n{FF4500}Введите /drink",0xFFFF00FF,301.3799,301.4108,1003.5391,10.0,75,1);// 13
+    Create3DTextLabel("{8813E7}Бар банды Ballas Gang\n{FF4500}Введите /drink",0xFFFF00FF,-58.1986,1362.6846,1080.2109,10.0,34,1);// 12
+    Create3DTextLabel("{83BFBF}Бар банды Rifa Gang\n{FF4500}Введите /drink",0xFFFF00FF,-225.0098,1404.4785,27.7734,10.0,63,1);// 18
+    Create3DTextLabel("{01FCFF}Бар банды Aztecas Gang\n{FF4500}Введите /drink",0xFFFF00FF,-46.7964,1399.9537,1084.4297,10.0,36,1);// 17
+    Create3DTextLabel("{009F00}Бар банды Grove Gang\n{FF4500}Введите /drink",0xFFFF00FF,2498.9570,-1709.2249,1014.7422,10.0,1,1);// 15
+    */
+    //
+    CreateDynamic3DTextLabel("Чтобы воспользоваться лифтом, посигнальте\nИли используйте команду /gofbi",0xFF6600FF,-2440.8933,528.3586,29.9144,20.0);//fbi
+    CreateDynamic3DTextLabel("Чтобы воспользоваться лифтом, посигнальте\nИли используйте команду /gofbi",0xFF6600FF,-2535.2244,504.4874,-10.8553,20.0);//fbi
+    CreateDynamic3DTextLabel("Что-бы взять оружие со склада\nПропишите команду /getweapon",0xFF6600FF,-9.2551,488.3937,1381.0022,5.0);//fbi
+    // -9.2551,488.3937,1381.0022
+    ////////////////////////////////////////////////////////
+    buygunzakon[5] = CreatePickup(353,23,-1810.3722,-1975.3984,-0.5234,-1); //АРМИЯ ЕПТА
+
+    buygunzakon[0] = CreatePickup(353,23,1281.6494,-216.2950,1201.9819,-1); //gun ФСБ
+    buygunzakon[1] = CreatePickup(353,23,539.7427,342.0759,1201.8594,-1); //gun Police
+    //buygunzakon[2] = CreatePickup(353,23,311.9774,-165.2273,999.6010,1); //gun Police
+    //buygunzakon[3] = CreatePickup(353,23,302.5668,-127.6718,1004.0625,15); //gun Police
+    //buygunzakon[4] = CreatePickup(353,23,290.3902,-107.9638,1001.5156,0); //gun swat
+    lspd[0] = CreatePickup(1318,23,150.8344,1263.2776,13.2951,-1);//Lspd вход
+    lspd[1] = CreatePickup(1318,23,541.2800,311.5480,1201.8594,-1);//Lspd выход
+    //lspd[4] = CreatePickup(1318,23,316.6778,-170.0422,999.5938,5);//Lspd вых из аммо
+    //lspd[2] = CreatePickup(1318,23,1524.486938,-1677.990844,6.218750);//Lspd Вход
+    //lspd[5] = CreatePickup(1318,23,1568.6144,-1689.9901,6.2188);//Lspd Вход из гаража
+    //lspd[3] = CreatePickup(1318,23,246.4416,87.6784,1003.6406);//Lspd выход в гараже
+    //sf[4]  = CreatePickup(1318,23,-1606.4298,672.0637,-4.9063);//Lspd выход в гараже
+    //sf[0]  = CreatePickup(1318,23,316.3047,-170.2971,999.5938,1);//Lspd выход в гараже
+    //sf[1]  = CreatePickup(1318,23,213.9762,120.8990,999.0156);//Lspd выход в гараже
+    //sf[2] = CreatePickup(1318,23,-1594.2096,716.1803,-4.9063);//sfpd
+    //sf[3] = CreatePickup(1318,23,246.4636,107.2969,1003.2188);//сфпд
+    //lvpdpic[0] = CreatePickup(1318,23,2297.1138,2451.4346,10.8203);//lvpd вход с гаража
+    //lvpdpic[1] = CreatePickup(1318,23,238.7510,138.6254,1003.0234,122);//lvpd вход в гараж
+    //lvpdpic[2] = CreatePickup(1318,23,2337.1335,2459.3105,14.9742);//Центральный вход
+    //lvpdpic[3] = CreatePickup(1318,23,288.8456,166.9235,1007.1719,122);//Центральный выход
+    //lvpdpic[4] = CreatePickup(1318,23,2297.1165,2468.6892,10.8203);//lvpd оружие вход
+    //lvpdpic[5] = CreatePickup(1318,23,299.9460,-141.8767,1004.0625,15);//lvpd оружие выход
+    //lvpdpic[6] = CreatePickup(1318,23,2278.3835,2458.0950,38.6837);//крыша
+    rmpic[0] = CreatePickup(1318,23,801.4119,-961.8951,1205.9318,3);
+    yakexit[0] = CreatePickup(1318,23,801.4119,-961.8951,1205.9318,2);
+    yakexit[1] = CreatePickup(1318,23,2416.9199,-1926.1446,22.0009);
+    fbi[1] = CreatePickup(1318,23,1262.9606,-212.2469,1201.9819,-1);//fbi
+    fbi[0] = CreatePickup(1318,23,522.6404,300.6389,13.6113);//fbi вход
+    //fbi[2] = CreatePickup(1318,23,582.6173,1247.8571,1081.2518, 5);//fbi арена вход
+    //fbi[3] = CreatePickup(1318,23,556.0175,1292.3226,1083.0673, 5);//fbi арена выход
+    //fbi[4] = CreatePickup(1318,23,-2486.7429,495.2537,-10.5974);//fbi лифт 1 вход
+    //fbi[5] = CreatePickup(1318,23,-2454.8359,515.9101,45.5625);//fbi крыша выход
+    //fbi[6] = CreatePickup(1318,23,577.8590,1282.1603,1080.3250, 5);//fbi лифт 2 выход
+    //fbi[7] = CreatePickup(1318,23,-2472.5420,469.1994,-10.6521);//fbi подземка вход
+    lcnpic[0] = CreatePickup(1318,23,801.4119,-961.8951,1205.9318,4);
+    lcnpic[1] = CreatePickup(1318,23,1919.1376,2183.4368,15.6974);//lcn вход
+    rmpic[1] = CreatePickup(1318,23,-288.4083,514.6428,13.2429);//RM вход
+    //
+    marenter[0] = CreatePickup(1318,23,-73.7082,855.6496,12.5978, -1);// Мэрия//вход в мерию
+    marenter[1] = CreatePickup(1318,23,1489.4110,-1810.3328,2995.6211, 1);// Мэрия//вход в мерию
+    marenter[3] = CreatePickup(1318,23,688.8248,-30.3905,1201.8580, -1);// Выход из мэрии
+    marenter[4] = CreatePickup(1318,23,1437.931,-1786.454,33.43);// с крышы мерия
+    marenter[5] = CreatePickup(1318,23,1497.3665,-1797.9243,2995.6240, 1);// на крышу мерия
+
+    bankpic[0] = CreatePickup(1318,23,2376.6389,-2139.2036,22.0886);//Банк вход южный
+    bankpic[1] = CreatePickup(1318,23,1853.5022,2035.0101,16.9742); //банк вход батырево
+    bankpic[6] = CreatePickup(1318,23,410.3967,744.6372,12.0006); // банк вход арзамас
+
+    bankpic[7] = CreatePickup(1318,23,-89.1016,722.9736,1600.1958, 2);//Банк выход
+    bankpic[3] = CreatePickup(1318,23,-89.1016,722.9736,1600.1958, 0);//Банк выход
+    bankpic[4] = CreatePickup(1318,23,-89.1016,722.9736,1600.1958, 1);//Банк выход
+
+    bankpic[2] = CreatePickup(1318,23,2147.8579,1603.9347,1006.1677,3); // Банк Выход из хранилища.
+    bankpic[5] = CreatePickup(1318,23,1396.7328,-1689.5903,3041.2505); // Банк Выход из хранилища.//
+    ballasvhod[0] = CreatePickup(1318,23,-68.8021,1351.1979,1080.2109,34);//Ballas на улицу
+    ballasvhod[1] = CreatePickup(1318,23,2000.0640,-1114.0533,27.1250);//Ballas в интерьр
+    rifa[0] = CreatePickup(1318,23,-229.29,1401.13,27.77,63);//Рифа вход на улицу
+    rifa[1] = CreatePickup(1318,23,2185.8225,-1815.2219,13.5469);//Рифа вход
+    mo[0] = CreatePickup(1318,23,952.5549,-909.1080,45.7656);//вход в Администрация Президента
+    mo[1] = CreatePickup(1318,23,-785.8101,-665.2892,4001.0859);//выход из министерства
+    vagospic[0] = CreatePickup(1318,23,2756.3350,-1182.8081,69.4035);//Vagos вход
+    vagospic[1] = CreatePickup(1318,23,300.4915,305.8677,1003.5391,75);//Vagos выход
+    aztecpic[0] = CreatePickup(1318,23,1667.52,-2106.94,14.07);//Aztec вход
+    aztecpic[1] = CreatePickup(1318,23,-42.5856,1405.4747,1084.4297,36);//Aztec выход
+    grooveexit = CreatePickup(1318,23,2495.7993,-1692.4044,1014.7422,1);//grove spawn выход
+    grooveenter = CreatePickup(1318,23,2495.3271,-1690.9893,14.7656);//Дом грув
+    swatenter = CreatePickup(1318,1,742.7875,-1359.1245,13.5000);//swat
+    swatenter2 = CreatePickup(1318,1,296.8525,-112.0709,1001.5156);//swat
+    swatexit = CreatePickup(1318,1,238.6690,139.3077,1003.0234);//swat
+    swatexit2 = CreatePickup(1318,1,288.7522,166.9949,1007.1719);//swat
+    ammomer = CreatePickup(1239,23,674.4913,-15.9106,1202.0065, -1);
+    CreateDynamic3DTextLabel("{9ACD32} Нелегальные работы \n\n{AFAFAF}Встаньте на чекпоинт чтобы устроиться",COLOR_WHITE,239.9099,1726.0103,12.1002,20.0);
+    CreateDynamic3DTextLabel("Чтобы выйти из гаража нажмите 'ALT'", -1, -1026.7469,-2611.7305,18.6245+0.8,9.0);
+    CreateDynamic3DTextLabel("Чтобы покинуть гараж\nПосигнальте 'H'\nИли же введите /exitgarage\n(ТОЛЬКО В ТРАНСПОРТЕ)", COLOR_BLUE, 995.9982,999.8981,1501.0314+0.8,9.0);
+    ammomerrr = CreatePickup(1239,23,239.9099,1726.0103,12.1002,0); // работа воришки (основу мода еблан писал, подписал также как амуницию в мерии, далбаеб.)
+    enterpickup[0] = CreatePickup(1318,1,-111.6859,986.7856,12.7537, 0); // Вход в 4 дракона
+    exitpickup[0] = CreatePickup(1318,1,-18.2004,978.4162,1301.0000, -1); // Выход из 4 драконов
+    //enterpickup[1] = CreatePickup(1318,1,2196.9653,1677.1760,12.3672, 0); // Вход в калигулу
+    //exitpickup[1] = CreatePickup(1318,1,2233.9465,1714.6853,1012.3828, VW_CALIGULAS); // Выход из калигулы
+    dresspickup[0] = CreatePickup(1275,2,1963.3717,1062.4791,994.4688, VW_DRAGONS); // Раздевалка 4 дракона
+    dresspickup[1] = CreatePickup(1275,2,2152.4712,1599.9259,1006.1735, VW_CALIGULAS); // Раздевалка в калигуле
+    army[0] = CreatePickup(1318,23,-1372.8932,498.9633,11.1953); // Армия СФ
+    army[1] = CreatePickup(1318,23,690.8471,-1332.6432,1102.0000,3); // Армия СФ
+    army[2] = CreatePickup(1318,23,1816.7490,1783.7092,15.6181); // Армия ЛВ
+    army[3] = CreatePickup(1318,23,-1834.5872,-1980.8989,-0.5234,-1); // Армия ЛВ
+    //----------------------------------------------------------------------[ Русская ]----------------------------------------
+    plen[0] = CreatePickup(1318,23,305.6964,-159.2085,999.5938);//стрелка1
+    plen[1] = CreatePickup(1318,23,306.4392,-159.2731,999.5938);//стрелка2
+    zona = CreatePickup(1318,23,279.2340,1833.1393,18.0874);//стрелка1
+    zonaa = CreatePickup(1318,23,290.1648,1833.3087,18.0226);//стрелка2
+    hitss[0] = CreatePickup(1318,23,-1043.6232,2208.3596,38.1197);// вход
+    hitss[1] = CreatePickup(1318,23,801.4119,-961.8951,1205.9318,1);// выход
+    hitss[2] = CreatePickup(353,23,-9.2551,488.3937,1381.0022,1); //gun ФСБ
+    sklad[0] = CreatePickup(1318,23,325.0629,1954.1919,21.7746);//стрелка3
+    sklad[1] = CreatePickup(1318,23,316.3806,-170.2857,999.5938);//стрелка4
+    minstr = CreatePickup(1239,23,-812.9762,-672.9258,4004.5850);
+    AlhambraDJ = false; JizzyDJ = false;
+
+    for(new i = 0; i < 7; i ++) MatHaul[i][mCapasity] = 5000;
+
+    LimitPlayerMarkerRadius(100.0);
+    ManualVehicleEngineAndLights();
+    AllowInteriorWeapons(1);
+    AddPlayerClass(79,1958.3783,1343.1572,1100.3746,269.1425,-1,-1,-1,-1,-1,-1);
+    // АКТЕРЫ
+    new actormed;
+    // Спавн
+    actormed = CreateActorEx("", "", 120,1235.3129,-1824.1046,13.5906,33.8404, 0);//присесть 1
+    ApplyActorAnimation(actormed, "COP_AMBIENT", "coplook_loop", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 186,1234.6890,-1824.6001,13.5899,39.1904, 0);//присесть 1
+    ApplyActorAnimation(actormed, "COP_AMBIENT", "coplook_loop", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 12, 1214.2435,-1816.4006,16.5938,344.0960, 0);//присесть 1
+    ApplyActorAnimation(actormed, "ped", "IDLE_chat", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 19, 1214.5292,-1815.8232,16.5938,163.9413, 0);//присесть 1
+    ApplyActorAnimation(actormed, "ped", "IDLE_chat", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 135,1208.7672,-1820.4006,13.5961,178.1864, 0);//присесть 1
+    ApplyActorAnimation(actormed, "SMOKING", "M_smkstnd_loop", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 137,1215.5027,-1819.4977,13.5974,160.0362, 0);//присесть 1
+    ApplyActorAnimation(actormed, "BEACH", "Lay_Bac_loop", 4.1, 1, 0, 0, 0, 0);
+    // Болька
+    actormed = CreateActorEx("", "", 1, 1169.7849,-1323.4867,4001.1001,180.4050, 1);//присесть 1
+    ApplyActorAnimation(actormed, "MISC", "seat_LR", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 23, 1173.3502,-1323.4850,4001.1001,177.3994, 1);//присесть 1
+    ApplyActorAnimation(actormed, "MISC", "seat_LR", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 23, 1173.3502,-1323.4850,4001.1001,177.3994, 1);//присесть 1
+    ApplyActorAnimation(actormed, "MISC", "seat_LR", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 23, 1162.3319,-1353.0922,4001.1001,267.0259, 1);//присесть 1
+    ApplyActorAnimation(actormed, "MISC", "seat_LR", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 14, 1169.1947,-1338.4258,4001.1001,7.3623, 1);//присесть 1
+    ApplyActorAnimation(actormed, "MISC", "seat_LR", 4.1, 1, 0, 0, 0, 0);
+    //
+    actormed = CreateActorEx("", "", 119, 1165.1897,-1365.5345,4001.7800,3.5189, 1);//прилечь 4
+    ApplyActorAnimation(actormed, "BEACH", "Sitnwait_Loop_W", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 190, 1173.0675,-1351.3505,4001.7214,94.2413, 1);//спать на боку
+    ApplyActorAnimation(actormed, "CRACK", "Crckidle2", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 308, 1172.4269,-1337.2716,4001.1001,299.9760, 1);//доктор который пиздит
+    ApplyActorAnimation(actormed, "ped", "IDLE_chat", 4.1, 1, 0, 0, 0, 0);
+
+    actormed = CreateActorEx("", "", 274, 1173.3552,-1336.4513,4001.1001,127.2870, 1);//доктор который пиздит
+    ApplyActorAnimation(actormed, "ped", "IDLE_chat", 4.1, 1, 0, 0, 0, 0);
+    //
+    CreateActorEx("Врач Джон", "Нажмите N для взаимодействия", 70, 1165.5441,-1331.2017,4001.1001,274.6126, 1, 1); // Бот Джон, доктор
+
+    new vladimir;
+    vladimir = CreateActor(181, 2566.1426, -2007.0017, 21.9609, 0.0);
+    SetActorInvulnerable(vladimir, true);
+
+    CreateDynamic3DTextLabel(""SERVER"NPC: Володя\n\n{FFFFFF}Нажмите {afafaf}[ ALT ]{FFFFFF} чтобы поговорить с ним", 0xFFFFFFFF, 2566.1426, -2007.0017, 21.9609, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+
+    new artem;
+    artem = CreateActor(167, -42.7930,921.9846,12.0020,158.8568);
+    SetActorInvulnerable(artem, true);
+
+    CreateDynamic3DTextLabel(""SERVER"NPC: Артём\n\n{FFFFFF}Нажмите {afafaf}[ ALT ]{FFFFFF} чтобы поговорить с ним", 0xFFFFFFFF, -42.7930,921.9846,12.0020, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+
+    LoadVehicles();
+    //----------------------------[ Таймеры ]-----------------------------------
+    GlobalSecondTimer = SetTimer("second_timer", 1000, false);
+    GlobalMinuteTimer = SetTimer("minute_timer", 60000, false);
+
+    switch(TEST_SERVER)
+    {
+        case 0:
+        {
+            SendRconCommand("hostname WIPE PROJECT"); // Основной
+            CreateMySQLConnection("127.0.0.1", "user44163", "user44163", "qfcChBFpIzZp");
+        }
+        case 1:
+        {
+            SendRconCommand("hostname [DEV] WIPE PROJECT"); // Тестовый
+            // CreateMySQLConnection("");
+        }
+    }
+
+    return 1;
+}
+
+stock CreateMySQLConnection(host[], user[], db[], pass[])
+{
+    connects = mysql_connect("127.0.0.1", "user44163", "user44163", "qfcChBFpIzZp", 3306, true, 6);
+    if(mysql_errno(connects)==0)
+    {
+        print("[SERVER] MYSQL ПОДКЛЮЧЕНИЕ УСТАНОВЛЕНО");
+    }
+    else
+    {
+        printf("[SERVER] MYSQL ERROR CODE %d", mysql_errno(connects));
+    }
+
+    mysql_set_charset("cp1251");
+    mysql_tquery(connects, !"SET CHARACTER SET 'utf8'", "", "");
+    mysql_tquery(connects, !"SET NAMES 'utf8'", "", "");
+    mysql_tquery(connects, !"SET character_set_client = 'cp1251'", "", "");
+    mysql_tquery(connects, !"SET character_set_connection = 'cp1251'", "", "");
+    mysql_tquery(connects, !"SET character_set_results = 'cp1251'", "", "");
+    mysql_tquery(connects, !"SET SESSION collation_connection = 'utf8_general_ci'", "", "");
+
+    report_OnGameModeInit();
+
+    mysql_tquery(connects, !"UPDATE `accounts` SET `prize_day` = '0', `prize_every` = '0', `pOnlineYes` = `day_online`, `day_online` = '0', `pAfkYes` = `pDayAfk`, `pDayAfk` = '0'", "", "");
+    mysql_tquery(connects, !"UPDATE `"TABLE_BIZZ"` SET `bProduct` = '10000'", "", "");
+
+    mysql_tquery(connects, !"SELECT * FROM `house` ORDER BY `house`.`hID` ASC", "LoadHouses");
+    mysql_tquery(connects, !"SELECT * FROM `"TABLE_BIZZ"` ORDER BY `"TABLE_BIZZ"`.`bID` ASC", "LoadBizz");
+
+    mysql_tquery(connects, !"SELECT * FROM `"TABLE_OTHER"`", "OnLoadOtherCallback");
+    mysql_tquery(connects, !"SELECT * FROM `"TABLE_MERIA"`", "OnLoadMeriaCallback");
+    mysql_tquery(connects, !"SELECT * FROM `"TABLE_PICK"`", "LoadPick", "");
+    mysql_tquery(connects, !"SELECT * FROM `"TABLE_GREENZONE"`", "LoadZone", "");
+    mysql_tquery(connects, !"SELECT * FROM `dropped_items` WHERE `storage_type` = 11", "LoadPlantsCallBack", "");
+    mysql_tquery(connects, !"DELETE FROM `dropped_items` WHERE `storage_type` != 11 AND `drop_time` < UNIX_TIMESTAMP()-5760", "", "");
+    mysql_tquery(connects, !"SELECT * FROM dropped_items WHERE `storage_type` != 11", "LoadDItems", "");
+    mysql_tquery(connects, !"SELECT * FROM `bank`", "TotalBankCeck") ;
+    mysql_tquery(connects, !"SELECT * FROM `fraction_ranks`", "OnFracRankLoad");
+    mysql_tquery(connects, !"SELECT * FROM `realtors`", "LoadRealtors");
+
+    mysql_tquery(connects, !"SELECT * FROM `config`", "LoadConfig");
+    mysql_tquery(connects, !"SELECT * FROM `hostnames`", "LoadNames");
+
+    mysql_tquery(connects, !"SELECT * FROM `server_settings`", "LoadSettings");
+
+    mysql_tquery(connects, !"SELECT * FROM `podezd` ORDER BY `podezd`.`pod_id` ASC", "podezds_loading");
+    mysql_tquery(connects, !"SELECT * FROM `apartment` ORDER BY `apartment`.`a_id` ASC", "apartments_loading");
+
+    mysql_tquery(connects, !"SELECT * FROM `family_system` ORDER BY `family_system`.`fam_id` ASC", "family_loading");
+
+    mysql_tquery(connects, !"UPDATE `accounts` SET `pBank` = '1000000000' WHERE `pBank` > 1000000000");
+    mysql_tquery(connects, !"UPDATE `accounts` SET `pCash` = '1000000000' WHERE `pCash` > 1000000000");
+
+   // mysql_tquery(connects, !"SELECT * FROM `familys_vehicles` ORDER BY `familys_vehicles`.`sv_id` ASC", "load_family_vehicles");
+    mysql_tquery(connects, !"SELECT * FROM `parkings`", "load_parkings");
+
+    LoadSeatDowns();
+
+    return 1;
+}
+
+stock LoadSeatDowns()
+{
+	mysql_query(connects, "select * from `seatdowns`");
+	TOTALDOWNS = cache_get_row_count(connects);
+
+	if(!TOTALDOWNS)return print("Посадки на загружены!");
+
+	for(new i; i < TOTALDOWNS; i ++)
+	{
+		SeatDownX[i] = cache_get_row_float(i, 0, connects);
+		SeatDownY[i] = cache_get_row_float(i, 1, connects);
+		SeatDownZ[i] = cache_get_row_float(i, 2, connects);
+		SeatDownA[i] = cache_get_row_float(i, 3, connects);
+
+        CreateDynamic3DTextLabel("{FFFFFF}Нажмите {33aa33}[ALT]\n"SERVER"Чтобы сесть", -1,SeatDownX[i], SeatDownY[i], SeatDownZ[i], 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, 0, 0);
+	}
+
+	printf("Всего посадок загружено: %d", TOTALDOWNS);
+	return true;
+}
+
+forward family_loading();
+public family_loading()
+{
+    new rows, fields, temp [ 32 ];
+    cache_get_data ( rows, fields ) ;
+    family_count = rows;
+    if ( rows )
+    {
+        for ( new f = 0; f < rows ; f++ )
+        {
+
+            family_info [ f ][ f_id ] = cache_get_field_content_int (f, "fam_id");
+            cache_get_field_content (f, "fam_name", temp ) , sscanf ( temp, "s[32]", family_info [ f ] [ f_name ] ) ;
+            cache_get_field_content (f, "fam_creator", temp ) , sscanf ( temp, "s[32]", family_info [ f ] [ f_creator ] ) ;
+            cache_get_field_content (f, "fam_data", temp ) , sscanf ( temp, "s[12]", family_info [ f ] [ f_creating_data ] ) ;
+            family_info [ f ][ f_chat_color ] = cache_get_field_content_int (f, "fam_chat_color" );
+            family_info [ f ][ f_members_amount ] = cache_get_field_content_int (f, "fam_members_amount" );
+            family_info [ f ][ f_nationality ] = cache_get_field_content_int (f, "fam_nationality" );
+            family_info [ f ][ f_house ] = cache_get_field_content_int (f, "fam_house" );
+            family_info [ f ][ f_rating ] = cache_get_field_content_int (f, "fam_rating" );
+        }
+    }
+    else return print ( "[Система семей] В базе данных не обнаружена ни одна семья!" ) ;
+    return 1;
+}
+
+forward LoadConfig();
+public LoadConfig()
+{
+    Config[sDist] = cache_get_field_content_int(0, "distribution", connects);
+    Config[sDistRub] = cache_get_field_content_int(0, "distrub", connects);
+    Config[sDonPower] = cache_get_field_content_int(0, "donpower", connects);
+    print("[Загрузка]: Конфиг загружен");
+    return 1;
+}
+
+forward LoadNames();
+public LoadNames()
+{
+    cache_get_field_content(0, "one_name", ServerName[0], connects, 64);
+    cache_get_field_content(0, "two_name", ServerName[1], connects, 64);
+    cache_get_field_content(0, "three_name", ServerName[2], connects, 64);
+    NameEnabled[0] = cache_get_field_content_int(0, "one_enbl", connects);
+    NameEnabled[1] = cache_get_field_content_int(0, "two_enbl", connects);
+    NameEnabled[2] = cache_get_field_content_int(0, "three_enbl", connects);
+    print("[Загрузка]: Config(Names) загружен успешно!");
+    print("Официальное сообщество - vk.com/futile.russia");
+    print("Свободное сообщество - vk.com/futile.russia");
+    return 1;
+}
+
+forward LoadSettings();
+public LoadSettings()
+{
+    allow_pc = bool:cache_get_field_content_int(0, "allow_pc", connects);
+    adminprice = cache_get_field_content_int(0, "adminprice", connects);
+    helpprice = cache_get_field_content_int(0, "helpprice", connects);
+    print("[Загрузка]: Config(settings) загружен успешно!");
+    return 1;
+}
+
+forward LoadRealtors();
+public LoadRealtors()
+{
+    new rows, fields, time = GetTickCount();
+    cache_get_data(rows, fields);
+    if(rows)
+    {
+        for(new i = 0; i < rows; i++)
+        {
+            if(TOTALREALTORS >= MAX_REALTORS - 1)
+            {
+                printf("[Загрузка]: Realtors | ПЕРЕПОЛНЕНИЕ! УВЕЛИЧЬТЕ MAX_REALTORS");
+                break;
+            }
+            RI[i][bID] = cache_get_field_content_int(i, "ID", connects);
+            RI[i][bPrice] = cache_get_field_content_int(i, "Price", connects);
+            RI[i][bRentDays] = cache_get_field_content_int(i, "RentDays", connects);
+            cache_get_field_content(i, "Owner", RI[i][bOwner], connects, MAX_PLAYER_NAME);
+            RI[i][bX] = cache_get_field_content_float(i, "X", connects);
+            RI[i][bY] = cache_get_field_content_float(i, "Y", connects);
+            RI[i][bZ] = cache_get_field_content_float(i, "Z", connects);
+            RI[i][bAngle] = cache_get_field_content_float(i, "Angle", connects);
+            RI[i][bBalance] = cache_get_field_content_int(i, "Balance", connects);
+            CreateRealtor(i);
+            TOTALREALTORS++;
+        }
+    }
+    printf("[Загрузка]: Realtors | Загружено: %i | Time: %i (ms)", TOTALREALTORS, GetTickCount() - time);
+    return 1;
+}
+
+
+stock CreateRealtor(idrl)
+{
+    if(IsValidDynamicPickup(RI[idrl][bPickup])) DestroyDynamicPickup(RI[idrl][bPickup]);
+    if(IsValidDynamicMapIcon(RI[idrl][bMapIcon])) DestroyDynamicMapIcon(RI[idrl][bMapIcon]);
+    RI[idrl][bMapIcon] = CreateDynamicMapIcon(RI[idrl][bX], RI[idrl][bY], RI[idrl][bZ], 34, 0xFFFFFFF);
+    RI[idrl][bPickup] = CreatePickup(1318, 1, RI[idrl][bX], RI[idrl][bY], RI[idrl][bZ], 0);
+    RI[idrl][bText] = CreateDynamic3DTextLabel("{F2A738}Риэлторское агенство", 0xFFFFFFF,RI[idrl][bX], RI[idrl][bY], RI[idrl][bZ], 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, 0, 0);
+    return 1;
+}
+
+stock SaveAccounts()
+{
+    foreach(Player,i) { if(IsPlayerConnected(i)) OnPlayerUpdateRL(i); }
+}
+stock GetClosestPlayer(p1)
+{
+    new Float:dis,Float:dis2,player;
+    player = INVALID_PLAYER_ID;
+    dis = 99999.99;
+    foreach(Player,x)
+    {
+        if(IsPlayerConnected(x))
+        {
+            if(x != p1)
+            {
+                dis2 = GetDistanceBetweenPlayers(x,p1);
+                if(dis2 < dis && dis2 != -1.00) dis = dis2,player = x;
+            }
+        }
+    }
+    return player;
+}
+
+stock EmptyMessage(const string[])
+{
+    new num, size = strlen(string);
+
+    for(new i=0; i<size; i++)
+    {
+        switch(string[i])
+        {
+        case ' ', '\t', '\r', '\n': num++;
+        }
+    }
+
+    if(num == size) return 1;
+
+    return 0;
+}
+
+stock save_server_info()
+{
+    SaveAccounts();
+    SaveOther();
+    SaveHousee();
+    SaveAll();
+}
+
+stock PayDay()
+{
+    GetBizz();
+    Profiler_Dump();
+
+    if(ghour == 00)
+    {
+        RentHouse();
+    }
+
+    save_server_info();
+
+    foreach(Player,i)
+    {
+
+        if(PI[i][get_adm_status])
+        {
+            PI[i][get_adm_hour] ++;
+            UpdatePlayerData(i, "get_adm_hour", PI[i][get_adm_hour]);
+        }
+        if(PI[i][pWanted] >= 1)
+        {
+            PI[i][pWanted] -=1;
+            SetPlayerWantedLevel(i, PI[i][pWanted]);
+        }
+        if(armmatbi < 0) armmatbi = 1000;
+        else if(armmatsf < 0) armmatsf = 1000;
+        else if(kazna < 0) kazna = 0;
+        else if(lspdmatbi < 0) lspdmatbi = 1000;
+        else if(sfpdmats < 0) sfpdmats = 1000;
+        else if(lvpdmats < 0) lvpdmats = 1000;
+        else if(fbimats < 0) fbimats = 1000;
+        else if(yakuzamats < 0) yakuzamats = 1000;
+        else if(rmmats < 0) rmmats = 1000;
+        else if(lcnmats < 0) lcnmats = 1000;
+        new moneys = 1+random(10000);
+        new moneyse = 1000+random(5000);
+        switch(PI[i][pMember])
+        {
+        case 5,6,14:{ PI[i][pPayCheck] += 1000000+moneys; }
+        case 1,10,21,25:{ PI[i][pPayCheck] += 12000*PI[i][pRank]+moneys; } // ЗП полиции, 12к умноженое на ранг + рандомные цифры
+        case 3,19:{ PI[i][pPayCheck] += 11500*PI[i][pRank]+moneys; } // Зп армии, 11.5к умноженое на ранг + рандомные цифры
+        case 2:{ PI[i][pPayCheck] += 13000*PI[i][pRank]+moneys; } // Зп ФБР, 13к умноженое на ранг + рандомные цифры
+        case 7,26:{ PI[i][pPayCheck] += 14000*PI[i][pRank]+moneys; } // Зп Мэрия, 14к умноженое на ранг + рандомные цифры
+        case 4,22,16:{ PI[i][pPayCheck] += 14000*PI[i][pRank]+moneys; } // Зп МинЗдрав, 14к умноженое на ранг + рандомные цифры
+        case 11:{ PI[i][pPayCheck] += 11000*PI[i][pRank]+moneys; } // Зп инструкторов, 11к умноженое на ранг + рандомные цифры
+        case 27,28:{ PI[i][pPayCheck] += 110000*PI[i][pRank]+moneyse; } // Зп Казино, 110к умноженое на ранг + рандомные цифры
+        }
+        PI[i][pExp] += 1*PayDayBoost;
+        PI[i][pDonatemoney2] += DonateGive;
+        new checks = PI[i][pPayCheck];
+        if(PI[i][pDonateRank] >=1) GameTextForPlayer(i, "PayDay", 5000, 1);
+        else GameTextForPlayer(i, "~w~PayDay", 5000, 1);
+        //-------------------------- Работам -------------------
+        if(PI[i][pDonateRank] >=1) SendClientMessage(i, 0xeac700aa,  "{FFFFFF}БАНКОВСКИЙ ЧЕК.");
+        else SendClientMessage(i, COLOR_GRAD1, " {FFFFFF}БАНКОВСКИЙ ЧЕК.");
+        SendClientMessage(i, COLOR_GRAD1, "{FFFFFF}____________________________________");
+        SendClientMessage(i, COLOR_GRAD1, "");
+        SendMes(i,0xFF8C37AA," {FFFFFF}Налог государству: {11e922}%s", formatInt(nalog));
+        PI[i][pBank] -= nalog;
+        kazna +=nalog;
+        if(PI[i][pDonateRank] >=1)
+        {
+            SendMes(i,0xFF8C37AA," {FFFFFF}Счет за телефон: {11e922}%d",PI[i][pMobile]);
+            SendClientMessage(i, 0xeac700aa, " ");
+            SendMes(i,0xFF8C37AA," {FFFFFF}Зарплата: {11e922}%s", formatInt(checks));
+            GiveBank(i, checks);
+            SendMes(i,0xeac700aa," {FFFFFF}Текущий баланс: {11e922}%s", formatInt(PI[i][pBank]));
+            PI[i][pZakonp] += 1;
+            PI[i][pBank] += PI[i][pMobile];
+            PI[i][pMobile] = 0;
+            if(PI[i][pDonateRank] == 3)
+            {
+                PI[i][pExp]++;
+                SendClientMessage(i, COLOR_LIGHTBLUE, " Вы получили дополнительный Респект, за счет VIP Аккаунта.");
+            }
+            kazna +=1000;
+        }
+        else
+        {
+            SendMes(i,0xFF8C37AA," {FFFFFF}Счет за телефон: {11e922}%d",PI[i][pMobile]);
+            SendClientMessage(i, COLOR_WHITE, " ");
+            SendMes(i,COLOR_WHITE," Зарплата: {11e922}%s", formatInt(checks));
+            GiveBank(i, checks);
+            SendMes(i,COLOR_WHITE," Текущий баланс: {11e922}%s", formatInt(PI[i][pBank]));
+            PI[i][pZakonp] += 1;
+            PI[i][pBank] += PI[i][pMobile];
+            PI[i][pMobile] = 0;
+            kazna +=1000;
+        }
+        if(PI[i][pAdmin] > 0) {
+            PI[i][pCash] += 48000;
+            SendClientMessage(i, COLOR_WHITE, "Вы получили админ зарплату, в размере 48000 рублей!");
+
+        }
+        if(PI[i][pDonateRank] >=1) SendClientMessage(i, 0xeac700aa,"{FFFFFF}____________________________________");
+        else SendClientMessage(i,COLOR_GRAD1,"{FFFFFF}____________________________________");
+        if(PI[i][punWarns] == 1) { PI[i][punWarnstime] += 1; if(PI[i][punWarnstime] < 10) SendMes(i,COLOR_LIGHTRED,"- [UNWARN] Автоматическое снятие варна через %d час(ов)", 10 - PI[i][punWarnstime]); }
+        if(PI[i][punWarns] == 1 && PI[i][punWarnstime] >=10)
+        {
+            if(PI[i][pWarns] == 1) PI[i][punWarnstime] = 0, PI[i][punWarns] = 0, PI[i][pWarns] -= 1;
+            else if(PI[i][pWarns] > 1) PI[i][punWarnstime] = 0, PI[i][punWarns] = 1, PI[i][pWarns] -= 1;
+            SendClientMessage(i,COLOR_LIGHTRED, "- [UNWARN] С Вас было снято одно предупреждение!");
+        }
+        if(GetPVarInt(i, "GetBizz") == 2 && GetPlayerBizz(i) == 1)
+        {
+            SendMes(i, COLOR_LIGHTRED, "Ваш бизнес {ffffff}%s{FF6347} был закрыт по причине: отсутствие продуктов или отсутствие лицензии",BizzInfo[GetPVarInt(i, "PlayerBizz")][bName],BizzInfo[GetPVarInt(i, "PlayerBizz")][bLockTime]);
+            SendClientMessage(i, COLOR_LIGHTRED, "Если по истечению {ffffff}12 {FF6347}часов бизнес будет закрыт, он будет продан гос-ву");
+            DeletePVar(i, "GetBizz");
+        }
+        else if(GetPVarInt(i, "GetBizz") == 3 && GetPlayerBizz(i) == 1)
+        {
+            SendMes(i, COLOR_LIGHTRED, "Ваш бизнес {ffffff}%s{FF6347} закрыт уже {ffffff}%i {FF6347}час(а/ов)",BizzInfo[GetPVarInt(i, "PlayerBizz")][bName],BizzInfo[GetPVarInt(i, "PlayerBizz")][bLockTime]);
+            SendClientMessage(i, COLOR_LIGHTRED, "Если по истечению {ffffff}12 {FF6347}часов бизнес будет закрыт, он будет продан гос-ву");
+            DeletePVar(i, "GetBizz");
+        }
+        else if(GetPVarInt(i, "GetBizz") == 1)
+        {
+            SendClientMessage(i, COLOR_LIGHTRED,"Ваш бизнес был продан гос-ву за неуплату налогов");
+            SendClientMessage(i, COLOR_LIGHTRED,"Ваши деньги за бизнес были перечислены на ваш счет");
+            DeletePVar(i, "GetBizz");
+        }
+        seans[i] = 0;
+        PI[i][pPayCheck] = 0;
+        PI[i][pPayDayHad] += 1;
+        PI[i][total_hour] += 1;
+        UpdatePlayerData(i, "total_hour", PI[i][total_hour]);
+
+        /*
+        if(PI[i][total_hour] == 5)
+        {
+            SendClientMessage(i, COLOR_LIGHTRED,"За 5 отыгранных часов вам было начислено 15 F - Coins, используйте /donaterub");
+            PI[i][pRub] += 15;
+        }
+        if(PI[i][total_hour] == 100)
+        {
+            SendClientMessage(i, COLOR_LIGHTRED,"За 100 отыгранных часов вам было начислено 100 F - Coins, используйте /donaterub");
+            PI[i][pRub] += 100;
+            PI[i][P_QUEST][1] = 1;
+            UpdatePlayerData(i, "quest_1", 1);
+        }
+        UpdatePlayerData(i, "pRubNAX", PI[i][pRub]);
+        */
+        if(PI[i][Texts][1] > 0) PI[i][Texts][1] --;
+        VipNews[i] = 0;
+        new exp = PI[i][pExp];
+        new nxtlevel = PI[i][pLevel]+1;
+        new expamount = nxtlevel*levelexp;
+        if(exp >= expamount)
+        {
+            PI[i][pLevel] += 1;
+            PI[i][pExp] = 0;
+            SendClientMessage(i,COLOR_WHITE,"Ваш игровой lvl повысился.");
+        }
+    }
+    format(stringer1,sizeof(stringer1),"{C2A2DA}Казна штата: "SERVER"%s\n{C2A2DA}Налог государства: "SERVER"%s\n{C2A2DA}Пожертвовать денег введите '/putkazna'", formatInt(kazna), formatInt(nalog));
+    Update3DTextLabelText(kaznameria, 0xC2A2DAFF, stringer1);
+    ggtime = 0;
+
+    SetTimer("spawnCars_1", 5000, false);
+
+    new query_string [ 128 ];
+    format ( query_string, sizeof query_string, "UPDATE `family_system` SET `fam_rating` = `fam_rating`+'%d'", random(5));
+    mysql_tquery ( connects, query_string ) ;
+
+    return 1;
+}
+
+publics: spawnCars_1()
+{
+    SendClientMessageToAll(COLOR_WHITE, "{FF0000}<<{FFFFFF} Уважаемые игроки проекта {FFFF00}"SERVER_NAME"{FFFFFF}! {FF0000}>>");
+    SendClientMessageToAll(COLOR_WHITE, "{FF0000}<<{FFFFFF} Через 2 минуты произойдёт респавн незанятого транспорта. {FF0000}>>");
+    SendClientMessageToAll(COLOR_WHITE, "{FF0000}<<{FFFFFF} Желаем всем приятной игры! {FF0000}>>");
+
+    SetTimer("spawnCars_2", 120000, false);
+    return 1;
+}
+
+publics: spawnCars_2()
+{
+    new vehicles_count;
+
+    for(new i = 1; i < MAX_VEHICLES; i++)
+    {
+        if(!IsValidVehicle(i)) continue;
+        else if(IsVehicleOccupied(i)) continue;
+        else if(IsTrailerAttachedToAnyVehicle(i)) continue;
+
+        SetVehicleToRespawn(i);
+        vehicles_count++;
+    }
+
+    SendClientMessageToAll(COLOR_WHITE, "{FF0000}<<{FFFFFF} Весь незанятый транспорт был успешно зареспавнен! {FF0000}>>");
+    return 1;
+}
+
+publics: SendJobMessage(job, color, string[])

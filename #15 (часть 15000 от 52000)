@@ -1,0 +1,1000 @@
+                        SendMes(playerid,0x6ab1ffaa,"Вы удалили все объекты игроку %s",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                }
+            }
+        }
+    */
+    //-----------------------------[ Диалог банка ]----------------------
+    case 8810:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: return SPD(playerid, 3245, DIALOG_STYLE_LIST,"Управление счетами", "1. Мои счета\n2. Открыть новый счет", "Выбрать", "Назад");
+                case 1:
+                    {
+                        if(GetPlayerBizz(playerid) > 0) ShowPlayerDialog(playerid, 2929, 1, "Пополнить счет бизнеса", "Введите колличество дней для оплаты бизнеса\n\nПримечание:\tОт 1 до 7 дней", "Пополнить", "Назад");
+                        else SendClientMessage(playerid, COLOR_GREY, "Вы не бизнесмен!");
+                        return 1;
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pPhousekey] == 255) return SendClientMessage(playerid, COLOR_WHITE, "У вас нет дома");
+                        SPD(playerid, 9521, DIALOG_STYLE_LIST, ""SERVER"Банкомат","- на 2 дней\n- на 7 дней\n- на 30 дней","Перевести", "Выход");
+                        return 1;
+                    }
+                case 3:
+                    {
+                        if(PI[playerid][pHousecash] <=0) return SendClientMessage(playerid, COLOR_GRAD1, "Нет денег за ваш дом");
+                        GiveMoney(playerid, PI[playerid][pHousecash]);
+                        SendMes(playerid,COLOR_WHITE,"::: Вам возвращены %d руб. за ваш дом :::", PI[playerid][pHousecash]);
+                        PI[playerid][pHousecash] = 0;
+                        return 1;
+                    }
+                    case 4:
+                    {
+                        if(GetPlayerBizz(playerid) == 0) return SendClientMessage(playerid,COLOR_GREY,"У вас нет бизнеса");
+                        else SPD(playerid, 2928, DIALOG_STYLE_INPUT, "Продукты", "{ffffff}Введите кол-во продуктов:\n\n{8D8DFF}1{ffffff} единиц продукции приходиться {8D8DFF}50 {ffffff}руб.\n", "Принять", "Назад");
+                    }
+                }
+            }
+            else return GameTextForPlayer(playerid, "~g~Good Luck", 1000, 1);
+        }
+    case 2928:
+        {
+            if(!response) return SPD(playerid, 8810, DIALOG_STYLE_LIST, "Банковские услуги","{ffffff}1. Управление счетами\n2. Перевести на счёт бизнеса\n3. Домашний счёт\n4. Забрать деньги за дом\n5. Заказать продукты для бизнеса", "Выбор", "Закрыть");
+            new till, i = GetPVarInt(playerid, "PlayerBizz");
+            till = strval(inputtext);
+            if(BizzInfo[i][bType] != 2)
+            {
+                if(till < 50 || till > 20000-BizzInfo[i][bProduct])
+                {
+                    SendClientMessage(playerid, COLOR_GREY, "Кол-во продуктов от 1 до 20000!");
+                    return SPD(playerid, 2928, DIALOG_STYLE_INPUT, "Продукты", "{ffffff}Введите кол-во продуктов:\n\n{8D8DFF}1{ffffff} единиц продукции приходиться {8D8DFF}50 {ffffff}руб.\n", "Принять", "Назад");
+                }
+            }
+            else
+            {
+                if(till < 50 || till > 50000-BizzInfo[i][bProduct])
+                {
+                    SendClientMessage(playerid, COLOR_GREY, "Кол-во продуктов от 1 до 50000!");
+                    return SPD(playerid, 2928, DIALOG_STYLE_INPUT, "Продукты", "{ffffff}Введите кол-во продуктов:\n\n{8D8DFF}1{ffffff} единиц продукции приходиться {8D8DFF}50 {ffffff}руб.\n", "Принять", "Назад");
+                }
+            }
+            if(PI[playerid][pBank] < till * 50) return SendClientMessage(playerid,COLOR_GREY,"На вашем банковском счету недостаточно средств!"), SPD(playerid, 2928, DIALOG_STYLE_INPUT, "Продукты", "{ffffff}Введите кол-во продуктов:\n\n{8D8DFF}1{ffffff} единиц продукции приходиться {8D8DFF}50 {ffffff}руб.\n", "Принять", "Назад");
+            PI[playerid][pBank] -= till * 50;
+
+            BizzInfo[i][bProduct] += till;
+            SaveBizz(i);
+
+            new scm_string[156];
+            format(scm_string, sizeof(scm_string), "{afafaf}Вы заказали "SERVER"%d ед. продукции{afafaf}. С вас взято: {33aa33}%d rub.", till, till * 50);
+            return SendClientMessage(playerid, COLOR_WHITE, scm_string);
+        }
+    case 2929:
+        {
+            if(!response) return 1;
+            if(strval(inputtext) > 7 || strval(inputtext) < 1 || (BizzInfo[GetPVarInt(playerid,"PlayerBizz")][bMoney]/100/24)+strval(inputtext) > 7) return SendClientMessage(playerid,COLOR_GREY,"Неверное колличество / Бизнес уже оплачен!");
+            if(PI[playerid][pBank] < 100*(strval(inputtext)*24)) return SendClientMessage(playerid,COLOR_GREY,"Недостаточно средств на банковском счету");
+            PI[playerid][pBank]-=100*(strval(inputtext)*24);
+            BizzInfo[GetPVarInt(playerid,"PlayerBizz")][bMoney] += (strval(inputtext)*24)*100;
+            format(stringer1,168,"__________________________________\nВаш бизнес оплачен на:\t%i дней\nСтарый баланс:\t%i руб.\nНовый баланс:\t%i руб.\n__________________________________",floatround((BizzInfo[GetPVarInt(playerid,"PlayerBizz")][bMoney]/100)/24),PI[playerid][pBank]+(100*strval(inputtext))*24,PI[playerid][pBank]);
+            ShowPlayerDialog(playerid, 000,DIALOG_STYLE_MSGBOX, "Баланс основного счета",stringer1, "Закрыть", "");
+        }
+    case 8816:
+        {
+            if(!response) return SPD(playerid,3256,DIALOG_STYLE_LIST,"{4F94CD}Основной счёт","1. История операций\n2. Снять с банковского счёта\n3. Положить на банковский счёт\n\
+                    4. Баланс банковского счета\n5. Пополнить мобильный телефон\n6. Безналичный перевод", "Выбрать", "Назад");
+            if(!strlen(inputtext))// если оставляет пустую строку, выводим ему опять окно
+            {
+                format(stringer,sizeof(stringer), "Баланс вашего счёта: %d руб..\nВведите нужную вам сумму", PI[playerid][pBank]);
+                return SPD(playerid,8816,DIALOG_STYLE_INPUT,"Положить на счёт",stringer,"Далее","Назад");
+            }
+            new summa = strval(inputtext);
+            if(PI[playerid][pCash] < summa) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+            if(summa < 1) return SendClientMessage(playerid, COLOR_GREY, "Нельзя положить меньше 1 руб.!");
+            if(PI[playerid][pBank] + summa >= 1000000000) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Невозможно хранить на счету более 1 млрд. рублей!");
+            PI[playerid][pCash] -=summa;
+            SendClientMessage(playerid, COLOR_YELLOW2, "::: Возьмите пожалуйста Ваш чек :::");
+            GiveBank(playerid, summa);
+            SendMes(playerid,COLOR_WHITE,"Положено на счёт: %d руб.",summa);
+            SendClientMessage(playerid, COLOR_GRAD6, "");
+            SendMes(playerid,COLOR_WHITE,"Новый баланс: %d руб.", PI[playerid][pBank]);
+            SendClientMessage(playerid, COLOR_YELLOW2, "::: Возьмите пожалуйста Ваш чек :::");
+            Transfer_Log(playerid, PI[playerid][pID], 0, summa, 0, PI[playerid][pNames]); // ЛОГ
+            return 1;
+        }
+    case 8817:
+        {
+            return SPD(playerid,3256,DIALOG_STYLE_LIST,"{4F94CD}Основной счёт","1. История операций\n2. Снять с банковского счёта\n3. Положить на банковский счёт\n\
+                    4. Баланс банковского счета\n5. Пополнить мобильный телефон\n6. Безналичный перевод", "Выбрать", "Назад");
+        }
+    case 8831:
+        {
+            if(!response) return SPD(playerid,3256,DIALOG_STYLE_LIST,"{4F94CD}Основной счёт","1. История операций\n2. Снять с банковского счёта\n3. Положить на банковский счёт\n\
+                    4. Баланс банковского счета\n5. Пополнить мобильный телефон\n6. Безналичный перевод", "Выбрать", "Назад");
+            new playerd, price;
+            if(sscanf(inputtext, "di",playerd, price)) return SPD(playerid, 8831, 1, "Перевод", "Введите ID игрока и кол-во долларов через пробел\n\nПример: 45 15761", "Принять", "Назад");
+            if(!IsPlayerConnected(playerd) || gPlayerLogged[playerd] == 0 || playerd == playerid) { SPD(playerid, 8831, 1, "Перевод", "Введите ID игрока и кол-во долларов через пробел\n\nПример: 45 15761", "Принять", "Назад"); return SendClientMessage(playerid, COLOR_GREY, "Игрока несуществует!"); }
+            if(PI[playerid][pBank] < price) { SPD(playerid, 8831, 1, "Перевод", "Введите ID игрока и кол-во долларов через пробел\n\nПример: 45 15761", "Принять", "Назад"); return SendClientMessage(playerid, COLOR_GREY, "Недостаточно средств на счету!"); }
+            if(price < 1) return SPD(playerid, 8831, 1, "Перевод", "Введите ID игрока и кол-во долларов через пробел\n\nПример: 45 15761", "Принять", "Назад");
+            if(PI[playerd][pBank] + price < 0) return SendClientMessage(playerid, COLOR_WHITE, "У него лимит банковских накоплений!");
+            PI[playerid][pBank] -= price+money;
+            GiveBank(playerd, price);
+            SendMes(playerid, TEAM_BLUE_COLOR, "Вы перевели на счет %s: %s долларов. Остаток на счете: %s долларов", PI[playerd][pNames], formatInt(price), formatInt(PI[playerid][pBank]));
+            SendMes(playerd, TEAM_BLUE_COLOR, "%s перевел на ваш счет: %s долларов. Теперь на счете: %s долларов", PI[playerid][pNames], formatInt(price), formatInt(PI[playerd][pBank]));
+            format(stringer1, sizeof(stringer1), "[ВНИМАНИЕ] {FFFFFF} Игрок "SERVER"%s{FFFFFF} перевел %d игроку %s на счет в банке ! [SYSTEM]", PI[playerid][pNames], formatInt(price), PI[playerd][pNames]);
+            SendAdminMessage(COLOR_RED,stringer1); // Сообщение админам о переводе денег с банковского счета одного на другой
+            Transfer_Log(playerid, PI[playerid][pID], 2, price, PI[playerd][pID], PI[playerd][pNames]); // ЛОГ
+            return SPD(playerid,3256,DIALOG_STYLE_LIST,"{4F94CD}Основной счёт","1. История операций\n2. Снять с банковского счёта\n3. Положить на банковский счёт\n\
+                    4. Баланс банковского счета\n5. Пополнить мобильный телефон\n6. Безналичный перевод", "Выбрать", "Назад");
+        }
+    case 8814:
+        {
+            if(!response) return SPD(playerid,3256,DIALOG_STYLE_LIST,"{4F94CD}Основной счёт","1. История операций\n2. Снять с банковского счёта\n3. Положить на банковский счёт\n\
+                    4. Баланс банковского счета\n5. Пополнить мобильный телефон\n6. Безналичный перевод", "Выбрать", "Назад");
+            if(!strlen(inputtext))// если оставляет пустую строку, выводим ему опять окно
+            {
+                format(stringer,sizeof(stringer), "Баланс вашего счёта: %s руб.\nВведите нужную вам сумму", formatInt(PI[playerid][pBank]));
+                return SPD(playerid,8814,DIALOG_STYLE_INPUT,"Снятие со счёта",stringer,"Далее","Назад");
+            }
+            new summa = strval(inputtext);
+            if(PI[playerid][pBank] < summa) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+            if(summa < 1) return SendClientMessage(playerid, COLOR_GREY, "Нельзя снять меньше 1 руб.!");
+            GiveMoney(playerid, summa);
+            SendClientMessage(playerid, COLOR_YELLOW2, "::: Возьмите пожалуйста Ваш чек :::");
+            PI[playerid][pBank] -= summa;
+            SendMes(playerid,COLOR_GRAD4,"Снято со счёта: %s руб.",formatInt(summa));
+            SendClientMessage(playerid, COLOR_GRAD6, "");
+            SendMes(playerid,0xFEBC41AA,"Новый баланс: %s руб.", formatInt(PI[playerid][pBank]));
+            SendClientMessage(playerid, COLOR_YELLOW2, "::: Возьмите пожалуйста Ваш чек :::");
+            Transfer_Log(playerid, PI[playerid][pID], 1, summa, 0, PI[playerid][pNames]); // ЛОГ
+            return 1;
+        }
+    case 9998:
+        {
+            if(response)
+            {
+                new Float:health;
+                GetPlayerHealth(playerid,health);
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(PI[playerid][pCash] < 750) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 750;
+                        SetPlayerHealth(playerid, health+10.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Пиво");
+                    }
+                case 1:
+                    {
+                        if(PI[playerid][pCash] < 1000) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 1000;
+                        SetPlayerHealth(playerid, health+15.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Вино");
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pCash] < 1250) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 1250;
+                        SetPlayerHealth(playerid, health+20.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Портвейн");
+                    }
+                case 3:
+                    {
+                        if(PI[playerid][pCash] < 1500) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 1500;
+                        SetPlayerHealth(playerid, health+25.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Водку");
+                    }
+                case 4:
+                    {
+                        if(PI[playerid][pCash] < 1750) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 1750;
+                        SetPlayerHealth(playerid, health+30.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Текилу");
+                    }
+                case 5:
+                    {
+                        if(PI[playerid][pCash] < 2500) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 2500;
+                        SetPlayerHealth(playerid, health+35.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Коньяк");
+                    }
+                case 6:
+                    {
+                        if(PI[playerid][pCash] < 3000) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 3000;
+                        SetPlayerHealth(playerid, health+40.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Виски");
+                    }
+                case 7:
+                    {
+                        if(PI[playerid][pCash] < 5000) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+                        PI[playerid][pCash] -= 5000;
+                        SetPlayerHealth(playerid, health+50.0);
+                        SendClientMessage(playerid, COLOR_NEWS, "Вы купили Абсент");
+                    }
+                }
+                SetPlayerDrunkLevel(playerid,GetPlayerDrunkLevel(playerid)+2000);
+                if(GetPlayerDrunkLevel(playerid) > 20000) SetPlayerDrunkLevel(playerid,20000);
+                FIXES_ApplyAnimation(playerid,"BAR","dnk_stndF_loop",4.1,0,0,0,0,0,1);
+                return 1;
+            }
+            else return 1;
+        }
+    case 9999:
+        {
+            if(!response) return pc_cmd_atm(playerid);
+            if(!strlen(inputtext))// если оставляет пустую строку, выводим ему опять окно
+            {
+                format(stringer,sizeof(stringer), "На счету вашего телефона: %d руб.\nВведите сумму, которую вы хотите положить на телефон",PI[playerid][pMobile]);
+                return SPD(playerid,9999,DIALOG_STYLE_INPUT,"Счёт моб. телефона",stringer,"Далее","Назад");
+            }
+            new moneys = strval(inputtext);
+            if(moneys < 1 || moneys > 15000)
+            {
+                SendClientMessage(playerid, COLOR_GREY, "Минимальная сумма - 1, максимальная - 15000!");
+                format(stringer,sizeof(stringer), "На счету вашего телефона: %d руб.\nВведите сумму, которую вы хотите положить на телефон",PI[playerid][pMobile]);
+                return SPD(playerid,9999,DIALOG_STYLE_INPUT,"Счёт моб. телефона",stringer,"Далее","Назад");
+            }
+            if(PI[playerid][pCash] < moneys) return SendClientMessage(playerid, COLOR_GRAD1, "{FF3200} ! {FEFEFE} -У вас нет столько денег!");
+            if(PI[playerid][pMobile] >= 5000) return SendClientMessage(playerid, COLOR_GRAD1, "{FF3200} ! {FEFEFE} -Ваш баланс более 5000 руб., платёж не возможен!");
+            PI[playerid][pCash] -= moneys;
+            PI[playerid][pMobile] +=moneys;
+            SendClientMessage(playerid, COLOR_NEWS, "== [ Мобильный баланс ] ==");
+            SendMes(playerid,COLOR_WHITE,"- Сумма к оплате %d руб.", moneys);
+            SendClientMessage(playerid, COLOR_WHITE, "- Коммисия 0 руб.");
+            SendClientMessage(playerid, COLOR_WHITE, "- Ваш запрос принят, ожидайте поступления денежных средств");
+            SendMes(playerid,COLOR_WHITE,"- Ваш баланс %d руб.", PI[playerid][pMobile]);
+            SendClientMessage(playerid, COLOR_NEWS, "== [ Мобильный баланс ] ==");
+            SendMes(playerid,COLOR_YELLOW,"SMS: Ваш баланc пополнен на сумму %d руб.. Отправитель: "SERVER_NAME" Telecom", moneys);
+            return 1;
+        }
+        //------------------------------------[ Банкомат ] ---------------------------
+    case 8900:
+        {
+            if(!response) return GameTextForPlayer(playerid, "~g~Good Luck", 1000, 1);
+            switch(listitem)
+            {
+            case 0:
+                {
+                    format(stringer,sizeof(stringer), "Баланс вашего счёта: %s руб.", formatInt(PI[playerid][pBank]));
+                    ShowPlayerDialog(playerid,8904,DIALOG_STYLE_LIST,stringer," - 500$\n - 1000$\n - 5000$\n - 10000$\n - 20000$\n - 50000$\n - 100000$\n- 1000000$\n- 10000000$","ОК","Назад");
+                }
+            case 1:
+                {
+                    format(stringer,sizeof(stringer), "_________________________\nНа вашем счету %s руб.\n_________________________",formatInt(PI[playerid][pBank]));
+                    ShowPlayerDialog(playerid,8905,DIALOG_STYLE_MSGBOX,""SERVER"Банкомат",stringer,"Назад","");
+                }
+            case 2:
+                {
+                    if(PI[playerid][pPhousekey] == 255) return SendClientMessage(playerid, COLOR_WHITE, "У вас нет дома");
+                    SPD(playerid, 9521, DIALOG_STYLE_LIST, ""SERVER"Банкомат","- на 2 дней\n- на 7 дней","Перевести", "Выход");
+                }
+            case 3: ShowPlayerDialog(playerid,9999,DIALOG_STYLE_INPUT,""SERVER"Банкомат","Пополнение мобильного счёта\nИспользуйте сумму от 500$ до 15.000$","Ввести","Закрыть");
+            case 4:
+                {
+                    if(GetPlayerBizz(playerid) > 0) ShowPlayerDialog(playerid, 2929, 1, "Пополнить счет бизнеса", "Введите колличество дней для оплаты бизнеса\n\nПримечание:\tОт 1 до 7 дней", "Пополнить", "Назад");
+                    else SendClientMessage(playerid, COLOR_GREY, "Вы не бизнесмен!");
+                }
+            }
+            return 1;
+        }
+    case 8904:
+        {
+            if(response)
+            {
+                if(listitem == 0) { money = 500; }
+                else if(listitem == 1) { money = 1000; }
+                else if(listitem == 2) { money = 5000; }
+                else if(listitem == 3) { money = 10000; }
+                else if(listitem == 4) { money = 20000; }
+                else if(listitem == 5) { money = 50000; }
+                else if(listitem == 6) { money = 100000; }
+                else if(listitem == 7) { money = 1000000; }
+                else if(listitem == 8) { money = 10000000; }
+                if (money > PI[playerid][pBank]) return SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, ""SERVER"Банкомат", "На вашем счету недостаточно денег!", "<< Назад", "");
+                GiveMoney(playerid, money);
+                PI[playerid][pBank] = PI[playerid][pBank]-money;
+                SendMes(playerid,0x6495EDFF,"Вы сняли со счёта: %d руб.. Остаток: %d руб.", money,PI[playerid][pBank]);
+                format(stringer, sizeof(stringer), "~b~+%d", money);
+                GameTextForPlayer(playerid, stringer, 3000, 1);
+                return 1;
+            }
+            else return SPD(playerid, 8900, DIALOG_STYLE_LIST, ""SERVER"Банкомат", "1.{ffffff} Снять наличные\n2.{ffffff} Баланс\n3.{ffffff} Домашний счёт\n4.{ffffff} Пополнить счет телефона\n5. {ffffff}Пополнить счёт бизнеса", "Выбрать", "Закрыть");
+        }
+    case 8905: if(response) return SPD(playerid, 8900, DIALOG_STYLE_LIST, ""SERVER"Банкомат", "1.{ffffff} Снять наличные\n2.{ffffff} Баланс\n3.{ffffff} Домашний счёт\n4.{ffffff} Пополнить счет телефона\n5. {ffffff}Пополнить счёт бизнеса", "Выбрать", "Закрыть");
+    case 9521:
+        {
+            if(response)
+            {
+                new plata,day,max_day,bouse = PI[playerid][pPhousekey];
+                if(HouseInfo[bouse][hKlass] == 0) plata = 300;
+                else if(HouseInfo[bouse][hKlass] == 1) plata = 600;
+                else if(HouseInfo[bouse][hKlass] == 2) plata = 900;
+                else if(HouseInfo[bouse][hKlass] == 3) plata = 1200;
+                else if(HouseInfo[bouse][hKlass] == 4) plata = 1500;
+                else if(HouseInfo[bouse][hKlass] == 5) plata = 1800;
+                switch(listitem)
+                {
+                case 0: day = 2, max_day = 4;
+                case 1:
+                    {
+                        if(PI[playerid][total_hour] < 10) return SCMF(playerid, -1, ""error" Вам необходимо отыграть 10 часов что бы пополнить счёт дома на 7 дней! (%d/10)",PI[playerid][total_hour]);
+                        day = 7, max_day = 14;
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][total_hour] < 30) return SCMF(playerid, -1, ""error" Вам необходимо отыграть 30 часов что бы пополнить счёт дома на 30 дней! (%d/30)",PI[playerid][total_hour]);
+                        day = 30, max_day = 30;
+                    }
+                }
+                new takking = day*plata;
+                if (PI[playerid][pBank] < takking) return SendMes(playerid, COLOR_GREY, "Для пополнения счёта необходимо %d",takking), SPD(playerid, 10010, DIALOG_STYLE_MSGBOX, ""SERVER"Банкомат", "На вашем счету недостаточно денег!", "Назад", "");
+                else
+                {
+                    if(HouseInfo[bouse][hTakings] >= max_day*plata) return SCMF(playerid, -1, ""error" Вам нельзя больше %d дней!",max_day);
+                    PI[playerid][pBank] -= takking,HouseInfo[bouse][hTakings] += takking;
+                    SendMes(playerid,0x6495EDFF, "Вы положили на счёт Вашей квартиры %d руб.. Квартирный счёт: %d руб.", takking, HouseInfo[bouse][hTakings]);
+                    SaveHouse(bouse);
+                    return 1;
+                }
+            }
+            else return 1;
+        }
+    case 5230:
+        {
+            if(!response) return 1;
+            new idd;
+            if(sscanf(inputtext,"d",idd) || !IsPlayerConnected(idd)) return SearchingHit(playerid);
+            if(PI[idd][pHeadValue] == 0) return SendClientMessage(playerid,COLOR_GREY,"Игрок не заказан.");
+            if(ContractInfo[idd][cHitman] != INVALID_PLAYER_ID) return SendClientMessage(playerid,COLOR_GREY,"Выбранный вами заказ, уже кто-то взял.");
+            format(stringer1, sizeof(stringer1), "Хитман %s[%d] взял заказ №%d (%s ($%d))",PI[playerid][pNames],playerid,idd,PI[idd][pNames],PI[idd][pHeadValue]);
+            SendFamilyMessage(23, COLOR_GREEN, stringer1);
+            ContractInfo[playerid][cZakaz] = idd;
+            ContractInfo[idd][cHitman] = playerid;
+        }
+    case 5350:
+        {
+            if(response)
+            {
+                if(listitem == 0) SPD(playerid,5351,DIALOG_STYLE_INPUT,"Своя мелодия","Введите прямую ссылку на воспроизведение своей мелодии","Ок","Назад");
+                else if(listitem == 1)
+                {
+                    pc_cmd_dj(playerid, "");
+                    foreach(Player, i)
+                    {
+                        if(GetDistanceBetweenPlayers(playerid,i) < MGM[4])
+                        {
+                            SendClientMessage(i,COLOR_WHITE,"[PlayList] Музыка отключена DJ.");
+                            StopAudioStreamForPlayer(i);
+                            Music[playerid] = false;
+                        }
+                    }
+                }
+                else if(listitem == 2)
+                {
+                    if(IsPlayerInRangeOfPoint(playerid, 2.0,487.35198974609,-2.1640000343323,1002.3829956055)) AlhambraDJ = false, AlhambraDJID = INVALID_PLAYER_ID;
+                    else if(IsPlayerInRangeOfPoint(playerid, 1.0,-2648.001953125,1422.7509765625,906.46099853516)) JizzyDJ = false, JizzyDJID = INVALID_PLAYER_ID;
+                    SendClientMessage(playerid,COLOR_WHITE,"Вы отошли от пульта DiskJokey'я.");
+                    pc_cmd_dj(playerid, "");
+                }
+            }
+        }
+    case 5351:
+        {
+            if(response)
+            {
+                new Float:X,Float:Y,Float:Z;
+                GetPlayerPos(playerid, X, Y, Z);
+                strmid(URLW, inputtext, 0, strlen(inputtext), 255);
+                MGM[4] = 100; MGM[1] = X; MGM[2] = Y; MGM[3] = Z;
+                pc_cmd_dj(playerid, "");
+                foreach(Player, i)
+                {
+                    if(GetDistanceBetweenPlayers(playerid,i) < MGM[4])
+                    {
+                        SendClientMessage(i,COLOR_WHITE,"[PlayList] Установлен трек DJ.");
+                        StopAudioStreamForPlayer(i);
+                        PlayAudioStreamForPlayer(i, URLW, MGM[1], MGM[2], MGM[3], MGM[4], true);
+                        Music[i] = true;
+                    }
+                }
+            }
+            else pc_cmd_dj(playerid, "");
+        }
+    /*
+    case 3939:
+        {
+            if(!response)
+            {
+                new dialog_string[156];
+                format(dialog_string, sizeof(dialog_string), "Скин #%d\nСтоимость скина: {33aa33}%d руб.\nСледующий скин\nПредыдущий скин\nКупить скин", GetPlayerSkin(playerid), SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+                ShowPlayerDialog(playerid, 9185, DIALOG_STYLE_LIST, !""SERVER"Покупка одежды", dialog_string, !"Далее", !"Выйти");
+                return 1;
+            }
+            new skin;
+            if(PI[playerid][pSex] == 1)
+            {
+                skin = SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinID];
+            }
+            else
+            {
+                skin = SkinsFeMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinID];
+            }
+            switch(listitem) {
+            case 0: PI[playerid][pSkinhome][0] = skin;
+            case 1: PI[playerid][pSkinhome][1] = skin;
+            case 2: PI[playerid][pSkinhome][2] = skin;
+            }
+            PI[playerid][pChar] = skin;
+            SetCameraBehindPlayer(playerid);
+            SetPVarInt(playerid,"CloserInClothes", true);
+            CancelSelectTextDraw(playerid);
+            for(new i=0; i<4; i++)
+            {
+                TextDrawHideForPlayer(playerid, gSkinShopDraw[i]);
+            }
+            PlayerTextDrawHide(playerid, gSkinShopPriceDraw[playerid]);
+            new bizid = GetPVarInt(playerid, "Bizzid");
+
+            SetPlayerVirtualWorldEx(playerid, 0);
+            SetPPos(playerid,BizzInfo[bizid][bEntrx],BizzInfo[bizid][bEntry],BizzInfo[bizid][bEntrz]);
+            SetPlayerInteriorEx(playerid, 0);
+
+            if(PI[playerid][pSex] == 1)
+            {
+                PI[playerid][pCash] -= SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice];
+                BizzInfo[bizid][bMoney] += SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice];
+                BizzPay[bizid] += SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice];
+            }
+            else
+            {
+                PI[playerid][pCash] -= SkinsFeMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice];
+                BizzInfo[bizid][bMoney] += SkinsFeMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice];
+                BizzPay[bizid] += SkinsFeMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice];
+            }
+
+            BizzInfo[bizid][bProduct] -= 50;
+            SaveBizz(bizid);
+            DeletePVar(playerid,"Bizzid");
+            DeletePVar(playerid,"PlayerSkinSlot");
+            DeletePVar(playerid,"PlayerInClothes");
+            DeletePVar(playerid,"OldSkin");
+            TogglePlayerControllable(playerid, true);
+            return 1;
+        }
+    */
+    case 5300: //"{FFFFFF}1. {1AFF00}Открыть {FFFFFF}или {df5802}закрыть {FFFFFF}дом\n2. Продать дом государству\n3. Продать домашний транспорт\n4. Отметить транспорт на GPS\n5. Доставить транспорт к дому (1000$)\n
+        {
+            new house = PI[playerid][pPhousekey];
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(HouseInfo[house][hLock] == 1)
+                        {
+                            HouseInfo[house][hLock] = 0;
+                            GameTextForPlayer(playerid, "~g~Unlocked", 5000, 6);
+                            PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
+                            return 1;
+                        }
+                        if(HouseInfo[house][hLock] == 0)
+                        {
+                            HouseInfo[house][hLock] = 1;
+                            GameTextForPlayer(playerid, "~r~Locked", 5000, 6);
+                            PlayerPlaySound(playerid, 1145, 0.0, 0.0, 0.0);
+                            return 1;
+                        }
+                    }
+                case 1: SPD(playerid,5033,DIALOG_STYLE_MSGBOX,"{dba002}Продажа имущества","{ffffff}Вы хотите продать свой дом?\n{AFAFAF}(чтобы продать дом другому игроку введите /sellhouse [ID игрока] [Цена])\n\n{FF6347}Внимание! Вам вернут только половину стоимости дома!","Да","Нет");
+                case 4://сейф
+                    {
+                        new bouse = PI[playerid][pPhousekey];
+                        format(stringer, sizeof(stringer), "Положить оружие\nНаркотики\nАптечек (%d)\nДенег (%s)\nМатериалы (%d)\nDeagle (%d патрон)\nAK47 (%d патрон)\nShotGun (%d патрон)\nM4 (%d патрон)\nSD-Pistol (%d патрон)\nRifle (%d патрон)\nMP5 (%d патрон)",
+                        HouseInfo[bouse][hNark], formatInt(HouseInfo[bouse][hMoney]), HouseInfo[bouse][hMatel],HouseInfo[bouse][hduggl],HouseInfo[bouse][hak47],HouseInfo[bouse][hshotgun],HouseInfo[bouse][hm4],HouseInfo[bouse][hsdpist],HouseInfo[bouse][hrifle],HouseInfo[bouse][hsmg]);
+                        SPD(playerid, 3940, DIALOG_STYLE_LIST, "{dba002}Информация о сейфе", stringer, "Выбрать", "Отмена");
+                    }
+                case 5: SPD(playerid, 3944, DIALOG_STYLE_LIST, "{dba002}Прописка", "Прописка\nВыписка", "Выбрать", "Отмена");
+                default: return 1;
+                }
+            }
+        }
+    case 3940:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0:
+                {
+                    for(new i = 0; i < 13; i++)
+                    {
+                        if(PI[playerid][Weapon][i] > 0 && PI[playerid][Ammo][i] > 0)
+                        {
+                            if(PI[playerid][Weapon][i] == 24) HouseInfo[PI[playerid][pPhousekey]][hduggl] += PI[playerid][Ammo][i];
+                            else if(PI[playerid][Weapon][i] == 30) HouseInfo[PI[playerid][pPhousekey]][hak47] += PI[playerid][Ammo][i];
+                            else if(PI[playerid][Weapon][i] == 25) HouseInfo[PI[playerid][pPhousekey]][hshotgun] += PI[playerid][Ammo][i];
+                            else if(PI[playerid][Weapon][i] == 31) HouseInfo[PI[playerid][pPhousekey]][hm4] += PI[playerid][Ammo][i];
+                            else if(PI[playerid][Weapon][i] == 23) HouseInfo[PI[playerid][pPhousekey]][hsdpist] += PI[playerid][Ammo][i];
+                            else if(PI[playerid][Weapon][i] == 33) HouseInfo[PI[playerid][pPhousekey]][hrifle] += PI[playerid][Ammo][i];
+                            else if(PI[playerid][Weapon][i] == 29) HouseInfo[PI[playerid][pPhousekey]][hsmg] += PI[playerid][Ammo][i];
+                        }
+                    }
+                    SendClientMessage(playerid,COLOR_BLUE,"Вы положили все ваше оружие в сейф.");
+                    SaveHouse(PI[playerid][pPhousekey]);
+                    ResetWeapons(playerid);
+                }
+            case 1:
+                {
+                    new hm = PI[playerid][pPhousekey];
+                    format(stringer,sizeof(stringer),"Семена (%d)\nКокаин (%d)\nКрэк (%d)\nГероин (%d)\nLSD (%d)\nМетанфентамин (%d)\nМарихуана (%d)", HouseInfo[hm][hdrugs][0], HouseInfo[hm][hdrugs][1], HouseInfo[hm][hdrugs][2], HouseInfo[hm][hdrugs][3], HouseInfo[hm][hdrugs][4], HouseInfo[hm][hdrugs][5], HouseInfo[hm][hdrugs][6]);
+                    SPD(playerid, 599, DIALOG_STYLE_LIST, "Информация о наркотиках", stringer, "Выбрать", "Отмена");
+                }
+            case 2: SPD(playerid, 3941, DIALOG_STYLE_LIST, "Информация о аптечках","Положить\nВзять", "Выбрать", "Отмена");
+            case 3: SPD(playerid, 3942, DIALOG_STYLE_LIST, "Информация о деньгах","Положить\nВзять", "Выбрать", "Отмена");
+            case 4: SPD(playerid, 3943, DIALOG_STYLE_LIST, "Информация о материалах","Положить\nВзять", "Выбрать", "Отмена");
+            case 5: // дигл
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hduggl] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет Deagle.");
+                    return SPD(playerid, 3947, DIALOG_STYLE_INPUT, "Взять оружие: Deagle","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            case 6://ак 47
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hak47] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет АК47.");
+                    return SPD(playerid, 3948, DIALOG_STYLE_INPUT, "Взять оружие: АК47","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            case 7://дробовик
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hshotgun] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет ShotGun.");
+                    return SPD(playerid, 5432, DIALOG_STYLE_INPUT, "Взять оружие: ShotGun","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            case 8://m4
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hm4] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет M4.");
+                    return SPD(playerid, 5433, DIALOG_STYLE_INPUT, "Взять оружие: M4","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            case 9://Sd- pistol
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hsdpist] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет SDpist.");
+                    return SPD(playerid, 5434, DIALOG_STYLE_INPUT, "Взять оружие: SDpist","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            case 10://nRifle
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hrifle] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет Rifle.");
+                    return SPD(playerid, 5435, DIALOG_STYLE_INPUT, "Взять оружие: Rifle","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            case 11://MP5
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hsmg] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В вашем сейфе нет MP5.");
+                    return SPD(playerid, 5436, DIALOG_STYLE_INPUT, "Взять оружие: MP5","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+                }
+            }
+        }
+    case 3947://дигл
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 3947, DIALOG_STYLE_INPUT, "Взять оружие: Deagle","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hduggl] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hduggl] -= price;
+            GiveWeapon(playerid, 24, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон Deagle из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 3948://ak
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 3948, DIALOG_STYLE_INPUT, "Взять оружие: AK47","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hak47] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hak47] -= price;
+            GiveWeapon(playerid, 30, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон AK47 из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 5432://дробовик
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 5432, DIALOG_STYLE_INPUT, "Взять оружие: ShotGun","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hshotgun] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hshotgun] -= price;
+            GiveWeapon(playerid, 25, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон ShotGun из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 5433://m4
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 5433, DIALOG_STYLE_INPUT, "Взять оружие: M4","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hm4] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hm4] -= price;
+            GiveWeapon(playerid, 31, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон M4 из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 5434://sd
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 5434, DIALOG_STYLE_INPUT, "Взять оружие: SDpist","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hsdpist] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hsdpist] -= price;
+            GiveWeapon(playerid, 23, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон SDpist из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 5435://rifle
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 5435, DIALOG_STYLE_INPUT, "Взять оружие: Rifle","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hrifle] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hrifle] -= price;
+            GiveWeapon(playerid, 33, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон Rifle из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 5436://mp5
+        {
+            if(!response) return 1;
+            new price;
+            if(sscanf(inputtext,"i",price)) return SPD(playerid, 5436, DIALOG_STYLE_INPUT, "Взять оружие: MP5","Введите сколько хотите взять патронов из сейфa?", "Выбрать", "Отмена");
+            if(HouseInfo[PI[playerid][pPhousekey]][hsmg] < price) return SendClientMessage(playerid,COLOR_GRAD1,"В вашем сейфе нет столько патрон!");
+            if(price < 1 || price > 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя взять меньше 1, и больше 1000 патрон!");
+            HouseInfo[PI[playerid][pPhousekey]][hsmg] -= price;
+            GiveWeapon(playerid, 29, price);
+            SendMes(playerid,-1,"Вы взяли %d патрон MP5 из сейфа!",price);
+            SaveHouse(PI[playerid][pPhousekey]);
+        }
+    case 3941://нарко
+        {
+            if(!response) return 1;
+            new bouse = PI[playerid][pPhousekey];
+            switch(listitem)
+            {
+            case 0: SPD(playerid, 3951, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить аптечек в сейф?", "Выбрать", "Отмена");
+            case 1://Взять
+                {
+                    if(HouseInfo[bouse][hNark] <= 0) return SendClientMessage(playerid, COLOR_GREY, "Нет аптечек в сейфе.");
+                    SPD(playerid, 3952, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять аптечек из сейф ?", "Выбрать", "Отмена");
+                }
+            }
+        }
+    case 3942://деньги
+        {
+            if(!response) return 1;
+            new bouse = PI[playerid][pPhousekey];
+            switch(listitem)
+            {
+            case 0: SPD(playerid, 3953, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить денег в сейф?", "Выбрать", "Отмена");
+            case 1://Взять
+                {
+                    if(HouseInfo[bouse][hMoney] <= 0) return SendClientMessage(playerid, COLOR_GREY, "Нет денег в сейфе.");
+                    SPD(playerid, 3954, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять денег из сейф?", "Выбрать", "Отмена");
+                }
+            }
+        }
+    case 3943://металл
+        {
+            if(!response) return 1;
+            new bouse = PI[playerid][pPhousekey];
+            switch(listitem)
+            {
+            case 0: SPD(playerid, 3955, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить материалов в сейф?", "Выбрать", "Отмена");
+            case 1://Взять
+                {
+                    if(HouseInfo[bouse][hMatel] <= 0) return SendClientMessage(playerid, COLOR_GREY, "Нет материалов в сейфе.");
+                    SPD(playerid, 3956, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять материалов из сейф ?", "Выбрать", "Отмена");
+                }
+            }
+        }
+    case 3951://положить нарко
+        {
+            new bouse = PI[playerid][pPhousekey];
+            if(!response) return 1;
+            new nark = strval(inputtext);
+            if(PI[playerid][pHeal] < nark) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько аптечек.");
+            if(!strval(inputtext)) return SPD(playerid, 3951, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить аптечек в сейф?", "Выбрать", "Отмена");
+            if(nark > 1000 || nark < 0) return SPD(playerid, 3951, DIALOG_STYLE_INPUT, "Положить","Нельзя меньше 1 или более 1000!", "Выбрать", "Отмена");
+            PI[playerid][pHeal] -= strval(inputtext);
+            HouseInfo[bouse][hNark] += strval(inputtext);
+            format(stringer1,sizeof(stringer1),"Вы положили в сейф: %d штук аптечек",strval(inputtext));
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 3952://взять нарко
+        {
+            new bouse = PI[playerid][pPhousekey];
+            if(!response) return 1;
+            new nark = strval(inputtext);
+            if(HouseInfo[bouse][hNark] - nark < 0) return SendClientMessage(playerid, COLOR_GREY, "В сейфе нет столько аптечек!");
+            if(!strval(inputtext)) return SPD(playerid, 3952, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять аптечек из сейф ?", "Выбрать", "Отмена");
+            if(nark > 1000 || nark < 0) return SPD(playerid, 3952, DIALOG_STYLE_INPUT, "Взять","Нельзя меньше 1 или более 1000", "Выбрать", "Отмена");
+            if(PI[playerid][pHeal] >= 1000) return SendClientMessage(playerid,COLOR_GRAD1,"Вы не можете взять больше");
+            PI[playerid][pHeal] += strval(inputtext);
+            HouseInfo[bouse][hNark] -= strval(inputtext);
+            format(stringer1,sizeof(stringer1),"Вы взяли с сейф: %d штук аптечек",strval(inputtext));
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }//
+    case 3953://положить деньги
+        {
+            new bouse = PI[playerid][pPhousekey];
+            if(!response) return 1;
+            new mones = strval(inputtext);
+            if(PI[playerid][pCash] < mones) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько денег.");
+            if(HouseInfo[bouse][hMoney] + mones < 0) return SendClientMessage(playerid,COLOR_GRAD1,"Нельзя положить больше!");
+            if(!strval(inputtext)) return SPD(playerid, 3953, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить денег в сейф ?", "Выбрать", "Отмена");
+            if(mones > 100000000 || mones < 0) return SPD(playerid, 3953, DIALOG_STYLE_INPUT, "Положить","Нельзя меньше 1 и больше 100000000", "Выбрать", "Отмена");
+            PI[playerid][pCash] -= strval(inputtext);
+            HouseInfo[bouse][hMoney] += strval(inputtext);
+            format(stringer1,sizeof(stringer1),"Вы положили в сейф: %d руб. ",strval(inputtext));
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 3954://взять деньги
+        {
+            new bouse = PI[playerid][pPhousekey];
+            if(!response) return 1;
+            new mones = strval(inputtext);
+            if(HouseInfo[bouse][hMoney] - mones < 0) return SendClientMessage(playerid, COLOR_GREY, "В сейфе нет столько денег!");
+            if(!strval(inputtext)) return SPD(playerid, 3954, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять денег из сейф ?", "Выбрать", "Отмена");
+            if(mones > 100000000 || mones < 0) return SPD(playerid, 3954, DIALOG_STYLE_INPUT, "Взять","Нельзя меньше 1 и больше 100000000", "Выбрать", "Отмена");
+            GiveMoney(playerid, strval(inputtext));
+            HouseInfo[bouse][hMoney] -= strval(inputtext);
+            format(stringer1,sizeof(stringer1),"Вы взяли с сейф: %d руб. ",strval(inputtext));
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 3955://положить метал
+        {
+            new bouse = PI[playerid][pPhousekey];
+            if(!response) return 1;
+            new metal = strval(inputtext);
+            if(PI[playerid][pMats] < metal) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько металла.");
+            if(!strval(inputtext)) return SPD(playerid, 3955, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить материалов в сейф ?", "Выбрать", "Отмена");
+            if(metal > 5000 || metal < 0) return SPD(playerid, 3955, DIALOG_STYLE_INPUT, "Положить","Нельзя меньше 1 и больше 5000", "Выбрать", "Отмена");
+            PI[playerid][pMats] -= strval(inputtext);
+            HouseInfo[bouse][hMatel] += strval(inputtext);
+            format(stringer1,sizeof(stringer1),"Вы положили в сейф %d металла ",strval(inputtext));
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 3956://взять метал
+        {
+            new bouse = PI[playerid][pPhousekey];
+            if(!response) return 1;
+            new metal = strval(inputtext);
+            if(HouseInfo[bouse][hMatel] - metal < 0) return SendClientMessage(playerid, COLOR_GREY, "В сейфе нет столько материалов!");
+            if(!strval(inputtext)) return SPD(playerid, 3956, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять материалов из сейф ?", "Выбрать", "Отмена");
+            if(metal > 5000 || metal < 0) return SPD(playerid, 3956, DIALOG_STYLE_INPUT, "Взять","Нельзя меньше 1 и больше 5000", "Выбрать", "Отмена");
+            PI[playerid][pMats] += strval(inputtext);
+            HouseInfo[bouse][hMatel] -= strval(inputtext);
+            format(stringer1,sizeof(stringer1),"Вы взяли с сейф %d металла ",strval(inputtext));
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 599://взять метал
+        {
+            if(!response) return 1;
+            SetPVarInt(playerid, "DrugsMenuDialog", listitem);
+            format(stringer, sizeof stringer, "%s: %d гр.", Drugs[listitem+1][d_name], HouseInfo[PI[playerid][pPhousekey]][hdrugs][listitem]);
+            return SPD(playerid, 600, DIALOG_STYLE_LIST, stringer, "[1] Взять\n[2] Положить", "Выбрать","Отмена");
+        }
+    case 600:
+        {
+            if(!response) return 1;
+            new itemID = GetPVarInt(playerid, "DrugsMenuDialog");
+            switch(listitem) {
+            case 0:
+                {
+                    if(HouseInfo[PI[playerid][pPhousekey]][hdrugs][itemID] <= 0) return SendClientMessage(playerid, COLOR_GREY, "Нет наркотика в сейфе.");
+                    SPD(playerid, 602, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять наркотиков из сейф ?", "Выбрать", "Отмена");
+                }
+            case 1: SPD(playerid, 601, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить наркотика в сейф?", "Выбрать", "Отмена");
+            }
+            return 1;
+        }
+    case 601://положить метал
+        {
+            if(!response) return 1;
+            new bouse = PI[playerid][pPhousekey], itemID = GetPVarInt(playerid, "DrugsMenuDialog");
+            if(PI[playerid][p_drugs][itemID] < strval(inputtext)) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько наркотика.");
+            if(!strval(inputtext)) return SPD(playerid, 601, DIALOG_STYLE_INPUT, "Положить","Введите сколько хотите положить наркотика в сейф ?", "Выбрать", "Отмена");
+            if(strval(inputtext) > 100 || strval(inputtext) < 0) return SPD(playerid, 601, DIALOG_STYLE_INPUT, "Положить","Нельзя меньше 1 и больше 100", "Выбрать", "Отмена");
+            PI[playerid][p_drugs][itemID] -= strval(inputtext);
+            HouseInfo[bouse][hdrugs][itemID] += strval(inputtext);
+            SendMes(playerid,0x29FF00AA,"Вы положили в сейф наркотик: %s (%d грамм). Теперь в сейфе: %d грамм.",Drugs[itemID+1][d_name],strval(inputtext),HouseInfo[bouse][hdrugs][itemID]);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 602://взять метал
+        {
+            if(!response) return 1;
+            new bouse = PI[playerid][pPhousekey], itemID = GetPVarInt(playerid, "DrugsMenuDialog");
+            if(HouseInfo[bouse][hdrugs][itemID] < strval(inputtext)) return SendClientMessage(playerid, COLOR_GREY, "В сейфе нет столько наркотика!");
+            if(!strval(inputtext)) return SPD(playerid, 602, DIALOG_STYLE_INPUT, "Взять","Введите сколько хотите взять наркотика из сейфа?", "Выбрать", "Отмена");
+            if(strval(inputtext) > 100 || strval(inputtext) < 0) return SPD(playerid, 602, DIALOG_STYLE_INPUT, "Взять","Нельзя меньше 1 и больше 100", "Выбрать", "Отмена");
+            PI[playerid][p_drugs][itemID] += strval(inputtext);
+            HouseInfo[bouse][hdrugs][itemID] -= strval(inputtext);
+            SendMes(playerid,0x29FF00AA,"Вы взяли с сейфа наркотик: %s (%d грамм). Теперь в сейфе: %d грамм.",Drugs[itemID+1][d_name],strval(inputtext),HouseInfo[bouse][hdrugs][itemID]);
+            SaveHouse(PI[playerid][pPhousekey]);
+            return 1;
+        }
+    case 3944://заселение
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: ShowPlayerDialog(playerid,3945, DIALOG_STYLE_INPUT, "{dba002}Прописка","Введите [ID] человека\n которого хотите прописать в вашем доме", "Прописать", "Отмена");
+            case 1: ShowPlayerDialog(playerid,3946, DIALOG_STYLE_INPUT, "{dba002}Выписка","Введите [ID] человека\n которого хотите прописать в вашем доме", "Выписать", "Отмена");
+            }
+        }
+    case 3945:
+        {
+            if(!response) return 1;
+            new ids = strval(inputtext);
+            if(!IsPlayerConnected(ids) || ids == INVALID_PLAYER_ID || ids == playerid) return SendClientMessage(playerid, COLOR_GREY, "[Ошибка] Человек не найден!");
+            if(PI[ids][pPhousekey] != 255 || PI[ids][pHomez] != 255) return SendClientMessage(playerid, COLOR_RED, "У этого человека есть свой дом или он где-то уже прописан");
+            if(!ProxDetectorS(5.0, playerid, ids)) return SendClientMessage(playerid,COLOR_GREY,"Игрок не рядом с вами");
+            format(stringer, sizeof(stringer), "%s предлагает вам подселится к нему в дом.\nВы согласны?",PI[playerid][pNames]);
+            SPD(ids, 3949, 0, "Подселение в доме", stringer, "Да", "Нет");
+            format(stringer1,sizeof(stringer1),"Вы предложили %s подселится к вам домой",PI[ids][pNames]);
+            SendClientMessage(playerid,0x29FF00AA,stringer1);
+            SetPVarInt(ids, "PodPiska", playerid);
+            return 1;
+        }
+    case 3946:
+        {
+            if(!response) return 1;
+            new ids = strval(inputtext);
+            if(!IsPlayerConnected(ids) || ids == INVALID_PLAYER_ID || ids == playerid) return   SendClientMessage(playerid, COLOR_GREY, "[Ошибка] Человек не найден!");
+            if(PI[ids][pHomez] != PI[playerid][pPhousekey]) return SendClientMessage(playerid, COLOR_RED, "Этот человек тут не прописан");
+            PI[ids][pHomez] = 255;
+            format(stringer1,sizeof(stringer1), "Вы выписали %s из своего дома",PI[ids][pNames]);
+            SendClientMessage(playerid, COLOR_RED, stringer1);
+            format(stringer1,sizeof(stringer1), "Вас выписал хозяин дома %s",PI[playerid][pNames]);
+            SendClientMessage(ids, COLOR_RED, stringer1);
+            return 1;
+        }
+    case 3949:
+        {
+            if(!response) return 1;
+            PI[playerid][pHomez] = PI[GetPVarInt(playerid,"PodPiska")][pPhousekey];
+            format(stringer1,sizeof(stringer1), "Вы прописали игрока %s в своем доме.",PI[playerid][pNames]);
+            SendClientMessage(GetPVarInt(playerid,"PodPiska"), COLOR_RED, stringer1);
+            format(stringer1,sizeof(stringer1), "Вас прописал %s в своём доме.",PI[GetPVarInt(playerid,"PodPiska")][pNames]);
+            SendClientMessage(playerid, COLOR_RED, stringer1);
+            DeletePVar(playerid, "PodPiska");
+        }
+    case 5033:
+        {
+            new house = PI[playerid][pPhousekey];
+            if(!response || house == 255) return 1;
+            HouseInfo[house][hHel] = 0;
+            HouseInfo[house][hLock] = 1;
+            HouseInfo[house][hOwned] = 0;
+            strmid(HouseInfo[house][hOwner], "The State", 0, strlen("The State"), 255);
+            GiveMoney(playerid, HouseInfo[house][hValue]);
+            format(stringer, sizeof(stringer), "Дом продан за %d руб.", HouseInfo[house][hValue]);
+            SendClientMessage(playerid, COLOR_WHITE, stringer);
+            foreach(Player,i)
+            {
+                if(PI[i][pHomez] == PI[playerid][pPhousekey])
+                {
+                    PI[i][pHomez] = 255;
+                    SendClientMessage(i, COLOR_LIGHTRED, "Дом в котором вы были прописаны продан его владельцем.");
+                    SendClientMessage(i, COLOR_LIGHTRED, "Вам была выдана компенсация от государства за потерю жилья. В размере - 1.000.000 руб.");
+                    PI[playerid][pCash] += 1000000;
+                }
+            }
+            mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pHomez` = '255' WHERE `pHomez` = '%d'",house);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+            BuyHouse(house);
+            SaveHouse(house);
+            HouseInfo[house][hRobhouse] = false;
+            PI[playerid][pPhousekey] = 255;
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pPhousekey` = '255' WHERE `pID` = '%d'",PI[playerid][pID]);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+            return 1;
+        }
+    case 9979:
+        {
+            if(response)
+            {
+                if(PI[playerid][pJob] != 14)
+                {
+                    SendClientMessage(playerid, COLOR_RED, "Вы устроились на работу боксёра. (( /mm> команды сервера ))");
+                    PI[playerid][pJob] = 14;
+                }
+                else SendClientMessage(playerid, COLOR_RED, "Вы уже работаете на работе боксёра.");
+            }
+        }
+    case 9678:
+        {
+            if(response)
+            {
+                GiveWeapon(playerid, 3, 1);
+                GiveWeapon(playerid, 24, 49);
+                GiveWeapon(playerid, 29, 210);
+                GiveWeapon(playerid, 17, 1);
+                SetPlayerHealth(playerid, 100);
+                SetPlayerArmour(playerid, 120);
+                PI[playerid][pGunlspdTime] = gettime() + 60;
+                PI[playerid][pSatiety] = 100;
+                SendClientMessage(playerid, COLOR_GREEN,"Выдано:   Дубинка, Усовершенствованная Броня, Desert Eagle(6 Обойм), MP5 (6 обойм), 1 дымовая шашка");//Любимый цвет
+                Police +=1;
+            }
+            else
+            {
+                GiveWeapon(playerid, 3, 1);
+                GiveWeapon(playerid, 23, 102);
+                GiveWeapon(playerid, 25, 50);
+                GiveWeapon(playerid, 17, 1);
+                SetPlayerHealth(playerid, 100);
+                SetPlayerArmour(playerid, 120);
+                PI[playerid][pGunlspdTime] = gettime() + 60;
+                PI[playerid][pSatiety] = 100;
+                SendClientMessage(playerid, COLOR_GREEN,"Выдано:   Дубинка, Усовершенствованная Броня, SDPistol(6 Обойм), Shotgun (50 Патронов), 1 дымовая шашка");//Любимый цвет
+                Police +=1;
+            }
+        }
+    case 19:
+        {
+            if(response)
+            {
+                if(PI[playerid][pMember] != 0) return SendClientMessage(playerid,COLOR_GRAD1,"Вы состоите во фракции");
+                if(PI[playerid][pJob] == 7) return SendClientMessage(playerid,COLOR_GRAD1,"Вы уже устроились");
+                SetPlayerSkinEx(playerid,27);
+                PI[playerid][pJob] = 7;
+                SendClientMessage(playerid,COLOR_GREEN,"Принимайте заказы от заказчиков, и зарабатывайте деньги");
+                SendClientMessage(playerid,COLOR_WHITE,"Более подробно о работе можно узнать в INFO");
+            }
+            else
+            {
+                if(PI[playerid][pJob] == 0) return SendClientMessage(playerid,COLOR_GRAD1,"Вы не брали работу");
+                SendClientMessage(playerid,COLOR_YELLOW,"::: Рабочий день завершён :::");
+                SetPlayerSkinEx(playerid,PI[playerid][pChar]);
+                PI[playerid][pJob] = 0;
+                return 1;
+            }
+        }
+    case 3725:
+        {
+            if(response)
+            {
+                if(listitem == 0)
+                {
+                    if(FD(playerid))
+                    {
+                        new i;
+                        for(new h = 0; h < sizeof(HouseInfo); h++)
+                        {
+                            if(HouseInfo[h][hOwned] == 1)
+                            {
+                                strmid(HouseInfo[h][hOwner], "The State", 0, strlen("The State"), 255);
+                                HouseInfo[h][hHel] = 0;
+                                HouseInfo[h][hLock] = 1;
+                                HouseInfo[h][hOwned] = 0;
+                                HouseInfo[h][hTakings] = 0;
+                                BuyHouse(h);
+                                SaveHouse(h);

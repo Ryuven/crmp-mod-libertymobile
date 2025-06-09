@@ -1,0 +1,1000 @@
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color3Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color3Pu(playerid);
+public Color3Pu(playerid)
+{
+    SetPlayerColor(playerid, 0xffff00FF);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color4Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color4Pu(playerid);
+public Color4Pu(playerid)
+{
+    SetPlayerColor(playerid, 0x00ff00AA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color5Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color5Pu(playerid);
+public Color5Pu(playerid)
+{
+    SetPlayerColor(playerid, 0x00ffffAA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color6Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color6Pu(playerid);
+public Color6Pu(playerid)
+{
+    SetPlayerColor(playerid, 0xceff31AA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color7Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color7Pu(playerid);
+public Color7Pu(playerid)
+{
+    SetPlayerColor(playerid, 0xff00ffAA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color8Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color8Pu(playerid);
+public Color8Pu(playerid)
+{
+    SetPlayerColor(playerid, 0x0000ffAA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color9Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color9Pu(playerid);
+public Color9Pu(playerid)
+{
+    SetPlayerColor(playerid, 0x00000000);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color10Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color10Pu(playerid);
+public Color10Pu(playerid)
+{
+    SetPlayerColor(playerid, 0xcecbceAA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color11Pu" , 2500 , false, "i" , playerid);
+}
+
+
+forward Color11Pu(playerid);
+public Color11Pu(playerid)
+{
+    SetPlayerColor(playerid, 0x9c00ffAA);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color1Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+stock formatInt(amount, delimiter[2] = ",")
+{
+    new int_string[15];
+    format(int_string, sizeof(int_string), "%d", amount >= 0 ? amount : -amount);
+
+    new value = strlen(int_string);
+    switch(value)
+    {
+        case 4..6:
+            strins(int_string, delimiter, value - 3, 1);
+        case 7..9:
+            strins(int_string, delimiter, value - 3, 1),
+            strins(int_string, delimiter, value - 6, 1);
+        case 10..12:
+            strins(int_string, delimiter, value - 3, 1),
+            strins(int_string, delimiter, value - 6, 1),
+            strins(int_string, delimiter, value - 9, 1);
+    }
+
+    if(amount < 0) strins(int_string, "-", 0);
+
+    return int_string;
+}
+
+/*
+formatInt(intVariable, iThousandSeparator = ',', iCurrencyChar = " руб.")
+{
+    static
+    s_szReturn[ 32 ],
+    s_szThousandSeparator[ 2 ] = { ' ', EOS },
+    s_szCurrencyChar[ 2 ] = { ' ', EOS },
+    s_iVariableLen,
+    s_iChar,
+    s_iSepPos,
+    bool:s_isNegative
+    ;
+
+    format( s_szReturn, sizeof( s_szReturn ), "%d", intVariable );
+
+    if(s_szReturn[0] == '-')
+    s_isNegative = true;
+    else
+    s_isNegative = false;
+
+    s_iVariableLen = strlen( s_szReturn );
+
+    if ( s_iVariableLen >= 4 && iThousandSeparator)
+    {
+        s_szThousandSeparator[ 0 ] = iThousandSeparator;
+
+        s_iChar = s_iVariableLen;
+        s_iSepPos = 0;
+
+        while ( --s_iChar > _:s_isNegative )
+        {
+            if ( ++s_iSepPos == 3 )
+            {
+                strins( s_szReturn, s_szThousandSeparator, s_iChar );
+
+                s_iSepPos = 0;
+            }
+        }
+    }
+    if(iCurrencyChar) {
+        s_szCurrencyChar[ 0 ] = iCurrencyChar;
+        strins( s_szReturn, _:s_isNegative, s_szCurrencyChar );
+    }
+    return s_szReturn;
+}
+*/
+stock GiveItem(playerid,item)
+{
+    new str[12];
+    format(str,sizeof(str), "%d", item);
+    SendClientMessage(playerid, COLOR_WHITE, str);
+    /*
+    new skin = GetPlayerSkin(playerid);
+    switch(item)
+    {
+        case 19042..19053: SetAttachToSkin(playerid, 15, skin, item);
+        case 19421..19424://Наушники
+        {
+            SetAttachToSkin(playerid, 14, skin, item);
+        }
+        case 18911..18920: //банданы
+        {
+            SetAttachToSkin(playerid, 13, skin, item);
+        }
+        case 19011..19019,19024,19027,19028,19029,19022,19035,19031,19032,19033://Очки
+        {
+            SetAttachToSkin(playerid, 12, skin, item);
+        }
+        case 19069,19068,19067://Шапки
+        {
+            SetAttachToSkin(playerid, 1, skin, item);
+        }
+        case 19554: //Шапка баллас
+        {
+            SetAttachToSkin(playerid, 3, skin, item);
+        }
+        case 18953,18954: //Тёплые шапки
+        {
+            SetAttachToSkin(playerid, 2, skin, item);
+        }
+        case 18968,18967,18969://Панамки
+        {
+            SetAttachToSkin(playerid, 4, skin, item);
+        }
+        case 18955,18956,18957,18959://Кепки на зад
+        {
+            SetAttachToSkin(playerid, 5, skin, item);
+        }
+        case 18926,18927,18928,18929,18930,18931,18932,18933: //Кепки наперёд
+        {
+            SetAttachToSkin(playerid, 6, skin, item);
+        }
+        case 19094..19120,19528,19521,19520://Каски
+        {
+            SetAttachToSkin(playerid, 9, skin, item);
+        }
+        case 19519://Парики 1
+        {
+            SetAttachToSkin(playerid, 10, skin, item);
+        }
+        case 19274://Парики 2
+        {
+            SetAttachToSkin(playerid, 11, skin, item);
+        }
+        case 18925,18922,18923,18924,18921: //Береты
+        {
+            SetAttachToSkin(playerid, 8, skin, item);
+        }
+        case 18947,18948,18949,18950,18951: //Шляпы
+        {
+            SetAttachToSkin(playerid, 7, skin, item);
+        }
+        //Рюкзаки
+        case 3026:
+        {
+            SetAttachToSkin(playerid, 16, skin, item);
+        }
+        case 371:
+        {
+            SetAttachToSkin(playerid, 17, skin, item);
+        }
+        case 19559:
+        {
+            SetAttachToSkin(playerid, 18, skin, item);
+        }
+        //Вип
+        //Шляпы 1
+        case 18970, 18973, 18972, 18971:
+        {
+            SetAttachToSkin(playerid, 19, skin, item);
+        }
+        //Шляпы 2
+        case 19487, 19352:
+        {
+            SetAttachToSkin(playerid, 20, skin, item);
+        }
+        //Банданы на голову
+        case 18910, 18909, 18908, 18907, 18906,18891..18905:
+        {
+            SetAttachToSkin(playerid, 21, skin, item);
+        }
+        //Усы
+        case 19351:
+        {
+            SetAttachToSkin(playerid, 22, skin, item);
+        }
+        //Усы
+        case 19350:
+        {
+            SetAttachToSkin(playerid, 24, skin, item);
+        }
+        //Гитары
+        case 19319, 19318, 19317:
+        {
+            SetAttachToSkin(playerid, 23, skin, item);
+        }
+        case    19064..19066://шапки новогоднии
+        {
+            SetAttachToSkin(playerid, 25, skin, item);
+        }
+        case 19085://повязка
+        {
+            SetAttachToSkin(playerid, 26, skin, item);
+        }
+        case 19054..19058://новогодний рюкзак
+        {
+            SetAttachToSkin(playerid, 27, skin, item);
+        }
+        case 881://Ёлка
+        {
+            SetAttachToSkin(playerid, 28, skin, item);
+        }
+        case 19624: //Чимодан
+        {
+            SetAttachToSkin(playerid, 29, skin, item);
+        }
+    }
+    */
+    return 1;
+}
+
+stock SetAttachToSkin(playerid, type, skinid, setobject)
+{
+    if(type == 1)
+    {
+        switch (skinid)// расные шапки
+        {
+        case 1: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.016000,-0.002001, 0.000000,90.000000,89.900016, 1.000000,1.000000,1.000000);
+        case 3: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.016000,-0.002001, 0.000000,90.000000,89.900016, 1.217999,1.187000,1.000000);
+        case 4: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149998,0.016000,-0.002001, 0.000000,90.000000,89.900016, 1.217999,1.187000,1.000000);
+        case 5: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149998,0.016000,-0.002001, 0.000000,90.000000,89.900016, 1.217999,1.187000,1.000000);
+        case 7: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138998,0.016000,-0.002001, 0.000000,90.000000,89.900016, 1.217999,1.033000,1.000000);
+        case 9: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.004999,0.000998, 0.000000,90.000000,95.899993, 1.000000,1.000000,1.000000);
+        case 10: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.098997,0.000999,0.000998, 0.000000,90.000000,95.899993, 1.175000,1.000000,1.000000);
+        case 11: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115997,0.006999,0.000998, 0.000000,90.000000,95.899993, 1.092000,1.000000,1.000000);
+        case 12: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115997,-0.006000,0.000998, 0.000000,90.000000,95.899993, 1.137000,1.050999,1.000000);
+        case 14: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,0.021999,0.001998, 0.000000,90.000000,95.899993, 1.137000,1.091999,1.000000);
+        case 15: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104998,-0.013999,0.001998, 0.000000,90.000000,95.899993, 1.137000,1.091999,1.000000);
+        case 17: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.017000,0.001998, 0.000000,90.000000,95.899993, 1.137000,1.091999,1.000000);
+        case 18: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123997,-0.000999,0.001998, 0.000000,90.000000,95.899993, 1.137000,1.091999,1.000000);
+        case 20: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138998,-0.000999,0.001998, 0.000000,90.000000,95.899993, 1.137000,1.091999,1.000000);
+        case 21: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,-0.000999,0.001998, 0.000000,90.000000,95.899993, 1.137000,1.091999,1.000000);
+        case 25: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,0.017000,0.001998, 0.000000,90.000000,95.899993, 0.987000,1.091999,0.866999);
+        case 26: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,0.017000,0.001998, 0.000000,90.000000,95.899993, 1.122000,1.091999,0.866999);
+        case 28: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.021000,0.001998, 0.000000,90.000000,95.899993, 1.181999,1.091999,0.866999);
+        case 30: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130997,0.017000,-0.003001, 0.000000,90.000000,95.899993, 1.181999,1.091999,0.866999);
+        case 39: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104997,0.006000,-0.003001, 0.000000,90.000000,95.899993, 0.981000,1.091999,0.866999);
+        case 40: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118997,0.006000,-0.003001, 0.000000,90.000000,95.899993, 0.981000,1.091999,0.866999);
+        case 43: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.074997,0.006000,-0.003001, 0.000000,90.000000,95.899993, 0.981000,1.091999,0.866999);
+        case 44: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.103997,0.027000,-0.003001, 0.000000,90.000000,95.899993, 0.981000,1.091999,0.866999);
+        case 45: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.103997,0.009000,-0.003001, 0.000000,90.000000,95.899993, 1.071000,1.091999,0.866999);
+        case 46: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129997,0.022000,-0.003001, 0.000000,90.000000,95.899993, 1.071000,1.091999,0.866999);
+        case 47: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129997,0.022000,-0.003001, 0.000000,90.000000,95.899993, 1.125999,1.091999,0.866999);
+        case 48: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.147997,-0.002999,-0.003001, 0.000000,90.000000,95.899993, 1.125999,1.091999,0.866999);
+        case 49: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110997,0.024000,-0.003001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 54: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,0.035999,-0.003001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 55: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,-0.014000,-0.003001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 56: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,-0.014000,-0.003001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 57: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.158998,0.014999,-0.003001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 58: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106998,0.005999,-0.002001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 59: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.145998,0.007999,-0.002001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 60: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132998,0.002999,-0.002001, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 62: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132998,0.012999,0.008999, 0.000000,90.000000,95.899993, 0.964999,1.091999,0.866999);
+        case 63: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.000999,0.004999, 0.000000,90.000000,95.899993, 1.104999,1.091999,0.866999);
+        case 64: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.007999,0.004999, 0.000000,90.000000,95.899993, 1.104999,1.091999,0.866999);
+        case 66: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.025999,0.004999, 0.000000,90.000000,95.899993, 1.104999,1.091999,0.866999);
+        case 68: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.024999,0.004999, 0.000000,90.000000,95.899993, 0.958999,1.091999,0.866999);
+        case 69: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,-0.004000,0.004999, 0.000000,90.000000,95.899993, 0.958999,1.091999,0.866999);
+        case 70: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.019999,0.004999, 0.000000,90.000000,95.899993, 0.958999,1.091999,0.866999);
+        case 72: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.005999,0.004999, 0.000000,90.000000,95.899993, 0.958999,1.091999,0.866999);
+        case 75: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115997,0.015000,-0.000001, 0.000000,90.000000,95.400001, 1.151999,1.069000,1.000000);
+        case 76: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115997,0.003000,-0.000001, 0.000000,90.000000,95.400001, 1.151999,1.069000,1.000000);
+        case 82: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.034000,-0.000001, 0.000000,90.000000,95.400001, 1.151999,1.069000,1.000000);
+        case 83: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.016000,-0.000001, 0.000000,90.000000,95.400001, 1.151999,1.069000,1.000000);
+        case 84: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.157998,0.016000,-0.000001, 0.000000,90.000000,95.400001, 1.151999,1.069000,1.000000);
+        case 85: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.157998,0.016000,-0.010001, 0.000000,90.000000,95.400001, 1.151999,1.240999,1.000000);
+        case 86: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101998,0.016000,-0.004000, 0.000000,90.000000,95.400001, 1.151999,1.048999,1.000000);
+        case 88: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101998,0.027000,-0.004000, 0.000000,90.000000,95.400001, 1.151999,1.048999,1.000000);
+        case 89: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.007000,0.005999, 0.000000,90.000000,95.400001, 1.151999,1.048999,1.000000);
+        case 90: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.007000,0.005999, 0.000000,90.000000,95.400001, 1.151999,1.048999,1.000000);
+        case 91: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,-0.001999,0.005999, 0.000000,90.000000,95.400001, 1.151999,1.048999,1.000000);
+        case 95: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.100998,-0.003999,0.005999, 0.000000,90.000000,95.400001, 0.967999,1.048999,1.000000);
+        case 96: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.005000,0.005999, 0.000000,90.000000,95.400001, 0.967999,1.048999,1.000000);
+        case 97: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,-0.011999,0.005999, 0.000000,90.000000,95.400001, 0.967999,1.048999,1.000000);
+        case 98: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122997,0.032000,0.005999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 100: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.009000,0.005999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 101: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143998,0.009000,0.005999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 102: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.002000,0.003999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 103: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.002000,0.003999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 105: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.002000,0.003999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 106: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.002000,0.003999, 0.000000,90.000000,95.400001, 1.117999,1.048999,1.000000);
+        case 111: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.002000,-0.002000, 0.000000,90.000000,95.400001, 0.980999,1.048999,1.000000);
+        case 112: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101997,0.002000,-0.002000, 0.000000,90.000000,95.400001, 0.980999,1.048999,1.000000);
+        case 113: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137997,0.002000,0.002999, 0.000000,90.000000,95.400001, 0.980999,1.048999,1.000000);
+        case 117: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114997,0.012000,0.003999, 0.000000,90.000000,95.400001, 0.980999,1.048999,1.000000);
+        case 119: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,0.019000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.048999,1.000000);
+        case 120: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.004000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.048999,1.000000);
+        case 121: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.004000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.147000,1.000000);
+        case 122: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118997,0.010000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.147000,1.000000);
+        case 123: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.007000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.147000,1.000000);
+        case 124: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.007000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.147000,1.000000);
+        case 125: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129997,0.000000,-0.000001, 0.000000,90.000000,95.400001, 0.980999,1.147000,1.000000);
+        case 126: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,-0.003999,0.000999, 0.000000,90.000000,95.400001, 1.009999,1.147000,1.000000);
+        case 127: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,-0.003999,0.000999, 0.000000,90.000000,95.400001, 1.009999,1.147000,1.000000);
+        case 128: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.026000,-0.010001, 0.000000,90.000000,95.400001, 1.009999,1.147000,1.000000);
+        case 129: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.100998,0.016000,-0.004000, 0.000000,90.000000,95.400001, 1.009999,0.949999,1.000000);
+        case 130: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.065998,0.019000,-0.001000, 0.000000,90.000000,95.400001, 1.009999,0.949999,1.000000);
+        case 132: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.035998,0.005000,-0.001000, 0.000000,90.000000,95.400001, 1.009999,0.949999,1.000000);
+        case 138: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.005000,-0.001000, 0.000000,90.000000,95.400001, 1.009999,0.949999,1.000000);
+        case 144: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.173998,-0.007999,-0.001000, 0.000000,90.000000,95.400001, 1.009999,1.087000,1.000000);
+        case 147: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,-0.001999,-0.001000, 0.000000,90.000000,95.400001, 1.009999,1.087000,1.000000);
+        case 148: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,-0.001999,-0.001000, 0.000000,90.000000,95.400001, 1.009999,1.087000,1.000000);
+        case 151: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,-0.004999,0.010999, 0.000000,90.000000,95.400001, 1.176999,1.087000,1.000000);
+        case 154: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.109998,0.009000,0.000999, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 156: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,-0.002999,0.005999, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 157: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.012000,0.005999, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 160: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.012000,0.005999, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 163: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.012000,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 164: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.012000,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 165: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.012000,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 166: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.012000,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 169: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,-0.007999,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 170: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.011000,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 171: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133998,0.008000,-0.000000, 0.000000,90.000000,95.400001, 1.028999,1.087000,1.000000);
+        case 176: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133998,0.004000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 177: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.182998,-0.009999,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 179: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.000000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 180: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,-0.003999,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 182: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.026000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 184: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120998,0.014000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 185: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136998,0.004000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 186: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136998,0.004000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 187: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110998,-0.006999,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 188: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110998,0.006000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 189: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136998,0.006000,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 190: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,-0.001999,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 191: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,-0.001999,-0.000000, 0.000000,90.000000,95.400001, 1.062999,1.087000,1.000000);
+        case 192: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.004999,0.002998, 0.000000,90.000000,96.400009, 1.207000,1.000000,1.000000);
+        case 193: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.004999,0.002998, 0.000000,90.000000,96.400009, 1.207000,1.000000,1.000000);
+        case 194: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.004999,0.002998, 0.000000,90.000000,96.400009, 1.207000,1.000000,1.000000);
+        case 200: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137998,0.004999,0.002998, 0.000000,90.000000,96.400009, 1.207000,1.000000,1.000000);
+        case 210: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101998,0.001000,0.002998, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 213: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.001000,-0.001001, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 217: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.145998,0.004000,-0.009001, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 221: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,-0.021999,0.001999, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 222: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,-0.021999,0.001999, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 223: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.158998,0.011000,-0.004000, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 227: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142997,0.015000,0.000999, 0.000000,90.000000,96.400009, 0.946999,1.000000,1.000000);
+        case 228: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150997,0.015000,0.000999, 0.000000,90.000000,96.400009, 1.231999,1.000000,1.000000);
+        case 229: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101998,0.005000,0.000999, 0.000000,90.000000,96.400009, 0.948999,1.000000,1.000000);
+        case 234: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,-0.001999,0.001999, 0.000000,90.000000,96.400009, 0.948999,1.000000,1.000000);
+        case 235: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.076998,-0.001999,0.001999, 0.000000,90.000000,96.400009, 0.948999,1.000000,1.000000);
+        case 236: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.095998,0.010000,0.001999, 0.000000,90.000000,96.400009, 0.948999,1.000000,1.000000);
+        case 240: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.010000,0.001999, 0.000000,90.000000,96.400009, 1.099999,1.000000,1.000000);
+        case 250: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.119998,0.010000,0.001999, 0.000000,90.000000,96.400009, 1.099999,1.000000,1.000000);
+        case 252: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.010000,0.005999, 0.000000,90.000000,96.400009, 1.099999,1.000000,1.000000);
+        case 258: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.003000,0.005999, 0.000000,90.000000,96.400009, 1.099999,1.000000,1.000000);
+        case 259: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.003000,0.005999, 0.000000,90.000000,96.400009, 1.099999,1.000000,1.000000);
+        case 262: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.095998,0.022000,-0.003000, 0.000000,90.000000,96.400009, 0.964999,1.000000,1.000000);
+        case 265: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,0.010000,-0.001000, 0.000000,90.000000,96.400009, 0.987999,1.079000,1.000000);
+        case 266: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,0.010000,-0.001000, 0.000000,90.000000,96.400009, 0.987999,1.079000,1.000000);
+        case 267: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,-0.009999,-0.001000, 0.000000,90.000000,96.400009, 0.987999,1.079000,1.000000);
+        case 268: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,0.004000,-0.001000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 272: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138998,0.004000,-0.005000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 273: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.100998,0.004000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 274: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.025000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 275: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.025000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 276: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.025000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 280: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.025000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 281: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.025000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 282: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.025000,-0.003000, 0.000000,90.000000,96.400009, 0.987999,1.159999,1.000000);
+        case 286: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.003000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 290: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.013000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 291: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141998,0.015000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 292: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.009000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 293: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.162998,0.009000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 294: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.009000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 295: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.119997,0.009000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 296: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137998,-0.005999,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 297: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.145998,0.007000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 298: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.145998,0.007000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 299: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150998,0.007000,0.001999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 300: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.007000,0.007999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 301: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.007000,0.007999, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 302: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.014000,-0.004000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 303: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.014000,-0.004000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 304: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.014000,-0.004000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 305: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.014000,-0.004000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 310: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.003000,-0.004000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        case 311: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,0.003000,-0.004000, 0.000000,90.000000,96.400009, 1.058999,1.159999,1.000000);
+        default: SendClientMessage(playerid,COLOR_GREY,"Аксессуар шапка, не будет отображаться на этом скине!");
+        }
+    }
+    else if(type == 2)
+    {
+        switch (skinid)//“Єплые шапки
+        {
+        case 1: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,0.016000,-0.002001, 0.000000,-0.799996,-8.600006, 1.000000,1.000000,1.050999);
+        case 3: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.022000,0.008999, 2.000010,-5.95521,5.400008, 1.000000,1.042000,1.079000);
+        case 4: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.169998,0.018000,-0.000001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 5: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.169998,0.018000,-0.000001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 7: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141997,0.032000,-0.004001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 9: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113997,0.017000,-0.004001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 10: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106997,0.017000,-0.004001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 11: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106997,0.017000,-0.004001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 12: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106997,0.007000,-0.002001, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.079000);
+        case 14: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,0.032000,0.003998, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.146000);
+        case 15: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.098997,0.008000,0.003998, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.146000);
+        case 17: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120997,0.020000,0.003998, 2.000010,2.000011,1.000008, 1.000000,1.042000,1.146000);
+        case 18: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.097998,0.016000,0.003998, 2.000010,2.000011,-17.799989, 1.000000,1.042000,1.146000);
+        case 20: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.004000,0.000998, 2.000010,2.000011,-17.799989, 1.000000,1.042000,1.146000);
+        case 21: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.116998,0.014000,-0.000001, 2.000010,2.000011,-17.799989, 1.000000,1.042000,1.146000);
+        case 25: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.023000,-0.000001, 2.000010,2.000011,-17.799989, 1.000000,1.042000,1.146000);
+        case 26: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.026000,-0.000001, 2.000010,2.000011,-17.799989, 1.000000,1.131000,1.206000);
+        case 30: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.026000,-0.000001, 2.000010,2.000011,-17.799989, 1.000000,1.131000,1.206000);
+        case 40: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106998,0.005000,-0.000001, 2.000010,2.000011,-17.799989, 1.000000,1.052000,1.206000);
+        case 43: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.063998,0.015000,-0.000001, 2.000010,2.000011,-17.799989, 1.000000,1.052000,1.206000);
+        case 44: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.100998,0.027000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.909000,1.206000);
+        case 45: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.100998,0.005000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.974000,1.206000);
+        case 46: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.040000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 47: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.017000,-0.003000, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 48: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125998,0.004000,-0.003000, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 49: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.097998,0.020000,-0.003000, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 55: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104998,-0.000999,0.000999, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 56: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104998,-0.000999,0.000999, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 57: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.147998,0.025000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,1.070000,1.206000);
+        case 58: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101998,0.014000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.953000,0.969000);
+        case 59: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.152998,0.006000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.953000,0.969000);
+        case 60: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.006000,-0.004000, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 62: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.025000,0.005999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 66: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.023000,0.005999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 67: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.023000,0.005999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 68: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.030000,-0.000000, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 70: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.024000,0.006999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 72: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.024000,0.006999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 82: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.173998,0.024000,0.006999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 83: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.173998,0.024000,0.006999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 84: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.173998,0.024000,0.006999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 86: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106998,0.001000,0.006999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 95: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106998,0.001000,0.003999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 96: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114998,0.020000,0.003999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 97: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114998,0.010000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 98: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.029000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 100: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133998,0.009000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 101: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133998,0.009000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 106: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.009000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 108: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.009000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 109: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.009000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 110: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.009000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 111: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121998,0.018000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 112: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.109998,0.013000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 113: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,0.013000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 114: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.146998,0.005000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 117: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114998,0.020000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 118: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114998,0.020000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 119: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121998,0.020000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 120: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.000000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 121: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.000000,0.000999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.084000);
+        case 123: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,0.005000,-0.003000, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 124: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,0.013000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 125: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125998,0.021000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 126: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.001000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 127: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.014000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 128: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,0.025000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 147: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,-0.000999,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 156: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,-0.009999,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 160: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.024000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 162: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132998,0.017000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 163: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.011000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 164: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.011000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 165: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.018000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 166: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.018000,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 169: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,-0.003999,0.002999, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 170: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.017000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,0.967000,1.166000);
+        case 171: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.009000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 176: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.005000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 179: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.009000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 180: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.005000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 182: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104998,0.018000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 183: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104998,0.018000,-0.001000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 184: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104998,0.018000,-0.003000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 185: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.018000,-0.002000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 186: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.000000,-0.002000, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 187: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.103998,0.005000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 188: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.103998,0.011000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 189: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.003000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 190: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.001000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 191: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.001000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 192: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.007000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 193: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.007000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 194: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.008000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 199: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.116998,0.008000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 200: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.008000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,1.043000,1.166000);
+        case 206: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.020000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 208: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114998,0.012000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 210: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114998,0.004000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 213: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.010000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 217: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.021000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 218: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.015000,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 221: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,-0.012999,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 222: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150998,-0.017999,0.001999, 2.000010,2.000011,-17.799989, 1.000000,0.970000,1.166000);
+        case 223: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150998,0.014000,0.001999, 2.000010,2.000011,-26.199983, 1.000000,0.970000,1.166000);
+        case 226: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122998,0.003000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,0.970000,1.166000);
+        case 227: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143998,0.029000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,0.970000,1.166000);
+        case 228: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143998,0.023000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,1.132000,1.166000);
+        case 229: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.105998,0.011000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 234: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.105998,-0.002999,0.001999, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 235: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.073998,0.010000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 236: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.098998,0.010000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 240: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133998,0.015000,0.001999, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 243: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.091998,0.023000,0.001998, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 250: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.023000,-0.004001, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 252: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.005000,0.003998, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 258: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135998,0.019000,0.003998, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 259: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135998,0.010000,0.003998, 2.000010,2.000011,-10.499980, 1.000000,1.013000,1.166000);
+        case 262: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,0.027000,-0.002001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.000000);
+        case 265: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,0.015000,-0.002001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.000000);
+        case 266: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,0.013000,-0.002001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.000000);
+        case 267: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,0.007999,0.002998, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.000000);
+        case 268: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,0.007999,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 272: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 273: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.097998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 274: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 275: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 276: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 280: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 281: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 282: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 286: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 291: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 292: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.098998,0.019000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.000000,1.085999);
+        case 294: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136998,0.020000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.075999,1.085999);
+        case 295: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125998,0.020000,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.075999,1.085999);
+        case 296: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125998,0.003999,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.075999,1.085999);
+        case 297: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141998,0.003999,-0.001001, 0.000000,0.899997,-5.699998, 1.000000,1.075999,1.131999);
+        case 298: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122998,0.021000,-0.003001, 0.000000,0.899997,-5.699998, 1.000000,1.075999,1.131999);
+        case 299: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143998,0.030000,-0.003001, 0.000000,0.899997,-23.200000, 1.000000,1.075999,1.131999);
+        case 300: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.013000,-0.003001, 0.000000,0.899997,-7.599999, 1.000000,0.885999,1.131999);
+        case 301: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.013000,-0.003001, 0.000000,0.899997,-7.599999, 1.000000,0.885999,1.131999);
+        case 302: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.021000,-0.003001, 0.000000,0.899997,-7.599999, 1.000000,0.909999,1.131999);
+        case 303: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.021000,-0.000001, 0.000000,0.899997,-7.599999, 1.000000,0.909999,1.034999);
+        case 304: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.021000,-0.000001, 0.000000,0.899997,-7.599999, 1.000000,0.909999,1.034999);
+        case 305: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.021000,-0.000001, 0.000000,0.899997,-7.599999, 1.000000,0.909999,1.034999);
+        case 310: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.021000,-0.000001, 0.000000,0.899997,-7.599999, 1.000000,0.909999,1.034999);
+        case 311: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.021000,-0.000001, 0.000000,0.899997,-7.599999, 1.000000,0.909999,1.034999);
+        default: SendClientMessage(playerid,COLOR_GREY,"Аксессуар шапка, не будет отображаться на вашем скине!");
+        }
+    }
+    else if(type == 3)
+    {
+        switch (skinid)//Ўапки баллас
+        {
+        case 1: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.009999,0.001998, 0.400000,-3.699999,12.699994, 1.114999,1.000000,1.238999);
+        case 3: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.013000,0.004998, 0.400000,-3.699999,12.699994, 1.114999,1.245000,1.238999);
+        case 4: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.181997,0.000999,0.004998, 0.400000,-3.699999,12.699994, 1.114999,1.245000,1.238999);
+        case 5: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.181997,0.000999,0.004998, 0.400000,-3.699999,12.699994, 1.114999,1.245000,1.238999);
+        case 7: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154997,0.025000,0.004998, 0.400000,-3.699999,12.699994, 1.114999,1.245000,1.238999);
+        case 9: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,0.007999,0.004998, 0.400000,-3.699999,12.699994, 1.114999,1.245000,1.238999);
+        case 10: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,-0.000000,0.004998, 0.400000,-3.699999,12.699994, 1.114999,1.245000,1.238999);
+        case 11: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141997,-0.006000,0.004998, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.238999);
+        case 12: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141997,-0.025000,0.004998, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.238999);
+        case 14: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141997,0.011999,0.004999, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 15: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114997,-0.025000,0.004999, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 17: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.153997,0.005000,0.004999, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 18: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.114997,-0.003999,0.004999, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 20: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.165997,-0.014999,0.004999, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 21: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150997,-0.003999,0.000998, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 25: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135997,0.010000,0.006999, 0.400000,-3.699999,-0.400006, 1.114999,1.245000,1.297000);
+        case 26: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150997,0.004000,0.006999, 0.400000,-3.699999,-0.400006, 1.114999,1.344000,1.297000);
+        case 28: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134997,0.011000,-0.004001, 0.400000,-3.699999,-0.400006, 1.114999,1.344000,1.297000);
+        case 30: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134997,0.005000,-0.004001, 0.400000,-3.699999,-0.400006, 1.114999,1.344000,1.297000);
+        case 40: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134997,-0.018999,0.007999, 0.400000,-3.699999,-0.400006, 1.114999,1.344000,1.297000);
+        case 43: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.108997,-0.009000,0.007999, 0.400000,-3.699999,-0.400006, 1.114999,1.132000,1.297000);
+        case 44: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.108997,0.011999,0.007999, 0.400000,-3.699999,-0.400006, 1.114999,1.132000,1.297000);
+        case 45: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120997,-0.008000,0.007999, 0.400000,-3.699999,-0.400006, 1.114999,1.132000,1.297000);
+        case 46: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.152997,0.006999,0.007999, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 47: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.152997,0.000999,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 48: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.152997,-0.014000,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 49: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.109997,0.007999,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 55: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125997,-0.010000,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 56: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125997,-0.020000,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 57: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.157997,0.013999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 58: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110997,0.000999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.214000,1.367000);
+        case 59: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.164997,-0.002000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.311000,1.367000);
+        case 60: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,-0.002000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 66: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,0.004999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 67: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,0.003999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 68: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,0.017999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 69: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,-0.010000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 70: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,0.013999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 72: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,0.007999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 76: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,-0.016000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.367000);
+        case 82: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.195997,0.004999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.145000);
+        case 83: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.195997,-0.006000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.145000);
+        case 84: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.195997,-0.006000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.145000);
+        case 86: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,-0.012000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.164000,1.145000);
+        case 90: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,-0.001000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.356000,1.264000);
+        case 91: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,-0.015000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.356000,1.264000);
+        case 95: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,-0.023000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.137000,1.264000);
+        case 96: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,0.001999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.137000,1.264000);
+        case 97: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,-0.005000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.137000,1.264000);
+        case 98: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,0.012999,-0.002001, 0.400000,-3.699999,-0.400006, 1.114999,1.247000,1.264000);
+        case 100: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151997,-0.008000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.247000,1.264000);
+        case 101: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151997,-0.008000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.247000,1.264000);
+        case 106: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.163997,-0.008000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.247000,1.264000);
+        case 108: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.003000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.247000,1.264000);
+        case 109: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.003000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.356000,1.314000);
+        case 110: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.003000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.356000,1.314000);
+        case 111: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.003000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.108000,1.314000);
+        case 112: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133997,-0.003000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,0.987000,1.314000);
+        case 113: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.166997,-0.005000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 114: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.166997,-0.005000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 116: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.166997,-0.005000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 117: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121997,0.010999,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 118: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121997,0.010999,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 119: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,0.007999,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 120: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,0.003999,0.004999, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.314000);
+        case 121: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,0.003999,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.374000);
+        case 122: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126997,-0.000000,0.003998, 0.400000,-3.699999,-0.400006, 1.114999,1.204000,1.374000);
+        case 123: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143997,-0.002000,-0.000001, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 124: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143997,-0.002000,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 125: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122997,0.008999,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 126: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131997,0.000999,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 127: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131997,0.000999,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 128: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142997,0.007999,0.001998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 147: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123997,-0.011000,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 148: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123997,-0.010000,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.278000,1.374000);
+        case 151: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.147997,-0.019000,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.371001,1.374000);
+        case 154: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110997,-0.001000,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.207000,1.374000);
+        case 156: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.170997,-0.023000,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.207000,1.374000);
+        case 157: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,0.009999,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.207000,1.374000);
+        case 160: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,0.000999,0.005998, 0.400000,-3.699999,-0.400006, 1.114999,1.018000,1.294000);
+        case 162: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.003999,0.005998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.294000);
+        case 163: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.008999,0.005998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.294000);
+        case 164: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.005999,0.005998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.294000);
+        case 165: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.003999,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.352999);
+        case 166: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.003999,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.352999);
+        case 169: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,-0.014000,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.352999);
+        case 170: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.136997,0.000999,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.114001,1.352999);
+        case 171: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.141997,-0.005000,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 172: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151997,-0.009000,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 176: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151997,-0.009000,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 179: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151997,-0.004000,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 180: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151997,-0.010000,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 182: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121997,0.006999,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 183: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121997,0.001999,0.002998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 184: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121997,0.010999,-0.002001, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 185: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154997,-0.006000,0.000998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 186: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139997,-0.006000,0.004998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 187: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,-0.001000,0.004998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 188: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,-0.001000,0.004998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 189: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138997,-0.001000,0.004998, 0.400000,-3.699999,-0.400006, 1.188999,1.230001,1.352999);
+        case 191: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.158997,-0.007000,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.383001,1.428999);
+        case 192: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.158997,-0.012000,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.383001,1.428999);
+        case 193: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.158997,-0.012000,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.383001,1.428999);
+        case 194: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.158997,-0.012000,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.383001,1.428999);
+        case 200: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140997,-0.012000,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.383001,1.428999);
+        case 206: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140997,0.019999,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.071001,1.250999);
+        case 207: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,-0.002000,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.071001,1.250999);
+        case 210: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.003999,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.071001,1.250999);
+        case 213: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.003999,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.177001,1.327999);
+        case 217: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142997,-0.003000,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.177001,1.327999);
+        case 221: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.161997,-0.015000,0.006998, 0.400000,-3.699999,-0.400006, 1.268999,1.257001,1.429999);
+        case 222: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.015000,0.006998, 0.400000,-3.699999,-0.400006, 1.268999,1.257001,1.429999);
+        case 223: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.153997,0.012999,0.006998, 0.400000,-3.699999,-0.400006, 1.268999,1.386001,1.429999);
+        case 226: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,-0.020000,0.006998, 0.400000,-3.699999,-0.400006, 1.268999,1.386001,1.429999);
+        case 227: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.147997,0.018999,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.128001,1.429999);
+        case 228: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.147997,0.004999,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.288001,1.429999);
+        case 229: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118997,-0.005000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.091001,1.429999);
+        case 234: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118997,-0.015000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.091001,1.429999);
+        case 235: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.096997,-0.007000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.091001,1.283999);
+        case 236: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120997,-0.002000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.091001,1.283999);
+        case 240: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.001000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.264001,1.283999);
+        case 247: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148997,-0.001000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.264001,1.283999);
+        case 248: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.182997,-0.004000,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.323001,1.283999);
+        case 250: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.146997,0.004999,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.323001,1.283999);
+        case 252: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.146997,-0.008999,0.002998, 0.400000,-3.699999,-0.400006, 1.268999,1.323001,1.283999);
+        case 254: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.146997,-0.008999,0.007998, 0.400000,-3.699999,-0.400006, 1.268999,1.323001,1.283999);
+        case 258: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.146997,-0.004999,0.007998, 0.400000,-3.699999,-0.400006, 1.268999,1.323001,1.411999);
+        case 259: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.146997,-0.008999,0.007998, 0.400000,-3.699999,-0.400006, 1.268999,1.323001,1.411999);
+        case 262: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112997,0.007000,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 265: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112997,0.007000,0.003998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 266: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132997,0.000000,-0.004001, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 267: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132997,-0.008999,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 268: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132997,-0.008999,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 272: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149997,-0.001999,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 273: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,-0.004999,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 274: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,0.002000,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 275: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117997,0.002000,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 276: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,0.002000,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 280: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132997,0.001000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.146001,1.411999);
+        case 281: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132997,0.006000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.057001,1.208999);
+        case 282: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,0.011000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.057001,1.208999);
+        case 286: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144997,0.006000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.057001,1.208999);
+        case 291: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.159997,0.010000,0.004998, 0.400000,-3.699999,-0.400006, 1.268999,1.278001,1.319999);
+        case 292: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128997,0.001000,-0.001001, 0.400000,-3.699999,-0.400006, 1.268999,1.014001,1.137000);
+        case 293: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128997,0.001000,-0.001001, 0.400000,-3.699999,-0.400006, 1.268999,1.014001,1.216000);
+        case 294: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.156997,0.008000,0.000998, 0.400000,-3.699999,-0.400006, 1.268999,1.231001,1.216000);
+        case 295: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135997,0.001000,0.005998, 0.400000,-3.699999,-0.400006, 1.268999,1.231001,1.295000);
+        case 296: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135997,-0.006999,0.005998, 0.400000,-3.699999,-0.400006, 1.268999,1.363001,1.295000);
+        case 297: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.156997,-0.000999,0.005998, 0.400000,-3.699999,-0.400006, 1.268999,1.363001,1.295000);
+        case 299: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.178997,0.011000,0.005998, 0.400000,-3.699999,-0.400006, 1.268999,1.363001,1.295000);
+        case 300: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135997,0.007000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.101001,1.295000);
+        case 301: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135997,0.007000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.101001,1.295000);
+        case 302: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135997,0.007000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.179001,1.295000);
+        case 303: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137997,0.012000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.179001,1.295000);
+        case 304: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137997,0.006000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.179001,1.295000);
+        case 305: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137997,0.006000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.179001,1.295000);
+        case 310: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137997,0.001000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.179001,1.295000);
+        case 311: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137997,0.000000,-0.000001, 0.400000,-3.699999,-0.400006, 1.134999,1.179001,1.295000);
+        default: SendClientMessage(playerid,COLOR_GREY,"Аксессуар шапка, не будет отображаться на этом скине!");
+        }
+    }
+    else if(type == 4)
+    {
+        switch (skinid)//ѕанамки
+        {
+        case 1: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.016000,-0.005001, 0.000000,90.000000,93.500007, 1.000000,1.000000,1.000000);
+        case 3: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.007999,0.001998, 0.000000,90.000000,93.500007, 1.000000,1.000000,1.000000);
+        case 4: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149998,0.015000,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 5: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.161998,0.004999,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 7: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.161998,0.018000,-0.000001, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 9: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,0.006999,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 10: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,0.006999,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 11: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,0.012000,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 12: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,-0.000000,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 14: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,0.027000,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 15: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,-0.013000,0.001998, 0.000000,90.000000,93.500007, 1.043999,1.123999,1.000000);
+        case 17: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.016000,0.002998, 0.000000,90.000000,93.699989, 1.000000,1.000000,1.000000);
+        case 18: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.013000,0.000998, 0.000000,90.000000,93.699989, 1.000000,1.000000,1.000000);
+        case 20: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.013000,0.000998, 0.000000,90.000000,93.699989, 1.000000,1.000000,1.000000);
+        case 21: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.009999,0.000998, 0.000000,90.000000,93.699989, 1.000000,1.000000,1.000000);
+        case 25: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.138998,0.014000,0.000998, 0.000000,90.000000,93.699989, 1.000000,1.000000,1.000000);
+        case 26: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149998,0.014000,0.000998, 0.000000,90.000000,93.699989, 1.000000,1.000000,1.000000);
+        case 30: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149998,0.014000,-0.002001, 0.000000,90.000000,93.699989, 1.000000,1.074000,1.000000);
+        case 40: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,-0.003000,-0.002001, 0.000000,90.000000,93.699989, 1.000000,1.074000,1.000000);
+        case 43: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.081998,0.017999,-0.002001, 0.000000,90.000000,93.699989, 1.000000,1.074000,1.000000);
+        case 44: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.029000,-0.002001, 0.000000,90.000000,93.699989, 1.000000,1.074000,1.000000);
+        case 45: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.098998,0.008999,-0.002001, 0.000000,90.000000,93.699989, 1.000000,1.074000,1.000000);
+        case 46: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.037999,-0.001001, 0.000000,90.000000,93.699989, 1.078999,1.074000,1.000000);
+        case 47: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.023000,-0.001001, 0.000000,90.000000,93.699989, 1.078999,1.074000,1.000000);
+        case 48: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135998,0.004999,-0.005000, 0.000000,90.000000,93.699989, 1.078999,1.138000,1.000000);
+        case 49: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.020999,-0.005000, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 54: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.043999,-0.005000, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 55: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.004999,-0.005000, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 56: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.004999,-0.005000, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 57: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.031999,-0.004000, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 58: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.017999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 59: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.157998,0.024999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 60: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.157998,0.024999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 62: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.026999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 66: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.019999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 67: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.019999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 68: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.032999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 69: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.014999,0.000999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 70: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.032999,0.008999, 0.199999,91.999984,97.199958, 1.078999,1.138000,1.000000);
+        case 72: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.032999,0.001999, 0.199999,91.999984,90.599967, 0.977999,0.991000,1.000000);
+        case 73: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.117998,0.032999,0.001999, 0.199999,91.999984,90.599967, 0.977999,0.991000,1.000000);
+        case 76: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.133998,0.002999,0.001999, 0.199999,91.999984,90.599967, 0.977999,0.991000,1.000000);
+        case 78: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135998,0.006999,0.001999, 0.199999,91.999984,90.599967, 0.977999,0.991000,1.000000);
+        case 79: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.121998,0.006999,0.006999, 0.199999,91.999984,90.599967, 0.977999,0.991000,1.000000);
+        case 82: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.182998,0.025999,0.003999, 0.199999,91.999984,90.599967, 0.977999,0.991000,1.000000);
+        case 83: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.163998,0.020999,0.003999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 84: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.163998,0.020999,0.003999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 86: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.119998,0.011999,0.003999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 88: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.032999,0.003999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 90: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.010999,0.003999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 91: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.005999,0.003999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 94: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.079998,0.022999,0.001999, 0.199999,91.999984,90.599967, 1.071999,0.991000,1.000000);
+        case 95: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.102998,0.001999,0.001999, 0.199999,91.999984,90.599967, 0.934999,0.991000,1.000000);
+        case 96: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.015999,-0.000000, 0.199999,91.999984,90.599967, 0.986999,1.020000,1.000000);
+        case 97: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.010999,-0.000000, 0.199999,91.999984,90.599967, 0.986999,1.020000,1.000000);
+        case 98: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.035999,-0.003000, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 100: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,0.015999,0.000999, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 101: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144998,0.015999,0.000999, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 102: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144998,0.015999,-0.005000, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 106: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144998,0.016999,-0.006001, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 108: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144998,0.016999,-0.001000, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 109: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144998,0.016999,-0.005001, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 110: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.144998,0.016999,-0.005001, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 111: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132998,0.017999,0.000999, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 112: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118998,0.014999,0.000999, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 113: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,0.014999,0.000999, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 114: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148998,0.014999,-0.004000, 0.199999,91.999984,90.599967, 1.025999,1.020000,1.000000);
+        case 116: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.148998,0.014999,-0.004000, 0.199999,91.999984,90.599967, 1.025999,1.041000,1.000000);
+        case 117: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106998,0.020999,-0.004000, 0.199999,91.999984,90.599967, 1.025999,1.041000,1.000000);
+        case 118: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106998,0.020999,-0.004000, 0.199999,91.999984,90.599967, 1.025999,1.041000,1.000000);
+        case 119: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.020999,-0.002000, 0.199999,91.999984,90.599967, 1.025999,1.041000,1.000000);
+        case 120: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.006999,0.003999, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 121: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.006999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 122: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.006999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 123: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,0.006999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 124: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,0.011999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 125: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.119998,0.012999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 126: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.119998,0.012999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 127: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.012999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 128: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.154998,0.033999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 129: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.089998,0.030999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 130: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.069998,0.030999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 131: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.103998,0.030999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 146: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.014999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 147: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.002999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 148: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.002999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 151: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.150998,0.002999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 154: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.107998,0.002999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 156: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.171998,-0.002000,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 157: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 160: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 162: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 163: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 164: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 165: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 166: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 169: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,-0.001000,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 170: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.017999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 171: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.014999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 172: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.007999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 176: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124998,0.007999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 177: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.174998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 179: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132998,0.020999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 180: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.137998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 182: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 183: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 184: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 185: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,0.017999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 186: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,0.009999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 187: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.002999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 188: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.011999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 189: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.014999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 191: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 192: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 193: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 194: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 195: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.151998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 196: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.096998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 199: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.108998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 200: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.142998,0.016999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 202: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143998,0.016999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 206: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.143998,0.016999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 207: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.094998,0.016999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 208: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.016999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 210: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.008999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 211: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.010999,-0.000000, 0.199999,91.999984,90.599967, 1.025999,1.094000,1.000000);
+        case 212: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.113998,0.021999,-0.000000, 0.199999,91.999984,90.599967, 0.855999,1.005000,1.000000);
+        case 213: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129998,0.018999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 214: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.001999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 216: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.001999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 217: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.015999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 218: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.015999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 219: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139998,0.008999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 221: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.173998,0.001999,-0.001001, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 222: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.156998,-0.007000,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 223: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.179998,0.021999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 224: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,-0.004000,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 225: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,-0.002000,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 226: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.134998,-0.009000,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 227: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.149998,0.022999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 228: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.166998,0.012999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 229: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.116998,0.000999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 230: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.102998,0.015999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 233: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.132998,0.007999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 234: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.100998,0.007999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 235: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.080998,0.007999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 236: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.103998,0.007999,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 237: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,-0.002000,0.000999, 0.199999,91.999984,90.599967, 0.947999,1.044000,1.000000);
+        case 240: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135998,0.017999,0.000999, 0.199999,91.999984,90.599967, 1.002999,1.090000,1.000000);
+        case 247: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.016000,0.001998, 0.000000,90.000000,82.699989, 1.000000,1.057000,1.000000);
+        case 248: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.155998,0.027000,-0.004001, 0.000000,90.000000,82.699989, 1.153000,1.136999,1.000000);
+        case 250: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110998,0.027000,-0.004001, 0.000000,90.000000,82.699989, 1.153000,1.136999,1.000000);
+        case 251: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.110998,0.027000,-0.004001, 0.000000,90.000000,82.699989, 1.153000,1.136999,1.000000);
+        case 252: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.122998,0.020999,-0.004001, 0.000000,90.000000,82.699989, 1.153000,1.136999,1.000000);
+        case 258: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.020999,-0.004001, 0.000000,90.000000,82.699989, 1.153000,1.136999,1.000000);
+        case 259: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.126998,0.020999,-0.004001, 0.000000,90.000000,82.699989, 1.153000,1.136999,1.000000);
+        case 262: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.088998,0.030000,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 263: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.128998,0.004999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 265: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.008999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 266: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.005999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 267: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.005999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 272: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.157998,0.016999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 273: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.007999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 274: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.014999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 275: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.021999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 276: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.021999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 280: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.021999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 281: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.021999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 282: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.021999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 286: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.021999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 290: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115998,0.011999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 291: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.166998,0.013999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 292: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.111998,0.013999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 294: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.167998,0.016999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 295: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.123998,0.016999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 296: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.145998,-0.003000,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 297: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.160998,0.009999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 298: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.135998,0.009999,0.001998, 0.000000,90.000000,82.699989, 0.936000,1.136999,1.000000);
+        case 299: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.172998,0.026999,0.001998, 0.000000,90.000000,82.699989, 1.037000,1.136999,1.000000);
+        case 300: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125998,0.026999,0.001998, 0.000000,90.000000,82.699989, 1.037000,1.136999,1.000000);
+        case 301: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.125998,0.026999,0.001998, 0.000000,90.000000,82.699989, 1.037000,1.136999,1.000000);
+        case 302: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.140998,0.016000,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 303: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.016000,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 304: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.016000,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 305: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.131998,0.016000,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 306: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,0.007999,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 308: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,0.007999,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 309: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.130998,0.007999,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 310: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115997,0.007999,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        case 311: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.115997,0.015000,0.000998, 0.000000,90.000000,85.500000, 1.000000,1.000000,1.000000);
+        default: SendClientMessage(playerid,COLOR_GREY,"Аксессуар панамка, не будет отображаться на этом скине!");
+        }
+    }
+    else if(type == 5)// епки назад
+    {
+        switch (skinid)
+        {
+        case 1: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.105997,0.034000,0.000998, 6.799999,90.000000,97.500000, 0.925999,1.092999,1.000000);
+        case 3: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.124997,0.034000,-0.005001, 8.500000,89.899986,76.199981, 1.024999,1.115999,1.000000);
+        case 4: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139997,0.034000,0.006998, 8.500000,89.899986,99.799995, 1.090999,1.115999,1.000000);
+        case 5: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139997,0.034000,0.006998, 8.500000,89.899986,99.799995, 1.090999,1.115999,1.000000);
+        case 7: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.129997,0.045000,-0.001001, 8.500000,89.899986,81.05521, 1.016000,1.055999,1.000000);
+        case 9: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.116997,0.016999,-0.001001, 8.500000,89.899986,81.05521, 1.016000,1.055999,1.000000);
+        case 10: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.093997,0.016999,-0.001001, 8.500000,89.899986,81.05521, 1.016000,1.055999,1.000000);
+        case 11: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.104997,0.028999,-0.001001, 8.500000,89.899986,81.05521, 1.016000,1.055999,1.000000);
+        case 12: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.094997,0.015999,-0.004001, 8.500000,89.899986,81.05521, 1.037000,1.123999,1.000000);
+        case 14: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120997,0.037000,-0.004001, 8.500000,89.899986,81.05521, 1.037000,1.123999,1.000000);
+        case 15: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.106997,-0.001999,-0.005001, 8.500000,89.899986,81.05521, 1.037000,1.123999,1.000000);
+        case 17: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120997,0.031000,-0.002001, 8.500000,89.899986,81.05521, 1.037000,1.123999,1.000000);
+        case 18: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.085997,0.019000,0.000998, 8.500000,89.899986,81.05521, 0.947000,1.123999,1.000000);
+        case 20: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.139997,0.014000,0.000998, 8.500000,89.899986,81.05521, 0.947000,1.123999,1.000000);
+        case 21: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127998,0.027000,-0.004001, 8.500000,89.899986,81.05521, 0.947000,1.123999,1.000000);
+        case 25: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.112998,0.027000,0.004998, 8.500000,89.899986,81.05521, 0.947000,1.123999,1.000000);
+        case 26: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120998,0.029000,-0.002001, 8.500000,89.899986,81.05521, 1.047000,1.030999,1.000000);
+        case 30: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.120998,0.029000,-0.007001, 8.500000,89.899986,81.05521, 1.047000,1.088999,1.000000);
+        case 39: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.082997,0.023000,-0.004000, 8.500000,89.899986,81.05521, 1.047000,1.088999,1.000000);
+        case 40: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.101997,0.023000,-0.003001, 8.500000,89.899986,81.05521, 1.047000,1.156999,1.000000);
+        case 43: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.058998,0.026000,-0.009001, 8.500000,89.899986,81.05521, 0.913000,0.994999,1.000000);
+        case 44: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.083997,0.036000,0.002998, 8.500000,89.899986,81.05521, 0.913000,0.994999,1.000000);
+        case 45: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.088998,0.027000,-0.003001, 8.500000,89.899986,81.05521, 0.988000,1.017999,1.000000);
+        case 46: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118997,0.045999,-0.003001, 8.500000,89.899986,81.05521, 1.016000,1.113999,1.000000);
+        case 47: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.118997,0.035000,-0.006001, 8.500000,89.899986,81.05521, 1.016000,1.113999,1.000000);
+        case 48: SetPlayerAttachedObject (playerid, 0, setobject, 2, 0.127997,0.018000,-0.009001, 8.500000,89.899986,81.05521, 1.091000,1.150999,1.000000);

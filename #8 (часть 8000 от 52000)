@@ -1,0 +1,1000 @@
+                SetPlayerArmour(playerid, 0);
+                ResetWeapons(playerid);
+                PI[playerid][pMember] = 0;
+                PI[playerid][pLeader] = 0;
+                PI[playerid][pRank] = 0;
+                SetPlayerColor(playerid, 0xFFFFFF80);
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                format(str_nabor, sizeof str_nabor, "[A] %s[%d] покинул свою организацию. Причина: Авто-набор", PI[playerid][pNames], playerid);
+                SendAdminMessage(COLOR_GREY, str_nabor);
+                PI[playerid][pOdet] = 0;
+                format(str_naborr, sizeof(str_naborr), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0', `pLeader` = '0', `odet` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+                mysql_function_query(connects, str_naborr, false, "", "");
+                ShowPlayerDialog(playerid, 10104, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Cухопутные Войска\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+            }
+        }
+        case 10152:
+        {
+            if(response)
+            {
+                new str_nabor[200], str_naborr[200];
+                SendClientMessage(playerid, COLOR_GREY, !"Вы успешно покинули свою организацию, теперь Вы обычный гражданин.");
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                SetPlayerArmour(playerid, 0);
+                ResetWeapons(playerid);
+                PI[playerid][pMember] = 0;
+                PI[playerid][pLeader] = 0;
+                PI[playerid][pRank] = 0;
+                SetPlayerColor(playerid, 0xFFFFFF80);
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                format(str_nabor, sizeof str_nabor, "[A] %s[%d] покинул свою организацию. Причина: Авто-набор", PI[playerid][pNames], playerid);
+                SendAdminMessage(COLOR_GREY, str_nabor);
+                PI[playerid][pOdet] = 0;
+                format(str_naborr, sizeof(str_naborr), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0', `pLeader` = '0', `odet` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+                mysql_function_query(connects, str_naborr, false, "", "");
+                ShowPlayerDialog(playerid, 10107, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Ореховская ОПГ\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+            }
+        }
+        case 10153:
+        {
+            if(response)
+            {
+                new str_nabor[200], str_naborr[200];
+                SendClientMessage(playerid, COLOR_GREY, !"Вы успешно покинули свою организацию, теперь Вы обычный гражданин.");
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                SetPlayerArmour(playerid, 0);
+                ResetWeapons(playerid);
+                PI[playerid][pMember] = 0;
+                PI[playerid][pLeader] = 0;
+                PI[playerid][pRank] = 0;
+                SetPlayerColor(playerid, 0xFFFFFF80);
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                format(str_nabor, sizeof str_nabor, "[A] %s[%d] покинул свою организацию. Причина: Авто-набор", PI[playerid][pNames], playerid);
+                SendAdminMessage(COLOR_GREY, str_nabor);
+                PI[playerid][pOdet] = 0;
+                format(str_naborr, sizeof(str_naborr), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0', `pLeader` = '0', `odet` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+                mysql_function_query(connects, str_naborr, false, "", "");
+                ShowPlayerDialog(playerid, 10110, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Батыревская Бригада\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+            }
+        }
+        case 10154:
+        {
+            if(response)
+            {
+                new str_nabor[200], str_naborr[200];
+                SendClientMessage(playerid, COLOR_GREY, !"Вы успешно покинули свою организацию, теперь Вы обычный гражданин.");
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                SetPlayerArmour(playerid, 0);
+                ResetWeapons(playerid);
+                PI[playerid][pMember] = 0;
+                PI[playerid][pLeader] = 0;
+                PI[playerid][pRank] = 0;
+                SetPlayerColor(playerid, 0xFFFFFF80);
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                format(str_nabor, sizeof str_nabor, "[A] %s[%d] покинул свою организацию. Причина: Авто-набор", PI[playerid][pNames], playerid);
+                SendAdminMessage(COLOR_GREY, str_nabor);
+                PI[playerid][pOdet] = 0;
+                format(str_naborr, sizeof(str_naborr), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0', `pLeader` = '0', `odet` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+                mysql_function_query(connects, str_naborr, false, "", "");
+                ShowPlayerDialog(playerid, 10113, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Тамбовская ОПГ\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+            }
+        }
+        case 1987:
+        {
+            if(!response) return 1;
+            new Float:distance = 1000000.0, biz = -1, Float:pX, Float:pY, Float:pZ;
+            GetPlayerPos(playerid, pX, pY, pZ);
+            for(new i = 0; i < sizeof(BizzInfo); i++)
+            {
+                if(BizzInfo[i][bType] == 3)
+                {
+                    if(GetPlayerDistanceFromPoint(playerid, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz]) < distance)
+                    {
+                        distance = GetPlayerDistanceFromPoint(playerid, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz]);
+                        biz = i;
+                    }
+                }
+            }
+
+            if(moped_online[playerid] != INVALID_VEHICLE_ID)
+            {
+                DestroyVehicle(moped_online[playerid]);
+                moped_online[playerid] = INVALID_VEHICLE_ID;
+            }
+
+            SetPlayerSkin(playerid, 167);
+            moped_online[playerid] = AddStaticVehicleEx(448, -40.5937, 909.6667, 11.5413 + 0.5, 158.7754, 1, 1, 100000, 0, VEHICLE_ACTION_TYPE_RAZVOZ);
+
+            PutPlayerInVehicle(playerid, moped_online[playerid], 0);
+            GetVehicleParamsEx(moped_online[playerid], engine,lights,alarm,doors,bonnet,boot,objective);
+            SetVehicleParamsEx(moped_online[playerid], 1,1,0,0,0,0,0);
+
+            if(biz != -1) SetPVarInt(playerid, "work_eda", biz), SetPlayerCheckpoint(playerid, BizzInfo[biz][bEntrx], BizzInfo[biz][bEntry], BizzInfo[biz][bEntrz], 10.0);
+            return SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, !"{FFD700}Яндекс Еда", !"{FFFFFF}Езжайте за пиццей, и отвезите её клиенту.\n\nМетка отмечена красным цветом на карте.", !"ОК", !"");
+        }
+        case 1982:
+        {
+            new giveplayerid = GetPVarInt(playerid, "race_offer");
+
+            if(!response)
+            {
+                SendClientMessage(giveplayerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Игрок отказался от вашего предложения.");
+                SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы отказались от состязания.");
+
+                PI[playerid][pRaceMoney] = PI[giveplayerid][pRaceMoney] = 0;
+
+                DeletePVar(giveplayerid, "race_offer");
+                return DeletePVar(playerid, "race_offer");
+            }
+
+            if(!IsPlayerInVehicle(playerid, GetPlayerOwnableCar(playerid)) || !IsPlayerInVehicle(giveplayerid, GetPlayerOwnableCar(giveplayerid)))
+            {
+                PI[playerid][pRaceMoney] = PI[giveplayerid][pRaceMoney] = 0;
+
+                DeletePVar(giveplayerid, "race_offer");
+                DeletePVar(playerid, "race_offer");
+
+                return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Произошла ошибка. Гонка отменена.");
+            }
+
+            if(PI[playerid][pCash] < money || PI[giveplayerid][pCash] < money)
+            {
+                PI[playerid][pRaceMoney] = PI[giveplayerid][pRaceMoney] = 0;
+
+                DeletePVar(giveplayerid, "race_offer");
+                DeletePVar(playerid, "race_offer");
+
+                return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}У вас или у вашего соперника недостаточно средств.");
+            }
+
+            new virt_mir = RandomEx(500, 2000);
+
+            // 1-ый игрок (которому предложили)
+
+            SetVehiclePos(GetPlayerOwnableCar(playerid), 1455.5135, 1575.3220, 15.7877);
+            SetVehicleZAngle(GetPlayerOwnableCar(playerid), 270.0);
+            LinkVehicleToInterior(GetPlayerOwnableCar(playerid), 0);
+            SetVehicleVirtualWorld(GetPlayerOwnableCar(playerid), virt_mir);
+            SetPlayerVirtualWorld(playerid, virt_mir);
+            PutPlayerInVeh(playerid, GetPlayerOwnableCar(playerid), 0);
+
+            RepairVehicle(GetPlayerOwnableCar(playerid));
+            SetVehicleData(GetPlayerOwnableCar(playerid), V_FUEL, 100);
+
+            TogglePlayerControllable(playerid, false);
+            SetCameraBehindPlayer(playerid);
+
+            GameTextForPlayer(playerid, "~r~5...", 1000, 4);
+
+            SetPVarInt(playerid, "race_timer_second", 5);
+            race_timer[playerid] = SetTimerEx("@__race_timer", 1000, false, "d", playerid);
+
+            // 2-ой игрок (который предложил)
+
+            SetVehiclePos(GetPlayerOwnableCar(giveplayerid), 1455.6162, 1587.9634, 15.8461);
+            SetVehicleZAngle(GetPlayerOwnableCar(giveplayerid), 270.0);
+            LinkVehicleToInterior(GetPlayerOwnableCar(giveplayerid), 0);
+            SetVehicleVirtualWorld(GetPlayerOwnableCar(giveplayerid), virt_mir);
+            SetPlayerVirtualWorld(giveplayerid, virt_mir);
+            PutPlayerInVeh(playerid, GetPlayerOwnableCar(playerid), 0);
+
+            RepairVehicle(GetPlayerOwnableCar(giveplayerid));
+            SetVehicleData(GetPlayerOwnableCar(giveplayerid), V_FUEL, 100);
+
+            TogglePlayerControllable(giveplayerid, false);
+            SetCameraBehindPlayer(giveplayerid);
+
+            GameTextForPlayer(giveplayerid, "~r~5...", 1000, 4);
+
+            SetPVarInt(giveplayerid, "race_timer_second", 5);
+            race_timer[giveplayerid] = SetTimerEx("@__race_timer", 1000, false, "d", giveplayerid);
+
+            PI[playerid][pCash] -= PI[playerid][pRaceMoney];
+            PI[giveplayerid][pCash] -= PI[giveplayerid][pRaceMoney];
+
+            return 1;
+        }
+        case 6975:
+        {
+            if(!response)
+            {
+                DestroyVehicle(PI[playerid][pUgonVehicle]);
+
+                PI[playerid][pUgonTimer] =
+                PI[playerid][pUgonVehicle] = 0;
+
+                DeletePVar(playerid, "random_code");
+
+                SetPlayerExtra(playerid, INVALID_PLAYER_ID, 2, "Попытка угона транспорта");
+                return SendClientMessage(playerid, COLOR_YELLOW, "[SMS от Володи]: Ты не смог взломать сигнализацию! Сваливай пока копы не приехали.");
+            }
+            new otvet = GetPVarInt(playerid, "random_code");
+            DeletePVar(playerid, "random_code");
+
+            if(otvet != strval(inputtext))
+            {
+                DestroyVehicle(PI[playerid][pUgonVehicle]);
+
+                PI[playerid][pUgonTimer] =
+                PI[playerid][pUgonVehicle] = 0;
+
+                SetPlayerExtra(playerid, INVALID_PLAYER_ID, 2, "Попытка угона транспорта");
+                return SendClientMessage(playerid, COLOR_YELLOW, "[SMS от Володи]: Ты не смог взломать сигнализацию! Сваливай пока копы не приехали.");
+            }
+            else
+            {
+                timer_jack[playerid] = SetTimerEx("JackCar", 5000, 0, "dd", playerid, PI[playerid][pUgonVehicle]);
+                TogglePlayerControllable(playerid, false);
+                FIXES_ApplyAnimation(playerid,"ROB_BANK","CAT_Safe_Rob",4.1, 0, 1, 1, 1, 0, 1);
+                SetPVarInt(playerid, "JackCar_use", 1);
+
+                stringer1[0] = EOS;
+                format(stringer1, 90, "%s взламывает автомобиль", PI[playerid][pNames]);
+                ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+
+                SetPlayerExtra(playerid, INVALID_PLAYER_ID, 6, "Угон транспорта");
+            }
+        }
+        case 6125:
+        {
+            if(!response) return 1;
+
+            if(GetPVarInt(playerid, "UgonInvite") == 1 || PI[playerid][pUgonTimer] > 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы уже начали угон, пожалуйста ожидайте сообщение от Володи.");
+
+            new Random_timer = RandomEx(1, 4);
+            switch(Random_timer)
+            {
+                case 1:
+                {
+                    sms_timer[playerid] = SetTimerEx("sms_vladimir", 20000, 0, "d", playerid);
+                }
+                case 2:
+                {
+                    sms_timer[playerid] = SetTimerEx("sms_vladimir", 15000, 0, "d", playerid);
+                }
+                case 3:
+                {
+                    sms_timer[playerid] = SetTimerEx("sms_vladimir", 30000, 0, "d", playerid);
+                }
+                case 4:
+                {
+                    sms_timer[playerid] = SetTimerEx("sms_vladimir", 25000, 0, "d", playerid);
+                }
+            }
+            SetPVarInt(playerid, "UgonInvite", 1);
+            return SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, !""SERVER"NPC: {afafaf}Володя", !"{FFFFFF}Ну и отлично!\nБуквально через пару секунд отмечу дорогую тачку у тебя на радаре.\nНапишу тебе SMS-сообщение, ожидай!\n\n{afafaf}Ожидайте сообщение от Володи.", !"ОК", !"");
+        }
+        case 9821:
+        {
+            if (response)
+            {
+                SPD(playerid, 9822, DIALOG_STYLE_LIST, !""SERVER"Выбор места для стрелы", !"1. Шахта\n2. Полисадник", !"Выбрать", !"Отмена");
+            }
+            else
+            {
+                SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы отменили захват бизнеса.");
+                DeletePVar(playerid, "bizwar_id");
+            }
+            return 1;
+        }
+        case 9822:
+        {
+            if (response)
+            {
+                new i = GetPVarInt(playerid, "bizwar_id");
+                DeletePVar(playerid, "bizwar_id");
+
+                if (BizWarTime[0] > 0 || BizWarTime[1] > 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Война за бизнес уже идет");
+                if (BizHourTime > gettime()) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Стрелы за бизнес проходят 1 раз в час");
+                if (PI[playerid][pMember] == BizzInfo[i][bMafia]) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы не можете захватить собственный бизнес");
+                if (!IsPlayerInBandOnline(BizzInfo[i][bMafia])) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Мафия на которую Вы собираетесь напасть нет в сети / Меньше трёх человек");
+
+                war_gangzone = listitem;
+
+                new fX, fY, strela[16];
+                switch(war_gangzone)
+                {
+                    case 0:
+                    {
+                        fX = 2378;
+                        fY = 1743;
+                        strela = "Шахта";
+                    }
+                    case 1:
+                    {
+                        fX = 2307;
+                        fY = 473;
+                        strela = "Полисадник";
+                    }
+                }
+
+                get_gz_pos ( fX, fY, 80.0, mafia_zone [ 0 ], mafia_zone [ 1 ], mafia_zone [ 2 ], mafia_zone [ 3 ] ) ;
+                biz_war_gangzone = GangZoneCreate ( mafia_zone [ 0 ], mafia_zone [ 1 ], mafia_zone [ 2 ], mafia_zone [ 3 ] ) ;
+
+                GangZoneShowForAll(biz_war_gangzone, 0xFF000060);
+                GangZoneFlashForAll(biz_war_gangzone, 0xFFFFFF60);
+
+                BizWarTime[0] = 300;
+                MZInfo[bNapad] = PI[playerid][pMember];
+                MZInfo[bFrakVlad] = BizzInfo[i][bMafia];
+                MZInfo[bBiz] = i;
+
+                MZInfo[bCountDead][MZInfo[bNapad]] =
+                MZInfo[bCountDead][MZInfo[bFrakVlad]] = 0;
+
+
+                new string[186];
+                format(string, sizeof(string), "%s забила стрелу Вашей ОПГ за бизнес %s. Место встречи: %s", GetTeamData(PI[playerid][pMember], O_NAME), BizzInfo[i][bName], strela);
+                SendFamilyMessage(BizzInfo[i][bMafia], 0xFF0000FF, string);
+                SendFamilyMessage(BizzInfo[i][bMafia], 0xFF0000FF, "Встреча состоится через 5 минут");
+                format(string, sizeof(string), ""SERVER"Начал захват бизнеса: %s", PI[playerid][pNames]);
+                SendFamilyMessage(BizzInfo[i][bMafia], -1, string);
+
+                format(string, sizeof(string), "Ваша ОПГ забила стрелу %s за бизнес %s. Место встречи: %s", GetTeamData(BizzInfo[i][bMafia], O_NAME), BizzInfo[i][bName], strela);
+                SendFamilyMessage(PI[playerid][pMember], 0xFF0000FF, string);
+                SendFamilyMessage(PI[playerid][pMember], 0xFF0000FF, "Встреча состоится через 5 минут");
+                format(string, sizeof(string), ""SERVER"Начал захват бизнеса: %s", PI[playerid][pNames]);
+                SendFamilyMessage(PI[playerid][pMember], -1, string);
+
+                SendFamilyMessage(BizzInfo[i][bMafia], -1, "Место встречи отмечено на карте {afafaf}(квадратом)");
+                SendFamilyMessage(PI[playerid][pMember], -1, "Место встречи отмечено на карте {afafaf}(квадратом)");
+            }
+            else
+            {
+                SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы отменили захват");
+                DeletePVar(playerid, "bizwar_id");
+            }
+            return 1;
+        }
+        case 5512:
+        {
+            new report_id = TempReportInfo[playerid][reportID];
+            format(mysql_query_, sizeof(mysql_query_),"SELECT * FROM "TABLE_REPORTS" WHERE `id` = '%d' AND `status` = 0", report_id);
+            mysql_tquery(connects, mysql_query_, "report_checked", "dds", playerid, response, inputtext);
+        }
+        case 5513: {
+            if (!response) {
+                TempReportInfo[playerid][reportID] = 0;
+                return true;
+            }
+            report_Show(playerid);
+            return true;
+        }
+        case 9182:
+        {
+            if (!response)
+                return true;
+
+            if (!strlen(inputtext))
+                return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы ничего не ввели!");
+
+            if(PI[playerid][pMuteTime] > gettime())
+                return SendMes(playerid, COLOR_LIGHTRED, "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+
+            if (PlayerReportFix[playerid] > gettime())
+                return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Подавать жалобу можно 1 раз в минуту!");
+
+            report_Send(playerid, inputtext);
+            PlayerReportFix[playerid] = gettime() + 60;
+
+            return 1;
+        }
+        case 9185:
+        {
+            if(!response) return pc_cmd_exitskin(playerid);
+            switch(listitem)
+            {
+                case 0, 1:
+                {
+                    new dialog_string[156];
+                    format(dialog_string, sizeof(dialog_string), "Скин #%d\nСтоимость скина: {33aa33}%d руб.\nСледующий скин\nПредыдущий скин\nКупить скин", GetPlayerSkin(playerid), SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+                    ShowPlayerDialog(playerid, 9185, DIALOG_STYLE_LIST, !""SERVER"Покупка одежды", dialog_string, !"Далее", !"Выйти");
+                }
+                case 2:
+                {
+                    pc_cmd_nextskin(playerid);
+
+                    new dialog_string[156];
+                    format(dialog_string, sizeof(dialog_string), "Скин #%d\nСтоимость скина: {33aa33}%d руб.\nСледующий скин\nПредыдущий скин\nКупить скин", GetPlayerSkin(playerid), SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+                    ShowPlayerDialog(playerid, 9185, DIALOG_STYLE_LIST, !""SERVER"Покупка одежды", dialog_string, !"Далее", !"Выйти");
+                }
+                case 3:
+                {
+                    pc_cmd_backskin(playerid);
+
+                    new dialog_string[156];
+                    format(dialog_string, sizeof(dialog_string), "Скин #%d\nСтоимость скина: {33aa33}%d руб.\nСледующий скин\nПредыдущий скин\nКупить скин", GetPlayerSkin(playerid), SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+                    ShowPlayerDialog(playerid, 9185, DIALOG_STYLE_LIST, !""SERVER"Покупка одежды", dialog_string, !"Далее", !"Выйти");
+                }
+                case 4:
+                {
+                    pc_cmd_buyskin(playerid);
+                }
+            }
+        }
+        case 9198:
+        {
+            if(!response) return 1;
+            new item_data;
+
+            switch(PI[playerid][pMember])
+            {
+                case 1:
+                {
+                    item_data = listitem;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 1, 79, 300, 1, VEHICLE_ACTION_TYPE_MVD);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 2:
+                {
+                    item_data = listitem + 3;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_FBI);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 5:
+                {
+                    item_data = listitem + 7;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_LCN_MAFIA);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 6:
+                {
+                    item_data = listitem + 10;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_YAKUDZA);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 7:
+                {
+                    item_data = listitem + 13;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_MAYOR);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 14:
+                {
+                    item_data = listitem + 17;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_RM);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 16:
+                {
+                    item_data = listitem + 20;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_NEWS);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 19:
+                {
+                    item_data = listitem + 21;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_ARMY);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 23:
+                {
+                    item_data = listitem + 24;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_HITCAR);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+                case 24:
+                {
+                    item_data = listitem + 28;
+
+                    if(ORGANIZATION_CAR_INFO[item_data][CARS_COUNT] <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"В паркинге не осталось транспорта данного вида.");
+
+                    new ParkingID = GetPVarInt(playerid, "ParkingSelected");
+
+                    PlayerVeh[playerid] = AddStaticVehicleEx(ORGANIZATION_CAR_INFO[item_data][MODEL_ID], park_info[ParkingID][park_x], park_info[ParkingID][park_y], park_info[ParkingID][park_z], park_info[ParkingID][park_r], 0, 0, 300, 1, VEHICLE_ACTION_TYPE_STREET);
+                    ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]--;
+
+                    VehicleOrg[playerid] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleTeam[PlayerVeh[playerid]] = ORGANIZATION_CAR_INFO[item_data][TEAM_ID];
+                    VehicleOwner[PlayerVeh[playerid]] = playerid;
+
+                    DeletePVar(playerid, "ParkingSelected");
+                }
+            }
+            PutPlayerInVeh(playerid, PlayerVeh[playerid], 0);
+            zavodis[playerid] = 0;
+
+            format(stringer1, sizeof(stringer1), "[R] %s %s[%d] взял автомобиль '%s [ID: %d]' с паркинга. Остаток: %d т/с.", fRankName[PI[playerid][pMember]-1][PI[playerid][pRank]-1],PI[playerid][pNames], playerid, g_vehicle_info[ORGANIZATION_CAR_INFO[item_data][MODEL_ID] - 400][VI_NAME], ORGANIZATION_CAR_INFO[item_data][MODEL_ID], ORGANIZATION_CAR_INFO[item_data][CARS_COUNT]);
+            return SendRadioMessage(PI[playerid][pMember], TEAM_BLUE_COLOR, stringer1);
+        }
+        case 2362:
+        {
+            if(!response) return 1;
+
+            new Float:X, Float:Y, Float:Z, string[144];
+            GetPlayerPos(playerid, X, Y, Z);
+
+            createdvehs ++ ;
+            createdvehicles[createdvehs] = CreateVehicle(car_autosalon[listitem][0], X,Y,Z, 0.0, RandomEx(1,20), RandomEx(1,20), 60000, 0, VEHICLE_ACTION_TYPE_ADMIN);
+            vehcreat[createdvehicles[createdvehs]] = 1;
+            PutPlayerInVeh(playerid, createdvehicles[createdvehs], 0);
+            zavodis[playerid] = 0;
+
+            LinkVehicleToInterior(createdvehicles[createdvehs], GetPlayerInterior(playerid));
+
+            format(string, sizeof(string), "[A] %s[%d] создал автомобиль '%s' (ID: %d)", PI[playerid][pNames], playerid, g_vehicle_info[car_autosalon[listitem][0] - 400][VI_NAME], car_autosalon[listitem][0]);
+            SendAdminMessage(COLOR_GREY, string);
+
+            format(stringer1, sizeof(stringer1), "Автомобиль ID: %d создан, для удаления /delveh", car_autosalon[listitem][0]);
+            return SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        }
+        case 1958:
+        {
+            if(!response)
+                return 1;
+
+            if(PI[playerid][pCash] < 5000)
+                return SendClientMessage(playerid, COLOR_WHITE, !"Недостаточно средств для аренды мопеда.");
+
+            new idx = GetPVarInt(playerid, pVar__RentBike_PickupIDX);
+            if(GetRentBikePickupMaxTenants(idx) <= GetRentBikePickupTenantsCount(idx))
+                return SendClientMessage(playerid, COLOR_WHITE, !"Мопедов свободных нет! Закажите такси или езжайте на автобусе.");
+
+            if(PlayerRentBike[playerid] != -1)
+            {
+                new vehicleid = PlayerRentBike[playerid];
+                DestroyVehicle(vehicleid);
+                SetRentBikePickupTenantsCount(RentBikePickupIDX[vehicleid], GetRentBikePickupTenantsCount(RentBikePickupIDX[vehicleid])-1);
+                RentBikePickupIDX[vehicleid] =
+                RentBikeOwner[vehicleid] = -1;
+            }
+
+            SetRentBikePickupTenantsCount(idx, GetRentBikePickupTenantsCount(idx)+1);
+
+            new Float:x, Float:y, Float:z, Float:a;
+            GetPlayerPos(playerid, x, y, z);
+            GetPlayerFacingAngle(playerid, a);
+            new vehicleid = CreateVehicle(462, x, y, z, a, -1, -1, 1000 * 60 * 10, VEHICLE_ACTION_TYPE_RENT_BIKE);
+            SetVehicleParam(vehicleid, V_LOCK, false);
+            SetVehicleParam(vehicleid, V_ENGINE, true);
+            PutPlayerInVehicle(playerid, vehicleid, 0);
+
+            RentBikePickupIDX[vehicleid] = idx;
+            RentBikeOwner[vehicleid] = playerid;
+            PlayerRentBike[playerid] = vehicleid;
+            DeletePVar(playerid, pVar__RentBike_PickupIDX);
+
+            PI[playerid][pCash] -= 5000;
+            return 1;
+        }
+        case 1951:
+        {
+            if(!response) return pc_cmd_donaterub(playerid);
+
+            if(PI[playerid][pDonateRubNew] < exc_vehicle_price_rub[listitem])
+            {
+                new fmt_text[100];
+                format(fmt_text, sizeof fmt_text, "Для покупки номера необходимо иметь на счету %d F - Coins", exc_vehicle_price_rub[listitem]);
+                return SendClientMessage(playerid, -1, fmt_text);
+            }
+            if(GetPlayerOwnableCar(playerid) != INVALID_VEHICLE_ID)
+            {
+                SendClientMessage(playerid, 0xCECECEFF, "Для покупки транспорта нужно выгрузить уже загруженный транспорт с сервера");
+                return 1;
+            }
+
+            if((GetPlayerOwnableCars(playerid) + 1) > PI[playerid][P_CAR_SLOT])
+            {
+                SendClientMessage(playerid, 0x1E90FFFF, "Все слоты для транспорта заняты. Вы можете увеличить их: {6666CC}/mm > Дополнительные возможности");
+                return 1;
+            }
+            switch(listitem)
+            {
+                case 0..MAX_VEHICLE_EXC - 0:
+                {
+                    BuyOwnableExcCar(playerid, exc_vehicle_model [ listitem ], 0 ) ;
+                    PI[playerid][pDonateRubNew] -= exc_vehicle_price_rub[listitem];
+                }
+            }
+        }
+        case 1952:
+        {
+            if(!response) return pc_cmd_donaterub(playerid);
+            new fmt_text[100];
+            if(PI[playerid][pDonateRubNew] < exc_skin_price_rub[listitem])
+            {
+                format(fmt_text, sizeof fmt_text, "Для покупки номера необходимо иметь на счету %d F - Coins", exc_skin_price_rub[listitem]);
+                return SendClientMessage(playerid, -1, fmt_text);
+            }
+
+            switch(listitem)
+            {
+                case 0..MAX_SKIN_EXC - 1:
+                {
+                    PI[playerid][pChar] = exc_skin_model[listitem];
+                    SetPlayerSkinEx(playerid, exc_skin_model[listitem], true);
+                    PI[playerid][pDonateRubNew] -= exc_skin_price_rub[listitem];
+                    format(fmt_text, sizeof fmt_text, "{33aa33}Поздравляем с покупкой скина %s!", exc_skin_name[listitem]);
+                    SendClientMessage(playerid, COLOR_WHITE, fmt_text);
+                }
+            }
+        }
+        case 1212:
+        {
+            if ( ! response ) return show_apmenu ( playerid ) ;
+            new kvart_id = PI[ playerid ] [ APARTMENT ] - 1 ;
+            if ( ap_info [ kvart_id ] [ ap_improve ] [ listitem ] )
+            {
+                SendClientMessage(playerid, COLOR_WHITE, !"У Вас уже установлено это улучшение." ) ;
+                show_apmenu ( playerid ) ;
+                return 1 ;
+            }
+            else if ( ( ! listitem && ! ap_info [ kvart_id ] [ ap_improve ] [ listitem ] ) || ( ap_info [ kvart_id ] [ ap_improve ] [ listitem - 1 ] && !ap_info [ kvart_id ] [ ap_improve ] [ listitem ] ) )
+            {
+                new mes [ 156 ] ;
+                format ( mes, sizeof ( mes ),"{FFFFFF}Вы хотите купить улучшение: "SERVER"\"%s\"?\n\n{FFFFFF}Оно обойдется Вам в {33aa33}$%d{FFFFFF}.", ap_improve_name [ listitem ], ap_improve_price [ listitem ] ) ;
+                SPD ( playerid, 1213, DIALOG_STYLE_MSGBOX, !""SERVER"Улучшения квартиры", mes, !"Купить", !"Отмена" ) ;
+                SetPVarInt ( playerid, "improveid", listitem ) ;
+            }
+            else
+            {
+                new scm_string [ 144 ] ;
+                format ( scm_string, sizeof scm_string, ""SERVER"Это улучшение ещё не доступно Вам. Сперва приобретите {FFFFFF}%s"SERVER".", ap_improve_name [ listitem - 1 ] ) ;
+                SendClientMessage ( playerid, COLOR_WHITE, scm_string ) ;
+
+                show_apmenu ( playerid ) ;
+            }
+        }
+        case 1213:
+        {
+            new improveid = GetPVarInt ( playerid, "improveid" ) ;
+            DeletePVar ( playerid, "improveid" ) ;
+            if ( ! response ) return show_apmenu ( playerid ) ;
+            new price = ap_improve_price [ improveid ] ;
+            if ( PI[ playerid ] [ pCash ] < price )
+            {
+                show_apmenu ( playerid ) ;
+                return SendClientMessage ( playerid, COLOR_WHITE, !"У Вас недостаточно денег." ) ;
+            }
+            new kvart_id = PI[ playerid ] [ APARTMENT ] - 1 ;
+
+            ap_info [ kvart_id ] [ ap_improve ] [ improveid ] = 1 ;
+            new data [ 32 ], query [ 128 ] ;
+            for(new i = 0; i < 4; i++)
+            {
+                if(!i) format ( data, sizeof ( data ),"%d", ap_info [ kvart_id ] [ ap_improve ] [ i ] ) ;
+                else format ( data, sizeof ( data ),"%s|%d", data, ap_info [ kvart_id ] [ ap_improve ] [ i ] ) ;
+            }
+            format(query,sizeof(query),"UPDATE `apartment` SET `a_improve` = '%s' WHERE `a_id` = '%d' LIMIT 1", data, kvart_id + 1 ) ;
+            mysql_tquery ( connects, query ) ;
+
+            PI[playerid][pCash] -= price;
+
+            SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Поздравляем, Вы купили улучшение для квартиры.");
+            if(improveid == improve_safe)
+            {
+                ap_info [ kvart_id ] [ ap_safe_code ] = 0 ;
+                format ( query, sizeof query, "UPDATE `apartment` SET `a_safe_code` = '0000' WHERE `a_id` = '%d' LIMIT 1", ap_info [ kvart_id ] [ ap_id ] ) ;
+                mysql_tquery ( connects, query ) ;
+                SendClientMessage ( playerid, COLOR_WHITE, !""SERVER"Код сейфа по умолчанию: {33aa33}0000" ) ;
+            }
+
+            stringer [ 0 ] = EOS;
+            new line_string [ 128 ] ;
+            for ( new i = 0 ; i < 4 ; i ++ )
+            {
+                new c[7];
+                if ( ap_info [ kvart_id ] [ ap_improve ] [ i ] ) c = "33aa33";
+                else if ( !i || ap_info [ kvart_id ] [ ap_improve ] [ i - 1 ] ) c = "ffffff" ;
+                else c = "afafaf" ;
+
+                format( line_string, sizeof ( line_string ),"{%s}%s\n", c, ap_improve_name [ i ] ) ;
+                strcat ( stringer, line_string ) ;
+            }
+            SPD ( playerid, 1212, DIALOG_STYLE_LIST, !""SERVER"Улучшения квартиры", stringer, !"Выбрать", !"Назад" ) ;
+        }
+        case 5124: pc_cmd_amenu(playerid);
+        case 5123:
+        {
+            if(!response) return 1;
+
+            new kvart_id = PI[playerid][APARTMENT] - 1;
+
+            switch(listitem)
+            {
+                case 0: pc_cmd_alock(playerid);
+                case 1:
+                {
+                    new floor_name[10];
+                    switch(ap_info [ kvart_id ] [ ap_floor ])
+                    {
+                        case 1: floor_name = "Первый";
+                        case 2: floor_name = "Второй";
+                        case 3: floor_name = "Третий";
+                        case 4: floor_name = "Четвертый";
+                        case 5: floor_name = "Пятый";
+                        case 6: floor_name = "Шестой";
+                        case 7: floor_name = "Седьмой";
+                        case 8: floor_name = "Восьмой";
+                        case 9: floor_name = "Девятый";
+                        case 10: floor_name = "Десятый";
+                        default: floor_name = "Unknown";
+                    }
+
+                    new strings[300];
+                    format ( strings, sizeof(strings), "{FFFFFF}Квартира: "SERVER"№%d\n{FFFFFF}Класс: "SERVER"%s\n{FFFFFF}Этаж: "SERVER"%s\n{FFFFFF}Оплачено: "SERVER"30 из 30 дней\n{FFFFFF}Аптечек в квартире: "SERVER"%d шт.",
+                    ap_info [ kvart_id ] [ ap_id ], apartment_class [ ap_info [ kvart_id ] [ ap_type ] - 1 ], floor_name, ap_info [ kvart_id ] [ ap_heal ] ) ;
+                    SPD ( playerid, 5124, DIALOG_STYLE_MSGBOX, !""SERVER"Информация о квартире", strings, !"Назад", !"" ) ;
+                }
+                case 2:
+                {
+                    stringer [ 0 ] = EOS;
+                    new line_string [ 128 ] ;
+                    for ( new i = 0 ; i < 4 ; i ++ )
+                    {
+                        new c[7];
+                        if ( ap_info [ kvart_id ] [ ap_improve ] [ i ] ) c = "33aa33";
+                        else if ( !i || ap_info [ kvart_id ] [ ap_improve ] [ i - 1 ] ) c = "ffffff" ;
+                        else c = "afafaf" ;
+
+                        format( line_string, sizeof ( line_string ),"{%s}%s\n", c, ap_improve_name [ i ] ) ;
+                        strcat ( stringer, line_string ) ;
+                    }
+                    SPD ( playerid, 1212, DIALOG_STYLE_LIST, !""SERVER"Улучшения квартиры", stringer, !"Выбрать", !"Назад" ) ;
+                }
+                case 3: pc_cmd_sellapartment(playerid);
+                case 4:
+                {
+                    SendClientMessage(playerid, COLOR_WHITE, !"Для того, чтобы продать квартиру игроку, используйте команду:");
+                    return pc_cmd_changeapartment(playerid, "");
+                }
+            }
+        }
+        case 5214:
+        {
+            if ( ! response )
+            {
+                DeletePVar ( GetPVarInt ( playerid, "h_seller_id" ), "h_sell_id" ) ;
+                DeletePVar ( playerid, "h_seller_id" ) ;
+                DeletePVar ( playerid, "h_seller_price" ) ;
+                return 1 ;
+            }
+            else
+            {
+                if ( PI[ GetPVarInt ( playerid, "h_seller_id" ) ] [ APARTMENT ] == -1 )
+                {
+                    DeletePVar ( GetPVarInt ( playerid, "h_seller_id" ), "h_sell_id" ) ;
+                    DeletePVar ( playerid, "h_seller_id" ) ;
+                    DeletePVar ( playerid, "h_seller_price" ) ;
+
+                    return SendClientMessage ( playerid, COLOR_WHITE, !"{afafaf}У игрока нет жилья." ) ;
+                }
+                if ( PI[ playerid ] [ APARTMENT ] != -1 )
+                {
+                    DeletePVar ( GetPVarInt ( playerid, "h_seller_id" ), "h_sell_id" ) ;
+                    DeletePVar ( playerid, "h_seller_id" ) ;
+                    DeletePVar ( playerid, "h_seller_price" ) ;
+                    SendClientMessage ( GetPVarInt ( playerid, "h_seller_id" ), COLOR_WHITE, !"{afafaf}У игрока уже есть жильё." ) ;
+                    return SendClientMessage ( playerid, COLOR_WHITE, !"{afafaf}У Вас уже есть жилье." ) ;
+                }
+                new h_price_int = GetPVarInt ( playerid, "h_seller_price" ) ;
+                if ( PI[ playerid ] [ pCash ] < h_price_int )
+                {
+                    DeletePVar ( GetPVarInt ( playerid, "h_seller_id" ), "h_sell_id" ) ;
+                    DeletePVar ( playerid, "h_seller_id" ) ;
+                    DeletePVar ( playerid, "h_seller_price" ) ;
+                    SendClientMessage ( GetPVarInt ( playerid, "h_seller_id" ), COLOR_WHITE, !"{afafaf}У игрока нет такого количества денег." ) ;
+                    return SendClientMessage ( playerid, COLOR_WHITE, !"{afafaf}У Вас нет такого количества денег." ) ;
+                }
+                new h_seller_id = GetPVarInt ( playerid, "h_seller_id" ) ;
+                if(!ProxDetectorS(5.0, playerid, h_seller_id))
+                {
+                    DeletePVar ( GetPVarInt ( playerid, "h_seller_id" ), "h_sell_id" ) ;
+                    DeletePVar ( playerid, "h_seller_id" ) ;
+                    DeletePVar ( playerid, "h_seller_price" ) ;
+                    SendClientMessage ( GetPVarInt ( playerid, "h_seller_id" ), COLOR_WHITE, !"{afafaf}Покупатель слишком далеко." ) ;
+                    return SendClientMessage ( playerid, COLOR_WHITE, !"{afafaf}Вы слишком далеко от продавца." ) ;
+                }
+                if ( GetPVarInt ( h_seller_id, "h_sell_id" ) != playerid )
+                {
+                    DeletePVar ( GetPVarInt ( playerid, "h_seller_id" ), "h_sell_id" ) ;
+                    DeletePVar ( playerid, "h_seller_id" ) ;
+                    DeletePVar ( playerid, "h_seller_price" ) ;
+                    return SendClientMessage ( playerid, COLOR_WHITE, !"error #275" ) ;
+                }
+
+                PI[ playerid ] [ APARTMENT ] = PI[ h_seller_id ] [ APARTMENT ] ;
+                PI[ h_seller_id ] [ APARTMENT ] = -1 ;
+
+                new apa_id = PI[ playerid ] [ APARTMENT ] ;
+                format ( ap_info [ apa_id - 1 ] [ ap_owner_name ], MAX_PLAYER_NAME, "%s", PI[ playerid ] [ pNames ] ) ;
+                ap_info [ apa_id - 1 ] [ ap_owner ] = PI[ playerid ] [ pID ] ;
+
+                PI[ playerid ] [ pCash ] -= h_price_int;
+                PI[ h_seller_id ] [ pCash ] += h_price_int;
+
+                UpdatePlayerData(playerid, "apartment", PI[playerid][APARTMENT]);
+                UpdatePlayerData(h_seller_id, "apartment", PI[h_seller_id][APARTMENT]);
+
+                PI[playerid][Settings][2] = 2;
+                format(stringer1,sizeof(stringer1),"%d, %d, %d, %d, %d, %d, %d",PI[playerid][Settings][0],PI[playerid][Settings][1],PI[playerid][Settings][2],
+                PI[playerid][Settings][3],PI[playerid][Settings][4], PI[playerid][Settings][5], PI[playerid][Settings][6]);
+                mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `settings` = '%s' WHERE `pID` = '%d'",stringer1,PI[playerid][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Вы успешно приобрели данную квартиру.");
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Меню управления квартирой: "SERVER"/amenu (/am).");
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Местом спавна автоматически установлена квартира.");
+
+                new query_string [ 142 + MAX_PLAYER_NAME + 1 ] ;
+                format ( query_string, 138,"UPDATE `apartment` SET `a_owner` = '%d',`a_ownername` = '%s' WHERE `a_id` = '%d' LIMIT 1", PI[ playerid ] [ pID ], PI[ playerid ] [ pNames ], apa_id ) ;
+                mysql_tquery ( connects, query_string ) ;
+
+                format ( query_string, 112, "Вы продали своё жильё {33aa33}%s {ffffff}за {33aa33}%d руб.", PI[ playerid ] [ pNames ], h_price_int ) ;
+                SendClientMessage ( h_seller_id, COLOR_WHITE, query_string ) ;
+
+                PI[h_seller_id][Settings][2] = 0;
+                format(stringer1,sizeof(stringer1),"%d, %d, %d, %d, %d, %d, %d",PI[h_seller_id][Settings][0],PI[h_seller_id][Settings][1],PI[h_seller_id][Settings][2],
+                PI[h_seller_id][Settings][3],PI[h_seller_id][Settings][4], PI[h_seller_id][Settings][5], PI[h_seller_id][Settings][6]);
+                mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `settings` = '%s' WHERE `pID` = '%d'",stringer1,PI[h_seller_id][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+
+                DeletePVar ( h_seller_id, "h_sell_id" ) ;
+                DeletePVar ( playerid, "h_seller_id" ) ;
+                DeletePVar ( playerid, "h_seller_price" ) ;
+            }
+            return 1 ;
+        }
+        case 5213:
+        {
+            if ( ! response ) return 1 ;
+            new s_house_id = PI[ playerid ] [ APARTMENT ] - 1 ;
+            format ( ap_info [ s_house_id ] [ ap_owner_name ], MAX_PLAYER_NAME, "Собственность области" ) ;
+
+            ap_info [ s_house_id ] [ ap_owner ] = -1 ;
+            ap_info [ s_house_id ] [ ap_closed ] = 0 ;
+            PI[playerid][pCash] += ap_info [ s_house_id ] [ ap_price ];
+
+            PI[ playerid ] [ APARTMENT ] = -1 ;
+            UpdatePlayerData(playerid, "apartment", PI[ playerid ] [ APARTMENT ]);
+            save_apartment ( s_house_id ) ;
+
+            PI[playerid][Settings][2] = 0;
+            format(stringer1,sizeof(stringer1),"%d, %d, %d, %d, %d, %d, %d",PI[playerid][Settings][0],PI[playerid][Settings][1],PI[playerid][Settings][2],
+            PI[playerid][Settings][3],PI[playerid][Settings][4], PI[playerid][Settings][5], PI[playerid][Settings][6]);
+            mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `settings` = '%s' WHERE `pID` = '%d'",stringer1,PI[playerid][pID]);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+
+            if ( IsValidDynamic3DTextLabel ( ap_info [ s_house_id ] [ ap_safe ] ) ) DestroyDynamic3DTextLabel ( ap_info [ s_house_id ] [ ap_safe ] ) ;
+            if ( IsValidDynamic3DTextLabel ( ap_info [ s_house_id ] [ ap_fridge ] ) ) DestroyDynamic3DTextLabel ( ap_info [ s_house_id ] [ ap_fridge ] ) ;
+
+            new data [ 48 ], query [ 128 ] ;
+            for(new i; i < 8; i++)
+            {
+                ap_info[s_house_id][ap_improve][ i ] = 0;
+                if(!i) format ( data, sizeof ( data ),"%d", ap_info [ s_house_id ] [ ap_improve ] [ i ] ) ;
+                else format ( data, sizeof ( data ),"%s|%d", data, ap_info [ s_house_id ] [ ap_improve ] [ i ] ) ;
+            }
+            format(query,sizeof(query),"UPDATE `apartment` SET `a_improve` = '%s' WHERE `a_id` = '%d' LIMIT 1", data, s_house_id ) ;
+            mysql_tquery ( connects, query ) ;
+
+            ap_info [ s_house_id ][ ap_safe_code ] = 0 ;
+            format ( query, sizeof query, "UPDATE `apartment` SET `a_safe_code` = '0000' WHERE `a_id` = '%d' LIMIT 1", ap_info [ s_house_id ] [ ap_id ] ) ;
+            mysql_tquery ( connects, query ) ;
+
+            SendClientMessage ( playerid, COLOR_WHITE, !""SERVER"Вы успешно продали недвижимость государству." ) ;
+        }
+        case 5212:
+        {
+            if ( ! response ) return 1 ;
+            new h = GetPVarInt ( playerid, "apartment_id" ) - 1 ;
+            if ( GetPVarInt ( playerid, "apartment_dialog" ) == 1 )
+            {
+                if ( ! IsPlayerInRangeOfPoint ( playerid, 2.00, ap_info [ h ] [ ap_pos ] [ 0 ], ap_info [ h ] [ ap_pos ] [ 1 ], ap_info [ h ] [ ap_pos ] [ 2 ] ) )
+                {
+                    SendClientMessage ( playerid, COLOR_WHITE, "Вы слишком далеко от объекта недвижимости." ) ;
+                    DeletePVar ( playerid, "apartment_id" ), DeletePVar ( playerid, "apartment_dialog" ) ;
+                    return 1 ;
+                }
+                if ( ap_info [ h ] [ ap_owner ] != -1 )
+                {
+                    SendClientMessage ( playerid, COLOR_WHITE, "Данная недвижимость уже находится в частной собственности." ) ;
+                    DeletePVar ( playerid, "apartment_id" ), DeletePVar ( playerid, "apartment_dialog" ) ;
+                    return 1 ;
+                }
+                if ( PI[playerid][pCash] < ap_info [ h ] [ ap_price ] )
+                {
+                    SendClientMessage ( playerid, COLOR_WHITE, "У Вас не хватает средств для приобретения недвижимости." ) ;
+                    return 1 ;
+                }
+                if ( PI[ playerid ] [ APARTMENT ] != -1 )
+                {

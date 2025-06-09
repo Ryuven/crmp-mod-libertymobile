@@ -1,0 +1,999 @@
+#pragma dynamic 5159
+
+// ============================== [ PRAGMA ] ===================================
+#pragma warning disable 234 // НЕ ТРОГАТЬ, УБЕРАЕТ ВАРНИНГИ
+#pragma warning disable 219 // НЕ ТРОГАТЬ, УБЕРАЕТ ВАРНИНГИ
+#pragma warning disable 201 // НЕ ТРОГАТЬ, УБЕРАЕТ ВАРНИНГИ
+#pragma warning disable 202 // НЕ ТРОГАТЬ, УБЕРАЕТ ВАРНИНГИ
+#pragma warning disable 213 // НЕ ТРОГАТЬ, УБЕРАЕТ ВАРНИНГИ
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+
+// ===================== [ ДОБАВИЛ BY WIPE STUDIO ] ============================
+// ------------------------- [ gamemodes v1 ] ----------------------------------
+// 0.1. Семью можно купить в правительстве за 2.000.000 рублей
+// 0.2. Добавлены дифайны для упрощенной работы с павно
+// 0.3. Уже 25 бизнесов с нормальным названием и ценами
+// 0.4. Команда лицензии на диалоге
+// ------------------------- [ gamemodes v2 ] ----------------------------------
+// 0.1. Команда паспорта на диалоге
+// 0.2. Команда медкарты пофикшена можно выдать другому игроку
+// 0.3. Поставлен административный помощник на спавне админов
+// 0.4. Убрал покупка лидерки и создателя(не фулл)
+// 0.5. Поменял скин админа(айди), поменял зп админа, добавил команду /askin
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+
+// ============================== [ INCLUDE ] ==================================
+#include <a_samp>
+#include <Pawn.CMD>
+#include <sscanf2>
+#include <foreach>
+#include <a_mysql>
+#include <regex>
+#include <a_actor>
+#include <geolocation>
+#include <Pawn.RakNet>
+#include <mxdate>
+#include <fdialog>
+#include <profiler>
+#include <crashdetect>
+#include <customhud>
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+main();
+// ============================ [ SETTINGS SERVER ] ============================
+#define SERVER_NAME "Liberty MOBILE"   // НАЗВАНИЕ ПРОЕКТА
+#define SERVER_WEBSITE "none"   // ССЫЛКА НА САЙТ ПРОЕКТА
+#define SERVER_FORUM "none"   // ССЫЛКА НА ФОРУМ ПРОЕКТА
+#define SERVER_MOD_VERSION "0.2"   // ВЕРСИЯ ДАННОГО МОДА
+#define AVTOR_MODA "Lil_Wipe (t.me/lil_wipe)"   // АВТОР МОДА ИЛИ ФИКСА
+#define SERVER_TELEGRAM "t.me/liberty_crmp"   // ССЫЛКА НА ТЕЛЕГРАММ-КНАЛ ПРОЕКТА
+// =============================================================================
+
+#define SWEEPER_DIALOG_ID 10007
+
+#define GetPlayerMoneyEx(%0)	GetPlayerData(%0, pCash) 			// деньги игрока
+#define GetPlayerIpEx(%0)		GetPlayerData(%0, pIpReg) 			// ип игрока
+
+#define SPD Dialog
+
+#define COR_SERVER          0x6666CCFF
+
+new online;
+
+#define MAX_DOWNS	100 // Максимальное кол-во кресел/диванов, на которые можно будет сесть
+new
+	Float: SeatDownX[MAX_DOWNS],
+	Float: SeatDownY[MAX_DOWNS],
+	Float: SeatDownZ[MAX_DOWNS],
+	Float: SeatDownA[MAX_DOWNS],
+	TOTALDOWNS;
+	
+new mysql;
+new admcar[MAX_PLAYERS];
+
+new dialogpickupschool;
+new Inkasator[7];//сколько машин
+
+enum pon
+{
+	pVodPravapon,
+}
+new ShoskiPon[MAX_PLAYERS][pon];
+
+#define STREAMER_OBJECT_SD 900.0
+
+new Float:sweeper_way[][3] = {
+        { -467.889678, 964.479614, 11.767663 },
+        { -321.087432, 965.437744, 11.773393 },
+        { -77.987434, 904.849792, 11.774001 },
+        { 79.662689, 844.006408, 11.773948 },
+        { 209.782653, 794.807678, 11.772226 },
+        { 144.528671, 625.993408, 11.773208 },
+        { 105.321907, 549.454345, 11.775374 },
+        { -20.667158, 572.612304, 11.769291 },
+        { -226.794479, 600.761108, 11.775735 },
+        { -376.232513, 627.966796, 11.773043 },
+        { -377.087921, 724.104125, 11.774024 },
+        { -375.942840, 952.746276, 11.772437 },
+        { -468.150054, 959.129821, 11.746495 },
+        { -490.038970, 876.905456, 11.718817 }
+};
+
+enum //диалоги
+{
+	DIALOG_DONATE_CASE_PRISE,
+	DIALOG_DONATE_CASE,
+}
+
+
+#include <streamer>
+
+#define PACKET_CUSTOMRPC    			251
+#define RPC_SHOW_NOTIFICATION      0x32
+
+//дальнобои
+new Fura[2];
+new Pricep[10];
+new Text3D:Pricep3dtext[10];
+new Checkpoint[MAX_PLAYERS];
+new pablochek[MAX_PLAYERS];
+
+//мопеды пикапы
+new moped_online[MAX_PLAYERS];
+
+new TEST_SERVER = 0;
+
+new timer_jack[MAX_PLAYERS];
+new sms_timer[MAX_PLAYERS];
+
+#define AUTH_CAMERA_POS 	 236.4, 810.1, 20.0 // позиции камеры при авторизации/регистрации
+#define AUTH_CAMERA_LOOK 	-400.0, 400.0, 5.0 // позиции камеры при авторизации/регистрации
+
+// УГОН ТРАНСПОРТА
+new cars_ugon_count;
+new Float: cars_pos_ugon[10][4] =
+{
+    {-159.0344,998.9144,11.2345,1.6127},
+    {20.7765,994.8978,11.2013,73.2310},
+    {85.8309,1363.0703,11.3718,348.8142},
+    {-49.0115,1661.2484,8.5196,177.4891},
+    {-64.7440,1254.4534,11.2573,226.0267},
+    {55.8779,1048.5300,11.2825,167.9931},
+    {-54.1761,819.1381,11.2433,159.0108},
+    {-182.7528,628.5712,11.2666,352.8759},
+    {-311.7483,545.6257,11.8181,82.3681},
+    {-301.8472,427.6505,11.8299,83.1204}
+};
+
+// СИСТЕМА РЕЙСА
+new race_timer[MAX_PLAYERS], Float:player_race_pos[MAX_PLAYERS][4];
+
+/***************************** [ TIMER'S ] ************************************/
+
+static
+    GlobalSecondTimer = -1,
+    GlobalMinuteTimer = -1;
+
+new player_family [ MAX_PLAYERS ]; // переменная игрока, меняете на своё.
+
+#define MAX_FAMILY 500
+new Iterator:family_vehicles[MAX_FAMILY]<MAX_VEHICLES-1>;
+
+enum _fam_enum_
+{
+    f_id,
+    f_name [ 32 ],
+    f_chat_color,
+    f_creator [ MAX_PLAYER_NAME ],
+    f_creating_data [ 32 ],
+    f_members_amount,
+    f_nationality,
+    f_online,
+    f_house,
+    f_rating
+}
+new family_info [ MAX_FAMILY ] [ _fam_enum_ ]; // Расчитано на 500 семей
+
+new model_family[7] =
+{
+    405, 410, 415, 419, 429, 477, 480
+};
+
+new model_family_name[7][24] =
+{
+    "BMW M5", "Nissan GTR", "Lamborghini Huracan", "Bentley Continental", "Porshe Panamera", "Rolls-Royce Phantom", "Lexus LFA"
+};
+
+new model_family_price[7] =
+{
+    12000000, 17000000, 35000000, 150000000, 25000000, 25000000, 30000000
+};
+
+new family_count = 0; // кол-во семей.
+
+enum
+{
+    dFamilyCreate = 5000,
+    dFamilyMenu,
+    dFamilyInfo,
+    dFamilyOffMembers,
+    dFamilyOnline,
+    dFamilyChatColor,
+    dFamilyNationality,
+    dFamilyInvite
+}//Диалоги
+
+new family_chat_color[5][12] = {//Массив цвета для чата
+    "FFFFFF","FFD39B","FFFF00","54FF9F","98F5FF"
+};
+
+/***************************** [ REG PLAYERS ] ********************************/
+
+new reg_players = 0;
+
+/****************************** [ TUNING ] ************************************/
+
+new Float: pos_tuning [ 4 ] [ 4 ] =
+{
+    {2060.8562,1883.6046,15.3945,90.8727},
+    {2060.7578,1878.5004,15.3945,87.54046306},
+    {2060.2705,1873.0806,15.4555,90.4775},
+    {2060.5864,1867.7013,15.3983,92.1032}
+};
+
+/*************************** [ BIZ WAR SYSTEM ] *******************************/
+
+new BizWarTime[2] = 0,
+    BizHourTime = 0,
+    Text: Bizwar[3],
+    biz_war_gangzone = - 1,
+    war_gangzone = - 1,
+    Float:mafia_zone[4];
+
+enum MzoneInfo
+{
+    bFrakVlad,
+    bNapad,
+    bBiz,
+    bCountDead[18]
+}
+new MZInfo[MzoneInfo];
+new PlayerPPKFix[MAX_PLAYERS];
+
+////////////////////////////////////////////////////////////////////////////////
+
+new PlayerReportFix[MAX_PLAYERS];
+
+#define REPORT_STATUS_NONE			0
+#define REPORT_STATUS_ANSWERED		1
+#define REPORT_STATUS_SKIPPED		2
+#define REPORT_STATUS_DISCONNECT	3
+
+#define TABLE_REPORTS				"reports_list"
+
+enum TEMP_REPORT_E {
+    reportID,
+    reportPlayerID,
+    reportDate[20],
+    reportText[144]
+};
+new TempReportInfo[MAX_PLAYERS][TEMP_REPORT_E];
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Record Online ] ~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+new
+    online_server,
+    ronline_server;
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~ [ Подземные паркинги ] ~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const MAX_PARKINGS = 11;
+
+enum _parkings
+{
+    park_id,
+    Float:park_x,
+    Float:park_y,
+    Float:park_z,
+    Float:park_r,
+    park_org
+}
+new
+    park_info[MAX_PARKINGS][_parkings],
+    gParkingsCount,
+    parking_area[MAX_PARKINGS];
+
+//МАШИНЫ ДЛЯ ДОНАТА
+#define MAX_VEHICLE_EXC 4
+
+new exc_vehicle_name [ MAX_VEHICLE_EXC ] [ 24 ] =
+{
+    "Tesla Cybertruck",
+    "Tesla Cybertruck",
+    "Tesla Model S",
+    "Mersedes 6x6"
+};
+
+new exc_vehicle_model [ MAX_VEHICLE_EXC ] = { 576, 466, 489, 411 };
+new exc_vehicle_price_rub [ MAX_VEHICLE_EXC ] = { 800, 700, 600, 500 };
+// СКИНЫ ДЛЯ ДОНАТА
+
+#define MAX_SKIN_EXC 5
+
+new exc_skin_name [ MAX_SKIN_EXC ] [ 24 ] =
+{
+    "Крик",
+    "Дед мороз",
+    "Батори",
+    "Гуль",
+    "Некоглай"
+};
+
+new exc_skin_model [ MAX_SKIN_EXC ] = { 98, 121, 132, 154, 161 };
+new exc_skin_price_rub [ MAX_SKIN_EXC ] = { 1000, 800, 1000, 700, 1500 };
+
+enum e_RENT_BIKE_PICKUP
+{
+    Float:RentBikePickup_PosX,
+    Float:RentBikePickup_PosY,
+    Float:RentBikePickup_PosZ,
+    RentBikePickup_ID,
+    STREAMER_TAG_3D_TEXT_LABEL:RentBikePickup_3DText,
+    RentBikePickup_TenantsCount,
+    RentBikePickup_MaxTenants
+};
+new RentBikePickupInfo[][e_RENT_BIKE_PICKUP] =
+{
+    {1870.1288,2253.0142,15.2740, 	-1, STREAMER_TAG_3D_TEXT_LABEL:-1, 0, 250}, // аренда мопедов 1 cпавн
+    {2764.0881,-2458.4819,21.7481, 	-1, STREAMER_TAG_3D_TEXT_LABEL:-1, 0, 250}, // аренда мопедов 2 спавн
+    {-328.6013,823.0311,13.0591, 	-1, STREAMER_TAG_3D_TEXT_LABEL:-1, 0, 250}, // аренда мопедов 3 спавн
+    {431.097198,1783.143676,11.997269, 	-1, STREAMER_TAG_3D_TEXT_LABEL:-1, 0, 250} // аренда мопедов возле больницы
+};
+const MAX_RENT_BIKE_PICKUPS = sizeof(RentBikePickupInfo);
+
+new RentBikePickupIDX[MAX_VEHICLES] = {-1, ...};
+new RentBikeOwner[MAX_VEHICLES] = {-1, ...};
+new PlayerRentBike[MAX_PLAYERS] = {-1, ...};
+
+new pVar__RentBike_PickupIDX[] = "pVar__RentBike_PickupIDX";
+
+stock Float:GetDistanceBetweenPoints(Float:X, Float:Y, Float:Z, Float:PointX, Float:PointY, Float:PointZ)
+{
+    new Float:Distance;Distance = floatabs(floatsub(X, PointX)) + floatabs(floatsub(Y, PointY)) + floatabs(floatsub(Z, PointZ));
+    return Distance;
+}
+stock Float: GetAngleToPoint(Float:x1, Float:y1, Float:x2, Float:y2)
+{
+    return atan2(y1-y2, x1-x2)-90.0;
+}
+
+//
+new gPlayerLogged[MAX_PLAYERS];
+
+/******************************************************************************/
+#pragma warning disable 239 // - Прихоти самблайма
+#pragma warning disable 214 // - Прихоти самблайма
+
+#define TABLE_BIZZ                                  "bizz"
+#define TABLE_ACCOUNT                               "accounts"
+#define TABLE_HOUSE                                 "house"
+#define TABLE_OTHER                                 "other"
+#define TABLE_MERIA                                 "meria"
+#define TABLE_BANLOG                                "banlog"
+#define TABLE_GANGZONE                              "gangzone"
+#define TABLE_PICK                                  "mayor"
+#define TABLE_GREENZONE                             "greenzone"
+#define TABLE_BANK                                  "bank"
+// ТАБЛИЦЫ ЛОГОВ
+#define TABLE_LOGBANK                               "transfers_log"
+#define TABLE_CAPTCHALOG                            "captchalog"
+/******************************************************************************/
+#define publics:%0(%1) forward %0(%1); public %0(%1)
+#define Cvet_0 0xFFFFFF80
+#define Cvet_1 0xFF0000FF
+#define Cvet_2 0x808080FF
+#define Cvet_3 0x008000FF
+#define Cvet_4 0xFFFF00FF
+#define Cvet_5 0x0000FFFF
+#define Cvet_6 0xFFA500FF
+#define Cvet_7 0x32CD32FF
+#define Cvet_8 0xFF00FFFF
+#define Cvet_9 0xDC143CFF
+#define Cvet_11 0xFFAB00FF
+#define Cvet_12 0x808000FF
+#define Cvet_13 0xFF6347FF
+#define Cvet_14 0xEE82EEFF
+#define Cvet_15 0xFFFFFFF
+
+new settings_name;
+
+new player_device[3][32] =
+{
+    {"PC"},
+    {"ANDROID"},
+    {"OLD CLIENT"}
+};
+
+// ------------------------
+new bool:allow_pc;  // Вход с ПК
+
+new adminprice = 80;    // Цена на админку
+new helpprice = 40;     // Цена на хелперку
+
+// ------------------------
+
+new string_scm[144];
+#define SCMF(%0,%1,%2,%3)               format(string_scm, 144, %2,%3) && SendClientMessage(%0, %1, string_scm)
+/******************************************************************************/
+#define SERVER                                  "{FF0000}" // - Цветовая гамма сервера
+//
+#define CBLUE              0x4682B4AA
+#define COLOR_ISPOLZUY     0x7FB151FF
+#define COLOR_GRAD1        0xB4B5B7FF
+#define COLOR_BLUE         0x33AAFFFF
+#define COLOR_GRAD2        0xBFC0C2FF
+#define COLOR_INDIGO       0x4B00B0AA
+#define COLOR_GRAD3        0xCBCCCEFF
+#define COLOR_GRAD4        0xD8D8D8FF
+#define COLOR_GRAD6        0xF0F0F0FF
+#define COLOR_BLACK        0x000000AA
+#define COLOR_GREY         0xAFAFAFAA
+#define COLOR_GREEN        0x33AA33AA
+#define COLOR_ORANGE       0xFF9900AA
+#define COLOR_RED          0xAA3333AA
+#define COLOR_LIGHTRED     0xFF6347AA
+#define COLOR_LIGHTBLUE    0x33CCFFAA
+#define COLOR_LIGHTGREEN   0x9ACD32AA
+#define COLOR_YELLOW       0xFFFF00AA
+#define COLOR_YELLOW2      0xF5DEB3AA
+#define COLOR_WHITE        0xFFFFFFAA
+#define COLOR_REDD         0xFF0000AA
+#define COLOR_BROW         0xA85400AA
+#define COLOR_FADE1        0xE6E6E6E6
+#define COLOR_FADE2        0xC8C8C8C8
+#define COLOR_FADE3        0xAAAAAAAA
+#define COLOR_FADE4        0x8C8C8C8C
+#define COLOR_FADE5        0x6E6E6E6E
+#define COLOR_PURPLE       0xC2A2DAAA
+#define COLOR_DBLUE        0x2641FEAA
+#define COLOR_ALLDEPT      0xFF8282AA
+#define COLOR_NEWS         0xFFA500AA
+#define COLOR_OOC          0xE0FFFFAA
+#define COLOR_BOX          0x00000050
+#define COLOR_BBLUE        0x20A9FFAA
+#define TEAM_BLUE_COLOR    0x8D8DFF00
+#define TEAM_GROVE_COLOR   0x00D900C8
+#define TEAM_VAGOS_COLOR   0xFFC801C8
+#define TEAM_BALLAS_COLOR  0xD900D3C8
+#define TEAM_AZTECAS_COLOR 0x01FCFFC8
+#define TEAM_CYAN_COLOR    0xFF8282AA
+#define TEAM_ORANGE_COLOR  0xFF830000
+#define COLOR_ORANGE       0xFF9900AA
+#define COLOR_RED          0xAA3333AA //это для цвета
+#define COLOR_YELLOW3      0xFFCC00AA
+#define COLOR_SILVER       0xC0C0C0FF
+#define COLOR_SHBAR        0x6053F3FF
+#define COLOR_SHBAR_BG     0x000000FF
+#define COLOR_SHBAR_BG2    0xB8CEF6FF
+#define dColorGun                       9164
+#define dColorGun2                      9165
+#define publics:%0(%1)                                                          forward %0(%1); public %0(%1)
+/******************************************************************************/
+#define PRESSED(%0) (((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+#define RELEASED(%0) (((newkeys & (%0)) != (%0)) && ((oldkeys & (%0)) == (%0)))
+#define HOLDING(%0) ((newkeys & (%0)) == (%0))
+#define RandomEx(%1,%2) (random(%2-%1)+%1)
+// Казино:
+#define VW_DRAGONS 50
+#define VW_CALIGULAS 51
+#define DRAGONS_FRAC 27 // номер фракции 4 драконы
+#define CALIGULAS_FRAC 28 // номер фракции калигула
+#define D_DUTY 15000
+#define D_ROULE 16000
+#define D_DICE 17000
+#define D_BLACKJACK 18000
+#define MAX_DICETABLES 8
+#define MAX_ROULETABLES 12
+#define MAX_BLACKJACKTABLES 12
+//
+#define D_ATUNE 450
+#define ANTI_FLOODS     1
+#define ONE_HUNDRED_MSECOND             1000
+#define DIALOG_STYLE_MSG4  0
+#define MAX_BUSINESS (200)
+#define MAX_ADVERT_COUNT 15 // Максимальное кол-во объявлений
+#define KEY_AIM 128
+#define SMALL_SIZE 64
+#define Max
+#define MAX_PROMO 20
+#define YouCanNot                                   "Вам недоступна эта функция!"
+#define SendMes(%1,%2,%3)    format(stringer1,sizeof(stringer1),%3), SendClientMessage(%1,%2,stringer1)
+#define GetPlayerInBiz(%0)		GetRealtorsrData(%0, bID) 	// в какой бизак вошел
+
+#define MAX_VIP_ADVERT_COUNT 20 // Максимальное кол-во VIP объявлений
+
+enum VIP_ADVERT_DATA
+{
+    vadSender[24],
+    vadCheker[24],
+    vadPhone,
+    vadText[100],
+    vadTime,
+    bool:vadCheked,
+    bool:vadBusy,
+    bool:vadCheking
+}
+new gVipAdvert[MAX_VIP_ADVERT_COUNT][VIP_ADVERT_DATA];
+new gVipAdvertCount;
+new vipadverttime;
+
+#define GivePVarInt(%0,%1,%2) SetPVarInt(%0,%1,(GetPVarInt(%0,%1) + %2))
+
+#define error                                   "{ffff00}[Ошибка]{ffffff}"
+#define inform                                   "{3399FF}[Информация]{ffffff}"
+
+#define MAX_PAYNSPRAY           10
+#define IsValidEmail(%1) \
+    regex_match(%1, "|([a-z0-9_\\.\\-]{1,20})@([a-z0-9\\.\\-]{1,20})\\.([a-z]{2,4})|is")
+//
+#define COLOR_GREY            0xAFAFAFAA
+#define COLOR_RED            0xAA3333AA
+new TeleportA = 0;
+new Float:TeleportFloatA[3];
+new TeleportInfoA[2];
+
+new yearpick;
+new numberpick;
+new createfam;
+new razdevalka_banya;
+
+new jail_area[4];
+
+/*
+    Подъезды + квартиры
+*/
+
+#define MAX_PODEZD 350
+
+enum _podeezd
+{
+    pod_id,
+    Float:pod_pos [ 4 ],
+    Float:pod_park_pos [ 4 ],
+    pod_icon,
+    pod_pickup,
+    pod_floor,
+    pod_world,
+    Text3D:pod_text
+} ;
+new pod_info [ MAX_PODEZD ] [ _podeezd ] ;
+
+new pod_count = 0 ;
+
+#define MAX_APARTMENT 15000
+
+new apartment_class [ 3 ] [ 8 ] = {"Люкс", "ТОП", "Люкс"};
+
+new Float:apartment_enter_bich [ 4 ] = { 66.8739,436.0070,1201.9454,1.6464 } ;
+new Float:apartment_spawn_bich [ 4 ] = { 57.0504,437.7449,1201.9454,270.5731 } ;
+new Float:apartment_exit_bich [ 3 ] = { 66.8739,436.0070,1201.9454 } ;
+
+new Float:apartment_enter_medium [ 4 ] = { 480.8087,2299.6187,1601.7969,176.8105 } ;
+new Float:apartment_spawn_medium [ 4 ] = { 493.0735,2310.1167,1604.6016,271.1444 } ;
+new Float:apartment_exit_medium [ 3 ] = { 480.8087,2299.6187,1601.7969 } ;
+
+new Float:apartment_enter_top [ 4 ] = { 10.4633, 2494.1567, 1540.9941, 359.0261 } ;
+new Float:apartment_spawn_top [ 4 ] = { 2.3692,2510.6702,1541.0020,180.2992 } ;
+new Float:apartment_exit_top [ 3 ] = { 10.4633, 2494.1567, 1540.9941 } ;
+
+new ap_improve_price [ 4 ] = { 10000, 12500, 15000, 23000 } ;
+new ap_improve_name [ 4 ] [ 22 ] = {"Аудио система", "Автоматические двери", "Холодильник", "Сейф"};
+
+#define improve_audio 			0
+#define improve_doors 			1
+#define improve_freeze 			2
+#define improve_safe 			3
+
+enum _apartment
+{
+    ap_id,
+    ap_owner,
+    ap_owner_name [ MAX_PLAYER_NAME ],
+    Float:ap_pos [ 4 ],
+    ap_vw,
+    ap_podezd,
+    ap_type,
+    ap_price,
+    ap_floor,
+    ap_pickup,
+    ap_exit_pickup,
+    ap_closed,
+    ap_improve [ 8 ],
+    ap_safe_code,
+    ap_safe_data [ 2 ],
+    ap_safe_guns [ 6 ],
+    ap_prods,
+    ap_seed,
+    ap_seed_result,
+
+    ap_radio_status,
+    ap_radio_url [ 128 ],
+
+    ap_heal,
+
+    Text3D:ap_safe,
+    Text3D:ap_fridge,
+
+    ap_sell_status,
+} ;
+new ap_info [ MAX_APARTMENT ] [ _apartment ] ;
+
+new apartment_count = 0 ;
+
+new Float:apartment_beggar [ 40 ] [ 4 ] =
+{
+    { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+    { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+    { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 },
+     { -1466.5449,-797.0806,17.0734,179.9201 },
+    { -1468.0063,-797.6807,17.0734,268.9279 },
+    { -1468.0082,-800.8185,17.0734,269.6408 },
+    { -1466.5521,-801.5156,17.0734,359.1101 }
+};
+
+
+new FirstPerson[MAX_PLAYERS], bool:switch_fp[MAX_PLAYERS];
+
+/******************************************************************************/
+enum
+E_ORG_DATA
+{
+    O_NAME[32],
+Float: O_SPAWN[4],
+    O_SPAWN_INT,
+    O_SPAWN_VW
+};
+
+/******************************************************************************/
+new g_organization[28][E_ORG_DATA] =
+{
+
+    {"МВД Г. Арзамас", {542.5897,342.8102,1201.8594,177.0195}, 0, 0}, //++++++++++++++
+    {"ФСБ", {1282.1091,-191.8916,1201.9819,180.9250}, 0, 0}, //++++++++++++++
+    {"NONE", {725.909912, -1299.934326, 1102.000000, 85.492195}, 15, 3},
+    {"NONE", {1158.368408, -1336.018432, 4001.100097, 0.391671}, 1, 1},
+    {"Курганская ОПГ", {792.9861,-968.9952,1205.9318,270.4008}, 0, 4},//++++++++++++++
+    {"Тамбовская ОПГ", {792.9861,-968.9952,1205.9318,270.4008}, 0, 2},//++++++++++++++
+    {"Мэрия", {672.8404,-13.3594,1202.0065,267.3052}, 0, 1}, //++++++++++++++
+    {"NONE", {000.000, 000.000, 000.000, 000.000}, -1, -1},
+    {"NONE", {000.000, 000.000, 000.000, 000.000}, -1, -1},
+    {"NONE", {225.164703, 121.044197, 999.078552, 89.073303}, 10, 0},
+    {"NONE", {-790.541198, 1555.099121, 1139.236938, 270.535888}, 1, 0},
+    {"NONE", {-61.298400, 1364.584716, 1080.210937, 100.000000}, 6, 34},
+    {"NONE", {303.630004, 309.250000, 999.148437, 263.049713}, 4, 75},
+    {"Ореховская ОПГ", {792.9861,-968.9952,1205.9318,270.4008}, 0, 3},//++++++++++++++
+    {"NONE", {2496.012939, -1708.923217, 1014.742187, 0.191797}, 3, 1},
+    {"Россия 24", {-2648.7813,-1827.8384,4.1045,359.5710}, 0, 1}, //++++++
+    {"NONE", {-49.755798, 1400.355346, 1084.429687, 90.424797}, 8, 36},
+    {"NONE", {-224.098907, 1410.445800, 27.773437, 89.287391}, 18, 63},
+    {"Армия Сухопутные войска", {-1830.2889,-2009.2148,-0.5234,359.2229}, 0, 0}, //+++++
+    {"NONE", {000.000, 000.000, 000.000, 000.000}, -1, -1},
+    {"NONE", {211.363601, 184.311294, 1003.031250, 174.357910}, 3, 122},
+    {"NONE", {000.000, 000.000, 000.000, 000.000}, -1, -1},
+    {"Похоронное бюро", {792.9861,-968.9952,1205.9318,270.4008}, 0, 1},
+    {"Стритрейсеры", {-227.4272,453.0845,12.8854, 316.816314}, 0, 0},
+    {"NONE", {211.786605, 142.404800, 1003.023437, 269.212799}, 3, 0},
+    {"NONE", {-806.013610, -672.316711, 4004.740478, 357.578186}, 1, 0},
+    {"NONE", {1950.792358, 1059.626098, 994.468750, 167.393981}, 10, 50},
+    {"NONE", {2151.969238, 1597.348266, 1006.176147, 359.832153}, 1, 51}
+};
+
+enum E_CONT_DATA
+{
+    C_NAME[32], // Название контейнера
+Float: C_SPAWN[4],  // Позиция спавна
+    C_TYPE_GIFT,    // 1 - $ 0 - RUB
+    C_PRICE,    // Цена
+    C_BET,      // Ставка
+Text3D:C_LABEL, // 3dtext
+    C_TIMER,
+    C_TIME,
+    C_LEADER_BET
+};
+
+new g_cont[3][E_CONT_DATA] =
+{
+    {"Уникальный автомобиль", {2489.9519,291.4786,29.4973}, 1, 30000000, -1},
+    {"Уникальный скин", {2484.5261,292.4818,29.4973}, 2, 20000000, -1},
+    {"F - Coins", {2478.5671,292.0558,29.4973}, 3, 550000000, -1}
+};
+
+new GiftCar[5] =
+{
+    411,579,503,505,429
+};
+new GiftSkin[5] =
+{
+    200,204,210,264,268
+};
+// prize day
+new skin_day[5] = {7, 125, 184, 167};
+new skin_name_day[4][32] = {"Камуфляж", "Рэпер", "Фотограф", "Курьер"}; // 14 8 9 5
+
+new car_day[6] = {411, 579, 429, 503, 505};
+/******************************************************************************/
+forward OnPlayerClickMap(playerid, Float:fX, Float:fY, Float:fZ);
+forward Float:GetDistanceBetweenPlayers(p1,p2);
+/******************************************************************************/
+
+
+new vehiclerc[MAX_PLAYERS];
+// HostNames
+new ServerName[3][64];
+new NameEnabled[3];
+// УСКОРИТЕЛИ ( BOOST-SYSTEM )
+new PayDayBoost = 1;
+new DonateGive = 0;
+//Настройки Администратора
+new bool:closewarnzz[MAX_PLAYERS] = false;
+new rc_pickup;
+new Teleport;
+new Float:TeleportFloat[3];
+new TeleportInfo[2];
+new TeleportInfo_players = 0;
+new dicetime;
+new PlayerIp[MAX_PLAYERS][1000+10000];
+
+enum
+E_BUY_CARS
+{
+    rent_car_modelid,
+Float: rent_car_pos_x,
+Float: rent_car_pos_y,
+Float: rent_car_pos_z,
+Float: rent_car_angle,
+};
+
+new Float:car_random_spawn_kvart[8][4] =
+{
+    {548.8497,997.4082,1000.5780,268.3231},
+    {548.9240,1000.5793,1000.6098,268.8433},
+    {548.8284,1003.6195,1000.6132,269.3321},
+    {548.7138,1006.8556,1000.6154,269.0490},
+    {548.8693,1011.5970,1000.5736,268.4701},
+    {549.1013,1014.6993,1000.5824,266.6292},
+    {549.1545,1017.9072,1000.5917,268.4078},
+    {549.1462,1021.1333,1000.5976,267.6946}
+};
+
+new cars_after_purchase_count[3];
+new Float: cars_pos_after_purchase[3][20][4] =
+{
+    { // --- Эконом класс
+        {2303.6929,-1789.5796,21.9668,268.8485},
+        {2303.5769,-1793.4410,21.9723,269.4314},
+        {2303.5754,-1797.7495,21.9772,270.3573},
+        {2303.6089,-1801.9741,21.9772,270.3056},
+        {2303.5317,-1805.9979,21.9772,269.0792},
+        {2303.3157,-1810.2928,21.9772,268.3804},
+        {2303.2805,-1814.5638,21.9772,269.4890},
+        {2303.2568,-1818.6278,21.9772,268.0161},
+        {2303.1733,-1822.7643,21.9789,268.4214},
+        {2303.0229,-1827.2156,21.9798,269.1752},
+        {2303.6929,-1789.5796,21.9668,268.8485},
+        {2303.5769,-1793.4410,21.9723,269.4314},
+        {2303.5754,-1797.7495,21.9772,270.3573},
+        {2303.6089,-1801.9741,21.9772,270.3056},
+        {2303.5317,-1805.9979,21.9772,269.0792},
+        {2303.3157,-1810.2928,21.9772,268.3804},
+        {2303.2805,-1814.5638,21.9772,269.4890},
+        {2303.2568,-1818.6278,21.9772,268.0161},
+        {2303.1733,-1822.7643,21.9789,268.4214},
+        {2303.0229,-1827.2156,21.9798,269.1752}
+    },
+    { // --- Cредний класс
+        {492.9298,2252.1165,11.6728,149.8651},
+        {488.2086,2254.4475,11.6832,153.0872},
+        {483.8810,2256.6267,11.6896,153.6288},
+        {479.3761,2259.0974,11.6960,152.1558},
+        {475.0040,2261.4414,11.7016,152.0669},
+        {470.7078,2263.6431,11.7081,152.6374},
+        {466.3447,2265.9001,11.7132,152.3073},
+        {469.5154,2272.2192,11.7562,331.1513},
+        {474.3939,2269.7197,11.7599,332.4195},
+        {478.8628,2267.4126,11.7624,332.8946},
+        {492.9298,2252.1165,11.6728,149.8651},
+        {488.2086,2254.4475,11.6832,153.0872},
+        {483.8810,2256.6267,11.6896,153.6288},
+        {479.3761,2259.0974,11.6960,152.1558},
+        {475.0040,2261.4414,11.7016,152.0669},
+        {470.7078,2263.6431,11.7081,152.6374},
+        {466.3447,2265.9001,11.7132,152.3073},
+        {469.5154,2272.2192,11.7562,331.1513},
+        {474.3939,2269.7197,11.7599,332.4195},
+        {478.8628,2267.4126,11.7624,332.8946}
+    },
+    { // --- Премиум класс
+        {410.0148,1174.4539,11.6617,174.2907},
+        {405.1988,1174.8733,11.6713,174.9179},
+        {400.1261,1175.1077,11.6756,173.2636},
+        {395.0679,1175.7788,11.6828,173.8913},
+        {390.3048,1176.2206,11.6905,173.3327},
+        {385.5719,1176.8260,11.6966,172.8054},
+        {380.5282,1177.4172,11.7018,173.8232},
+        {375.0757,1177.9818,11.7079,174.2519},
+        {467.0530,1188.9567,11.6804,108.1249},
+        {467.8181,1193.5042,11.7624,110.1305},
+        {481.9011,1226.0596,11.7760,237.1527},
+        {481.0269,1221.2134,11.7802,241.8009},
+        {480.6018,1216.1348,11.7802,242.3351},
+        {480.3589,1211.4047,11.7802,243.5045},
+        {480.1880,1206.7235,11.7802,238.9231},
+        {479.6782,1201.5466,11.7802,241.9782},
+        {479.0752,1197.1814,11.7802,244.3015},
+        {478.3552,1191.9608,11.7802,239.1381},
+        {477.8067,1187.2727,11.7894,242.4176},
+        {471.4847,1227.1755,11.7335,108.7499}
+    }
+};
+
+new VehicleColoursTableRGBA[128] = {
+    // The existing colours from San Andreas
+    0x000000FF, 0xF5F5F5FF, 0x2A77A1FF, 0x840410FF, 0x263739FF, 0x86446EFF, 0xD78E10FF, 0x4C75B7FF, 0xBDBEC6FF, 0x5E7072FF,
+    0x46597AFF, 0x656A79FF, 0x5D7E8DFF, 0x58595AFF, 0xD6DAD6FF, 0x9CA1A3FF, 0x335F3FFF, 0x730E1AFF, 0x7B0A2AFF, 0x9F9D94FF,
+    0x3B4E78FF, 0x732E3EFF, 0x691E3BFF, 0x96918CFF, 0x515459FF, 0x3F3E45FF, 0xA5A9A7FF, 0x635C5AFF, 0x3D4A68FF, 0x979592FF,
+    0x421F21FF, 0x5F272BFF, 0x8494ABFF, 0x767B7CFF, 0x646464FF, 0x5A5752FF, 0x252527FF, 0x2D3A35FF, 0x93A396FF, 0x6D7A88FF,
+    0x221918FF, 0x6F675FFF, 0x7C1C2AFF, 0x5F0A15FF, 0x193826FF, 0x5D1B20FF, 0x9D9872FF, 0x7A7560FF, 0x989586FF, 0xADB0B0FF,
+    0x848988FF, 0x304F45FF, 0x4D6268FF, 0x162248FF, 0x272F4BFF, 0x7D6256FF, 0x9EA4ABFF, 0x9C8D71FF, 0x6D1822FF, 0x4E6881FF,
+    0x9C9C98FF, 0x917347FF, 0x661C26FF, 0x949D9FFF, 0xA4A7A5FF, 0x8E8C46FF, 0x341A1EFF, 0x6A7A8CFF, 0xAAAD8EFF, 0xAB988FFF,
+    0x851F2EFF, 0x6F8297FF, 0x585853FF, 0x9AA790FF, 0x601A23FF, 0x20202CFF, 0xA4A096FF, 0xAA9D84FF, 0x78222BFF, 0x0E316DFF,
+    0x722A3FFF, 0x7B715EFF, 0x741D28FF, 0x1E2E32FF, 0x4D322FFF, 0x7C1B44FF, 0x2E5B20FF, 0x395A83FF, 0x6D2837FF, 0xA7A28FFF,
+    0xAFB1B1FF, 0x364155FF, 0x6D6C6EFF, 0x0F6A89FF, 0x204B6BFF, 0x2B3E57FF, 0x9B9F9DFF, 0x6C8495FF, 0x4D8495FF, 0xAE9B7FFF,
+    0x406C8FFF, 0x1F253BFF, 0xAB9276FF, 0x134573FF, 0x96816CFF, 0x64686AFF, 0x105082FF, 0xA19983FF, 0x385694FF, 0x525661FF,
+    0x7F6956FF, 0x8C929AFF, 0x596E87FF, 0x473532FF, 0x44624FFF, 0x730A27FF, 0x223457FF, 0x640D1BFF, 0xA3ADC6FF, 0x695853FF,
+    0x9B8B80FF, 0x620B1CFF, 0x5B5D5EFF, 0x624428FF, 0x731827FF, 0x1B376DFF, 0xEC6AAEFF, 0x000000FF
+};
+
+enum Bazar
+{
+    aID,
+Float:BazX,
+Float:BazY,
+Float:BazZ,
+    bMoney,
+    BName[40]
+}
+
+new Text:logotype_TD[1];
+new Text:greenzone;
+
+new realtorFreePickup, realtorFreeBusiness, realtorInfo;
+new adons;
+//Донат-Очки
+new donateoch;
+//
+new TempBGObject[MAX_PLAYERS] = {-1, ...};
+new Visitors = 0;
+new server_online = 0;
+new Buyitem[MAX_PLAYERS] = {-1, ...};
+new PlayerText:InfoText[MAX_PLAYERS] = {PlayerText:-1, ...};
+new Text:Boxmenu0;
+new Text:Boxmenu1;
+new Text:Boxmenu2;
+new Text:boxaccept;
+new Text:boxcancel;
+new Text:Boxmenu3;
+new Text:ButtonLeft;
+new Text:ButtonRight;
+new Text:ButtonUp;
+new Text:ButtonDown;
+new Text:ButtonCancel;
+new Text:ButtonSelect;
+new ItemsId[][] =
+{
+    { 19421,19422,19423,19424,1}, //Наушники
+    { 19069,19068,19067,19554,18953,18954,1},//Шапки
+    { 18968,18967,18969,1},//Панамки
+    { 18955,18956,18957,18959,18926,18927,18928,18929,18930,18931,18932,18933,1},//Кепки
+    { 19104,19105,19106,19107,19108,19109,1},//Каски
+    { 18925,18922,18923,18924,18921,1},//Береты
+    { 19519,19274,1},//Парики
+    { 19011,19012,19013,19014,19015,19016,19017,19018,19019,19024,19027,19028,19029,19022,19035,19031,19032,19033,1},//Очки
+    { 18911,18912,18913,18914,18915,18916,18917,18918,18919,18920,1 }, //Банданы
+    { 18947,18948,18949,18950,18951,1 }, //Шляпы
+    { 19042,19041,19040,19039,19043,19044,19045,19046,19048,19049,19050,19051,19053,1 }, //Часы
+    { 3026,371,19559,1 },//портфели
+    { 18970, 18973, 18972, 18971,1 },//Шляпы
+    { 18910, 18909, 18908, 18907, 18906,1 }// Банданы на голову
+};
+new ItemsCost[][] =
+{
+    { 30000,30000,30000,30000,1}, //Наушники
+    { 15000,15000,20000,25000,17000,17000,1},//Шапки
+    { 9000,9000,9000,1},//Панамки
+    { 9000,9000,9000,12000,9000,9000,15000,15000,9000,9000,9000,15000,1},//Кепки
+    { 5000,5000,5000,5000,5000,5000,1},//Каски
+    { 8000,8000,8000,9000,11000,1},//Береты
+    { 15000,15000,1},//Парики
+    { 6000,8000,4000,5000,6000,7000,7000,7000,10000,11000,11000,11000,11000,11000,10000,8000,11000,11000,1},//Очки
+    { 6000,6000,6000,8000,8000,8000,8000,7000,7000,7000,1 }, //Банданы
+    { 30000,30000,30000,30000,30000,1 }, //Шляпы
+    { 80000,700000,60000,60000,60000,10000,10000,10000,20000,24000,24000,15000,24000,1 }, //Часы
+    {10000,8000,9000,1},//портфели
+    {40000,40000,50000,40000,1},//шляпы
+    {6000,6000,6000,6000,6000,1}//Банданы
+};
+
+//Покупка команд
+enum
+{
+    CMD_setadmin,
+    CMD_setleader,
+    CMD_acar,
+    CMD_avig,
+    CMD_aunvig,
+    CMD_offleader,
+    CMD_veh,
+    CMD_setprefix,
+    CMD_templeader,
+    CMD_NUM//кол-во команд в этом списке (не трогать, оставить вконце) //11111111111
+};
+static const stock CMD_names[CMD_NUM][32] =
+{
+    "/setadmin",
+    "/setleader",
+    "/acar",
+    "/avig",
+    "/aunvig",
+    "/offleader",
+    "/veh",
+    "/prefix",
+    "/templeader"
+};
+static const stock CMD_desc[CMD_NUM][64] =
+{
+    "- Назначать администраторов",
+    "- Назначить лидера фракции",
+    "- Создать админский Ferrari",
+    "- Выдать выговор администратору",
+    "- Снять выгор администратору",
+    "- Снять лидера в оффлайне",
+    "- Создание автомобиля",
+    "- Выдача префикса",
+    "- Выдача временной лидерки"
+};
+static const stock CMD_price[CMD_NUM] = { // Цены на команды
+    1200, // setadmin
+    700, // setleader
+    100, // acar
+    800, // avig
+    750, // aunvig
+    410, // Offleader
+    500, // veh
+    500, // setprefix
+    500 // templeader
+};
+new PlayerBigEarsConnect[MAX_PLAYERS char] = true;
+// КОНВЕРТИРОВАНИЕ UNIX времени:
+#define EPOCH_YR        1970            /* EPOCH = Jan 1 1970 00:00:00 */
+#define SECS_DAY        (24 * 60 * 60)
+#define LEAPYEAR(%0)    (!((%0) % 4) && (((%0) % 100) || !((%0) % 400)))
+#define YEARSIZE(%0)    (LEAPYEAR(%0) ? 366 : 365)

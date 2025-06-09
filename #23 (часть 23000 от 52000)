@@ -1,0 +1,1000 @@
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[13][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[13][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[107][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[107][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 3: //Army SF
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[142][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[142][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[91][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[91][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[150][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[150][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[89][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[89][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 4: //Mediki
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[16][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[16][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[17][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[17][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[18][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[18][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[19][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[19][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[20][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[20][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, 308); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = 308; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, 309); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 309; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 5: //Курганская ОПГ
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[21][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[21][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[22][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[22][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[23][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[23][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[24][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[24][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 6: //Тамбовская ОПГ
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[25][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[25][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[26][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[26][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[27][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[27][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[28][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[28][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[108][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[108][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 7: //ГУБЕРНАТОР
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[29][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[29][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[30][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[30][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[31][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[31][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[32][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[32][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[33][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[33][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 10: //сфпд
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[34][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[34][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[35][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[35][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[36][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[36][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[37][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[37][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[38][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[38][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[145][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[145][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[146][0]); SelectCharPlace[playerid] = 8; InviteSkin[playerid] = JoinPed[146][0]; }
+                        else if(SelectCharPlace[playerid] == 8) { SetPlayerSkinEx(playerid, JoinPed[144][0]); SelectCharPlace[playerid] = 9; InviteSkin[playerid] = JoinPed[144][0]; }
+                        else if(SelectCharPlace[playerid] == 9) { SetPlayerSkinEx(playerid, JoinPed[40][0]); SelectCharPlace[playerid] = 10; InviteSkin[playerid] = JoinPed[40][0]; }
+                        else if(SelectCharPlace[playerid] == 10) { SetPlayerSkinEx(playerid, 310); SelectCharPlace[playerid] = 11; InviteSkin[playerid] = 310; }
+                        else if(SelectCharPlace[playerid] == 11) { SetPlayerSkinEx(playerid, 311); SelectCharPlace[playerid] = 12; InviteSkin[playerid] = 311; }
+                        else if(SelectCharPlace[playerid] == 12) { SetPlayerSkinEx(playerid, JoinPed[41][0]); SelectCharPlace[playerid] = 13; InviteSkin[playerid] = JoinPed[41][0]; }
+                        else if(SelectCharPlace[playerid] == 13) { SetPlayerSkinEx(playerid, 306); SelectCharPlace[playerid] = 14; InviteSkin[playerid] = 306; }
+                        else if(SelectCharPlace[playerid] == 14) { SetPlayerSkinEx(playerid, 307); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 307; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 11: //Instructors
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[48][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[48][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[49][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[49][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[50][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[50][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[51][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[51][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 12://Баллас
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[74][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[74][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[75][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[75][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[76][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[76][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[119][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[119][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 13://Vagos
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[80][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[80][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[81][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[81][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[82][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[82][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[121][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[121][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 14://Русские
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[60][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[60][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[61][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[61][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[62][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[62][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[63][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[63][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[64][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[64][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 15://Грув
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[65][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[65][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[66][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[66][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[67][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[67][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[68][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[68][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[69][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[69][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[70][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[70][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[122][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[122][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 16://ЛС NEWS
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[85][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[85][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[86][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[86][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[87][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[87][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[88][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[88][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[147][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[147][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[148][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[148][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[149][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[149][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 17://азтек
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[71][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[71][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[72][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[72][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[73][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[73][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[123][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[123][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 18://Рифа
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[77][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[77][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[78][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[78][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[79][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[79][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[120][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[120][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 19://Army LV
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[143][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[143][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[91][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[91][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[150][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[150][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[89][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[89][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 21://LVPD
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[52][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[52][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[53][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[53][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[54][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[54][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[55][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[55][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[56][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[56][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[145][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[145][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[146][0]); SelectCharPlace[playerid] = 8; InviteSkin[playerid] = JoinPed[146][0]; }
+                        else if(SelectCharPlace[playerid] == 8) { SetPlayerSkinEx(playerid, JoinPed[144][0]); SelectCharPlace[playerid] = 9; InviteSkin[playerid] = JoinPed[144][0]; }
+                        else if(SelectCharPlace[playerid] == 9) { SetPlayerSkinEx(playerid, JoinPed[58][0]); SelectCharPlace[playerid] = 10; InviteSkin[playerid] = JoinPed[58][0]; }
+                        else if(SelectCharPlace[playerid] == 10) { SetPlayerSkinEx(playerid, 310); SelectCharPlace[playerid] = 11; InviteSkin[playerid] = 310; }
+                        else if(SelectCharPlace[playerid] == 11) { SetPlayerSkinEx(playerid, 311); SelectCharPlace[playerid] = 12; InviteSkin[playerid] = 311; }
+                        else if(SelectCharPlace[playerid] == 12) { SetPlayerSkinEx(playerid, JoinPed[59][0]); SelectCharPlace[playerid] = 13; InviteSkin[playerid] = JoinPed[59][0]; }
+                        else if(SelectCharPlace[playerid] == 13) { SetPlayerSkinEx(playerid, 306); SelectCharPlace[playerid] = 14; InviteSkin[playerid] = 306; }
+                        else if(SelectCharPlace[playerid] == 14) { SetPlayerSkinEx(playerid, 307); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 307; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 23: //Mediki
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[105][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[105][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[106][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[106][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[107][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[107][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[108][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[108][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[109][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[109][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[135][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[135][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[136][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[136][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 24: //Street racers
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[110][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[110][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[111][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[111][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[112][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[112][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[113][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[113][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[114][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[114][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[115][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[115][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[116][0]); SelectCharPlace[playerid] = 8; InviteSkin[playerid] = JoinPed[116][0]; }
+                        else if(SelectCharPlace[playerid] == 8) { SetPlayerSkinEx(playerid, JoinPed[117][0]); SelectCharPlace[playerid] = 9; InviteSkin[playerid] = JoinPed[117][0]; }
+                        else if(SelectCharPlace[playerid] == 9) { SetPlayerSkinEx(playerid, JoinPed[126][0]); SelectCharPlace[playerid] = 10; InviteSkin[playerid] = JoinPed[126][0]; }
+                        else if(SelectCharPlace[playerid] == 10) { SetPlayerSkinEx(playerid, JoinPed[127][0]); SelectCharPlace[playerid] = 11; InviteSkin[playerid] = JoinPed[127][0]; }
+                        else if(SelectCharPlace[playerid] == 11) { SetPlayerSkinEx(playerid, JoinPed[128][0]); SelectCharPlace[playerid] = 12; InviteSkin[playerid] = JoinPed[128][0]; }
+                        else if(SelectCharPlace[playerid] == 12) { SetPlayerSkinEx(playerid, JoinPed[129][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[129][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 25: //SWAT
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[5][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[5][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[7][0]); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = JoinPed[7][0]; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 26: //Скины Администрация Президента
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, 17); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = 17; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, 216); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = 216; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, 227); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = 227; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, 287); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = 287; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, 265); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = 265; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, 70); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = 70; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, 12); SelectCharPlace[playerid] = 8; InviteSkin[playerid] = 12; }
+                        else if(SelectCharPlace[playerid] == 8) { SetPlayerSkinEx(playerid, 208); SelectCharPlace[playerid] = 9; InviteSkin[playerid] = 208; }
+                        else if(SelectCharPlace[playerid] == 9) { SetPlayerSkinEx(playerid, 295); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 295; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 27,28: //Казино
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, 98); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = 98; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, 171); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = 171; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, 172); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = 172; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, 189); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 189; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                }
+                mysql_format(connects, stringer1, sizeof stringer1, "UPDATE `accounts` SET `pModel` = '%d' WHERE `Name` = '%s'", PI[playerid][pModel], PI[playerid][pNames]);
+                mysql_tquery(connects, stringer1);
+
+            }
+        }
+    }
+    else if(Current == HouseShaw)
+    {
+        switch(row)
+        {
+        case 0://Листаем вперед
+            {
+                if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, PI[playerid][pSkinhome][1]); SelectCharPlace[playerid] = 2; }
+                else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, PI[playerid][pSkinhome][2]); SelectCharPlace[playerid] = 3; }
+                else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, PI[playerid][pSkinhome][0]); SelectCharPlace[playerid] = 1; }
+                //ShowMenuForPlayer(HouseShaw,playerid);
+            }
+        case 1://Листаем назад
+            {
+                if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, PI[playerid][pSkinhome][1]); SelectCharPlace[playerid] = 2; }
+                else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, PI[playerid][pSkinhome][0]); SelectCharPlace[playerid] = 1; }
+                else if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, PI[playerid][pSkinhome][2]); SelectCharPlace[playerid] = 3; }
+                //ShowMenuForPlayer(HouseShaw,playerid);
+            }
+        case 2://выходим с выбраным скином  PI[playerid][pSkinhome][3]
+            {
+                if(GetPlayerSkin(playerid) != 0) PI[playerid][pChar] = GetPlayerSkin(playerid);
+                SetPlayerSkinEx(playerid,PI[playerid][pChar],true);
+                TogglePlayerControllable(playerid, 1);
+                SetCameraBehindPlayer(playerid);
+                SelectCharPlace[playerid] = 0;
+                SpawnPlayerEx(playerid);
+            }
+        }
+    }
+    if(Current == BuyClothes)
+    {
+        switch(row)
+        {
+        case 0://Листаем вперед
+            {
+                if(PI[playerid][pSex] == 1)
+                {
+                    ChangeSkinv[playerid]++;
+                    if(ChangeSkinv[playerid] >= 7) ChangeSkinv[playerid] = 0;
+                    SetPlayerSkin(playerid,SkinMen[ChangeSkinv[playerid]][0]);
+                }
+                else
+                {
+                    ChangeSkinv[playerid]++;
+                    if(ChangeSkinv[playerid] >= 5) ChangeSkinv[playerid] = 0;
+                    SetPlayerSkin(playerid,SkinMale[ChangeSkinv[playerid]][0]);
+                }
+                //ShowMenuForPlayer(BuyClothes, playerid);
+            }
+        case 1://Покупаем
+            {
+                TogglePlayerControllable(playerid, true);
+                PI[playerid][pChar] = GetPlayerSkin(playerid);
+                PlayerRegisterMySQL(playerid);
+            }
+        }
+    }
+    return 1;
+}
+
+stock IsRotators(carid) {
+    switch(carid) {
+    case 406,417,425,430,432,441,446,447,448,449,452,453,454,457,460,461,462,464,465,469,471,472,473,476,481,484,485,486,487,488,493,497,509,510,511,512,513,519,520,538,537,539,548,553,563,564,571,577,592,593,594,595: {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+stock JailCheat(playerid, code) {
+    new string[144],name[24];
+    GetPlayerName(playerid, name, 24);
+    switch(code)
+    {
+    case 6,8,9:
+        {
+            format(string, sizeof(string), "{FF6600}[ANTICHEAT] %s Подозревается в коде: %d, /re %d",name, code, playerid);
+            SendAdminMessage(COLOR_LIGHTRED, string);
+            return 1;
+        }
+    }
+    format(string, sizeof(string), "{FF6600}[ANTICHEAT] %s Кикнут из-за кода: %d",name, code);
+    SendAdminMessage(COLOR_LIGHTRED, string);
+
+    Kick(playerid);
+
+    return 1;
+}
+//--------------------------------------------------------[ При регистрации  закрытие] ----------------------------------------------------------
+public OnPlayerStateChange(playerid, newstate, oldstate)
+{
+	if(     newstate == PLAYER_STATE_DRIVER &&
+                GetVehicleModel(GetPlayerVehicleID(playerid)) == 574 &&
+                !GetPVarInt(playerid, "sweeper_work")   )
+    {
+        ShowSweeperDialog(playerid);
+    }
+    if(oldstate == PLAYER_STATE_DRIVER && GetPVarInt(playerid, "sweeper_work") )
+    {
+        StopSweeperWork(playerid);
+    }
+    if(newstate == PLAYER_STATE_DRIVER)
+    {
+        new model = GetVehicleModel(GetPlayerVehicleID(playerid));
+	    if(model==515 || model==514 || model==403)
+	    {
+	    	SendClientMessage(playerid,COLOR_ORANGE,"(Информация){FFFFFF} Для того чтобы начать работать подцепите прицеп и введите [/delivery]");
+            SendClientMessage(playerid,COLOR_ORANGE,"(Информация){FFFFFF} Чтобы уйти с работы дальнобойщика введите [/quitdelivery]");
+		}
+    }
+    
+    if (!gIsRequestClassCalled{playerid}
+            && newstate == PLAYER_STATE_ONFOOT
+            && oldstate == PLAYER_STATE_NONE) {
+        return CheatKick(playerid, 6);
+    }
+    SetPVarInt(playerid, "GunCheck", 5);
+    new newcar = GetPlayerVehicleID(playerid);
+    if(oldstate == PLAYER_STATE_DRIVER) checkveh[GetPVarInt(playerid,"CheckCar")] = gettime()+5, minigun[playerid]+=2;
+    if((newstate == 2 && oldstate == 3) || (newstate == 3 && oldstate == 2)) return CheatKick(playerid, 16);
+    if(newstate == oldstate) return CheatKick(playerid, 17);
+    if(newstate == PLAYER_STATE_ONFOOT)
+    {
+        if(PI[playerid][pRaceMoney])
+        {
+            new giveplayerid = GetPVarInt(playerid, "race_offer");
+
+            DisablePlayerCheckpoint(giveplayerid);
+            DisablePlayerCheckpoint(playerid);
+
+            stringer[0] = EOS;
+            format(stringer, sizeof(stringer), "{7B68EE}Игрок %s надрал зад в гонке игроку %s.\n{FFFFFF}Игрок %s забрал весь кэш: {FFA500}%s", PI[giveplayerid][pNames], PI[playerid][pNames], PI[giveplayerid][pNames], formatInt(PI[giveplayerid][pRaceMoney]));
+            SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, !""SERVER"Итоги гоночного соревнования", stringer, !"Ок", !"");
+            SPD(giveplayerid, 0000, DIALOG_STYLE_MSGBOX, !""SERVER"Итоги гоночного соревнования", stringer, !"Ок", !"");
+
+            PI[giveplayerid][pCash] += PI[giveplayerid][pRaceMoney] * 2;
+
+            // 1-ый игрок
+
+            SetVehiclePos(GetPlayerOwnableCar(playerid), player_race_pos[playerid][0], player_race_pos[playerid][1], player_race_pos[playerid][2]);
+            SetVehicleZAngle(GetPlayerOwnableCar(playerid), player_race_pos[playerid][3]);
+            LinkVehicleToInterior(GetPlayerOwnableCar(playerid), 0);
+            SetVehicleVirtualWorld(GetPlayerOwnableCar(playerid), 0);
+            SetPlayerVirtualWorld(playerid, 0);
+            PutPlayerInVeh(playerid, GetPlayerOwnableCar(playerid), 0);
+
+            RepairVehicle(GetPlayerOwnableCar(playerid));
+            SetVehicleData(GetPlayerOwnableCar(playerid), V_FUEL, 100);
+
+            // 2-ой игрок
+
+            SetVehiclePos(GetPlayerOwnableCar(giveplayerid), player_race_pos[giveplayerid][0], player_race_pos[giveplayerid][1], player_race_pos[giveplayerid][2]);
+            SetVehicleZAngle(GetPlayerOwnableCar(giveplayerid), player_race_pos[giveplayerid][3]);
+            LinkVehicleToInterior(GetPlayerOwnableCar(giveplayerid), 0);
+            SetVehicleVirtualWorld(GetPlayerOwnableCar(giveplayerid), 0);
+            SetPlayerVirtualWorld(giveplayerid, 0);
+            PutPlayerInVeh(giveplayerid, GetPlayerOwnableCar(giveplayerid), 0);
+
+            RepairVehicle(GetPlayerOwnableCar(giveplayerid));
+            SetVehicleData(GetPlayerOwnableCar(giveplayerid), V_FUEL, 100);
+
+            PI[playerid][pRaceMoney] = PI[giveplayerid][pRaceMoney] = 0;
+
+            DeletePVar(giveplayerid, "race_offer");
+            return DeletePVar(playerid, "race_offer");
+        }
+        if(!IsAPlane(newcar) && !IsABoat(newcar) && !IsANoSpeed(newcar))
+        {
+            for(new i = 0; i < 15; i ++) PlayerTextDrawHide(playerid, sr_carspeed_PTD[playerid][i]);
+        }
+        //if(TransportDuty[playerid] > 0) SetVehicleToRespawn(GetPlayerVehicleID(playerid));
+        if(PI[playerid][pJob] == 2)
+        {
+            if(gcontract[playerid] == 1) Delete3DTextLabel(Meh3d[GetPlayerVehicleID(playerid)]),gcontract[playerid] = 0;
+        }
+        if(TalkingLive[playerid] == 2)
+        {
+            SendClientMessage(playerid, 0x6ab1ffaa, "Прямой эфир завершён");
+            SendClientMessage(TalkingLive[playerid], 0x6ab1ffaa, "Прямой эфир завершён");
+            TogglePlayerControllable(playerid, true);
+            TogglePlayerControllable(TalkingLive[playerid], 1);
+            TalkingLive[TalkingLive[playerid]] = INVALID_PLAYER_ID;
+            TalkingLive[playerid] = INVALID_PLAYER_ID;
+        }
+        else if(TalkingLivels[playerid] == 2)
+        {
+            SendClientMessage(playerid, 0x6ab1ffaa, "Прямой эфир завершён");
+            SendClientMessage(TalkingLivels[playerid], 0x6ab1ffaa, "Прямой эфир завершён");
+            TogglePlayerControllable(playerid, true);
+            TogglePlayerControllable(TalkingLivels[playerid], 1);
+            TalkingLivels[TalkingLivels[playerid]] = INVALID_PLAYER_ID;
+            TalkingLivels[playerid] = INVALID_PLAYER_ID;
+        }
+        if(TakingLesson[playerid] == 1)
+        {
+            SendClientMessage(playerid, COLOR_RED, "Автосдача прекращена, вы покинули автомобиль");
+            DisablePlayerRaceCheckpoint(playerid); CP[playerid] = 0;
+            TakingLesson[playerid] = 0;
+           // SetVehicleToRespawn(GetPlayerVehicleID(playerid));
+        }
+        if(GetPVarInt(playerid, "ProductID") > 0)
+        {
+            SendClientMessage(playerid, COLOR_LIGHTRED, "У вас есть 15 секунд, чтобы вернуться");
+            DisablePlayerRaceCheckpoint(playerid);
+            SetPVarInt(playerid,"ProductTime",15);
+        }
+        if(TransportDuty[playerid] > 0)
+        {
+            if(TransportDuty[playerid] == 1) TaxiDrivers -= 1;
+            Delete3DTextLabel(taxi3d[newcar]);
+            DisablePlayerRaceCheckpoint(playerid);
+            GiveMoney(playerid, TransportMoney[playerid]);
+            TransportValue[playerid] = 0; TransportMoney[playerid] = 0;
+        }
+        if(TransportCost[playerid] > 0 && TransportDriver[playerid] != INVALID_PLAYER_ID)
+        {
+            if(IsPlayerConnected(TransportDriver[playerid]))
+            {
+                TransportTime[TransportDriver[playerid]] = 0;
+                TransportCost[TransportDriver[playerid]] = 0;
+                if(PI[playerid][pCash] < TransportCost[playerid])
+                {
+                    GameTextForPlayer(TransportDriver[playerid], "~r~ Fail", 5000, 1);
+                    GameTextForPlayer(playerid, "~r~ Fail", 5000, 1);
+                    SendClientMessage(TransportDriver[playerid], COLOR_GRAD1, "У пассажира не достаточно денег, чтобы заплатить!");
+                    SendClientMessage(playerid, COLOR_GRAD1, "У  вас не достаточно денег, чтобы заплатить!");
+                    TransportCost[playerid] = 0;
+                    TransportTime[playerid] = 0;
+                    TransportDriver[playerid] = INVALID_PLAYER_ID;
+                    return 1;
+                }
+                TransportMoney[TransportDriver[playerid]] += TransportCost[playerid];
+                PI[playerid][pCash] -=TransportCost[playerid];
+                TransportCost[playerid] = 0;
+                TransportTime[playerid] = 0;
+                TransportDriver[playerid] = INVALID_PLAYER_ID;
+                format(stringer1, sizeof(stringer1), "~r~-%d",TransportCost[playerid]);
+                GameTextForPlayer(playerid, stringer1, 5000, 1);
+                format(stringer1, sizeof(stringer1), "~g~+%d",TransportCost[playerid]);
+                GameTextForPlayer(TransportDriver[playerid], stringer1, 5000, 1);
+            }
+        }
+    }
+    else if(newstate == PLAYER_STATE_DRIVER)
+    {
+        // printf("ACTION TYPE №%d", GetVehicleData(newcar, V_ACTION_TYPE));
+        // people system
+        switch(GetVehicleData(newcar, V_ACTION_TYPE))
+        {
+        case VEHICLE_ACTION_TYPE_FAMILY:
+            {
+                SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит семье!");
+                RemoveFromVehicle(playerid);
+            }
+        case VEHICLE_ACTION_TYPE_BUY_FAMILY:
+            {
+            }
+        case VEHICLE_ACTION_TYPE_MEDIC_LS:
+            {
+                if(PI[playerid][pMember] != 4)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит Medics Los Santos!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_CALLIGULA:
+            {
+                if(PI[playerid][pMember] != 28)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит Casino Caligulas!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_4DRAGON:
+            {
+                if(PI[playerid][pMember] != 27)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит Casino Four Dragons!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_MVD:
+            {
+                if(PI[playerid][pMember] != 1)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит МВД!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_RM:
+            {
+                if(PI[playerid][pMember] != 14)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит Ореховская ОПГ!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_LCN_MAFIA:
+            {
+                if(PI[playerid][pMember] != 5)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит Курганская ОПГ!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_TAXI:
+            {
+                if(PI[playerid][pJob] != 4 && PI[playerid][pMember] != 0)
+                {
+                    SendClientMessage(playerid, COLOR_WHITE, ""error" Вы не таксист! /gps - Мэрия");
+                    RemoveFromVehicle(playerid);
+                    return 1;
+                }
+
+                SendClientMessage(playerid, COLOR_WHITE, "Введите: /fare - чтобы установить тариф");
+            }
+        case VEHICLE_ACTION_TYPE_HOTDOG:
+            {
+                if(PI[playerid][pJob] != 3 && PI[playerid][pMember] != 0)
+                {
+                    SendClientMessage(playerid, COLOR_WHITE, ""error" Вы не продавец ХотДогов! /gps - Мэрия");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_HITCAR:
+            {
+                if(PI[playerid][pMember] != 23)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вы не состоите в Хитманах!");
+                    RemoveFromVehicle(playerid);
+                }
+
+            }
+        case VEHICLE_ACTION_TYPE_AP:
+            {
+                if(PI[playerid][pMember] != 26)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вы не член Министерства!");
+                    RemoveFromVehicle(playerid);
+                }
+
+            }
+        case VEHICLE_ACTION_TYPE_STREET:
+            {
+                if(PI[playerid][pMember] != 24)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вы не состоите в Street Rasers!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_LVPD:
+            {
+                if(PI[playerid][pMember] != 21)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вы состоите в LVPD");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_NEWS:
+            {
+                if(PI[playerid][pMember] != 16)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вы не работник Россия 24!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_MAYOR:
+            {
+                if(PI[playerid][pMember] != 7)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит Правительству!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_MECHANIK:
+            {
+                if(PI[playerid][pJob] != 2)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Вы не механик! /gps - Мэрия");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_LIC:
+            {
+                if(PI[playerid][pMember] != 11 && TakingLesson[playerid] != 1)
+                {
+                    SendClientMessage(playerid,COLOR_GREY, ""error" Вы не школьный инструктор!");
+                    RemoveFromVehicle(playerid);
+                    return 1;
+                }
+
+
+            }
+        case VEHICLE_ACTION_TYPE_YAKUDZA:
+            {
+                if(PI[playerid][pMember] != 6)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит Тамбовская ОПГ!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_LSPD:
+            {
+                if(PI[playerid][pMember] != 1)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит МВД Г. Арзамас!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_FBI:
+            {
+                if(PI[playerid][pMember] != 2)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит ФСБ!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_FOOD..VEHICLE_ACTION_TYPE_FUEL:
+            {
+                if(PI[playerid][pJob] != 5)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вы не развозчик продуктов!");
+                    RemoveFromVehicle(playerid);
+                    return 1;
+                }
+
+                if(GetPVarInt(playerid,"JobVehicle") != GetPlayerVehicleID(playerid))
+                return SPD(playerid,1202,DIALOG_STYLE_MSGBOX,"Аренда","Заключение контракта:\n\nАвтомобиль для должности: Развозчика продуктов и бензина.\nСтоимость аренды автомобиля: 250 руб..\n\nВы согласны?","Да","Нет");
+
+                if(GetPVarInt(playerid,"ProductTime") > 0)
+                {
+                    new Float:VPos[3], i = ProductInfo[GetPVarInt(playerid, "ProductID")][pBizzid];
+                    DeletePVar(playerid,"ProductTime");
+                    GetPlayerPos(playerid, VPos[0], VPos[1], VPos[2]);
+                    DisablePlayerRaceCheckpoint(playerid);
+                    SetPlayerRaceCheckpoint(playerid, 1, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz], 0.0,0.0,0.0,6);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_SWAT:
+            {
+                if(PI[playerid][pMember] != 25)
+                {
+                    SendClientMessage(playerid, COLOR_GREY, ""error" Вам недоступен этот транспорт!");
+                    RemoveFromVehicle(playerid);
+                }
+            }
+        case VEHICLE_ACTION_TYPE_ARMY:
+            {
+                if(PI[playerid][pMember] != 3 && PI[playerid][pMember] != 19)
+                {
+                    SendClientMessage(playerid, COLOR_GRAD1, ""error" Транспорт пренадлежит Армии");
+                    RemoveFromVehicle(playerid);
+                }
+
+                if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 533)
+                {
+                    SendMes(playerid,TEAM_GROVE_COLOR,"Оружия: %d/%d", MatHaul[GetVehicleData(newcar, V_ACTION_ID)][mLoad],MatHaul[GetVehicleData(newcar, V_ACTION_ID)][mCapasity]);
+                    SendClientMessage(playerid, COLOR_WHITE, "(( Для загрузки/разгрузки Оружия  Введите: /carm ))");
+                }
+
+                if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 548) SendClientMessage(playerid, COLOR_WHITE, ":: Для загрузки/разгрузки материалов  Введите: /carmat");
+            }
+
+        case VEHICLE_ACTION_TYPE_INKOS:
+            {
+                if(PI[playerid][pJob] != 8)
+                {
+                    SendClientMessage(playerid,COLOR_WHITE, "Вы не инкассатор! /gps - Мэрия");
+                    RemoveFromVehicle(playerid);
+                }
+
+
+                SetPlayerCheckpoint(playerid,1425.6633,-1709.4857,13.5085,5);
+                SendClientMessage(playerid,COLOR_RED, "Загрузитесь деньгами у банка LS");
+                PicCP[playerid] = 0;
+            }
+
+
+        }
+        SetPVarInt(playerid, "CheckCar", newcar);
+        if(!IsAPlane(newcar) && !IsABoat(newcar) && !IsANoSpeed(newcar))
+        {
+        UpdateSpeedometr(playerid);
+        CreateSpeedometr(playerid);
+        }
+        if(GetVehicleData(newcar, V_FUEL) <= 0)
+        {
+            SendClientMessage(playerid, COLOR_WHITE, "В Т.С закончился бензин.");
+            PI[playerid][pFuelcar] = 0;
+        }
+        if(IsABike(newcar) && zavodis[playerid] == 0) pc_cmd_en(playerid, "");
+        
+        if(PI[playerid][pVodPrava] == 0)
+        {
+            if(TakingLesson[playerid] != 1) return SendClientMessage(playerid, COLOR_WHITE, ""error" У Вас нет водительских прав! (/gps - Автошкола)"), RemoveFromVehicle(playerid);
+        }
+        
+		if(newcar >= Inkasator[0] && newcar <= Inkasator[4]) //           инкассаторы
+	 	{
+	        if(ShoskiPon[playerid][pVodPravapon] == 0)
+	        {
+	            SendClientMessage(playerid,COLOR_RED," У Вас нет ключей от этого транспорта!");
+	            RemovePlayerFromVehicle(playerid);
+	        }
+		}
+        
+        if(ShoskiPon[playerid][pVodPravapon] == 1)
+        {
+			pablochek[playerid]=1;
+            SendClientMessage(playerid,COLOR_RED,"Едьте по чекпоинтам!");
+   			SetPlayerCheckpoint(playerid,-580.5369,89.9334,13.8259,3.0);// Координаты взяты произвольно к примеру примера.
+        }
+        
+
+        SendClientMessage(playerid, COLOR_WHITE, !"{FFFFFF}Нажмите "SERVER"CTRL{FFFFFF} чтобы завести авто, или введите команду {33aa33}/en{FFFFFF}.");
+        SendClientMessage(playerid, COLOR_WHITE, !"{FFFFFF}Чтобы включить или выключить фары, используйте команду {33aa33}/light{FFFFFF}.");
+        SendClientMessage(playerid, COLOR_WHITE, !"{FFFFFF}Чтобы закрыть транспорт, используйте команду {33aa33}/lk{FFFFFF}.");
+
+        if(IsABoat(newcar))
+        {
+            if(PI[playerid][pBoatLic] < 1) return SendClientMessage(playerid, COLOR_WHITE, ""error"(( У Вас нет лицензии на водный транспорт! (/gps - Автошкола))"), RemoveFromVehicle(playerid);
+        }
+        if(IsAPlane(newcar))
+        {
+            if(PI[playerid][pFlyLic] < 1)
+            {
+                if(TakingLesson[playerid] == 1) { }
+                else return SendClientMessage(playerid, COLOR_WHITE, ""error"(( У Вас нет лицензии на воздушный транспорт! (/gps - Автошкола или /donate ))"), RemoveFromVehicle(playerid);
+            }
+        }
+        if(VodPrava(newcar))
+        {
+            if(PI[playerid][pVodPrava] == 0)
+            {
+                if(TakingLesson[playerid] != 1) return SendClientMessage(playerid, COLOR_WHITE, ""error" У Вас нет водительских прав! (/gps - Автошкола или /donate)"), RemoveFromVehicle(playerid);
+            }
+        }
+        if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 520) // Гидра
+        {
+            if (PI[playerid][pMember] == 3 && PI[playerid][pRank] >= 8 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 19 && PI[playerid][pRank] >= 12 && PI[playerid][pOdet] == 1) { }
+            else {
+                RemoveFromVehicle(playerid);
+                SendClientMessage(playerid, COLOR_GRAD1, ""error" Вам недоступна боевая техника!");
+            }
+        }
+        else if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 425)//Апач
+        {
+            if (PI[playerid][pMember] == 3 && PI[playerid][pRank] >= 8 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 19 && PI[playerid][pRank] >= 8 && PI[playerid][pOdet] == 1) { }
+            else {
+                RemoveFromVehicle(playerid);
+                SendClientMessage(playerid, COLOR_GRAD1, ""error" Вам недоступна боевая техника!"); }
+        }
+        else if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 432)//Танк
+        {
+            if ((PI[playerid][pMember] == 19 || PI[playerid][pMember] == 3) && PI[playerid][pRank] >= 12 && PI[playerid][pOdet] == 1) { }
+            else {
+                RemoveFromVehicle(playerid);
+                SendClientMessage(playerid, COLOR_GRAD1, ""error" Вам недоступна боевая техника!"); }
+        }
+        /*
+        else if(newcar == matsfuraactek)
+        {
+            if(PI[playerid][pLeader] == 17 || PI[playerid][pMember] == 17) { }
+            else { SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит Varios Los Aztecas Gang!"); RemoveFromVehicle(playerid); }
+        }
+        else if(newcar >= coronoscar[0] && newcar <= coronoscar[1])
+        {
+            if(PI[playerid][pLeader] == 17 || PI[playerid][pMember] == 17) { }
+            else { SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит Varios Los Aztecas Gang!"); RemoveFromVehicle(playerid); }
+        }
+        else if(newcar == matsfuravagos)
+        {
+            if(PI[playerid][pLeader] == 13 || PI[playerid][pMember] == 13) { }
+            else { SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит Los Santos Vagos Gang!"); RemoveFromVehicle(playerid); }
+        }
+        else if(newcar == matsfuragrove)
+        {
+            if(PI[playerid][pLeader] == 15 || PI[playerid][pMember] == 15) { }
+            else { SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит Grove Street Gang!"); RemoveFromVehicle(playerid); }
+        }
+        else if(newcar == matsfurarifa)
+        {
+            if(PI[playerid][pLeader] == 18 || PI[playerid][pMember] == 18) { }
+            else { SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит The Rifa Gang!"); RemoveFromVehicle(playerid); }
+        }
+        else if(newcar == matsfuraballas)
+        {
+            if(PI[playerid][pLeader] == 12 || PI[playerid][pMember] == 12) { }
+            else { SendClientMessage(playerid, COLOR_GREY, ""error" Транспорт пренадлежит The Ballas Gang!"); RemoveFromVehicle(playerid); }
+        }
+        */
+
+    }
+    else if(newstate == PLAYER_STATE_PASSENGER) // TAXI & BUSSES
+    {
+        minigun[playerid]+=2;
+        foreach(Player,i)
+        {
+            if(IsPlayerInVehicle(i, newcar) && GetPlayerState(i) == 2 && TransportDuty[i] > 0)
+            {
+                if(PI[playerid][pCash] < TransportValue[i])
+                {
+                    SendMes(playerid,0x6ab1ffaa,"Вам нужно %d руб., чтобы сесть в машину.", TransportValue[i]);
+                    RemoveFromVehicle(playerid);
+                    return 1;
+                }
+                if(TransportDuty[i] == 1)
+                {
+                    if(PI[playerid][pLevel] > 1 && PI[playerid][pCash] < TransportValue[i])
+                    {
+                        SendMes(playerid,COLOR_GREEN,"Вам нужно %d руб., чтобы сесть в такси.", TransportValue[i]);
+                        RemoveFromVehicle(playerid);
+                        return 1;
+                    }
+                    SendMes(playerid,0x6ab1ffaa,"Вы заплатили таксисту %d руб..", TransportValue[i]);
+                    SendMes(i,0x6ab1ffaa,"Пасcажир %s сел в ваше такси.", PI[playerid][pNames]);
+                    PI[playerid][pCash] -=  TransportValue[i];
+                    GiveMoney(i, TransportValue[i]);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 1;
+}
+public OnPlayerExitVehicle(playerid, vehicleid)
+{
+    for(new i = 0; i < 15; i ++) PlayerTextDrawHide(playerid, sr_carspeed_PTD[playerid][i]);
+
+    CheckVehicle[playerid] = gettime() + 2;
+    VehicleID[playerid] = INVALID_VEHICLE_ID;
+    SetPVarInt(playerid, "GunCheck", 3);
+    PI[playerid][AFK_Time] = 0;
+    race_exitvehicle(playerid);
+    if(PEfir[playerid] != 255)
+    {
+        SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+        PEfir[playerid] = 255;
+    }
+    if(GetPVarInt(playerid, "rentrc") == 1)
+    {
+        SetPPos(playerid, -2231.7776,133.5524,1035.4210);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerVirtualWorld(playerid, 33);
+        SetPlayerInteriorEx(playerid, 6);
+        SetPlayerFacingAngle(playerid, 87.0766);
+        n_veh_DestroyVehicle(vehiclerc[playerid]);
+        DeletePVar(playerid, "rentrc");
+        SendClientMessage(playerid, 0xafafafff, "Вы отказалить от аренды транспорта");
+    }
+    if(Pefir[playerid] == 1 || Pefir[playerid] == 2)
+    {
+        Pefir[playerid] = 0;
+        PEfir[playerid] = 255;
+        SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+    }
+    if(TransportDuty[playerid] > 0)
+    {
+        if(TransportDuty[playerid] == 1) TaxiDrivers -= 1;
+        Delete3DTextLabel(taxi3d[vehicleid]);
+    }
+    if(VertMats[playerid] != 0) VertMats[playerid] = 0, DisablePlayerCheckpoint(playerid);
+    if(MatsArmyCar[playerid] != 0) MatsArmyCar[playerid] = 0, DisablePlayerCheckpoint(playerid);
+    return 1;
+}
+
+public OnPlayerRequestClass(playerid, classid)
+{
+    TextDrawShowForPlayer(playerid, logotype_TD[0]);
+
+    if(gPlayerLogged[playerid] == 1) {
+        SpawnPlayerEx(playerid);
+        return 1;
+    }
+    gIsRequestClassCalled{playerid} = true;
+    return 1;
+}
+
+publics: OnPlayerBanipCheck(playerid)
+{
+    SetPlayerCameraPos(playerid, AUTH_CAMERA_POS);
+    SetPlayerCameraLookAt(playerid, AUTH_CAMERA_LOOK);
+    new rows, fields;
+    cache_get_data(rows,fields);
+    if(rows)
+    {
+        new unbandate_IP = cache_get_field_content_int(0, "unbandate", connects),
+        bandate_IP = cache_get_field_content_int(0, "date", connects),
+        reason_IP[50], admin[24];
+        cache_get_field_content(0, "reason", reason_IP, connects, 50);
+        cache_get_field_content(0, "admin", admin, connects, 24);
+        if(unbandate_IP > gettime())
+        {
+            new ban_date[6], unban_date[6];
+            gmtime(bandate_IP, ban_date[0], ban_date[1], ban_date[2], ban_date[3], ban_date[4], ban_date[5]);
+            gmtime(unbandate_IP, unban_date[0], unban_date[1], unban_date[2], unban_date[3], unban_date[4], unban_date[5]);
+
+            format(stringer,sizeof(stringer),"{FF6347}Ваш IP адрес заблокирован\n\nАдминистратор: %s\nДата блокировки: %02d.%02d.%04d в %02d:%02d:%02d\nДата снятия блокировки: %02d.%02d.%04d в %02d:%02d:%02d\n\
+            Причина: %s\n\nПосле снятия блокировки, просим не нарушать правила сервера\n\
+            Вы можете подать апелляцию на снятие блокировки в спец.разделе на форуме",
+            admin, ban_date[2], ban_date[1], ban_date[0], ban_date[3]+3, ban_date[4], ban_date[5],
+            unban_date[2], unban_date[1], unban_date[0], unban_date[3]+3, unban_date[4], unban_date[5], reason_IP);
+
+            SPD(playerid, 0, DIALOG_STYLE_MSGBOX,"{FF6347}IP адрес заблокирован", stringer, "Отмена", "");
+            return KickEx(playerid);
+        }
+        else
+        {
+            format(mysql_query_, sizeof(mysql_query_),"DELETE FROM `baniplog` WHERE `ip` = '%s' LIMIT 1", PI[playerid][pIP]);
+            mysql_tquery(connects, mysql_query_, "", "");
+        }
+    }
+    mysql_format(connects, mysql_query_, sizeof(mysql_query_),"SELECT `password`, `salt` FROM `"TABLE_ACCOUNT"` WHERE `Name` = '%e' LIMIT 1", PI[playerid][pNames]);
+    mysql_tquery(connects, mysql_query_, "OnPlayerRegCheck", "i", playerid);
+    return 1;
+}
+stock rentrc(targetid, arenda, idavto)
+{
+    if(PI[targetid][pCash] < arenda) return SendMes(targetid, 0xFF0000AA, "[Ошибка] {ffffff}У Вас недостаточно денег для аренды, необходимо %d$",arenda);
+    SendMes(targetid,-1,"{ffffff}Вы арендовали %s за {66cc00}%i$", g_vehicle_info[idavto - 400][VI_NAME], arenda);
+    SendClientMessage(targetid, -1, "{63CB00}Чтобы вернуться в магазин пропишите {FFCD00}/cancelrc{63CB00} или {FFCD00}нажмите 'F'");
+    SetPlayerVirtualWorld(targetid, 0);
+    SetPlayerInterior(targetid, 0);
+    Hook_GivePlayerMoney(targetid, -arenda);
+    vehiclerc[targetid] = CreateVehicle(idavto, 1382.9015,-1757.5061,13.5469,358.0287, 77, 77,7200, 0);
+    zavodis[targetid] = 1;
+    SetVehicleData(vehiclerc[targetid], V_FUEL, 100);
+    LinkVehicleToInterior(vehiclerc[targetid], 0);
+    PutPlayerInVeh(targetid, vehiclerc[targetid], 0);
+    UpdatePlayerData(targetid, "pCash", PI[targetid][pCash]);
+    SetPVarInt(targetid, "rentrc", 1);
+    return 1;
+}
+stock SetPlayerExtra(playerid, declare, level, reason[])
+{
+    if(declare != INVALID_PLAYER_ID) SendMes(playerid,COLOR_LIGHTRED,"Вы совершили преступление: [%s]. Сообщил: %s.",reason,PI[declare][pNames]);
+    else SendMes(playerid,COLOR_LIGHTRED,"Вы совершили преступление: [%s]. Сообщил: Неизвестный.",reason);
+    if((PI[playerid][pWanted] + level) < 6) PI[playerid][pWanted] += level;
+    else PI[playerid][pWanted] = 6;
+    SendMes(playerid,COLOR_YELLOW,"Текущий уровень розыска: %d", PI[playerid][pWanted]);
+    SetPlayerWantedLevel(playerid, PI[playerid][pWanted]);
+    if(declare != INVALID_PLAYER_ID) format(stringer1, sizeof(stringer1),"Рация: Cообщает: %s. Преступление: %s. Подозреваемый: %s",PI[declare][pNames],reason,PI[playerid][pNames]);
+    else format(stringer1, sizeof(stringer1),"Рация: Cообщает: Неизвестный. Преступление: %s. Подозреваемый: %s",reason, PI[playerid][pNames]);
+    foreach (new i : Player)
+    {
+        if(!IsPlayerConnected(i) || gPlayerLogged[i] == 0) continue;
+        if(PI[i][pMember] == 1 || PI[i][pMember] == 2 || PI[i][pMember] == 10 || PI[i][pMember] == 21 || PI[i][pMember] == 25)
+        {
+            SendClientMessage(i, 0xFEBC41AA, stringer1);
+        }
+    }
+    return 1;
+}
+
+cmd:premcar(playerid)
+{
+    if(PI[playerid][pPremiumCar] != 1) return SendClientMessage(playerid, COLOR_WHITE, !"Для вас нет премиум автомобиля");
+    if(PI[playerid][pPayDayHad] < PI[playerid][pPremiumHours])
+    {
+        new scm_string[94];
+        format(scm_string, sizeof(scm_string), "Необходимо отыграть %d часов чтобы забрать премиум автомобиль [У вас отыграно: %d часов]", PI[playerid][pPremiumHours], PI[playerid][pPayDayHad]);
+        return SendClientMessage(playerid, COLOR_WHITE, scm_string);
+    }
+    BuyOwnableExcCar(playerid, 415, 1 ) ;
+
+    PI[playerid][pPremiumHours] = 0;
+    UpdatePlayerData(playerid, "pPremiumHours", PI[playerid][pPremiumHours]);
+
+    PI[playerid][pPremiumCar] = 0;
+    UpdatePlayerData(playerid, "pPremiumCar", PI[playerid][pPremiumCar]);
+    return 1;
+}
+
+publics: check_message()
+{

@@ -1,0 +1,1000 @@
+            if(ORGANIZATION_CAR_INFO[i][TEAM_ID] == VehicleTeam[vehicleid] && ORGANIZATION_CAR_INFO[i][MODEL_ID] == GetVehicleModel(vehicleid))
+            {
+                ORGANIZATION_CAR_INFO[i][CARS_COUNT]++;
+                DestroyVehicle(vehicleid);
+
+                VehicleTeam[vehicleid] =
+                PlayerVeh[VehicleOwner[vehicleid]] =
+                VehicleOrg[VehicleOwner[vehicleid]] =
+                VehicleOwner[vehicleid] = 0;
+
+                break;
+            }
+        }
+    }
+
+    if(RentBikePickupIDX[vehicleid] != -1)
+    {
+        DestroyVehicle(vehicleid);
+        SetRentBikePickupTenantsCount(RentBikePickupIDX[vehicleid], GetRentBikePickupTenantsCount(RentBikePickupIDX[vehicleid])-1);
+        new ownerid = RentBikeOwner[vehicleid];
+        PlayerRentBike[ownerid] =
+        RentBikePickupIDX[vehicleid] =
+        RentBikeOwner[vehicleid] = -1;
+        SendClientMessage(ownerid, 0xFF0000FF, "Ваш арендованный мопед был уничтожен. Договор аренды был аннулирован.");
+        return 1;
+    }
+
+    if(IsAOwnableCar(vehicleid))
+    {
+        new index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+        SetVehiclePos
+        (
+        vehicleid,
+        GetOwnableCarData(index, OC_POS_X),
+        GetOwnableCarData(index, OC_POS_Y),
+        GetOwnableCarData(index, OC_POS_Z)
+        );
+        SetVehicleZAngle(vehicleid, GetOwnableCarData(index, OC_ANGLE));
+        LinkVehicleToInterior(vehicleid, GetOwnableCarData(index, OC_Int));
+        SetVehicleVirtualWorld(vehicleid, GetOwnableCarData(index, OC_World));
+
+        SetVehicleData(vehicleid, V_FUEL, GetOwnableCarData(index, OC_FUEL));
+        SetVehicleParam(vehicleid, V_ENGINE, false);
+
+//        AddTune(index, vehicleid);
+        return 1;
+    }
+    else
+    {
+        DestroyVehicleLabel(vehicleid);
+        SetVehicleData(vehicleid, V_FUEL, 42.0);
+    }
+
+    if(GetVehicleData(vehicleid, V_ACTION_TYPE) == VEHICLE_ACTION_TYPE_ADMIN)
+    n_veh_DestroyVehicle(vehicleid);
+
+
+
+    if(vehicleid >= derby[0] && vehicleid <= derby[10]) return LinkVehicleToInterior(vehicleid, 15), SetVehicleVirtualWorld(vehicleid, 1);
+
+    if(Indicators_xqz[vehicleid][2]) DestroyDynamicObject(Indicators_xqz[vehicleid][2]), DestroyDynamicObject(Indicators_xqz[vehicleid][3]),Indicators_xqz[vehicleid][2]=0;
+    if(Indicators_xqz[vehicleid][0]) DestroyDynamicObject(Indicators_xqz[vehicleid][0]), DestroyDynamicObject(Indicators_xqz[vehicleid][1]),Indicators_xqz[vehicleid][0]=0;
+    return 1;
+}
+publics: OnPlayerCheckPassword(playerid, pass[], name[]) {
+    new salt[12], newpass[65], string[80];
+    cache_get_field_content(0, "salt", salt, connects, 11);
+    SHA256_PassHash(pass, salt, newpass, 65);
+    format(stringer1, sizeof(stringer1), "UPDATE `accounts` SET `password` = '%s' WHERE `Name` = '%s'", newpass, name);
+    mysql_function_query(connects, stringer1, false, "", "");
+    format(string, sizeof(string), "Новый пароль %s от аккаунта %s", pass, name);
+    SendClientMessage(playerid, COLOR_WHITE, string);
+    return 1;
+}
+publics: OnPlayerRegCheck(playerid)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    SetPlayerVirtualWorld(playerid, playerid);
+    if(rows)
+    {
+        cache_get_field_content(0, "password", PI[playerid][pPassword], connects, 65);
+        cache_get_field_content(0, "salt", PI[playerid][pSalt], connects, 11);
+        new string[256];
+        format(string, sizeof(string), "{FFFFFF}Приветствуем Вас на проекте "SERVER_NAME"!{FFFFFF}\nВаш аккаунт зарегистрирован.\nВаш никнейм: "SERVER"%s{FFFFFF}\n\n{afafaf}У вас имеется 1 минута на авторизацию", PI[playerid][pNames]);
+        SPD(playerid, 1, DIALOG_STYLE_PASSWORD, ""SERVER"Авторизация", string, "Войти", "Отмена");
+
+        PI[playerid][connect_timer] = SetTimerEx("KickTimer", 60000, 0, "i" ,playerid);
+    }
+    else
+    {//Регистрация
+        PlayerRegMode[playerid] = 2;
+        SPD(playerid, 2, DIALOG_STYLE_INPUT, !""SERVER"Регистрация", !"{FFFFFF}Приветствуем Вас на проекте "SERVER_NAME"!{FFFFFF}\nДанный аккаунт "SERVER"не зарегистрирован {FFFFFF}на нашем сервере\nЧтобы пройти регистрацию Вам необходимо пройти регистрацию\n\nВведите пароль для Вашего аккаунта\nОн будет запрашиваться каждый раз, когда Вы заходите на сервер\n\n\t{afafaf}Примечания:\n\t— Пароль может состоять из русских и латинских символов\n\t— Пароль чувствителен к регистру\n\t— Длина пароля от 6-ти до 15-ти символов", "Далее", "");
+    }
+    PreloadAllAnims(playerid);
+    ClearAnimations(playerid);
+    return 1;
+}
+
+stock OnPlayerUpdateRL(playerid)
+{
+    new query[2348],string[128];
+    if(gPlayerLogged[playerid] == 1 && IsPlayerConnected(playerid))
+    {
+        query = "UPDATE `"TABLE_ACCOUNT"` SET ";
+        acc_int_strcat(query, sizeof(query), "pLevel", PI[playerid][pLevel]);
+        acc_int_strcat(query, sizeof(query), "pPhousekey", PI[playerid][pPhousekey]);
+        acc_float_strcat(query, sizeof(query), "pFuelcar", PI[playerid][pFuelcar]);
+        acc_int_strcat(query, sizeof(query), "pHeadValue", PI[playerid][pHeadValue]);
+        acc_int_strcat(query, sizeof(query), "pContract", PI[playerid][pContract]);
+        //acc_int_strcat(query, sizeof(query), "pHelper", PI[playerid][pHelper]);
+        acc_int_strcat(query, sizeof(query), "pDonatemoney2", PI[playerid][pDonatemoney2]);
+        acc_int_strcat(query, sizeof(query), "pDonateRank", PI[playerid][pDonateRank]);
+        acc_int_strcat(query, sizeof(query), "pExp", PI[playerid][pExp]);
+        acc_int_strcat(query, sizeof(query), "pCash", PI[playerid][pCash]);
+        acc_int_strcat(query, sizeof(query), "pKills", PI[playerid][pKills]);
+        acc_int_strcat(query, sizeof(query), "pJailed", PI[playerid][pJailed]);
+        acc_int_strcat(query, sizeof(query), "pKills", PI[playerid][pKills]);
+        acc_int_strcat(query, sizeof(query), "pJailTime", PI[playerid][pJailTime]);
+        acc_int_strcat(query, sizeof(query), "pMats", PI[playerid][pMats]);
+        acc_int_strcat(query, sizeof(query), "pHeal", PI[playerid][pHeal]);
+        acc_int_strcat(query, sizeof(query), "pLeader", PI[playerid][pLeader]);
+        acc_int_strcat(query, sizeof(query), "pMember", PI[playerid][pMember]);
+        acc_int_strcat(query, sizeof(query), "pRank", PI[playerid][pRank]);
+        acc_int_strcat(query, sizeof(query), "pJob", PI[playerid][pJob]);
+        acc_int_strcat(query, sizeof(query), "pVodPrava", PI[playerid][pVodPrava]);
+        acc_int_strcat(query, sizeof(query), "pFlyLic", PI[playerid][pFlyLic]);
+        acc_int_strcat(query, sizeof(query), "pBoatLic", PI[playerid][pBoatLic]);
+        acc_int_strcat(query, sizeof(query), "pFishLic", PI[playerid][pFishLic]);
+        acc_int_strcat(query, sizeof(query), "pGunLic", PI[playerid][pGunLic]);
+        acc_int_strcat(query, sizeof(query), "pSDPistol", PI[playerid][pSDPistol]);
+        acc_int_strcat(query, sizeof(query), "pDesertEagle", PI[playerid][pDesertEagle]);
+        acc_int_strcat(query, sizeof(query), "pShotGun", PI[playerid][pShotGun]);
+        acc_int_strcat(query, sizeof(query), "pMP5", PI[playerid][pMP5]);
+        acc_int_strcat(query, sizeof(query), "pAK47", PI[playerid][pAK47]);
+        acc_int_strcat(query, sizeof(query), "pM4", PI[playerid][pM4]);
+        acc_int_strcat(query, sizeof(query), "pPnumber", PI[playerid][pPnumber]);
+        acc_int_strcat(query, sizeof(query), "pPayDayHad", PI[playerid][pPayDayHad]);
+        acc_int_strcat(query, sizeof(query), "pWarns", PI[playerid][pWarns]);
+        acc_int_strcat(query, sizeof(query), "punWarns", PI[playerid][punWarns]);
+        acc_int_strcat(query, sizeof(query), "punWarnstime", PI[playerid][punWarnstime]);
+        acc_int_strcat(query, sizeof(query), "pFuel", PI[playerid][pFuel]);
+        acc_int_strcat(query, sizeof(query), "pRobTime", PI[playerid][pRobTime]);
+        acc_int_strcat(query, sizeof(query), "pReportTime", PI[playerid][pReportTime]);
+        acc_int_strcat(query, sizeof(query), "pVerevka", PI[playerid][pVerevka]);
+        acc_int_strcat(query, sizeof(query), "pOtmbI4ka", PI[playerid][pOtmbI4ka]);
+        acc_int_strcat(query, sizeof(query), "pAutoTime", PI[playerid][pAutoTime]);
+        acc_int_strcat(query, sizeof(query), "pAutoSkill", PI[playerid][pAutoSkill]);
+        acc_int_strcat(query, sizeof(query), "pMarried", PI[playerid][pMarried]);
+        acc_int_strcat(query, sizeof(query), "pMuteTime", PI[playerid][pMuteTime]);
+        acc_int_strcat(query, sizeof(query), "pMobile", PI[playerid][pMobile]);
+        acc_int_strcat(query, sizeof(query), "pBank", PI[playerid][pBank]);
+        acc_int_strcat(query, sizeof(query), "pBoxSkill", PI[playerid][pBoxSkill]);
+        acc_int_strcat(query, sizeof(query), "pKongfuSkill", PI[playerid][pKongfuSkill]);
+        acc_int_strcat(query, sizeof(query), "pKickboxSkill", PI[playerid][pKickboxSkill]);
+        acc_int_strcat(query, sizeof(query), "pFightSkill", PI[playerid][pFightSkill]);
+        acc_int_strcat(query, sizeof(query), "pFightSkil", PI[playerid][pFightSkil]);
+        acc_int_strcat(query, sizeof(query), "pFightTime", PI[playerid][pFightTime]);
+        acc_int_strcat(query, sizeof(query), "pHospital", PI[playerid][pHospital]);
+        acc_int_strcat(query, sizeof(query), "pIzol", PI[playerid][pIzol]);
+        acc_int_strcat(query, sizeof(query), "pZakonp", PI[playerid][pZakonp]);
+        acc_int_strcat(query, sizeof(query), "pNarcoLomka", PI[playerid][pNarcoLomka]);
+        acc_int_strcat(query, sizeof(query), "pProz", PI[playerid][pProz]);
+        acc_int_strcat(query, sizeof(query), "pMestoJail", PI[playerid][pMestoJail]);
+        acc_int_strcat(query, sizeof(query), "pWanted", PI[playerid][pWanted]);
+        acc_int_strcat(query, sizeof(query), "pHousecash", PI[playerid][pHousecash]);
+        format(PI[playerid][pTexts],16,"%i, %i, %i",PI[playerid][Texts][0],PI[playerid][Texts][1],PI[playerid][Texts][2]);
+        acc_int_strcat(query, sizeof(query), "day_online", PI[playerid][pDayOnline]);
+        acc_int_strcat(query, sizeof(query), "pDayAfk", PI[playerid][pDayAfk]);
+        acc_str_strcat(query, sizeof(query), "Texts", PI[playerid][pTexts]);
+        acc_int_strcat(query, sizeof(query), "SkinHome1", PI[playerid][pSkinhome][0]);
+        acc_int_strcat(query, sizeof(query), "SkinHome2", PI[playerid][pSkinhome][1]);
+        acc_int_strcat(query, sizeof(query), "SkinHome3", PI[playerid][pSkinhome][2]);
+        acc_int_strcat(query, sizeof(query), "pHomez", PI[playerid][pHomez]);
+        acc_int_strcat(query, sizeof(query), "satiety", PI[playerid][pSatiety]);
+        acc_int_strcat(query, sizeof(query), "pHotvet", PI[playerid][pHotvet]);
+        //
+        acc_int_strcat(query, sizeof(query), "pcWarn", PI[playerid][pcWarn]);
+        acc_int_strcat(query, sizeof(query), "pcBan", PI[playerid][pcBan]);
+        //
+        acc_int_strcat(query, sizeof(query), "pRepAdm", PI[playerid][pRepAdm]);
+        acc_int_strcat(query, sizeof(query), "pKickAdm", PI[playerid][pKickAdm]);
+        acc_int_strcat(query, sizeof(query), "pWarnAdm", PI[playerid][pWarnAdm]);
+        acc_int_strcat(query, sizeof(query), "pBanAdm", PI[playerid][pBanAdm]);
+        acc_int_strcat(query, sizeof(query), "pMuteAdm", PI[playerid][pMuteAdm]);
+        acc_int_strcat(query, sizeof(query), "pJailAdm", PI[playerid][pJailAdm]);
+        acc_int_strcat(query, sizeof(query), "pUsedJail", PI[playerid][pUsedJail]);
+        acc_int_strcat(query, sizeof(query), "pZakazov", PI[playerid][pZakazov]);
+        acc_int_strcat(query, sizeof(query), "pRubNAX", PI[playerid][pDonateRubNew]);
+        new drugs[128];
+        for(new i = 0; i < 7; i++) format(drugs, sizeof drugs, "%s%d ", drugs, PI[playerid][p_drugs][i]);
+        acc_str_strcat(query, sizeof(query), "drugs", drugs);
+        strdel(query, strlen(query)-1, strlen(query));//Удаляем запятую
+        format(string,sizeof(string)," WHERE `pID` = '%d'",PI[playerid][pID]);
+        strcat(query, string);
+        mysql_function_query(connects, query, false, "", "");
+
+        new string_2[512];
+        for(new idx = 1; idx < 11; idx++)
+        {
+            GetPlayerWeaponData(playerid, idx, PI[playerid][Weapon][idx-1], PI[playerid][Ammo][idx-1]);
+        }
+        format(PI[playerid][pWeapons],32,"%i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i",PI[playerid][Weapon][0], PI[playerid][Weapon][1], PI[playerid][Weapon][2], PI[playerid][Weapon][3],
+        PI[playerid][Weapon][4], PI[playerid][Weapon][5], PI[playerid][Weapon][6], PI[playerid][Weapon][7], PI[playerid][Weapon][8], PI[playerid][Weapon][9], PI[playerid][Weapon][10]);
+
+        format(PI[playerid][Ammos],32,"%i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i",PI[playerid][Ammo][0], PI[playerid][Ammo][1], PI[playerid][Ammo][2], PI[playerid][Ammo][3],
+        PI[playerid][Ammo][4], PI[playerid][Ammo][5], PI[playerid][Ammo][6], PI[playerid][Ammo][7], PI[playerid][Ammo][8], PI[playerid][Ammo][9], PI[playerid][Ammo][10]);
+
+        mysql_format(connects, string_2, sizeof(string_2), "UPDATE `accounts` SET `Weapons` = '%s', `Ammos`='%s'", PI[playerid][pWeapons], PI[playerid][Ammos]);
+        mysql_format(connects,  string_2, sizeof( string_2), "%s WHERE `Name` = '%s'", connects, PI[playerid][pNames]);
+        mysql_function_query(connects,  string_2, false, "", "");
+
+    }
+    return 1;
+}
+publics: Logs(playerid, type, page)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendClientMessage(playerid, COLOR_GREY, "Истории не найдено.");
+    enum LOG_DATE
+    {
+        number,
+        act,
+        summa,
+        trasfer_number,
+        nick[24],
+        logdate[32]
+    }
+    new Crazy[1][LOG_DATE], string[1500];
+    if(type == 1) {
+        for(new i; i < rows; i++)
+        {
+            Crazy[0][number] = cache_get_field_content_int(i, "number", connects);
+            Crazy[0][act] = cache_get_field_content_int(i, "act", connects);
+            Crazy[0][summa] = cache_get_field_content_int(i, "summa", connects);
+            Crazy[0][trasfer_number] = cache_get_field_content_int(i, "trasfer_number", connects);
+            cache_get_field_content(i, "nick", Crazy[0][nick], connects, 24);
+            cache_get_field_content(i, "date", Crazy[0][logdate], connects, 32);
+            if(Crazy[0][act] == 0) format(stringer1, sizeof(stringer1), "{FF4500}[%s]{FFFFFF} На счет зачисленно %s руб.\n", Crazy[0][logdate],formatInt(Crazy[0][summa]));
+            else if(Crazy[0][act] == 1) format(stringer1, sizeof(stringer1), "{FF4500}[%s]{FFFFFF} Со счета снято %s руб.\n", Crazy[0][logdate],formatInt(Crazy[0][summa]));
+            else if(Crazy[0][act] == 2 && Crazy[0][number] == PI[playerid][pID]) format(stringer1, sizeof(stringer1), "{FF4500}[%s]{FFFFFF} На основной счет (им. %s) переведено %s руб.\n", Crazy[0][logdate],Crazy[0][nick],formatInt(Crazy[0][summa]));
+            else if(Crazy[0][act] == 2) format(stringer1, sizeof(stringer1), "{FF4500}[%s]{FFFFFF} На счет %d (им. %s) переведено %s руб.\n", Crazy[0][logdate],Crazy[0][trasfer_number],Crazy[0][nick],formatInt(Crazy[0][summa]));
+            strcat(string, stringer1);
+        }
+        SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, "{FF6F00}История операций", string, "Принять", "");
+    }
+    else if(type == 2) {
+        for(new i; i < rows; i++)
+        {
+            cache_get_field_content(i, "ip", Crazy[0][nick], connects, 32);
+            cache_get_field_content(i, "date", Crazy[0][logdate], connects, 32);
+            Crazy[0][act] = cache_get_field_content_int(i, "status", connects);
+            format(stringer1, sizeof(stringer1), "{FFFFFF}%d. Дата: %s | IP: %s - %s\n", i+1, Crazy[0][logdate], Crazy[0][nick], Crazy[0][act] ? ("{09B000}Удачно{FFFFFF}") : ("{FF4500}Неудачно{FFFFFF}"));
+            strcat(string, stringer1);
+        }
+        SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, "{FF6F00}Информация о вводах каптчи", string, "Принять", "");
+    }
+    else if(type == 3) {
+        for(new i; i < rows; i++)
+        {
+            cache_get_field_content(i, "Name", Crazy[0][nick], connects, 32);
+            cache_get_field_content(i, "pGetonDate", Crazy[0][logdate], connects, 32);
+            Crazy[0][act] = cache_get_field_content_int(i, "pOnline", connects);
+            format(stringer1,sizeof(stringer1), "%d.\t%s\t{FF6F00}%s{FFFFFF}\t{FF6F00}%s{FFFFFF}\n",i+1,Crazy[0][nick],Crazy[0][logdate],Crazy[0][act] != 1001 ? ("{09B000}Online{FFFFFF}") : ("{FF4500}OFFline{FFFFFF}")), strcat(string,stringer1);
+        }
+        SetPVarInt(playerid, #page_str, page);
+        format(stringer1, sizeof(stringer1), "{FF6F00}Игроки с одинаковыми IP (страница №%d)", page);
+        return SPD(playerid, 793, DIALOG_STYLE_LIST, stringer1, string, "Принять", "Отмена");
+    }
+    /*
+    else if(type == 4) {
+        format(stringer1, sizeof(stringer1),"{FFFFFF}Ник\t{FFFFFF}Уровень\t{FFFFFF}Ответы\t{FFFFFF}Статус\n"), strcat(string,stringer1);
+        foreach (new i : Player)
+        {
+            if(PI[i][pHelper] == 0) continue;
+            format(stringer1,sizeof(stringer1), "%s\t%d\t%d\t{09B000}Online\n",PI[i][pNames],PI[i][pHelper],PI[i][pHotvet]), strcat(string,stringer1);
+        }
+        for(new i; i < rows; i++)
+        {
+            cache_get_field_content(i, "Name", Crazy[0][nick], connects, 32);
+            Crazy[0][summa] = cache_get_field_content_int(i, "pHelper", connects);
+            Crazy[0][number] = cache_get_field_content_int(i, "pHotvet", connects);
+            format(stringer1,sizeof(stringer1), "%s\t%d\t%d\t{FF4500}OFFline\n",Crazy[0][nick],Crazy[0][summa],Crazy[0][number]), strcat(string,stringer1);
+        }
+        SPD(playerid, 0000, DIALOG_STYLE_TABLIST_HEADERS, "{FF6F00}Статистика хелперов", string, "Принять", "Отмена");
+    }
+    */
+    else if(type == 5) {
+        new time[6];
+        format(stringer1, sizeof(stringer1),"{FFFFFF}#\t{FFFFFF}С\t{FFFFFF}На\t{FFFFFF}Время\n"), strcat(string,stringer1);
+        for(new i; i < rows; i++)
+        {
+            cache_get_field_content(i, "old_nick", Crazy[0][nick], connects, 24);
+            cache_get_field_content(i, "new_nick", Crazy[0][logdate], connects, 24);
+            Crazy[0][act] = cache_get_field_content_int(i, "date", connects);
+            gmtime(Crazy[0][act], time[0], time[1], time[2], time[3], time[4], time[5]);
+            format(stringer1,sizeof(stringer1), "%d.\t%s\t{FF6F00}%s{FFFFFF}\t%02d.%02d.%04d в %02d:%02d:%02d{FFFFFF}\n",i+1,Crazy[0][nick],Crazy[0][logdate], time[2], time[1], time[0], time[3]+3, time[4], time[5]), strcat(string,stringer1);
+        }
+        return SPD(playerid, 0000, DIALOG_STYLE_TABLIST_HEADERS, "{FF6F00}История измененных ников", string, "Принять", "Отмена");
+    }
+    return 1;
+}
+cmd:offwarn(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 7) return 1;
+    if(PI[playerid][pVigs] > 1) return SendClientMessage(playerid, 0xFF6600AA, "{FF6600}На вашем аккаунте выговор, некоторые команды были заблокированы. Снимите выговор — {FFFFFF}/adonate, {FF6600}чтобы снять блокировку команд.");
+    new nicks[24];
+    if(sscanf(params, "s[24]s[128]", nicks, params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /offwarn [ник] [причина]");
+
+
+
+    format(mysql_query_, sizeof(mysql_query_), "SELECT `pID`, `pWarns` FROM `"TABLE_ACCOUNT"` WHERE `Name` = '%s'", nicks);
+    mysql_function_query(connects, mysql_query_, true, "OffWarn", "dss",playerid,nicks,params[1]);
+    return 1;
+}
+publics: OffWarn(playerid, tmp[], reason[])
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_GREY, "Аккаунт %s не найден в базе данных.",tmp);
+    new ids = cache_get_field_content_int(0, "pID", connects),
+    warns = cache_get_field_content_int(0, "pWarns", connects) + 1
+    ;
+    //if(ids == 1 || ids == 3) return DelAdmin(playerid);
+    if(warns < 3) {
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pWarns` = '%d', `pLeader` = '0', `pMember` = '0', `pRank` = '0', `punWarns` = '1', `punWarnstime` = '0' WHERE `pID` = '%d'", warns, ids);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        format(stringer1, sizeof(stringer1), "[A] Администратор %s заварнил %s в offline (%d / 3). Причина: %s",PI[playerid][pNames], tmp, warns, reason);
+        SendAdminMessage(COLOR_GREY,stringer1);
+        format(stringer1, sizeof(stringer1), "выдал предупреждение (%d / 3), с причиной: %s", warns, reason);
+
+        Admin_Log(playerid, stringer1, tmp, gettime());
+    }
+    else {
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pWarns` = '0', `punWarns` = '0', `punWarnstime` = '0' WHERE `pID` = '%d'", ids);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        mysql_format(connects, mysql_query_, sizeof(mysql_query_), "SELECT 1 FROM `"TABLE_BANLOG"` WHERE `name` = '%e'", tmp);
+        mysql_function_query(connects, mysql_query_, true, "OffBan", "dsdsd",playerid, tmp, 2, reason, 0);
+    }
+    return 1;
+}
+publics: CheckNumber(playerid, nubmer)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) {
+        SendMes(playerid, COLOR_GREY, "Счета, номер %d несуществует.", nubmer);
+        return SPD(playerid,3253,DIALOG_STYLE_INPUT,"{4F94CD}Перевод средств","{FFFFFF}Введите номер счёта, на который\nхотите осуществить перевод средств:","Далее","Назад");
+    }
+    SetPVarInt(playerid, "_banknumber", nubmer);
+    cache_get_field_content(0, "owner", _INFO[playerid][gOWNER][GetPVarInt(playerid, "_banklogin")], connects, 20);
+    _INFO[playerid][gBALANCE][GetPVarInt(playerid, "_banklogin")] = cache_get_field_content_int(0, "balance", connects);
+    return SPD(playerid,3254,DIALOG_STYLE_INPUT,"{4F94CD}Перевод средств","{FFFFFF}Введите сумму денег которую\nхотите перевести на введенный Вами счёт:","Далее","Назад");
+}
+publics: OnLeaderPanel(playerid, page)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Информация о членах семьи не найдена.");
+    page_identifier[playerid][0] = 0, page_number[playerid] = 0;
+    enum LP_DATE
+    {
+        name[20],
+        ids,
+        rank,
+        last_vhod[32]
+    }
+    new OFFLP[1][LP_DATE], string[1500];
+    format(stringer1, sizeof(stringer1),"{FF6F00}Перейти на следующую страницу\nПерейти на предыдущую страницу\n"), strcat(string,stringer1);
+
+    for(new i; i < rows; i++)
+    {
+        cache_get_field_content(i, "Name", OFFLP[0][name], connects, 20);
+        OFFLP[0][ids] = cache_get_field_content_int(i, "pID", connects);
+        OFFLP[0][rank] = cache_get_field_content_int(i, "pRank", connects);
+        cache_get_field_content(i, "pGetonDate", OFFLP[0][last_vhod], connects, 32);
+        page_identifier[playerid][page_number[playerid]] = OFFLP[0][ids], page_number[playerid]++;
+        format(stringer1,sizeof(stringer1), "%d. %s\t[{FF6F00}%s (%d){FFFFFF}]\t[{FF6F00}%s{FFFFFF}]\n",i+1,OFFLP[0][name],fRankName[PI[playerid][pMember]-1][OFFLP[0][rank]-1],OFFLP[0][rank],OFFLP[0][last_vhod]), strcat(string,stringer1);
+    }
+    SetPVarInt(playerid, #page_str, page);
+    format(stringer1, sizeof(stringer1), "{FF6F00}Список OFFline игроков страница №%d", page);
+    return SPD(playerid, 758, DIALOG_STYLE_LIST, stringer1, string, "Принять", "Отмена");
+}
+
+publics: OFFStats(playerid)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return 1;
+    new lastvhod[32], nicks [20];
+    new rank = cache_get_field_content_int(0, "pRank", connects);
+    new vigs = cache_get_field_content_int(0, "vigs", connects);
+    if(!rank) return 1;
+    cache_get_field_content(0, "Name", nicks, connects, 20);
+    cache_get_field_content(0, "pGetonDate", lastvhod, connects, 32);
+    format(stringer, sizeof(stringer), "{FFFFFF}Имя_Фамилия: {FF6F00}%s\n{FFFFFF}Ранг: {FF6F00}%s (%d)\n{FFFFFF}Выговоров: {FF6F00}%d / 3\n{FFFFFF}Был в сети: {FF6F00}%s{FFFFFF}\n- Уволить\n- Повысить\n- Понизить\n- Выдать выговор\n- Снять выговор", nicks, fRankName[PI[playerid][pMember]-1][rank-1], rank, vigs, lastvhod);
+    return SPD(playerid, 759, DIALOG_STYLE_LIST, "{FF6F00}Информация о игроке", stringer, "Выбрать", "Отмена");
+}
+publics: OFFLP_DATA(playerid, ids, act)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return 1;
+    new nicks[20];
+    new rank = cache_get_field_content_int(0, "pRank", connects);
+    new vigs = cache_get_field_content_int(0, "vigs", connects);
+    cache_get_field_content(0, "Name", nicks, connects, 20);
+    if(IsPlayerConnected(GetPlayerID(nicks))) return SendClientMessage(playerid,-1,"Данный игрок в сети.");
+    if(act == 4) {
+        SendMes(playerid, -1, "Вы уволили игрока %s.",nicks);
+        mysql_format(connects, mysql_query_,sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0' WHERE `pID` = '%d'", ids);
+    }
+    else if(act == 5) {
+        switch(PI[playerid][pMember])
+        {
+        case 1,10,3,19,21: if(rank >= 14) return SendClientMessage(playerid, COLOR_GREY, "Ранг не может быть больше 14. Действие отменено.");
+        case 2,26,4,5,6,11,12,13,14,15,17,18,22,24,25,7: if(rank >= 9) return SendClientMessage(playerid, COLOR_GREY, "Ранг не может быть больше 9. Действие отменено.");
+        case 27,28: if(rank >= 4) return SendClientMessage(playerid, COLOR_GREY, "Ранг не может быть больше 4. Действие отменено.");
+        case 16: if(rank >= 12) return SendClientMessage(playerid, COLOR_GREY, "Ранг не может быть больше 12. Действие отменено.");
+        case 23: if(rank >= 11) return SendClientMessage(playerid, COLOR_GREY, "Ранг не может быть больше 11. Действие отменено.");
+        }
+        SendMes(playerid, -1, "Вы повысили игрока %s до %d ранга.",nicks, rank+1);
+        mysql_format(connects, mysql_query_,sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pRank` = '%d' WHERE `pID` = '%d'", rank+1,ids);
+    }
+    else if(act == 6) {
+        if(rank == 1) return SendClientMessage(playerid, COLOR_GREY, "У игрока первый ранг. Понизить невозможно.");
+        SendMes(playerid, -1, "Вы понизили игрока %s до %d ранга.",nicks, rank-1);
+        mysql_format(connects, mysql_query_,sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pRank` = '%d' WHERE `pID` = '%d'", rank-1,ids);
+    }
+    else if(act == 7) {
+        vigs ++;
+        if(vigs >= 3) {
+            SendMes(playerid, -1, "Вы уволили игрока %s (3 / 3).",nicks);
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pLeader` = '0', `pRank` = '0', `odet` = '0' , `vigs` = '0' WHERE `pID` = '%d'", ids);
+        }
+        else {
+            SendMes(playerid, -1, "Вы выдали игроку %s выговор (%d / 3).",nicks, vigs);
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'", vigs,ids);
+        }
+    }
+    else if(act == 8) {
+        if(vigs == 0) return SendClientMessage(playerid, COLOR_GREY, "У игрока отсутствуют выговоры.");
+        SendMes(playerid, -1, "Вы сняли выговор у игрока %s (%d / 3).",nicks, vigs-1);
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'", vigs-1,ids);
+    }
+    mysql_tquery(connects, mysql_query_, "", "");
+    return 1;
+}
+publics: OnFracRankLoad()
+{
+    new rows, fields, fraction, load_data[20];
+    cache_get_data(rows, fields, connects);
+    if(!rows) return print("Ранги не загружены.");
+    for(new r = 0; r < rows; r++)
+    {
+        fraction = cache_get_row_int(r,0);
+        for(new i = 1; i < 16; i++) {
+            cache_get_row(r,i,fRankName[fraction][i-1],connects,40);
+        }
+        cache_get_row(r,16,load_data,connects,20);
+        sscanf(load_data,"p<,>iiii",gFractionRank[fraction][0],gFractionRank[fraction][1],gFractionRank[fraction][2],gFractionRank[fraction][3]);
+    }
+    printf ("[Ранги организаций] Загружены: %d фракций", rows);
+    return 1;
+}
+publics: Delete(playerid,tmp[])
+{
+    new rows, fields, null = 0;
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_GREY, "Аккаунт %s не найден в Базе данных.",tmp);
+    new ids = GetPlayerID(tmp);
+    if(IsPlayerConnected(ids))
+    {
+        SendClientMessage(ids, COLOR_LIGHTRED,"Ваш аккаунт был удален, за нарушение правил сервера!");
+        KickEx(ids);
+    }
+    for(new i = 1; i <= TOTALBIZZ;i++) if(!strcmp(BizzInfo[i][bOwner],tmp,false) && strcmp(BizzInfo[i][bOwner],"None",true) != 0) null = i;
+    if(null != 0) ClearBizz(null);
+    mysql_format(connects, mysql_query_,sizeof(mysql_query_),"DELETE FROM `"TABLE_ACCOUNT"` WHERE `Name` = '%e'",tmp);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    format(stringer1, sizeof(stringer1), "[A] Администратор %s удалил аккаунт %s.",PI[playerid][pNames], tmp);
+    SendAdminMessage(COLOR_LIGHTRED, stringer1);
+    Admin_Log(playerid, "удалил аккаунт", tmp, gettime());
+    return 1;
+}
+publics: UnBan(playerid, tmp[], type)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) {
+        if(GetPVarInt(playerid, "BuyUnBan")) {DeletePVar(playerid, "BuyUnBan");}
+        return SendClientMessage(playerid, COLOR_WHITE,"Игрок / IP адрес не был заблокирован!");
+    }
+    if(!type) mysql_format(connects, mysql_query_, sizeof(mysql_query_), "DELETE FROM `"TABLE_BANLOG"` WHERE `name` = '%e'",tmp);
+    else format(mysql_query_, sizeof(mysql_query_), "DELETE FROM `baniplog` WHERE `ip` = '%s'",tmp);
+    mysql_function_query(connects, mysql_query_, false, "","");
+    if(GetPVarInt(playerid, "BuyUnBan"))
+    {
+        DeletePVar(playerid, "BuyUnBan");
+        PI[playerid][pDonateRubNew] -= 200;
+        UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+        return SendClientMessage(playerid, -1, "Вы успешно купили разбан аккаунта!");
+    }
+    format(mysql_query_, sizeof(mysql_query_), "[A] Администратор %s разблокировал %s %s.",PI[playerid][pNames], (!type) ? ("игрока:") : ("IP адрес:"),tmp);
+    SendAdminMessage(COLOR_LIGHTRED,mysql_query_);
+    Admin_Log(playerid, "разбанил", tmp, gettime());
+    return 1;
+}
+publics:BuyCmdCallback(playerid, CMD_i)
+{
+    if(PI[playerid][pDonateRubNew] < CMD_price[CMD_i]*2) return SendClientMessage(playerid,COLOR_GREY, "У Вас недостаточно F - Coins, пополнить их можно на сайте {FFCD00}"SERVER_WEBSITE" -> Донат");
+    new CMDaccess[CMD_NUM + 1];
+    cache_get_field_content(0, "CMDaccess", CMDaccess, connects, sizeof(CMDaccess));
+    if(CMDaccess[CMD_i] == '1') return SendClientMessage(playerid,-1, "У Вас уже есть эта команда!");
+    CMDaccess[CMD_i] = '1';
+    PI[playerid][aiCMDaccess][CMD_i] = '1';
+    new fstring[144];
+    format(fstring, sizeof fstring, "Вы успешно купили команду %s за %i F - Coins", CMD_names[CMD_i],  CMD_price[CMD_i] * 2);
+    SendClientMessage(playerid,-1,fstring);
+    PI[playerid][pDonateRubNew] -= CMD_price[CMD_i]*2;
+    UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+
+    new query[144];
+    mysql_format(connects, query, sizeof(query), "UPDATE `accounts` SET `CMDaccess` = '%s', `pPrefix` = '%s' WHERE `Name` = '%e'", CMDaccess,PI[playerid][pPrefix],PI[playerid][pNames]);
+    mysql_function_query(connects, query, false, "", "");
+    return 1;
+}
+publics: Givedonate(playerid, tmp[], donate)
+{
+    new rows, fields, money[20];
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_GREY, "Аккаунт %s не найден в базе данных.",tmp);
+    if(donate > 5000 || donate < 0) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: Нельзя меньше 0 и больше 5000");
+    new ids = GetPlayerID(tmp);
+    if(IsPlayerConnected(ids))
+    {
+        PI[ids][pDonatemoney2] += donate;
+        format(stringer1, sizeof(stringer1),"Администратор: %s выдал вам %d донат-очков, теперь у вас %d донат очков.", PI[playerid][pNames],donate,PI[ids][pDonatemoney2]);
+        SendClientMessage(ids, COLOR_WHITE,stringer1);
+    }
+    cache_get_field_content(0, "pDonatemoney2", money);
+    mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pDonatemoney2` = '%d' WHERE `Name` = '%e'",strval(money)+donate,tmp);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    SendMes(playerid, COLOR_WHITE, "Игроку %s зачисленно %d донат очков. Его новый баланс: %d донат очков.", tmp, donate, strval(money)+donate);
+    format(stringer1, sizeof(stringer1), "выдал %d донат очков",donate);
+    Admin_Log(playerid, stringer1, tmp, gettime());
+    return 1;
+}
+publics: is_cmd_allow(playerid, CMD_id) {
+    if (PI[playerid][pAdmin] < 1) return 0;
+    return (PI[playerid][aiCMDaccess][CMD_id] == '1');
+}
+publics: setcmd_SQL_callback(playerid, Namets[], CMD_i, CMD_allow) {
+    if (cache_get_row_count() < 1) return SendClientMessage(playerid, -1, "{ffffff}Введённое имя игрока отсутствует в БД");
+    new CMDaccess[CMD_NUM + 1];
+    new string[256];
+    cache_get_field_content(0, "CMDaccess", CMDaccess, connects, sizeof(CMDaccess));
+    new CMDaccess_i_new = CMD_allow ? '1' : '0';
+    new changed = CMDaccess[CMD_i] != CMDaccess_i_new;
+    if(changed)
+    {
+        CMDaccess[CMD_i] = CMDaccess_i_new;
+        mysql_format(connects, string, sizeof(string), "UPDATE `accounts` SET `CMDaccess` = '%s' WHERE `Name` = '%s'", CMDaccess, Namets);
+        mysql_function_query(connects, string, false, "", "");
+
+        foreach(new i: Player)
+        {
+            if(!IsPlayerConnected(i) || !PI[i][pAdmin]) continue;
+            if(strcmp(PI[i][pNames], Namets, true) != 0) continue;
+            PI[i][aiCMDaccess][CMD_i] = CMD_allow ? '1' : '0';
+            if(CMD_allow) format(string, sizeof(string), "Тебе дали команду %s.", CMD_names[CMD_i]);
+            else format(string, sizeof(string), "У тебя забрали команду %s.", CMD_names[CMD_i]);
+            SendClientMessage(i, -1, string);
+            break;
+        }
+    }
+    if (changed)
+    {
+        if (CMD_allow) format(string, sizeof(string), "• "SERVER"Вы выдали команду %s игроку %s.", CMD_names[CMD_i], Namets);
+        else format(string, sizeof(string), "• "SERVER"Вы забрали команду %s у игрока %s.", CMD_names[CMD_i], Namets);
+    }
+    else
+    {
+        if (CMD_allow) format(string, sizeof(string), "• "SERVER"Команда %s уже доступна игроку %s.", CMD_names[CMD_i], Namets);
+        else format(string, sizeof(string), "• "SERVER"Команда %s уже недоступна игроку %s.", CMD_names[CMD_i], Namets);
+    }
+    SendClientMessage(playerid, -1, string);
+    return 1;
+}
+publics: SetVig_Date(playerid, tmp[], reason[], type)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_GREY, "Аккаунт %s не найден в базе данных.",tmp);
+    new admin = cache_get_field_content_int(0, "pAdmin", connects);
+    new leader = cache_get_field_content_int(0, "pLeader", connects);
+    new vigs = cache_get_field_content_int(0, "vigs", connects);
+    if(!admin && !leader) return SendClientMessage(playerid,COLOR_WHITE,"Указанный игрок не является администратором / лидером");
+    if(admin && PI[playerid][pAdmin] < 11) return 1;
+    if(admin > PI[playerid][pAdmin]) return 1;
+    if(admin == 12 && !FD(playerid)) return SendClientMessage(playerid, COLOR_WHITE, "У вас нет прав на выдачу выговора Основателю.");
+    if(type == 1)
+    {
+        if(vigs <= 0) return SendClientMessage(playerid,COLOR_WHITE,"Выговоры отсутствуют.");
+        vigs --;
+        if(leader && !admin)
+        {
+            format(stringer1, sizeof(stringer1), "Администратор %s снял выговор лидеру фракции %s: %s (%d/3). Причина: %s", PI[playerid][pNames], GetPlayerFracName[leader], tmp, vigs, reason);
+            SendClientMessageToAll(COLOR_LIGHTRED, stringer1);
+            format(stringer1, sizeof(stringer1), "снял выговор лидеру фракции %s (%d/3) по причине: %s", GetPlayerFracName[leader], vigs, reason);
+            Admin_Log(playerid, stringer1, tmp, gettime());
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `Name` = '%s'",vigs, tmp);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+        }
+        else if(admin)
+        {
+            format(stringer1, sizeof(stringer1), "Главный администратор %s снял администратору %s выговор (%d/3). Причина: %s", PI[playerid][pNames], tmp, vigs, reason);
+            SendAdminMessage(COLOR_LIGHTRED, stringer1);
+            format(stringer1, sizeof(stringer1), "снял выговор (%d/3), по причине: %s", vigs, reason);
+            Admin_Log(playerid, stringer1, tmp, gettime());
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `Name` = '%s'", vigs, tmp);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+        }
+    }
+    else if(type == 2)
+    {
+        vigs ++;
+        if(vigs >= 3)
+        {
+            if(leader && !admin)
+            {
+                format(stringer1, sizeof(stringer1), "Администратор %s снял лидера фракции %s: %s (3/3). Причина: %s", PI[playerid][pNames], GetPlayerFracName[leader], tmp, reason);
+                SendClientMessageToAll(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "снял лидеры фракции %s по причине (3/3): %s", GetPlayerFracName[leader], reason);
+                Admin_Log(playerid, stringer1, tmp, gettime());
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pLeader` = '0', `pRank` = '0', `odet` = '0' , `vigs` = '0' WHERE `Name` = '%s'", tmp);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+            else if(admin)
+            {
+                format(stringer1, sizeof(stringer1), "Главный администратор %s снял с %s права администратора (3/3). Причина: %s", PI[playerid][pNames], tmp, reason);
+                SendAdminMessage(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "снял права администратора (3/3), по причине: %s", reason);
+                Admin_Log(playerid, stringer1, tmp, gettime());
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pAdmin` = '0', `vigs` = '0' WHERE `Name` = '%s'",tmp);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+        }
+        else
+        {
+            if(leader && !admin)
+            {
+                format(stringer1, sizeof(stringer1), "Администратор %s выдал выговор лидеру фракции %s: %s (%d/3). Причина: %s", PI[playerid][pNames], GetPlayerFracName[leader], tmp,vigs, reason);
+                SendClientMessageToAll(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "выдал выговор лидеру фракции %s (%d/3) по причине: %s", GetPlayerFracName[leader],vigs, reason);
+                Admin_Log(playerid, stringer1, tmp, gettime());
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `Name` = '%s'",vigs, tmp);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+            else if(admin)
+            {
+                format(stringer1, sizeof(stringer1), "Главный администратор %s выдал администратору %s выговор (%d/3). Причина: %s", PI[playerid][pNames], tmp, vigs, reason);
+                SendAdminMessage(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "выдал выговор (%d/3), по причине: %s", vigs, reason);
+                Admin_Log(playerid, stringer1, tmp, gettime());
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `Name` = '%s'",vigs,tmp);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+        }
+    }
+    return 1;
+}
+publics: OffAdmin(playerid,tmp[])
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_GREY, "Аккаунт %s не найден в базе данных.",tmp);
+    mysql_format(connects,mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pAdmin` = '0', `vigs` = '0' WHERE `Name` = '%e'", tmp);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    SendMes(playerid, COLOR_GREY, "Аккаунт %s был снят с поста администратора.", tmp);
+    return 1;
+}
+publics: GetOffStats(playerid,tmp[])
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_RED, "[SYSTEM] {FFFFFF}Аккаунт %s не найден в базе данных.",tmp);
+    new str[144],string[256],mem[64];
+    format(str,sizeof(str),""SERVER"[0] {FFFFFF}Имя:  [%s]\n",tmp); strcat(string,str);
+    cache_get_field_content(0, "pID",mem); format(str,sizeof(str),""SERVER"[1] {FFFFFF}Номер аккаунта: [%s]\n",mem); strcat(string,str);
+    cache_get_field_content(0, "pRubNAX",mem); format(str,sizeof(str),""SERVER"[2] {FFFFFF}F - Coins: [%s]\n",mem); strcat(string,str);
+    cache_get_field_content(0, "pAdmin",mem); format(str,sizeof(str),""SERVER"[3] {FFFFFF}Админ-Уровень: [%s]\n",mem); strcat(string,str);
+    cache_get_field_content(0, "pLeader",mem); format(str,sizeof(str),""SERVER"[4] {FFFFFF}Лидер: [%s]\n",mem); strcat(string,str);
+    cache_get_field_content(0, "pMember",mem); format(str,sizeof(str),""SERVER"[5] {FFFFFF}Организация: [%s]\n",mem); strcat(string,str);
+    SPD(playerid,1932,DIALOG_STYLE_MSGBOX,""SERVER" OFFLINE-Статистика",string,"Скрыть","");
+    return 1;
+}
+
+CMD:flip(playerid, params[])
+{
+        if(PI[playerid][pAdmin] < 1) return SendClientMessage(playerid, COLOR_WHITE, !"{FFFF00}У Вас нет доступа к данной команде.");
+        if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_WHITE, !"Используйте: /flip [id игрока]");
+        if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, COLOR_WHITE, !"Игрок не найден!");
+
+        // получаем id транспорта где сидит игрок
+        new vehicleid = GetPlayerVehicleID(params[0]);
+
+        // проверяем что игрок сидит в транспорте, если это не так пишем ошибку
+        if(!vehicleid)
+        {
+            SendClientMessage(playerid, 0x4682B4FF, "Игрок должен находиться в транспорте!");
+            return 1;
+        }
+
+        // переменные которые будут хранить позицию и угол поворота
+        new Float:x, Float:y, Float:z;
+        new Float:angle;
+
+        // получаем позицию и угол поворота
+        GetVehiclePos(vehicleid, x, y, z);
+        GetVehicleZAngle(vehicleid, angle);
+
+        // устанавливаем позицию и угол поворота
+        SetVehiclePos(vehicleid, x, y, z + 1.5);
+        SetVehicleZAngle(vehicleid, angle);
+
+        // пишем сообщение что все успешно
+        SendClientMessage(playerid, 0x4682B4FF, "Транспорт поставлен на колёса.");
+
+        return 1;
+}
+
+publics: OffLeader(playerid,tmp[])
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) return SendMes(playerid, COLOR_GREY, "Аккаунт %s не найден в базе данных.",tmp);
+    format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pLeader` = '0', `pMember` = '0', `pRank` = '0', `vigs` = '0' WHERE `Name` = '%s'", tmp);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    format(stringer1, 100, "[A] %s снял лидерство с %s в offline.",PI[playerid][pNames],tmp);
+    SendAdminMessage(COLOR_GREY,stringer1);
+    Admin_Log(playerid, "снял с поста лидера", tmp, gettime());
+    return 1;
+}
+publics: OnPlayerCheckPhone(playerid, number)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows)
+    {
+        SPD(playerid,3421,1,"Смена номера SIM-карты","{ffffff}Введите новый шестизначный номер телефона","Купить","Отмена");
+        SendClientMessage(playerid, -1, "Ошибка: данный номер занят другим игроком");
+    }
+    else
+    {
+        PI[playerid][pPnumber] = number;
+        PI[playerid][pDonatemoney2] -= 70;
+        GameTextForPlayer(playerid, "~r~-70 Donate ~g~Thanks!", 5000, 1);
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pPnumber` = '%d' WHERE `pID` = '%d'", number, PI[playerid][pID]);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        format(stringer1,sizeof(stringer1),"Ваш новый номер телефона: {FFFFFF}%d.",PI[playerid][pPnumber]);
+        SendClientMessage(playerid,COLOR_GREY,stringer1);
+    }
+    return 1;
+}
+publics: OffBan(playerid, tmp[], days, reason[], type)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows) return SendClientMessage(playerid, COLOR_WHITE, "Игрок / IP адрес уже заблокирован!");
+    if(!type)
+    {
+        ServerBan(playerid, tmp, days, reason);
+        new ids = GetPlayerID(tmp);
+        if(ids != INVALID_PLAYER_ID) {
+            SendMes(ids, COLOR_LIGHTRED, "Администратор %s заблокировал ваш аккаунт на %d дней. Причина: %s", PI[playerid][pNames], days, reason);
+            PI[ids][pLeader] = 0, PI[ids][pMember] = 0, PI[ids][pJob] = 0, PI[ids][pRank] = 0, PI[ids][pOdet] = 0;
+            KickEx(ids);
+        }
+    }
+    else ServerBan(playerid, tmp, days, reason, 1);
+    new query[400];
+    format(query, sizeof(query), "UPDATE `accounts` SET `pMember` = '0', `pLeader` = '0', `pRank` = '0', `odet` = '0', `pJob` = '0', `vigs` = '0' WHERE `Name` = '%s'", tmp);
+    mysql_function_query(connects, query, false, "", "");
+    format(stringer1, sizeof(stringer1), "Администратор %s заблокировал %s %s на %d дней. Причина: %s",PI[playerid][pNames], (!type) ? ("игрока:") : ("IP адрес:"), tmp, days, reason);
+    SendAdminMessage(COLOR_LIGHTRED,stringer1);
+    Admin_Log(playerid, stringer1, tmp, gettime());
+    return 1;
+}
+publics: LoginCallback(playerid)
+{
+    new maximum[78];
+    cache_get_field_content(0, "pID", maximum),             PI[playerid][pID] = strval(maximum);
+    cache_get_field_content(0, "pUsePromo", maximum),       PI[playerid][pUsePromo] = strval(maximum);
+    cache_get_field_content(0, "pPremiumCar", maximum),     PI[playerid][pPremiumCar] = strval(maximum);
+    cache_get_field_content(0, "pPremiumHours", maximum),   PI[playerid][pPremiumHours] = strval(maximum);
+    cache_get_field_content(0, "pLevel", maximum),          PI[playerid][pLevel] = strval(maximum);
+    cache_get_field_content(0, "pPhousekey", maximum),      PI[playerid][pPhousekey] = strval(maximum);
+    cache_get_field_content(0, "pAdmin", maximum),  PI[playerid][pAdmin] = strval(maximum);
+    cache_get_field_content(0, "pFuelcar", maximum),        PI[playerid][pFuelcar] = strval(maximum);
+    cache_get_field_content(0, "pHeadValue", maximum),      PI[playerid][pHeadValue] = strval(maximum);
+    cache_get_field_content(0, "pContract", maximum),       PI[playerid][pContract] = strval(maximum);
+    cache_get_field_content(0, "pZakazov", maximum),        PI[playerid][pZakazov] = strval(maximum);
+   // cache_get_field_content(0, "pHelper", maximum),         PI[playerid][pHelper] = strval(maximum);
+    cache_get_field_content(0, "pDonatemoney2", maximum),   PI[playerid][pDonatemoney2] = strval(maximum);
+    cache_get_field_content(0, "pDonateRank", maximum),     PI[playerid][pDonateRank] = strval(maximum);
+    cache_get_field_content(0, "pSex", maximum),            PI[playerid][pSex] = strval(maximum);
+    cache_get_field_content(0, "pExp", maximum),            PI[playerid][pExp] = strval(maximum);
+    cache_get_field_content(0, "pCash", maximum),           PI[playerid][pCash] = strval(maximum);
+    cache_get_field_content(0, "pKills", maximum),          PI[playerid][pKills] = strval(maximum);
+    cache_get_field_content(0, "pJailed", maximum),         PI[playerid][pJailed] = strval(maximum);
+    cache_get_field_content(0, "pJailTime", maximum),       PI[playerid][pJailTime] = strval(maximum);
+    cache_get_field_content(0, "pMats", maximum),           PI[playerid][pMats] = strval(maximum);
+    cache_get_field_content(0, "pHeal", maximum),           PI[playerid][pHeal] = strval(maximum);
+    cache_get_field_content(0, "pClist", maximum),          PI[playerid][pClist] = strval(maximum);
+    cache_get_field_content(0, "pLeader", maximum),         PI[playerid][pLeader] = strval(maximum);
+    cache_get_field_content(0, "pMember", maximum),         PI[playerid][pMember] = strval(maximum);
+    cache_get_field_content(0, "pRank", maximum),           PI[playerid][pRank] = strval(maximum);
+    cache_get_field_content(0, "pJob", maximum),            PI[playerid][pJob] = strval(maximum);
+    cache_get_field_content(0, "apartment", maximum),       PI[playerid][APARTMENT] = strval(maximum);
+    cache_get_field_content(0, "pVodPrava", maximum),       PI[playerid][pVodPrava] = strval(maximum);
+    cache_get_field_content(0, "pFlyLic", maximum),         PI[playerid][pFlyLic] = strval(maximum);
+    cache_get_field_content(0, "pBoatLic", maximum),        PI[playerid][pBoatLic] = strval(maximum);
+    cache_get_field_content(0, "pFishLic", maximum),        PI[playerid][pFishLic] = strval(maximum);
+    cache_get_field_content(0, "pGunLic", maximum),         PI[playerid][pGunLic] = strval(maximum);
+    cache_get_field_content(0, "pSDPistol", maximum),       PI[playerid][pSDPistol] = strval(maximum);
+    cache_get_field_content(0, "pDesertEagle", maximum),    PI[playerid][pDesertEagle] = strval(maximum);
+    cache_get_field_content(0, "pShotGun", maximum),        PI[playerid][pShotGun] = strval(maximum);
+    cache_get_field_content(0, "pMP5", maximum),            PI[playerid][pMP5] = strval(maximum);
+    cache_get_field_content(0, "pAK47", maximum),           PI[playerid][pAK47] = strval(maximum);
+    cache_get_field_content(0, "pM4", maximum),             PI[playerid][pM4] = strval(maximum);
+    cache_get_field_content(0, "pChar", maximum),           PI[playerid][pChar] = strval(maximum);
+    cache_get_field_content(0, "pModel", maximum),          PI[playerid][pModel] = strval(maximum);
+    cache_get_field_content(0, "pPnumber", maximum),        PI[playerid][pPnumber] = strval(maximum);
+    cache_get_field_content(0, "pPayDayHad", maximum),      PI[playerid][pPayDayHad] = strval(maximum);
+    cache_get_field_content(0, "pWarns", maximum),          PI[playerid][pWarns] = strval(maximum);
+    cache_get_field_content(0, "punWarns", maximum),        PI[playerid][punWarns] = strval(maximum);
+    cache_get_field_content(0, "punWarnstime", maximum),    PI[playerid][punWarnstime] = strval(maximum);
+    cache_get_field_content(0, "pFuel", maximum),           PI[playerid][pFuel] = strval(maximum);
+    cache_get_field_content(0, "pRobTime", maximum),        PI[playerid][pRobTime] = strval(maximum);
+    cache_get_field_content(0, "pReportTime", maximum),     PI[playerid][pReportTime] = strval(maximum);
+    cache_get_field_content(0, "pVerevka", maximum),        PI[playerid][pVerevka] = strval(maximum);
+    cache_get_field_content(0, "pOtmbI4ka", maximum),       PI[playerid][pOtmbI4ka] = strval(maximum);
+    cache_get_field_content(0, "pAutoTime", maximum),       PI[playerid][pAutoTime] = strval(maximum);
+    cache_get_field_content(0, "pAutoSkill", maximum),      PI[playerid][pAutoSkill] = strval(maximum);
+    cache_get_field_content(0, "pMarried", maximum),        PI[playerid][pMarried] = strval(maximum);
+    cache_get_field_content(0, "pMuteTime", maximum),       PI[playerid][pMuteTime] = strval(maximum);
+    cache_get_field_content(0, "pMobile", maximum),         PI[playerid][pMobile] = strval(maximum);
+    cache_get_field_content(0, "pBank", maximum),           PI[playerid][pBank] = strval(maximum);
+    cache_get_field_content(0, "pBoxSkill", maximum),       PI[playerid][pBoxSkill] = strval(maximum);
+    cache_get_field_content(0, "pKongfuSkill", maximum),    PI[playerid][pKongfuSkill] = strval(maximum);
+    cache_get_field_content(0, "pKickboxSkill", maximum),   PI[playerid][pKickboxSkill] = strval(maximum);
+    cache_get_field_content(0, "pFightSkill", maximum),     PI[playerid][pFightSkill] = strval(maximum);
+    cache_get_field_content(0, "pFightSkil", maximum),      PI[playerid][pFightSkil] = strval(maximum);
+    cache_get_field_content(0, "pFightTime", maximum),      PI[playerid][pFightTime] = strval(maximum);
+    cache_get_field_content(0, "pHospital", maximum),       PI[playerid][pHospital] = strval(maximum);
+    cache_get_field_content(0, "pIzol", maximum),           PI[playerid][pIzol] = strval(maximum);
+    PI[playerid][pDostup] = cache_get_field_content_int(0, "pDostup", connects);
+    cache_get_field_content(0, "pZakonp", maximum),         PI[playerid][pZakonp] = strval(maximum);
+    cache_get_field_content(0, "pNarcoLomka", maximum),     PI[playerid][pNarcoLomka] = strval(maximum);
+    cache_get_field_content(0, "pProz", maximum),           PI[playerid][pProz] = strval(maximum);
+    cache_get_field_content(0, "pMestoJail", maximum),      PI[playerid][pMestoJail] = strval(maximum);
+    cache_get_field_content(0, "pWanted", maximum),         PI[playerid][pWanted] = strval(maximum);
+    cache_get_field_content(0, "pHousecash", maximum),      PI[playerid][pHousecash] = strval(maximum);
+    cache_get_field_content(0, "pNumbercar", maximum),      strmid(PI[playerid][pNumbercar], maximum, 0, strlen(maximum), 64);
+    cache_get_field_content(0, "pIpReg", maximum),          strmid(PI[playerid][pIpReg], maximum, 0, strlen(maximum), 64);
+    cache_get_field_content(0, "day_online", maximum),       PI[playerid][pDayOnline] = strval(maximum);
+    cache_get_field_content(0, "pDayAfk", maximum),      PI[playerid][pDayAfk] = strval(maximum);
+    cache_get_field_content(0, "pOnlineYes", maximum),       PI[playerid][pOnlineYes] = strval(maximum);
+    cache_get_field_content(0, "pAfkYes", maximum),      PI[playerid][pAfkYes] = strval(maximum);
+    cache_get_field_content(0, "Texts",PI[playerid][pTexts],connects,16), sscanf(PI[playerid][pTexts], "p<,>a<i>[3]",PI[playerid][Texts]);
+    cache_get_field_content(0, "SkinHome1", maximum),        PI[playerid][pSkinhome][0] = strval(maximum);
+    cache_get_field_content(0, "SkinHome2", maximum),        PI[playerid][pSkinhome][1] = strval(maximum);
+    cache_get_field_content(0, "SkinHome3", maximum),        PI[playerid][pSkinhome][2] = strval(maximum);
+    cache_get_field_content(0, "pHomez", maximum),           PI[playerid][pHomez] = strval(maximum);
+    cache_get_field_content(0, "satiety", maximum),          PI[playerid][pSatiety] = strval(maximum);
+    cache_get_field_content(0, "keyip",PI[playerid][pKeyIp],connects,16);
+    cache_get_field_content(0, "pHotvet", maximum),          PI[playerid][pHotvet] = strval(maximum);
+    cache_get_field_content(0, "pAccent",PI[playerid][pAccent],connects,32);
+    PI[playerid][pCheckIp] = cache_get_field_content_int(0,"checkip");
+    cache_get_field_content(0, "pGetonIP",PI[playerid][pGetonIP],connects,16);
+    cache_get_field_content(0, "pGetonDate",PI[playerid][pGetondate],connects,16);
+    cache_get_field_content(0, "settings", maximum), sscanf(maximum, "p<,>a<i>[7]",PI[playerid][Settings]);
+    cache_get_field_content(0, "odet", maximum),             PI[playerid][pOdet] = strval(maximum);
+    cache_get_field_content(0, "voenbill", maximum),             PI[playerid][pVoenBill] = strval(maximum);
+    cache_get_field_content(0, "medcard", maximum),          PI[playerid][pMedCard] = strval(maximum);
+    cache_get_field_content(0,  "drugs", maximum, connects, 64), sscanf(maximum, "a<i>[7]", PI[playerid][p_drugs]);
+    cache_get_field_content(0,"acessories",PI[playerid][pSlotItems], connects, 64), sscanf(PI[playerid][pSlotItems], "p<,>a<i>[6]",PI[playerid][pSlotItem]);
+    cache_get_field_content(0, "vigs", maximum),             PI[playerid][pVigs] = strval(maximum);
+    cache_get_field_content(0, "CMDaccess", PI[playerid][aiCMDaccess], connects, CMD_NUM+1);
+    cache_get_field_content(0, "pPrefix",maximum,connects,32), strmid(PI[playerid][pPrefix], maximum, 0, strlen(maximum), 32);
+    cache_get_field_content(0, "pInv", maximum),             PI[playerid][pInv] = strval(maximum);
+    cache_get_field_content(0, "pBlNick", maximum),          PI[playerid][pBlNick] = strval(maximum);
+    cache_get_field_content(0, "pcWarn", maximum),           PI[playerid][pcWarn] = strval(maximum);
+    cache_get_field_content(0, "pcBan", maximum),            PI[playerid][pcBan] = strval(maximum);
+    PI[playerid][pOffCountry] = cache_get_field_content_int(0, "pOffCountry", connects);
+    PI[playerid][pRepAdm] = cache_get_field_content_int(0, "pRepAdm", connects);
+    PI[playerid][pKickAdm] = cache_get_field_content_int(0, "pKickAdm", connects);
+    PI[playerid][pWarnAdm] = cache_get_field_content_int(0, "pWarnAdm", connects);
+    PI[playerid][pBanAdm] = cache_get_field_content_int(0, "pBanAdm", connects);
+    PI[playerid][pMuteAdm] = cache_get_field_content_int(0, "pMuteAdm", connects);
+    PI[playerid][pJailAdm] = cache_get_field_content_int(0, "pJailAdm", connects);
+    PI[playerid][pAge] = cache_get_field_content_int(0,"age");
+    PI[playerid][pNational] = cache_get_field_content_int(0,"national");
+    PI[playerid][pOffBH] = cache_get_field_content_int(0,"pOffBH");
+    PI[playerid][pKInCapt] = cache_get_field_content_int(0,"pKInCapt");
+    PI[playerid][pUsedJail] = cache_get_field_content_int(0,"pUsedJail");
+    PI[playerid][pYtADM] = cache_get_field_content_int(0,"pYtADM");
+
+    player_family [ playerid ] = cache_get_field_content_int(0,"family");
+    if(player_family [ playerid ])
+    {
+        family_info [ player_family [ playerid ] - 1 ] [ f_online ]++;
+        format(mysql_query_, sizeof(mysql_query_), "{%s}Семья: {FFFFFF}%s", family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ], family_info[player_family [ playerid ] - 1][f_name]);
+        PI[playerid][pFamilyText] = CreateDynamic3DTextLabel( mysql_query_, -1, 0.0, 0.0, 0.0, 12.0, playerid, INVALID_VEHICLE_ID, 1);
+    }
+
+    PI[playerid][youtube] = cache_get_field_content_int(0,"youtube");
+    PI[playerid][dalbaeb] = cache_get_field_content_int(0,"dalbaeb");
+    PI[playerid][eblan] = cache_get_field_content_int(0,"eblan");
+    PI[playerid][total_hour] = cache_get_field_content_int(0,"total_hour");
+
+    PI[playerid][year_point] = cache_get_field_content_int(0,"year_point");
+    PI[playerid][year_quest] = cache_get_field_content_int(0,"year_quest");
+
+    PI[playerid][P_QUEST][1] = cache_get_field_content_int(0,"quest_1");
+    PI[playerid][P_QUEST][2] = cache_get_field_content_int(0,"quest_2");
+    PI[playerid][P_QUEST][3] = cache_get_field_content_int(0,"quest_3");
+    PI[playerid][P_QUEST][4] = cache_get_field_content_int(0,"quest_4");
+    PI[playerid][P_QUEST][5] = cache_get_field_content_int(0,"quest_5");
+
+
+    PI[playerid][last_login] = cache_get_field_content_int(0,"last_login");
+    PI[playerid][every_enter] = cache_get_field_content_int(0,"every_enter");
+    PI[playerid][P_OPEN_CONT] = cache_get_field_content_int(0,"open_cont");
+    PI[playerid][pRemCar] = cache_get_field_content_int(0,"pRemCar");
+
+    PI[playerid][get_adm_status] = cache_get_field_content_int(0,"get_adm_status");
+    PI[playerid][get_adm_hour] = cache_get_field_content_int(0,"get_adm_hour");
+
+    PI[playerid][P_CAR_SLOT] = cache_get_field_content_int(0,"car_slot");
+
+    PI[playerid][boombox] = cache_get_field_content_int(0,"boombox");
+    PI[playerid][P_PRIZE_DAY] = cache_get_field_content_int(0,"prize_day");
+    PI[playerid][P_PRIZE_EVERY] = cache_get_field_content_int(0,"prize_every");
+
+    PI[playerid][pDonateRubNew] = cache_get_field_content_int(0, "pRubNAX");
+
+    if(PI[playerid][pCash] <= 0) PI[playerid][pCash] = 0;
+    if(PI[playerid][pProz] <= 0) PI[playerid][pProz] = 0;
+
+
+    /*
+    PI[ playerid ] [ pFamily ] = cache_get_field_content_int ( 0, "pFamily", connects ) ;
+    if ( PI[ playerid ] [ pFamily ] != 0 )
+    {
+        new text_str [ 128 ], family_id = PI[ playerid ] [ pFamily ] ;
+        new _fam_jackdaw [ 28 ] ;
+        switch ( family_info [ family_id - 1 ] [ fam_enhancement ] [ 9 ] )
+        {
+            case 0: format ( _fam_jackdaw, sizeof _fam_jackdaw, "" ) ;
+            default: format ( _fam_jackdaw, sizeof _fam_jackdaw, "[{%s}%s{"#cWH"}] ", family_info [ family_id - 1 ] [ fam_chat_color ], fam_jackdaw [ family_info [ family_id - 1 ] [ fam_enhancement ] [ 9 ] ] ) ;
+        }
+
+        format ( text_str, 128, "%s{%s}%s {"#cWH"}%s", _fam_jackdaw, family_info [ family_id - 1 ] [ fam_chat_color ], family_info [ family_id - 1 ] [ fam_name ], fam_brand [ family_info [ family_id - 1 ] [ fam_enhancement ] [ 10 ] ] ) ;
+        PI[ playerid ] [ pFamilyText ] = CreateDynamic3DTextLabel( text_str, COLOR_WHITE, 0.0, 0.0, 0.0, 12.0, playerid, INVALID_VEHICLE_ID, 1 ) ;
+    }
+    */
+    //PI[ playerid ] [ pFamilyRang ] = cache_get_field_content_int ( 0, "u_family_rank", connects ) ;
+    //PI[ playerid ] [ family_ticket ] = cache_get_field_content_int ( 0, "u_family_ticket", connects ) ;
+
+    /*
+    if(PI[playerid][pOnlineYes])
+    {
+        PI[playerid][every_enter] ++;
+        UpdatePlayerData(playerid, "every_enter", PI[playerid][every_enter]);
+        if(PI[playerid][every_enter] >= 7)
+        {
+            PI[playerid][P_QUEST][5] = 1;
+            PI[playerid][pRub] += 25;
+
+            UpdatePlayerData(playerid, "every_enter", 0);
+
+            UpdatePlayerData(playerid, "quest_5", 1);
+        }
+    }
+    else
+    {
+        PI[playerid][every_enter] = 0;
+        UpdatePlayerData(playerid, "every_enter", 0);
+    }
+*/
+    UpdatePlayerData(playerid, "online", 1);
+
+    new mystring[250],ip[16];
+    GetPlayerIp(playerid, ip, 16);
+    mysql_format(connects, mystring, sizeof mystring, "UPDATE `accounts` SET `last_ip` = '%s' WHERE `Name` = '%s' LIMIT 1", ip, PI[playerid][pNames]);
+    mysql_tquery(connects, mystring);

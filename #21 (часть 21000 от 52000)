@@ -1,0 +1,1000 @@
+            SetOtherInt("fbimats", fbimats);
+        }
+        else if(MatsArmyCar[playerid] == 21)
+        {
+            if(MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad] == 0 || armmatsf >= 49999)
+            {
+                SendClientMessage(playerid, COLOR_GRAD1, "Cклад Армии SF заполнен, или грузовик пуст!");
+                MatsArmyCar[playerid] = 0;
+                DisablePlayerCheckpoint(playerid);
+                return 1;
+            }
+            MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad] -= 5000;
+            armmatsf += 5000;
+            SendMes(playerid,TEAM_GROVE_COLOR,"Оружие успешно доставлено! Оружие: %d/5000", MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad]);
+            SendMes(playerid,COLOR_WHITE,"Склад Армии SF: %d/50000", armmatsf);
+            SetOtherInt("armmatsf", armmatsf);
+        }
+        else if(MatsArmyCar[playerid] == 35)
+        {
+            if(MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad] == 0 || sfpdmats >= 49999)
+            {
+                SendClientMessage(playerid, COLOR_WHITE, "Склад SFPD заполнен, либо грузовик пуст!");
+                MatsArmyCar[playerid] = 0;
+                DisablePlayerCheckpoint(playerid);
+                return 1;
+            }
+            MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad] -= 5000;//Рзагрузились
+            sfpdmats += 5000;// прибовляем на склад ЛСПД 5к матов
+            SendMes(playerid,TEAM_GROVE_COLOR,"Маты успешно доставлены! Компоненты материалов: %d/5000", MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad]);
+            SendMes(playerid,COLOR_WHITE,"Склад SFPD: %d/50000", sfpdmats);
+            CP[playerid] = 0;
+            SetOtherInt("sfpdmats", sfpdmats);
+        }
+        MatsArmyCar[playerid] = 0;
+        DisablePlayerCheckpoint(playerid);
+        return 1;
+    }
+    else if(CP[playerid] == 123)
+    {
+        DisablePlayerCheckpoint(playerid);
+        SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}Введите /sloading для загрузки");
+        CP[playerid] = 0;
+        return 1;
+    }
+    else if(IsPlayerInRangeOfPoint(playerid,1.5,1473.7715,-1805.7227,2995.6296))
+    {
+        if(useguns[playerid] == 0 && PicCP[playerid] == 2) return SPD(playerid, 10092, DIALOG_STYLE_MSGBOX, "Устройство на работу","Посмотреть список доступных работ?", "Да", "Нет");
+    }
+    else if(IsPlayerInRangeOfPoint(playerid, 10.0,1425.6633,-1709.4857,13.5085))
+    {
+        SendClientMessage(playerid,COLOR_GREEN, "Отвезите деньги к банкомату (банкомат отмечен красной точкой на карте)");
+        DisablePlayerCheckpoint(playerid);
+        keis[playerid] = 1;
+        new rand = random(sizeof(RandomSpawn));
+        SetPlayerCheckpoint(playerid,RandomSpawn[rand][0],RandomSpawn[rand][1],RandomSpawn[rand][2],RandomSpawn[rand][3]);
+        return 1;
+    }
+    else if(IsPlayerInRangeOfPoint(playerid, 10.0,1919.7749,-1760.5482,13.5469))
+    {
+        SendClientMessage(playerid,COLOR_GREEN, "Выйдите из машины и отнесите деньги в банкомат (/bankup)");
+        DisablePlayerCheckpoint(playerid);
+     //   SetPlayerAttachedObject(playerid,3,1210,5,0.299999,0.099999,0.000000,0.000000,-83.000000,0.000000,1.000000,1.000000,1.000000);
+        keis[playerid] = 1;
+        return 1;
+    }
+    else if(IsPlayerInRangeOfPoint(playerid, 10.0,1361.9775,-1290.5338,13.3604))
+    {
+        SendClientMessage(playerid,COLOR_GREEN, "Выйдите из машины и отнесите деньги в банкомат (/bankup)");
+        DisablePlayerCheckpoint(playerid);
+     //   SetPlayerAttachedObject(playerid,3,1210,5,0.299999,0.099999,0.000000,0.000000,-83.000000,0.000000,1.000000,1.000000,1.000000);
+        keis[playerid] = 1;
+        return 1;
+    }
+    else if(IsPlayerInRangeOfPoint(playerid, 10.0,1137.8004,-1755.2164,13.5811))
+    {
+        SendClientMessage(playerid,COLOR_GREEN, "Выйдите из машины и отнесите деньги в банкомат (/bankup)");
+        DisablePlayerCheckpoint(playerid);
+      //  SetPlayerAttachedObject(playerid,3,1210,5,0.299999,0.099999,0.000000,0.000000,-83.000000,0.000000,1.000000,1.000000,1.000000);
+        keis[playerid] = 1;
+        return 1;
+    }
+    else
+    {
+        switch (gPlayerCheckpointStatus[playerid])
+        {
+        case 12:
+            {
+                PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
+                DisablePlayerCheckpoint(playerid);
+                gPlayerCheckpointStatus[playerid] = 0;
+                SendClientMessage(playerid, COLOR_WHITE, "Вы добрались до дома!");
+                return 1;
+            }
+        case 13:
+            {
+                PlayerPlaySound(playerid, 1058, 0.0, 0.0, 0.0);
+                DisablePlayerCheckpoint(playerid);
+                gPlayerCheckpointStatus[playerid] = 0;
+                SendClientMessage(playerid, -1, "Вы добрались до цели!");
+                return 1;
+            }
+        }
+    }
+    for(new idx = 1; idx <= TOTALBIZZ;idx++)
+    {
+        if(IsPlayerInDynamicCP(playerid, BizzInfo[idx][bMenu]) && IsPlayerInRangeOfPoint(playerid, 5.0, BizzInfo[idx][bMenux],BizzInfo[idx][bMenuy],BizzInfo[idx][bMenuz]))
+        {
+            if(BizzInfo[idx][bLock] > 0) return SendClientMessage(playerid,COLOR_GREY,"Бизнес закрыт!");
+            else if(BizzInfo[idx][bType] == 3) return EatList(playerid, idx);
+            else if(BizzInfo[idx][bType] == 4 || BizzInfo[idx][bType] == 5) return ClubList(playerid);
+            else if(BizzInfo[idx][bType] == 6) return BuySkin(playerid, idx);
+            else if(BizzInfo[idx][bType] == 7) return MagazineAmmoList(playerid, idx);
+            else if(BizzInfo[idx][bType] == 9) return ActsMagazine(playerid, idx);
+            else if(BizzInfo[idx][bType] == 10) return ShowAutosalon(playerid, idx);
+        }
+    }
+    return 1;
+}
+
+public OnPlayerLeaveCheckpoint(playerid) return 1;
+public OnPlayerEnterRaceCheckpoint(playerid)
+{
+    DisablePlayerRaceCheckpoint(playerid);
+    if(GetPVarInt(playerid, "ProductID") > 0)
+    {
+        if(GetPVarInt(playerid,"LoadProd") == 0) return SendClientMessage(playerid,COLOR_GREY,"Загрузите продукты в автомобиль!");
+        new i = ProductInfo[GetPVarInt(playerid, "ProductID")][pBizzid], playerd;
+        BizzInfo[i][bProduct] += ProductInfo[GetPVarInt(playerid, "ProductID")][pTill];
+        GiveBank(playerid, ProductInfo[GetPVarInt(playerid, "ProductID")][pPrice]);
+        SendMes(playerid,COLOR_BLUE, "Вы доставили %i продуктов для %s (%s)", ProductInfo[GetPVarInt(playerid, "ProductID")][pTill], BizzInfo[i][bName], ProductInfo[GetPVarInt(playerid, "ProductID")][pName]);
+        sscanf(ProductInfo[GetPVarInt(playerid, "ProductID")][pName], "u", playerd);
+        SendClientMessage(playerid, COLOR_WHITE, "Деньги перечислены на ваш счет.");
+        DeletePVar(playerid,"LoadProd");
+        if(IsPlayerConnected(playerd))
+        {
+            SendClientMessage(playerd, 0x006699FF, "[ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ]");
+            SendMes(playerd, 0xC5EEFEAA, "Развозчик продуктов %s выполнил ваш заказ",PI[playerid][pNames]);
+            SendMes(playerd, 0xC5EEFEAA, "Кол-во: %i", ProductInfo[GetPVarInt(playerid, "ProductID")][pTill]);
+            SendMes(playerd, 0xC5EEFEAA, "Оплата: %s руб.", formatInt(ProductInfo[GetPVarInt(playerid, "ProductID")][pPrice]));
+            SendClientMessage(playerd, 0x006699FF, "[ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ]");
+        }
+        BizzInfo[i][bProdStat] = false;
+        foreach (new p : Player)
+        {
+            if(!IsPlayerConnected(p) || gPlayerLogged[p] == 0 || GetPVarInt(p, "ProductID") == 0) continue;
+            if(GetPVarInt(p, "ProductID") > GetPVarInt(playerid, "ProductID")) SetPVarInt(p, "ProductID", GetPVarInt(p, "ProductID") - 1);
+        }
+        for(new p = GetPVarInt(playerid, "ProductID"); p <= TOTALPRODUCT - 1; p++)
+        {
+            strmid(ProductInfo[p][pName],ProductInfo[p+1][pName],0,strlen(ProductInfo[p+1][pName]),MAX_PLAYER_NAME);
+            ProductInfo[p][pBizzid] = ProductInfo[p+1][pBizzid];
+            ProductInfo[p][pPrice] = ProductInfo[p+1][pPrice];
+            ProductInfo[p][pTill] = ProductInfo[p+1][pTill];
+            ProductInfo[p][pStatus] = ProductInfo[p+1][pStatus];
+            ProductInfo[p][pType] = ProductInfo[p+1][pType];
+        }
+        TOTALPRODUCT--;
+        DeletePVar(playerid, "ProductID");
+        DisablePlayerRaceCheckpoint(playerid);
+    }
+    if(GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
+    {
+        if(GetPVarInt(playerid,"race_check")==GetPlayerVehicleID(playerid))
+        {
+            if (GetPVarInt(playerid, "PlayerInRace"))
+            {
+                if (++PlayerScore{playerid} == 52)
+                {
+                    switch (++PlayerWinners{0})
+                    {
+                    case 1:
+                        {
+                            format(stringer1,sizeof(stringer1),"[RACE]: %s(%d) занял 1 место в гонке! Он получает: 100 donate money.",PI[playerid][pNames],playerid);
+                            RaceChat(COLOR_LIGHTBLUE,stringer1);
+                            PI[playerid][pDonatemoney2] += 100;
+                        }
+                    case 2:
+                        {
+                            format(stringer1,sizeof(stringer1),"[RACE]: %s(%d) занял 2 место в гонке! Он получает: 80 donate money.",PI[playerid][pNames],playerid);
+                            RaceChat(COLOR_LIGHTBLUE,stringer1);
+                            PI[playerid][pDonatemoney2] += 80;
+                        }
+                    case 3:
+                        {
+                            format(stringer1,sizeof(stringer1),"[RACE]: %s(%d) занял 3 место в гонке! Он получает: 50 donate money.",PI[playerid][pNames],playerid);
+                            RaceChat(COLOR_LIGHTBLUE,stringer1);
+                            PI[playerid][pDonatemoney2] += 50;
+                        }
+                    default:
+                        {
+                            format(stringer1,sizeof(stringer1),"[RACE]: %s(%d) занял %d место в гонке! Он получает: 10 donate money.",PI[playerid][pNames],playerid, PlayerWinners{0});
+                            RaceChat(COLOR_LIGHTBLUE,stringer1);
+                            PI[playerid][pDonatemoney2] += 10;
+                        }
+                    }
+                    Iter_Remove(RacersList, playerid);
+                    PlayersInRace{0} --;
+                    PlayerScore{playerid} = 0;
+                    for(new s = 0;s!= 10; s++) PlayerTextDrawHide(playerid, Race[s][playerid]);
+                    n_veh_DestroyVehicle(GetPVarInt(playerid, "race_check"));
+                    DeletePVar(playerid, "race_check");
+                    SetPPos(playerid, -2169.1880,643.9022,1052.3750);
+                    SetPlayerFacingAngle(playerid, 180.8674);
+                    SetPlayerInteriorEx(playerid, 1);
+                    SetPlayerVirtualWorldEx(playerid, 43);
+                    format(race_str,sizeof(race_str), "%s{FFFFFF}%i место: %s.\n ",race_str,PlayerWinners{0},PI[playerid][pNames]);
+                    DeletePVar(playerid, "PlayerInRace");
+                    if (PlayersInRace{0} == 0)
+                    {
+                        raceTime = 1;
+                        PlayerWinners{0} = 0;
+                        PlayersInRace{0} = 0;
+                        foreach(new i: RacersList)
+                        {
+                            PlayerScore{i} = 0;
+                            PlayerPosition{i} = 0;
+                            Iter_Remove(RacersList, i);
+                        }
+                        SendClientMessageToAll(COLOR_YELLOW3,"Гоночные мероприятия успешно закончены. '/racelist' - список победителей.");
+                        RaceStarting[2] = 0;
+                        typeRace = 3;
+                        //state RaceStarted:No;
+                    }
+                }
+                else
+                {
+                    foreach(new i: RacersList)
+                    {
+                        if (i != -1 && PlayerScore {playerid} > PlayerScore {i} && i != playerid)
+                        {
+                            PlayerPosition{playerid}++;
+                            PlayerPosition{i}--;
+                        }
+                        break;
+                    }
+                    if(PlayerScore{playerid} < 51) SetPlayerRaceCheckpoint(playerid, 0, los_santos_race[typeRace][PlayerScore{playerid}][0], los_santos_race[typeRace][PlayerScore{playerid}][1], los_santos_race[typeRace][PlayerScore{playerid}][2], los_santos_race[typeRace][PlayerScore{playerid}+1][0], los_santos_race[typeRace][PlayerScore{playerid}+1][1], los_santos_race[typeRace][PlayerScore{playerid}+1][2], 10.0);
+                    else SetPlayerRaceCheckpoint(playerid, 1, los_santos_race[typeRace][PlayerScore{playerid}][0], los_santos_race[typeRace][PlayerScore{playerid}][1], los_santos_race[typeRace][PlayerScore{playerid}][2], 0.0, 0.0, 0.0, 10.0);
+                    format(stringer1, sizeof(stringer1), "~y~%i/52", PlayerScore{playerid});
+                    GameTextForPlayer(playerid, stringer1, 3000, 4);
+                    format(stringer1, sizeof(stringer1), "Point: ~w~%d/52", PlayerScore{playerid});
+                    PlayerTextDrawSetString(playerid,Race[6][playerid], stringer1);
+                }
+            }
+        }
+    }
+    return 1;
+}
+forward UnFreez(playerid);
+public UnFreez(playerid)
+{
+    if(PlayerCuffed[playerid])
+    {
+        PlayerCuffed[playerid] = 0;
+        PlayerCuffedTime[playerid] = 0;
+    }
+    return TogglePlayerControllable(playerid, true);
+}
+
+forward KickTimer(playerid);
+public KickTimer(playerid)
+{
+    SendClientMessage(playerid, -1, "Время на авторизацию вышло, что бы выйти используйте /q(uit)");
+    Kick(playerid);
+}
+
+public OnPlayerLeaveRaceCheckpoint(playerid) return 1;
+public OnPlayerObjectMoved(playerid, objectid) return 1;
+public OnPlayerPickUpDynamicPickup(playerid, pickupid)
+{
+    if(pickupid >= MAX_PICKUPS || pickupid < 0) return 0;
+
+    if(PI[playerid][PICKUP_TIME] > gettime()) return 0;
+
+    PI[playerid][PICKUP_TIME] = gettime() + 4;
+    new Float:z;
+
+    GetPlayerPos(playerid, PickupX[playerid], PickupY[playerid], z);
+
+    for(new i; i < MAX_RENT_BIKE_PICKUPS; i++)
+    {
+        if(pickupid == RentBikePickupInfo[i][RentBikePickup_ID])
+        {
+            SetPVarInt(playerid, pVar__RentBike_PickupIDX, i);
+            rent_bike(playerid);
+            return 1;
+        }
+    }
+
+    for(new p = 0; p < pod_count; p++)
+    {
+        if(pickupid == pod_info[p][pod_pickup])
+        {
+            SetPPos(playerid, -1458.8229,-800.6911,14.0578);
+            SetPlayerFacingAngle(playerid, 89.9321);
+
+            SetPlayerInterior(playerid, 0);
+            SetPlayerVirtualWorld(playerid, pod_info[p][pod_world]);
+            SetCameraBehindPlayer(playerid);
+
+            SetPVarInt(playerid, "p_podezd_id", p + 1);
+            SetPVarInt(playerid, "p_floor_podezd", 1);
+
+            return 1;
+        }
+    }
+
+    for ( new a = 0; a < apartment_count ; a ++ )
+    {
+        if ( pickupid == ap_info [ a ] [ ap_pickup ] )
+        {
+            new dialog_string [ 512 ] ;
+            new floor_name[10];
+            switch(ap_info [ a ] [ ap_floor ])
+            {
+                case 1: floor_name = "Первый";
+                case 2: floor_name = "Второй";
+                case 3: floor_name = "Третий";
+                case 4: floor_name = "Четвертый";
+                case 5: floor_name = "Пятый";
+                case 6: floor_name = "Шестой";
+                case 7: floor_name = "Седьмой";
+                case 8: floor_name = "Восьмой";
+                case 9: floor_name = "Девятый";
+                case 10: floor_name = "Десятый";
+                default: floor_name = "Unknown";
+            }
+            if ( ap_info [ a ] [ ap_owner ] == -1 )
+            {
+                format ( dialog_string, sizeof dialog_string, "{FFFFFF}Квартира: \t\t\t"SERVER"№%d{FFFFFF}\nЭтаж: \t\t\t\t"SERVER"%s\n{FFFFFF}Класс: \t\t\t\t"SERVER"%s\n\n{FFFFFF}Стоимость: \t\t\t{33aa33}%s",
+                ap_info [ a ] [ ap_id ], floor_name, apartment_class [ ap_info [ a ] [ ap_type ] - 1 ], formatInt(ap_info [ a ] [ ap_price ]) ) ;
+
+                SPD ( playerid, 5212, DIALOG_STYLE_MSGBOX, !""SERVER"Квартира продаётся [Управление квартирой: /amenu]", dialog_string, !"Купить", !"Отмена" ) ;
+                SetPVarInt ( playerid, "apartment_dialog", 1 ) ;
+            }
+            else
+            {
+                new status_online [ 32 ] ;
+                new pl_id ;
+                sscanf ( ap_info [ a ] [ ap_owner_name ], "u", pl_id ) ;
+                if ( IsPlayerConnected ( pl_id ) ) status_online = "{33aa33}Онлайн" ;
+                else status_online = "{FF4500}Оффлайн" ;
+
+                format ( dialog_string, sizeof dialog_string, "{FFFFFF}Квартира: \t\t\t"SERVER"№%d{FFFFFF}\nЭтаж: \t\t\t\t"SERVER"%s\n{FFFFFF}Класс: \t\t\t\t"SERVER"%s\n\n{FFFFFF}Владелец: \t\t\t"SERVER"%s {FFFFFF}(%s{FFFFFF})",
+                ap_info [ a ] [ ap_id ], floor_name, apartment_class [ ap_info [ a ] [ ap_type ] - 1 ], ap_info [ a ] [ ap_owner_name ], status_online ) ;
+
+                SPD ( playerid, 5212, DIALOG_STYLE_MSGBOX, !""SERVER"Квартира занята [Управление квартирой: /amenu]", dialog_string, !"Войти", !"Отмена" ) ;
+                SetPVarInt ( playerid, "apartment_dialog", 2 ) ;
+            }
+            SetPVarInt ( playerid, "apartment_id", a + 1 ) ;
+            return 1;
+        }
+    }
+    return 1;
+}
+
+CMD:addseatdown(playerid)
+{
+    if(!FD(playerid)) return 1;
+	GetPlayerPos(playerid, SeatDownX[TOTALDOWNS], SeatDownY[TOTALDOWNS], SeatDownZ[TOTALDOWNS]);
+	GetPlayerFacingAngle(playerid, SeatDownA[TOTALDOWNS]);
+
+	static const mysql_str[] = "insert into `seatdowns` (`PosX`, `PosY`, `PosZ`, `PosA`) values ('%f', '%f', '%f', '%f')";
+	new str[sizeof(mysql_str) + (10*4)];
+
+	format(str, sizeof(str), mysql_str, SeatDownX[TOTALDOWNS], SeatDownY[TOTALDOWNS], SeatDownZ[TOTALDOWNS], SeatDownA[TOTALDOWNS]);
+	mysql_query(connects, str, false);
+
+	SendClientMessage(playerid, -1, "Вы успешно создали новую посадку!");
+
+	Create3DTextLabel("Нажмите {33aa33}[ ALT ]\n"SERVER"Чтобы сесть", -1, SeatDownX[TOTALDOWNS], SeatDownY[TOTALDOWNS], SeatDownZ[TOTALDOWNS], -1, -1);
+
+	TOTALDOWNS++;
+	return true;
+}
+
+public OnPlayerPickUpPickup(playerid, pickupid) //
+{
+    if(pickupid >= MAX_PICKUPS || pickupid < 0) return 0;
+
+    if(PI[playerid][PICKUP_TIME] > gettime()) return 0;
+
+    PI[playerid][PICKUP_TIME] = gettime() + 4;
+    //SendClientMessage(playerid, -1, "1");
+    //if(!IsPlayerInRangeOfPoint(playerid, 7.0, PickupInfo[pickupid][PickX], PickupInfo[pickupid][PickY], PickupInfo[pickupid][PickZ])) return 1;
+    //SendClientMessage(playerid, -1, "22");
+    //if(pickupid == GetPVarInt(playerid,"OLDPICKUP") || GetPVarInt(playerid,"TIMEPICKUP") > 0) return 1;
+    new Float:z;
+    GetPlayerPos(playerid, PickupX[playerid], PickupY[playerid], z);
+    if(pickupid == BarHouse[0] || pickupid == BarHouse[1])
+    {
+        stringer1[0] = EOS;
+        for(new i; i < 8; i ++)
+        {
+            format(stringer1,64,"[%d]\t%s\n",i,bar_menu[i]);
+            strcat(stringer, stringer1);
+        }
+        SPD(playerid, 3352, 2, ""SERVER"Бар", stringer, "Взять", "Отмена");
+        return 1;
+    }
+    else if(pickupid == enter_barrrr[0])
+    {
+        SetPlayerPos(playerid, 141.5628,-1170.0305,1200.6801);
+        SetPlayerFacingAngle(playerid, 350.3503);
+    }
+    else if(pickupid == enter_barrrr[1])
+    {
+        SetPlayerPos(playerid, 2086.3276,-2283.5229,21.9430);
+        SetPlayerFacingAngle(playerid, 87.5725);
+    }
+    else if(pickupid == barrrr[0] || pickupid == barrrr[1] || pickupid == barrrr[2])
+    {
+        new till = 50;
+        format(stringer, 512, "Вода\t\t\t{11e922}%i$\nСода\t\t\t{11e922}%i$\nКока-кола\t\t{11e922}%i$\nПиво\t\t\t{11e922}%i$\nВодка\t\t\t{11e922}%i$\nКоньяк\t\t\t{11e922}%i$\nАбсент\t\t\t{11e922}%i$",
+        till*4, till*7, till*10, till*15, till*20, till*25, till*30);
+        return ShowPlayerDialog(playerid, 9297, 2, "{3399FF}Клуб", stringer, "Принять", "Отмена");
+    }
+    if (pickupid == numberpick)
+    {
+        if(GetPlayerOwnableCar(playerid) == INVALID_VEHICLE_ID)
+        {
+            if(GetPlayerOwnableCars(playerid) == 0)
+            SendClientMessage(playerid, 0xCECECEFF, "У Вас нет личного транспорта");
+            else
+            SendClientMessage(playerid, 0xCECECEFF, "Ваш личный транспорт не загружен на сервер");
+        }
+        else
+        {
+            ShowPlayerDialog
+            (
+            playerid, DIALOG_OWNABLE_CAR_NUMBER, DIALOG_STYLE_MSGBOX,
+            !""SERVER"Получение номеров",
+            !"{FFFFFF}Стоимость покупки номеров для Вашего ТС составит {33aa33}5.000.000 руб.",
+            !"Купить", !"Выйти"
+            );
+        }
+    }
+    else if (pickupid == createfam)
+    {
+        pc_cmd_cfamily(playerid, "");
+    }
+    else if(pickupid == yearpick)
+    {
+        if(PI[playerid][year_quest]) return 1;
+
+        //SendClientMessage(playerid, -1, "Дед мороз: вот тебе 12 подарков, развезешь их получить новогодние поинты");
+        PI[playerid][year_count] = 12;
+        PI[playerid][year_quest] = 1;
+
+        UpdatePlayerData(playerid, "year_quest", PI[playerid][year_point]);
+
+        new rand = random(TOTALHOUSE);
+        PI[playerid][house_id] = rand;
+        SetPlayerCheckpoint(playerid, HouseInfo[rand][hEntrancex],HouseInfo[rand][hEntrancey],HouseInfo[rand][hEntrancez], 8.0);
+
+
+
+    }
+    else if(pickupid == razdevalka_banya)
+    {
+        if(!PI[playerid][P_OLD_SKIN])
+        {
+            SetPlayerData(playerid, P_OLD_SKIN, GetPlayerSkin(playerid));
+            SetPlayerSkin(playerid, 45);
+        }
+        else
+        {
+            SetPlayerSkin(playerid, GetPlayerData(playerid, P_OLD_SKIN));
+            SetPlayerData(playerid, P_OLD_SKIN, 0);
+        }
+        // printf("old skin %d", GetPlayerData(playerid, P_OLD_SKIN));
+        SendClientMessage(playerid, -1, ""inform" Вы успешно переоделись");
+
+    }
+    else if(pickupid == paintball)
+    {
+        if(StartPaintBall != 1 || TimerPaintBall <= 5) return SendClientMessage(playerid, COLOR_WHITE,"Регистрация закрыта!");
+        if(TeamPain[playerid] != 0) return SendClientMessage(playerid, COLOR_WHITE,"Вы уже зарегистрированны!");
+        if(PlayerPB[0] > 25 && PlayerPB[1] > 25) return SendClientMessage(playerid, COLOR_GREY,"Все места заняты.");
+        if(PlayerPB[1] == 0 && PlayerPB[0] == 0 || PlayerPB[0] < PlayerPB[1] || PlayerPB[1] == PlayerPB[0])
+        {
+            SendClientMessage(playerid, -1,"Вы зарегестрированы на матч. Вы играете за команду {33AAFF}синих{FFFFFF}!");
+            PlayerPB[0] ++;
+            TeamPain[playerid] = 1;
+            KillPain[playerid] = 0;
+            DeathPain[playerid] = 0;
+        }
+        else if(PlayerPB[0] > PlayerPB[1])
+        {
+            SendClientMessage(playerid, -1,"Вы зарегистрированы на матч. Вы играете за команду {FF4500}красных{FFFFFF}!");
+            PlayerPB[1] ++;
+            TeamPain[playerid] = 2;
+            KillPain[playerid] = 0;
+            DeathPain[playerid] = 0;
+        }
+        return 1;
+    }
+    else if(pickupid == P_VOKZALLS[0])
+    {
+        SetPPos(playerid,1893.6660,-2095.2715,1000.9688);
+        SetPlayerFacingAngle(playerid,179.2869);
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPlayerInteriorEx(playerid, 1);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == rc_pickup)
+    {
+        ShowPlayerDialog(playerid, 1398, DIALOG_STYLE_TABLIST_HEADERS, "{ffffb3}Аренда RC игрушек",
+        "{99CCFF}Название\t\t{99CCFF}Стоимость аренды\n\
+        {ffffff}RC Bandit(441)\t\t{FF8800}50000$\n\
+        {ffffff}RC Tiger(564)\t\t{FF8800}50000$\n\
+        {ffffff}RC Goblin(501)\t\t{FF8800}50000$\n\
+        {ffffff}RC Raider(465)\t\t{FF8800}50000$",
+        "Принять", "Отмена");
+        return 1;
+    }
+    else if(pickupid == P_VOKZALLS[1])
+    {
+        SetPPos(playerid,1730.0095,-1880.9292,13.7828);
+        SetPlayerFacingAngle(playerid,267.8674);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPlayerInteriorEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == racePickup[0])
+    {
+        SetPPos(playerid,1774.4395,-1663.5664,14.4277);
+        SetPlayerFacingAngle(playerid,119.0623);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }//говно
+    else if(pickupid == racePickup[1])
+    {
+        SetPPos(playerid,-2158.7422,641.9844,1052.3750);
+        SetPlayerFacingAngle(playerid,178.3607);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerInteriorEx(playerid,1);
+        SetPlayerVirtualWorldEx(playerid,43);
+        return 1;
+    }
+    else if(pickupid == racePickup[2] || pickupid == racePickup[3])
+    {
+        if(GetPVarInt(playerid, "DialogShow")) return 1;
+        if(RaceStarting[2] != 3) return SendClientMessage(playerid, -1, "• {AC0000}[Ошибка] {ffffff}Регистрация на гоночные мероприятия закрыта.");
+        if (PlayersInRace{0} >= 40) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Нет мест.");
+        if (GetPVarInt(playerid, "PlayerInRace")) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Вы уже зарегистрированы на гонку.");
+        SetPVarInt(playerid, "DialogShow", 1);
+        SPD(playerid,4312,DIALOG_STYLE_LIST,"{FF6F00}Регистрация на гонку #1{FFFFFF} (Выбор автомобиля)","{FFFFFF}1. Hotring Racer\n2. Super GT\n3. Bullet\n4. Phoenix\n5. Infernus\n6. Turismo","Выбрать","Отмена");
+        return 1;
+    }
+    else if(pickupid == BasePic[0])
+    {
+        SetPPos(playerid,831.5885,7.0524,1004.1797);
+        SetPlayerFacingAngle(playerid,120.23);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerInteriorEx(playerid,3);
+        SetPlayerVirtualWorldEx(playerid,301);
+        return 1;
+    }
+    else if(pickupid == BasePic[1])
+    {
+        SetPPos(playerid,2177.1746,1117.2573,12.6484);
+        SetPlayerFacingAngle(playerid,62.6900);
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == BasePic[2])
+    {
+        SendClientMessage(playerid, -1, "Временно не работает.");
+        /*
+        if(BaseStarting[1] != 3) return SendClientMessage(playerid, -1, "• {AC0000}[Ошибка] {ffffff}Регистрация на бейсджампинг закрыта.");
+        if(PlayersInBase{0} >= 30) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}К сожалению все места заняты.");
+        if(GetPVarInt(playerid, "PlayerInBase")) return SendClientMessage(playerid,-1, "• {AC0000}[Ошибка] {ffffff}Вы уже записаны на бейсджампинг.");
+        ShowPlayerDialog(playerid, 385, DIALOG_STYLE_MSGBOX, "{FF6F00}Запись на бейсджампинг","{FFFFFF}Бейсджампинг\n\nСтоимость билета: {FF6F00}15.000${FFFFFF}\nКоличество попыток: {FF6F00}3{FFFFFF}\n\nПосле прохождения всей карты Вы получите: {FF6F00}100 DonateMoney", "Поехали","Выход");
+        */
+        return 1;
+    }
+    else if(pickupid == army[0])
+    {
+        SetPlayerInteriorEx(playerid, 15);
+        SetPPos(playerid, 690.7396,-1330.5793,1102.0000);
+        SetPlayerFacingAngle(playerid, 0.9381);
+        SetPlayerVirtualWorldEx(playerid, 3);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == army[1])
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid, -1370.8291,498.9630,11.1953);
+        SetPlayerFacingAngle(playerid, 269.4792);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == army[2])
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid, -1832.0747,-1980.9991,-0.5234);
+        SetPlayerFacingAngle(playerid, 268.0319);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == army[3])
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid, 1816.7157,1780.4041,15.5142);
+        SetPlayerFacingAngle(playerid, 179.7277);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == enterpickup[0])
+    {
+        SetPPos(playerid, -15.2706,978.3472,1301.0073);
+        SetPlayerFacingAngle(playerid, 268.6517);
+        SetPlayerInteriorEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerVirtualWorldEx(playerid, 1);
+        return 1;
+    }
+    else if(pickupid == exitpickup[0])
+    {
+        SetPPos(playerid, -111.6671,983.6417,12.6053);
+        SetPlayerFacingAngle(playerid, 180.4903);
+        SetPlayerInteriorEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        return 1;
+    }
+    else if(pickupid == enterpickup[1])
+    {
+        SetPPos(playerid, 2498.9399,2507.8015,2501.0313);
+        SetPlayerFacingAngle(playerid, 180);
+        SetPlayerInteriorEx(playerid, 1);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerVirtualWorldEx(playerid, VW_CALIGULAS);
+        return 1;
+    }
+    else if(pickupid == exitpickup[1])
+    {
+        SetPPos(playerid, 2195.2456,1677.1650,12.3672);
+        SetPlayerFacingAngle(playerid, 90);
+        SetPlayerInteriorEx(playerid, 0);
+        SetCameraBehindPlayer(playerid);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        return 1;
+    }
+   	if(pickupid == dialogpickupschool)
+	{
+        return ShowPlayerDialog(playerid, 301, DIALOG_STYLE_LIST, "Автошкола","1. Сдать на права(250р)", "Выбрать", "Назад");
+	}
+    else if(pickupid == dresspickup[0])
+    {
+        if(PI[playerid][pMember] != DRAGONS_FRAC) return SendClientMessage(playerid, COLOR_SILVER, "Вы не работаете в казино Four Dragons");
+        if(StartDuty[playerid] == 0)
+        {
+            ShowPlayerDialog(playerid, D_DUTY, DIALOG_STYLE_MSGBOX, "Раздевалка", "Вы действительно хотите начать рабочий день?", "Да", "Нет");
+        }
+        else
+        {
+            ShowPlayerDialog(playerid, D_DUTY, DIALOG_STYLE_MSGBOX, "Раздевалка", "Вы действительно хотите закончить рабочий день?", "Да", "Нет");
+        }
+        return 1;
+    }
+    else if(pickupid == dresspickup[1])
+    {
+        if(PI[playerid][pMember] != CALIGULAS_FRAC) return SendClientMessage(playerid, COLOR_SILVER, "Вы не работаете в Casino Caligula's");
+        if(StartDuty[playerid] == 0)
+        {
+            ShowPlayerDialog(playerid, D_DUTY, DIALOG_STYLE_MSGBOX, "Раздевалка", "Вы действительно хотите начать рабочий день?", "Да", "Нет");
+        }
+        else
+        {
+            ShowPlayerDialog(playerid, D_DUTY, DIALOG_STYLE_MSGBOX, "Раздевалка", "Вы действительно хотите закончить рабочий день?", "Да", "Нет");
+        }
+        return 1;
+    }
+    else if(pickupid == fight) return SPD(playerid,9979,DIALOG_STYLE_MSGBOX,"Боксёр","Вы хотите устроится на работу боксёра?","Устроится","Отмена");
+    else if(pickupid == parashut) return GiveWeapon(playerid, 46, 100);
+    else if(pickupid == sportzal[0])
+    {
+        if(PI[playerid][pJob] == 6 && PI[playerid][pMember] == 0) SetPlayerSkinEx(playerid, 49);
+        SetPlayerInteriorEx(playerid,5);
+        ResetWeapons(playerid);
+        SetPPos(playerid,771.4412,-2.7885,1000.7279);
+        SetPlayerFacingAngle(playerid, 21.2131);
+        return 1;
+    }
+    else if(pickupid == sportzal[1])
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,2227.1162,-1723.1353,13.5533);
+        SetPlayerFacingAngle(playerid, 130.5909);
+        SetPlayerFightingStyle (playerid, FIGHT_STYLE_NORMAL);
+        if(PI[playerid][pMember] >=1) { SetPlayerSkinEx(playerid,PI[playerid][pModel]);}
+        if(PI[playerid][pMember] ==0) { SetPlayerSkinEx(playerid,PI[playerid][pChar]);}
+        return 1;
+    }
+    else if(pickupid == JobsDJ[0] || pickupid == JobsDJ[1]) return SPD(playerid,10099,DIALOG_STYLE_MSGBOX,"Работа DJ","Вы уверены, что хотите устроиться на работу Диджея?","Да","Нет");
+    else if(pickupid == paintvnutrpic)// выход
+    {
+        SetPlayerInteriorEx(playerid,7);
+        SetPPos(playerid,303.1312,-140.8648,1004.0625);
+        SetPlayerFacingAngle(playerid, 500);
+        return 1;
+    }
+    else if(pickupid == paintvnutrpic1)// Вход
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,2588.9453,2789.9827,10.8203);
+        SetPlayerFacingAngle(playerid, 500);
+        return 1;
+    }
+    else if(pickupid == paintulicpic)// выход
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,2503.0715,2776.3035,10.8203);
+        SetPlayerFacingAngle(playerid, 500);
+        return 1;
+    }
+    else if(pickupid == paintulicpic1)// Вход
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,2490.6626,2779.3379,10.8203);
+        SetPlayerFacingAngle(playerid, 500);
+        return 1;
+    }
+    else if(pickupid == ammomer)
+    {
+        if (PI[playerid][pMember] == 7) return GiveWeapon(playerid, 24, 35), SendClientMessage(playerid, 0x6495EDFF, "Вам выдано оружие");
+        else return SendClientMessage(playerid, COLOR_RED, "Вы не состоите в Мэрии!");
+    }
+    else if(pickupid == ammomerrr)
+    {
+        return SPD(playerid,28,0,"Работа: Вор","{FFFFFF}Вы собираетесь устроиться на работу Вором\nВы согласный с условиями?","Да","Нет");
+    }
+    else if(pickupid == lspic[0])
+    {
+        if(GetPVarInt(playerid,"NewsEnter") > gettime()) return SendClientMessage(playerid, -1, "Вас выгнали со студии, ждите своё время.");
+        return SPD(playerid,8242,DIALOG_STYLE_LIST,"Вход","[1] Офис","Далее","Закрыть");
+    }
+    else if(pickupid == lspic[1])
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,2126.7786,-1959.7334,20.2422);
+        SetPlayerFacingAngle(playerid, 357.7459);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        if(PEfir[playerid] != 255)
+        {
+            SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+            PEfir[playerid] = 255;
+        }
+        if(Pefir[playerid] == 1 || Pefir[playerid] == 2)
+        {
+            Pefir[playerid] = 0;
+            PEfir[playerid] = 255;
+            SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+        }
+        return 1;
+    }
+    else if(pickupid == lspic[2]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,1658.2383,-1693.4553,15.6094);
+        SetPlayerFacingAngle(playerid, 175.8234);
+        return 1;
+    } // Больница
+    else if(pickupid == medpic[0]) // медики вход ls
+    {
+        if(GetPVarInt(playerid,"MdEnter") > gettime()) return SendClientMessage(playerid, -1, "Вас выгнали с больницы, ждите своё время.");
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPlayerInteriorEx(playerid, 1);
+        SetPPos(playerid,1174.9686,-1330.9508,4001.1001);
+        SetPlayerFacingAngle(playerid, 90.9487);
+        TogglePlayerControllable(playerid, false);
+        SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+        return 1;
+    }
+    else if(pickupid == medpic[1]) // медики выход ls
+    {
+        if(PI[playerid][pHospital] == 1) PI[playerid][pHospital] = 0;
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,1177.1721,-1323.3220,14.0576);
+        SetPlayerFacingAngle(playerid, 270);
+        return 1;
+    }
+    else if(pickupid == medpic[2]) {
+        if(PI[playerid][pMember] != 4) return SendClientMessage(playerid, -1, "У вас нет ключей");
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,1160.1693,-1346.6605,26.6863);
+        SetPlayerFacingAngle(playerid, 182.3363);
+    }
+    else if(pickupid == medpic[3]) {
+        if(PI[playerid][pMember] != 4) return SendClientMessage(playerid, -1, "У вас нет ключей");
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPlayerInteriorEx(playerid, 1);
+        SetPPos(playerid,1164.9604,-1324.6031,4001.1001);
+        SetPlayerFacingAngle(playerid, 181.2934);
+        TogglePlayerControllable(playerid, false);
+        SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+    }
+    else if(pickupid == medpic[4]) { // Вход в подсобку
+        if(PI[playerid][pMember] != 4) return SendClientMessage(playerid, -1, "Вы не врач !");
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPlayerInteriorEx(playerid, 1);
+        SetPPos(playerid,1160.2570,-1330.8467,4001.1001);
+        SetPlayerFacingAngle(playerid, 91.5329);
+        TogglePlayerControllable(playerid, false);
+        SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+    }
+    else if(pickupid == medpic[5]) { // Выход с подсобки
+        if(PI[playerid][pMember] != 4) return SendClientMessage(playerid, -1, "Вы не врач !");
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPlayerInteriorEx(playerid, 1);
+        SetPPos(playerid,1164.3702,-1328.9469,4001.1001);
+        SetPlayerFacingAngle(playerid, 359.6103);
+        TogglePlayerControllable(playerid, false);
+        SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+    }
+    else if(pickupid == tserkov[0])
+    {
+        SetPlayerInteriorEx(playerid,1);
+        SetPPos(playerid,2504.9832,2500.4429,1500.9972);
+        SetPlayerFacingAngle(playerid, 269.6494);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == razdevalka[0] && PI[playerid][pMember] == 1) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка МВД Г. Арзамас","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[1] && PI[playerid][pMember] == 16) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка NEWS","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[2] && PI[playerid][pMember] == 21) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка LVPD","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[3] && PI[playerid][pMember] == 3) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка SFA","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[4] && PI[playerid][pMember] == 19) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка Сухопутных Войск","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[5] && PI[playerid][pMember] == 7) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка 'Мэрии'","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[6] && PI[playerid][pMember] == 2) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка ФСБ","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[7] && PI[playerid][pMember] == 4) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка МЧС Лос-Сантос","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[8] && PI[playerid][pMember] == 25) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, "Раздевалка SWAT","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[9] && PI[playerid][pMember] == 11) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка 'Инструкторов'","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == razdevalka[10] && PI[playerid][pMember] == 26) return SPD(playerid,2250,DIALOG_STYLE_MSGBOX, ""SERVER"Раздевалка ПРАВИТЕЛЬСТВА","Вы хотите одеть рабочую или обычную одежду?", "Рабочую", "Обычную");
+    else if(pickupid == tserkov[1])
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,-2478.0996,2515.4314,46.4467);
+        SetPlayerFacingAngle(playerid, 85.7211);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == mast[0]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,-1800.4135,1197.5573,25.1194);
+        SetPlayerFacingAngle(playerid, 182.3717);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        RemovePlayerAttachedObject(playerid,0);
+        return 1;
+    }
+    else if(pickupid == mast[1]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,1657.9347,2197.8618,10.8203);
+        SetPlayerFacingAngle(playerid, 183.9151);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        RemovePlayerAttachedObject(playerid,0);
+        return 1;
+    }
+    else if(pickupid == mast[2]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,854.0541,-601.7619,18.4219);
+        SetPlayerFacingAngle(playerid, 0.6835);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        RemovePlayerAttachedObject(playerid,0);
+        return 1;
+    }
+    else if(pickupid == lcnpic[0]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,1915.7491,2183.2034,15.7130);
+        SetPlayerFacingAngle(playerid, 89.1102);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        return 1;
+    }
+    else if(pickupid == lcnpic[1]) //
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,801.3885,-963.8674,1205.9318);
+        SetPlayerFacingAngle(playerid, 179.4074);
+        SetPlayerVirtualWorldEx(playerid, 4);
+        return 1;
+    }
+    else if(pickupid == rmpic[1]) //
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,801.3885,-963.8674,1205.9318);
+        SetPlayerFacingAngle(playerid, 179.4074);
+        SetPlayerVirtualWorldEx(playerid, 3);
+        return 1;
+    }
+    else if(pickupid == rmpic[0]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,-286.7893,514.3910,13.2719);
+        SetPlayerFacingAngle(playerid, 142.6658);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == yakexit[1]) //
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,801.3885,-963.8674,1205.9318);
+        SetPlayerFacingAngle(playerid, 179.4074);
+        SetPlayerVirtualWorldEx(playerid,2);
+        return 1;
+    }
+    else if(pickupid == yakexit[0]) //
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,2419.8127,-1926.2625,22.0009);
+        SetPlayerFacingAngle(playerid, 276.0466);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == fbi[1]) //fbi вЫход
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPPos(playerid,522.5555,302.7145,13.6113);
+        SetPlayerFacingAngle(playerid, 2.8058);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[0]) //fbi вход
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPPos(playerid,1268.5137,-212.3897,1201.9819);
+        SetPlayerFacingAngle(playerid, 271.0101);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[2]) //fbi вход
+    {
+        SetPlayerInteriorEx(playerid, 3);
+        SetPlayerVirtualWorldEx(playerid,5);
+        SetPPos(playerid,555.9778,1293.6598,1083.0673);
+        SetPlayerFacingAngle(playerid, 2.0995);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[3]) //fbi выход
+    {
+        SetPlayerInteriorEx(playerid, 3);
+        SetPlayerVirtualWorldEx(playerid,5);
+        SetPPos(playerid,582.2357,1249.6730,1080.3250);
+        SetPlayerFacingAngle(playerid, 359.2559);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[4]) //fbi вход
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPPos(playerid,-2452.8550,515.7732,45.5625);
+        SetPlayerFacingAngle(playerid, 268.0941);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[5]) //fbi выход
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPPos(playerid,-2486.6475,493.7961,-10.5974);
+        SetPlayerFacingAngle(playerid, 180.3599);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[6]) //fbi вход
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPPos(playerid,-2473.0608,471.3006,-10.6465);
+        SetPlayerFacingAngle(playerid, 1.5150);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == fbi[7]) //fbi выход
+    {
+        SetPlayerInteriorEx(playerid, 3);
+        SetPlayerVirtualWorldEx(playerid,5);
+        SetPPos(playerid,577.8264,1280.4301,1080.3250);
+        SetPlayerFacingAngle(playerid, 176.0201);
+        SetCameraBehindPlayer(playerid);
+        return 1;

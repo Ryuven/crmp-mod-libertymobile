@@ -1,0 +1,1000 @@
+    }
+    else if(pickupid == lspd[0]) //МВД Г. Арзамас вход в городе
+    {
+
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,541.3579,313.9411,1201.8691);
+        SetPlayerFacingAngle(playerid, 358.1335);
+        return 1;
+    }
+    else if(pickupid == lspd[1])///МВД Г. Арзамас выход в городе
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,148.4081,1263.8477,13.2951);
+        SetPlayerFacingAngle(playerid, 76.8481);
+        SetPlayerVirtualWorldEx(playerid, 0);
+
+        return 1;
+    }
+    else if(pickupid == lspd[4])//МВД Г. Арзамас вых из гаража
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,1528.010864,-1678.141723,5.890625);
+        SetPlayerFacingAngle(playerid, 259.617370);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        return 1;
+    }
+    else if(pickupid == lspd[2])//МВД Г. Арзамас вход на склад
+    {
+        if (IsAArm(playerid)|| IsACop(playerid))
+        {
+            SetPlayerInteriorEx(playerid,6);
+            SetPPos(playerid,316.3837,-167.8547,999.5938);
+            SetPlayerFacingAngle(playerid, 34.3574);
+            SetPlayerVirtualWorldEx(playerid, 5);
+        }
+        else SendClientMessage(playerid, COLOR_RED,"Дверь заперта! У вас нет пропуска");
+        return 1;
+    }
+    else if(pickupid == sf[4])//Вход в гараж гаража в sfpd
+    {
+        if (IsAArm(playerid)|| IsACop(playerid) || IsAMayor(playerid)|| keys[playerid] == 1 || PI[playerid][pMember] == 23)
+        {
+            SetPlayerInteriorEx(playerid,6);
+            SetPPos(playerid,316.3837,-167.8547,999.5938);
+            SetPlayerFacingAngle(playerid, 34.3574);
+            SetPlayerVirtualWorldEx(playerid, 1);
+        }
+        else SendClientMessage(playerid, COLOR_RED,"Дверь заперта! У вас нет пропуска");
+        return 1;
+    }
+    else if(pickupid == sf[0])//
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,-1606.4532,674.2636,-5.2422);
+        SetPlayerFacingAngle(playerid, 357.2527);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        return 1;
+    }
+    else if(pickupid == sf[2])//
+    {
+        SetPlayerInteriorEx(playerid,10);
+        SetPPos(playerid,217.3147,121.3382,999.0156);
+        SetPlayerFacingAngle(playerid, 272.8898);
+        return 1;
+    }
+    else if(pickupid == sf[3])//
+    {
+        if (IsAArm(playerid)|| IsACop(playerid) || IsAMayor(playerid)|| keys[playerid] == 1 || PI[playerid][pMember] == 23)
+        {
+            SetPlayerInteriorEx(playerid,0);
+            SetPPos(playerid,-1590.8289,716.0479,-5.2422);
+            SetPlayerFacingAngle(playerid, 269.9364);
+        }
+        else SendClientMessage(playerid, COLOR_RED,"Дверь заперта! У вас нет пропуска");
+        return 1;
+    }
+    else if(pickupid == lspd[5])
+    {
+        if (IsAArm(playerid)|| IsACop(playerid))
+        {
+            SetPlayerInteriorEx(playerid,6);
+            SetPPos(playerid,246.5438,85.7663,1003.6406);
+            SetPlayerFacingAngle(playerid, 278.0311);
+        }
+        else SendClientMessage(playerid, COLOR_RED,"Дверь заперта! У вас нет пропуска");
+        return 1;
+    }
+    else if(pickupid == sf[1])//Вход из гаража в МВД Г. Арзамас
+    {
+        if (IsAArm(playerid)|| IsACop(playerid) || IsAMayor(playerid)|| keys[playerid] == 1 || PI[playerid][pMember] == 23)
+        {
+            SetPlayerInteriorEx(playerid,0);
+            SetPPos(playerid,-1590.8289,716.0479,-5.2422);
+            SetPlayerFacingAngle(playerid, 269.9364);
+            SetPlayerVirtualWorldEx(playerid, 0);
+        }
+        else SendClientMessage(playerid, COLOR_RED,"Дверь заперта! У вас нет пропуска");
+        return 1;
+    }
+    else if(pickupid == lspd[3])//МВД Г. Арзамас выход в гараже
+    {
+        if (IsAArm(playerid)|| IsACop(playerid) || IsAMayor(playerid)|| keys[playerid] == 1 || PI[playerid][pMember] == 23)
+        {
+            SetPlayerInteriorEx(playerid,0);
+            SetPPos(playerid,1568.6962,-1692.2069,5.8906);
+            SetPlayerFacingAngle(playerid, 259.617370);
+            SetPlayerVirtualWorldEx(playerid, 0);
+            keys[playerid] = 0;
+        }
+        else SendClientMessage(playerid, COLOR_RED,"Дверь заперта! У вас нет пропуска");
+        return 1;
+    }
+    else if(pickupid == lvpdpic[0]) //lvpd 1 вход в здание с гаража
+    {
+        SetPlayerInteriorEx(playerid,3);
+        SetPlayerVirtualWorldEx(playerid, 122);
+        SetPPos(playerid,238.5033,141.1578,1003.0234);
+        SetPlayerFacingAngle(playerid, 359.1617);
+        return 1;
+    }
+    else if(pickupid == lvpdpic[1])//lvpd 2 вход в гараж..
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,2295.1934,2451.8459,10.8203);
+        SetPlayerFacingAngle(playerid, 94.8742);
+        return 1;
+    }
+    else if(pickupid == lvpdpic[2]) //lvpd 3 в здание
+    {
+        SetPlayerInteriorEx(playerid,3);
+        SetPlayerVirtualWorldEx(playerid, 122);
+        SetPPos(playerid,288.7445,169.2445,1007.1719);
+        SetPlayerFacingAngle(playerid, 9.7598);
+        return 1;
+    }
+    else if(pickupid == lvpdpic[3])//lvpd  4 на улицу
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,2340.1965,2455.9792,14.9688);
+        SetPlayerFacingAngle(playerid, 178.3347);
+        return 1;
+    }
+    else if(pickupid == lvpdpic[4]) return SPD(playerid,8240,DIALOG_STYLE_MSGBOX,"Вход","Куда Вы хотите войти?","Склад","На крышу");
+    else if(pickupid == lvpdpic[5])//lvpd 6 оружие выход
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,2293.3225,2468.6162,10.8203);
+        SetPlayerFacingAngle(playerid, 93.6957);
+        return 1;
+    }
+    else if(pickupid == lvpdpic[6]) return SPD(playerid,8241,DIALOG_STYLE_MSGBOX,"Вход","Куда Вы хотите войти?","Склад","Вниз");
+    else if(pickupid == buygunzakon[0])
+    {
+        if(PI[playerid][pLeader] == 2 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 2 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunfbiTime] > gettime()) return SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+            if(fbimats <= 0) return SendClientMessage(playerid,COLOR_GRAD1,""error"На складе нет материалов!");
+            {
+                GiveWeapon(playerid, 3, 1);
+                GiveWeapon(playerid, 24, 21);
+                GiveWeapon(playerid, 41, 1000);
+                GiveWeapon(playerid, 29, 90);
+                SetPlayerArmour(playerid, 100);
+                SetPlayerHealth(playerid,100);
+                fbimats -= 100;
+                PI[playerid][pGunfbiTime] = gettime() + 60;
+                PI[playerid][pSatiety] = 100;
+                SendClientMessage(playerid, COLOR_GREEN,"Выдано:    Броня, Desert Eagle (3 Обоймы),Spray, MP5 (3 Обоймы)");
+            }
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"Вы не агент ФСБ!");
+        return 1;
+    }
+    else if(pickupid == buygunzakon[1])
+    {
+        if(PI[playerid][pLeader] == 1 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 1 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunlspdTime] > gettime()) return   SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+            if(lspdmatbi <= 0) return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+            {
+                GiveWeapon(playerid, 3, 1);
+                GiveWeapon(playerid, 24, 21);
+                GiveWeapon(playerid, 25, 30);
+                SetPlayerHealth(playerid, 100);
+                SetPlayerArmour(playerid, 100);
+                lspdmatbi -= 100;
+                PI[playerid][pGunlspdTime] = gettime() + 60;
+                PI[playerid][pSatiety] = 100;
+                SendClientMessage(playerid, COLOR_GREEN,"Выдано:    Броня, Дубинка, Desert Eagle (3 Обоймы), Shotgun (30 патронов)");//Любимый цвет
+                Police +=1;
+            }
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"Вы не состоите в МВД Г. Арзамас!");
+        return 1;
+    }
+    else if(pickupid == buygunzakon[3])
+    {
+        if(PI[playerid][pLeader] == 21 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 21 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunlspdTime] > gettime()) return   SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+            if(lvpdmats <= 0) return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+            {
+                GiveWeapon(playerid, 3, 1);
+                GiveWeapon(playerid, 24, 100);
+                GiveWeapon(playerid, 25, 30);
+                SetPlayerHealth(playerid, 100);
+                SetPlayerArmour(playerid, 100);
+                lvpdmats -= 100;
+                PI[playerid][pGunlspdTime] = gettime() + 60;
+                PI[playerid][pSatiety] = 100;
+                SendClientMessage(playerid, COLOR_GREEN,"Выдано:   Броня, Дубинка, Desert Eagle (3 Обоймы), Shotgun (30 патронов)");//Любимый цвет
+                Police +=1;
+            }
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"Вы не состоите в LVPD!");
+        return 1;
+    }
+    else if(pickupid == buygunzakon[2])
+    {
+        if(PI[playerid][pLeader] == 10 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 10 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunlspdTime] > gettime()) return   SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+            if(sfpdmats <= 0) return    SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+            {
+                GiveWeapon(playerid, 3, 1);
+                GiveWeapon(playerid, 24, 21);
+                GiveWeapon(playerid, 25, 30);
+                SetPlayerHealth(playerid, 100);
+                SetPlayerArmour(playerid, 100);
+                sfpdmats -= 100;
+                PI[playerid][pGunlspdTime] = gettime() + 60;
+                PI[playerid][pSatiety] = 100;
+                SendClientMessage(playerid, COLOR_GREEN,"Выдано:   Броня,Дубинка, Desert Eagle(3 Обоймы), Shotgun (30 патронов)");//Любимый цвет
+                Police +=1;
+            }
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"Вы не cостоите в SFPD!");
+        return 1;
+    }
+    else if(pickupid >= serdce[0] && pickupid <= serdce[4])
+    {
+        if(PI[playerid][pLevel] >= 9) { SetPlayerHealth(playerid, 100), PI[playerid][pSatiety] = 100; }
+        else SendClientMessage(playerid, COLOR_RED,"Только для новичков! (9 лвл)");
+        return 1;
+    }
+    else if(pickupid >= hospital[0] && pickupid <= hospital[11])
+    {
+        if(PI[playerid][pHospital] == 1)
+        {
+            new Float:Health,hosp[40];
+            GetPlayerHealth(playerid,Health);
+            SetPlayerHealth(playerid, Health+25);
+            PI[playerid][pCash] --;
+            format(hosp,sizeof(hosp),"~r~-1$~g~ +25/%.0f HP",Health+1);
+            GameTextForPlayer(playerid,hosp,1000,4);
+            SetPVarInt(playerid,"TIMEPICKUP",0);
+            SetPVarInt(playerid,"OLDPICKUP",-1);
+            if(Health >= 100)
+            {
+                SendClientMessage(playerid, COLOR_GREEN,"Курс лечения завершен. Теперь вы можете выйти из больницы");
+                PI[playerid][pHospital] = 0;
+                UpdatePlayerData(playerid, "pHospital", PI[playerid][pHospital]);
+                return 1;
+            }
+        }
+        else return SendClientMessage(playerid,COLOR_GREEN,"Курс лечения завершен. Вы можете выходить из больницы.");
+        return 1;
+    }
+    else if(pickupid == hospital[12])
+    {
+        if(PI[playerid][pNarcoLomka] > 0)
+        {
+            new hosp[40];
+            PI[playerid][pNarcoLomka] --;
+            PI[playerid][pCash] -= 5;
+            SetPVarInt(playerid,"TIMEPICKUP",0);
+            SetPVarInt(playerid,"OLDPICKUP",-1);
+            format(hosp,sizeof(hosp),"~r~-5$~g~ -1/%d",PI[playerid][pNarcoLomka]);
+            GameTextForPlayer(playerid,hosp,1000,4);
+        }
+        else return SendClientMessage(playerid,COLOR_GREEN,"Вы полностью вылечены от наркозависимости.");
+        return 1;
+    }
+    else if(pickupid == minstr)
+    {
+        if(PI[playerid][pLeader] == 26 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 26 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunlspdTime] > gettime()) return SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+            {
+                SetPlayerArmour(playerid, 100);
+                SetPlayerHealth(playerid,100);
+                PI[playerid][pSatiety] = 100;
+                GiveWeapon(playerid, 41, 999);//Спрей
+                GiveWeapon(playerid, 24, 21);//3 обоймы дигла
+                SendClientMessage(playerid, COLOR_WHITE,"Выдано:   Броня, Spraycan, Desert Eagle (3 Обоймы)");
+                PI[playerid][pGunlspdTime] = gettime() + 60;
+            }
+        }
+        return 1;
+    }
+    else if(pickupid == buygunzakon[4])
+    {
+        if(PI[playerid][pLeader] == 26 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 25 && PI[playerid][pOdet] == 1) return SPD(playerid,9678,DIALOG_STYLE_MSGBOX, "Комплекты « SWAT » San Andreas","Вам доступен один из двух комплектов:\n\nКомплект № 1\t\tКомплект № 2\nБроня\t\t\tБроня\nДубинка\t\tДубинка\nDesert Eagle\t\tSDPistol\nMP5\t\t\tShotgun\nДымовая шашка\tДымовая шашка", "№ 1","№ 2");
+        else return SendClientMessage(playerid, COLOR_GREY,""error" Вы не cостоите на службе в SWAT!");
+    }
+    else if(pickupid == buygunzakon[5])
+    {
+        if(PI[playerid][pLeader] == 19 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 19 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunfbiTime] > gettime()) return SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+
+            GiveWeapon(playerid, 3, 1);
+            GiveWeapon(playerid, 24, 21);
+            GiveWeapon(playerid, 41, 1000);
+            GiveWeapon(playerid, 29, 90);
+            SetPlayerArmour(playerid, 100);
+            SetPlayerHealth(playerid,100);
+            fbimats -= 100;
+            PI[playerid][pGunfbiTime] = gettime() + 60;
+            PI[playerid][pSatiety] = 100;
+            SendClientMessage(playerid, COLOR_GREEN,"Выдано:    Броня, Desert Eagle (3 Обоймы),Spray, MP5 (3 Обоймы)");
+
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"Вы не армеец!");
+        return 1;
+    }
+    else if(pickupid == barkazino[0] || pickupid == barkazino[1])//бар казино
+    {
+        SPD(playerid,9998, DIALOG_STYLE_LIST, "Барная стойка", "Пиво 750руб.\nВино 1000руб.\nПортвейн 1250руб.\nВодка 1500руб.\nТекила 1750руб.\nКоньяк 2500руб.\nВиски 3000руб.\nАбсент 5000руб.", "Заказать", "Отмена");
+        return 1;
+    }
+    else if(pickupid == marenter[0])
+    {
+        if(GetPVarInt(playerid,"MerEnter") > gettime()) return SendClientMessage(playerid, -1, "Вас выгнали с мэрии, ждите своё время.");
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPPos(playerid,688.8973,-27.8779,1201.8580);
+        SetPlayerFacingAngle(playerid, 358.9944);
+        TogglePlayerControllable(playerid, false);
+        SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+       // SetPlayerCheckpoint(playerid,1473.7715,-1805.7227,2994.6,1.5);
+       // PicCP[playerid] = 2;
+        return 1;
+    }
+    else if(pickupid == marenter[1])
+    {
+        SetPlayerInteriorEx(playerid,1);
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPPos(playerid,-72.9264,857.6786,12.5978);
+        SetPlayerFacingAngle(playerid, 338.9508);
+        return 1;
+    }
+    else if(pickupid == marenter[3])
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,-72.9264,857.6786,12.5978);
+        SetPlayerFacingAngle(playerid, 338.9508);
+        DisablePlayerCheckpoint(playerid);
+        PicCP[playerid] = 0;
+        CP[playerid] = 0;
+        return 1;
+    }
+    else if(pickupid == marenter[4])
+    {
+        SetPlayerInteriorEx(playerid,1);
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPPos(playerid,1493.2820,-1797.5125,2995.6255);
+        SetPlayerFacingAngle(playerid, 91.5170);
+        TogglePlayerControllable(playerid, false);
+        SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+        SetPlayerCheckpoint(playerid,1473.7715,-1805.7227,2994.6,1.5);
+        PicCP[playerid] = 2;
+        return 1;
+    }
+    else if(pickupid == marenter[5])
+    {
+        if(PI[playerid][pLeader] == 7 || PI[playerid][pMember] == 7) SPD(playerid, 1634, DIALOG_STYLE_LIST, "Куда хотите выйти", "Салон\nКрыша\nСтоянка", "Выбрать", "Назад");
+        else SendClientMessage(playerid,COLOR_GREY,"У вас нет ключей.");
+        return 1;
+    }
+    else if(pickupid == rifa[0])//Рифа вход на улицу
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,2185.96,-1811.94,13.55);
+        SetPlayerFacingAngle(playerid, 400);
+        DisablePlayerCheckpoint(playerid);
+        PicCP[playerid] = 0;
+        return 1;
+    }
+    else if(pickupid == rifa[1])//Рифа вход в интерьер
+    {
+        SetPlayerInteriorEx(playerid,18);
+        SetPlayerVirtualWorldEx(playerid, 63);
+        SetPPos(playerid,-226.9188,1401.3635,27.7656);
+        SetPlayerFacingAngle(playerid, 500);
+        SetPlayerCheckpoint(playerid,-219.9122,1407.0699,27.7656,1.0);
+        PicCP[playerid] = 18;
+        return 1;
+    }
+    else if(pickupid == mo[0]) //Вход внутрь министерства
+    {
+        SetPlayerInteriorEx(playerid,1);
+        SetPPos(playerid,-788.8539,-665.4137,4001.0859);
+        SetPlayerFacingAngle(playerid, 89.7221);
+        SetTimerEx("freezeplayer", 2500, false, "i", playerid);
+        TogglePlayerControllable(playerid,0);
+        return 1;
+    }
+    else if(pickupid == mo[1]) //выход из министерства
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,952.2511,-912.2477,45.7656);
+        SetPlayerFacingAngle(playerid, 180.3593);
+        return 1;
+    }
+    else if(pickupid == vagospic[0])//Vagos вход в интерьер
+    {
+        SetPlayerInteriorEx(playerid,4);
+        SetPlayerVirtualWorldEx(playerid, 75);
+        SetPPos(playerid,303.2970,307.1475,1003.5391);
+        SetPlayerFacingAngle(playerid, 500);
+        SetPlayerCheckpoint(playerid,300.5920,307.3983,1003.5391,1.0);
+        PicCP[playerid] = 13;
+        return 1;
+    }
+    else if(pickupid == vagospic[1])//Vagos выход
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,2756.5786,-1180.7452,69.3951);
+        SetPlayerFacingAngle(playerid, 0.0457);
+        DisablePlayerCheckpoint(playerid);
+        PicCP[playerid] = 0;
+        return 1;
+    }
+    else if(pickupid == grooveenter) //грув
+    {
+        SetPlayerInteriorEx(playerid,3);
+        SetPPos(playerid,2496.1580,-1694.5743,1014.7422);
+        SetPlayerFacingAngle(playerid,177.8856);
+        SetPlayerVirtualWorldEx(playerid, 1);
+        SetPlayerCheckpoint(playerid,2492.4380,-1708.5669,1018.3368,1.0);
+        PicCP[playerid] = 15;
+        return 1;
+    }
+    else if(pickupid == swatenter) //swat
+    {
+        SetPlayerInteriorEx(playerid,3);
+        SetPPos(playerid,238.7926,141.2375,1003.0234);
+        SetPlayerFacingAngle(playerid,2.1113);
+        return 1;
+    }
+    else if(pickupid == swatenter2) //swat
+    {
+        SetPlayerInteriorEx(playerid,3);
+        SetPPos(playerid,288.8489,168.3671,1007.1719);
+        SetPlayerFacingAngle(playerid,1.7594);
+        return 1;
+    }
+    else if(pickupid == swatexit) //swat
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,742.6971,-1357.1042,13.5000);
+        SetPlayerFacingAngle(playerid,1.6001);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        return 1;
+    }
+    else if(pickupid == swatexit2) //swat
+    {
+        SetPlayerInteriorEx(playerid,6);
+        SetPPos(playerid,296.9200,-108.0720,1001.5156);
+        SetPlayerFacingAngle(playerid,0.8520);
+        return 1;
+    }
+    else if(pickupid == grooveexit) //грув
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,2495.1199,-1688.3727,13.7653);
+        SetPlayerFacingAngle(playerid, 4.2929);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        DisablePlayerCheckpoint(playerid);
+        PicCP[playerid] = 0;
+        return 1;
+    }
+    else if(pickupid == aztecpic[0])//Aztec вход в интерьер
+    {
+        SetPlayerInteriorEx(playerid,8);
+        SetPlayerVirtualWorldEx(playerid, 36);
+        SetPPos(playerid,-42.31,1408.18,1084.43);
+        SetPlayerFacingAngle(playerid, 1000);
+        SetPlayerCheckpoint(playerid,-46.0471,1398.3119,1084.4297,1.0);
+        PicCP[playerid] = 17;
+        return 1;
+    }
+    else if(pickupid == aztecpic[1])//Aztec выход
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,1667.4498,-2108.3840,13.8906);
+        SetPlayerFacingAngle(playerid, 178.1356);
+        DisablePlayerCheckpoint(playerid);
+        PicCP[playerid] = 0;
+        return 1;
+    }
+    else if(pickupid == bankpic[0]) //Банк вход Южный
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,-89.1448,720.7416,1600.2032);
+        SetPlayerFacingAngle(playerid, 181.9399);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetTimerEx("freezeplayer", 3000, false, "i", playerid);
+        TogglePlayerControllable(playerid,0);
+        return 1;
+    }
+    else if(pickupid == bankpic[1]) //Банк вход Батырево
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,-89.1448,720.7416,1600.2032);
+        SetPlayerFacingAngle(playerid, 181.9399);
+        SetPlayerVirtualWorldEx(playerid,1);
+        SetTimerEx("freezeplayer", 3000, false, "i", playerid);
+        TogglePlayerControllable(playerid,0);
+        return 1;
+    }
+    else if(pickupid == bankpic[6]) //Банк вход Арзамас
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,-89.1448,720.7416,1600.2032);
+        SetPlayerFacingAngle(playerid, 181.9399);
+        SetPlayerVirtualWorldEx(playerid,2);
+        SetTimerEx("freezeplayer", 3000, false, "i", playerid);
+        TogglePlayerControllable(playerid,0);
+        return 1;
+    }
+    else if(pickupid == bankpic[7]) //Банк выход Арзамас
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,409.1250,742.1978,12.0006);
+        SetPlayerFacingAngle(playerid, 159.0193);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == bankpic[3]) //Банк выход Южный
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,2377.3486,-2141.3796,21.9716);
+        SetPlayerFacingAngle(playerid, 178.5871);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == bankpic[4]) //Банк выход Батырево
+    {
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,1853.5388,2037.8024,16.9742);
+        SetPlayerFacingAngle(playerid, 359.2690);
+        SetPlayerVirtualWorldEx(playerid,0);
+        return 1;
+    }
+    else if(pickupid == bankpic[2])
+    {
+        SetPPos(playerid,1413.7816,-1701.7587,13.5395);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerFacingAngle(playerid, 173.9942);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == bankpic[5])
+    {
+        new membersss = PI[playerid][pMember];
+        if(membersss==5 || membersss==6 || membersss==12 || membersss==13 || membersss==14 || membersss==15 || membersss==17 || membersss==18 || membersss==23 || membersss==26 || PI[playerid][pJob]==12 && !IsACop(playerid))
+        {
+            if(PI[playerid][pRobTime] == 0) return SPD(playerid, 667, DIALOG_STYLE_MSGBOX, "Вход в хранилище", "Вы действительно хотите войти?", "Да", "Нет");
+            else return SendClientMessage(playerid, COLOR_GREY, " Вы засветились на камерах при последнем ограблении, ждите пока все утихнет.");
+        }
+        else if(IsACop(playerid))
+        {
+            SetPPos(playerid,2147.862,1601.332,1006.168);
+            SetPlayerInteriorEx(playerid,1);
+            SetPlayerVirtualWorldEx(playerid,3);
+            SetPlayerFacingAngle(playerid, 180.0);
+            SetCameraBehindPlayer(playerid);
+            return 1;
+        }
+        return 1;
+    }
+    else if(pickupid == ballasvhod[0])//Балас вход на улицу
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,2000.0796,-1116.2708,26.8559);
+        SetPlayerFacingAngle(playerid, 178.1123);
+        DisablePlayerCheckpoint(playerid);
+        PicCP[playerid] = 0;
+        return 1;
+    }
+    else if(pickupid == ballasvhod[1])//Балас вход в дом
+    {
+        SetPlayerInteriorEx(playerid,6);
+        SetPlayerVirtualWorldEx(playerid, 34);
+        SetPPos(playerid,-68.6311,1353.8743,1080.2109);
+        SetPlayerFacingAngle(playerid, 100);
+        SetPlayerCheckpoint(playerid,-58.0202,1366.2246,1080.2109,1.0);
+        PicCP[playerid] = 12;
+        return 1;
+    }
+    else if(pickupid == sklad[1]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,323.0864,1954.0352,21.7746);
+        SetPlayerFacingAngle(playerid, 91.1673);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == sklad[0]) //
+    {
+        SetPlayerInteriorEx(playerid,6);
+        SetPPos(playerid,316.9104,-168.6356,999.5938);
+        SetPlayerFacingAngle(playerid, 355.8037);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == gunarm[0])
+    {
+        if(PI[playerid][pMember] != 19) return SendClientMessage(playerid, COLOR_WHITE,"Вы не солдат Зоны 51!");
+        if(PI[playerid][pOdet] == 0) return SendClientMessage(playerid, COLOR_WHITE,"Вы не на службе!");
+        if(PI[playerid][pGun51Time] > gettime()) return SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+        if(armmatbi <= 0) return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет оружия!");
+        GiveWeapon(playerid, 24, 21);
+        GiveWeapon(playerid, 31, 150);
+        SetPlayerArmour(playerid, 100);
+        SetPlayerHealth(playerid,100);
+        armmatbi -= 100;
+        PI[playerid][pGun51Time] = gettime() + 60;
+        PI[playerid][pSatiety] = 100;
+        SendClientMessage(playerid, COLOR_GREEN,"Выдано:   Броня, Desert Eagle (3 Обоймы), M4A1 (3 Обоймы)");//Любимый цвет
+        return 1;
+    }
+    else if(pickupid == gunarm[1])
+    {
+        if(PI[playerid][pLeader] == 3 && PI[playerid][pOdet] == 1 || PI[playerid][pMember] == 3 && PI[playerid][pOdet] == 1)
+        {
+            if(PI[playerid][pGunaviaTime] > gettime()) return SendClientMessage(playerid,COLOR_GRAD1,""error"Брать оружие можно раз в минуту!");
+            if(armmatsf <= 0) return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет оружия!");
+            GiveWeapon(playerid, 24, 21);
+            GiveWeapon(playerid, 31, 150);
+            SetPlayerArmour(playerid, 100);
+            SetPlayerHealth(playerid,100);
+            armmatsf -= 100;
+            PI[playerid][pGunaviaTime] = gettime() + 60;
+            PI[playerid][pSatiety] = 100;
+            SendClientMessage(playerid, COLOR_GREEN,"Выдано:   Броня, Desert Eagle (3 Обоймы), M4A1 (3 Обоймы)");//Любимый цвет
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"Вы не солдат Армии SF!");
+        return 1;
+    }
+    else if(pickupid == zonaa) //
+    {
+        if(PI[playerid][pMember] == 19 || keys[playerid] == 1 || PI[playerid][pMember] == 23)
+        {
+            SetPlayerInteriorEx(playerid,0);
+            SetPPos(playerid,279.4233,1835.0087,17.6481);
+            SetPlayerFacingAngle(playerid, 17.2727);
+            SetCameraBehindPlayer(playerid);
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"У вас нет ключа!");
+        return 1;
+    }
+    else if(pickupid == zona) //
+    {
+        if( PI[playerid][pMember] == 19 || keys[playerid] == 1)
+        {
+            SetPlayerInteriorEx(playerid,0);
+            SetPPos(playerid,290.1921,1835.0770,17.6481);
+            SetPlayerFacingAngle(playerid, 356.2967);
+            SetCameraBehindPlayer(playerid);
+        }
+        else SendClientMessage(playerid, COLOR_WHITE,"У вас нет ключа!");
+        return 1;
+    }
+    else if(pickupid == hitss[0]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,802.0712,-964.3678,1205.9318);
+        SetPlayerFacingAngle(playerid, 181.6077);
+        SetPlayerVirtualWorldEx(playerid,1);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == hitss[1]) //
+    {
+        SetPlayerInteriorEx(playerid,0);
+        SetPPos(playerid,-1043.8945,2205.2869,38.1194);
+        SetPlayerFacingAngle(playerid, 121.9165);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == hitss[2])
+    {
+        if(PI[playerid][pMember] != 23) return SendClientMessage(playerid, COLOR_WHITE,"Вы не состоите в Похоронном бюро!");
+        return SPD(playerid,7765,DIALOG_STYLE_TABLIST,"Склад оружия","1.\tКомплект оружия № 1\t1 к.\t10.000$\n2.\tКомплект оружия № 2\t1 к.\t20.000$\n3.\tКомплект оружия № 3\t1 к.\t30.000$\n4.\tКомплект оружия № 4\t1 к.\t40.000$\n5.\tКомплект оружия № 5\t1 к.\t50.000$\n6.\tКомплект оружия № 6\t1 к.\t60.000$\n7.\tКомплект оружия № 7\t1 к.\t70.000$","Купить","Закрыть");
+    }
+    else if(pickupid == plen[0]) //
+    {
+        SetPlayerInteriorEx(playerid,6);
+        SetPPos(playerid,308.0302,-159.7244,999.5938);
+        SetPlayerFacingAngle(playerid, 258.2231);
+        return 1;
+    }
+    else if(pickupid == plen[1]) //
+    {
+        SetPlayerInteriorEx(playerid,6);
+        SetPPos(playerid,303.6572,-159.7246,999.5938);
+        SetPlayerFacingAngle(playerid, 88.7500);
+        return 1;
+    }
+    else if(pickupid == mapa)
+    {
+        if(PI[playerid][pIzol] > 0) return SendClientMessage(playerid, -1, "Вы уже голосовали на этих выборах!");
+        return ShowPlayerDialog(playerid, 8924, 0, "Выборы президента", "{ffffff}Вы хотите взять свой избирательный бюллетень и проголосовать ?", "Да", "Нет");
+    }
+    else if(pickupid >= Pickup1[0] && pickupid <= Pickup1[2])
+    {
+        if(viborplayer[playerid] == 0) return SendClientMessage(playerid, -1, "Возьмите избирательный бюллитень");
+        return GetPick(playerid, 0);
+    }
+    for(new h = 0; h < TOTALHOUSE; h++)
+    {
+        if(pickupid == HouseInfo[h][hPickup])
+        {
+            new stringhouse[300];
+            if(HouseInfo[h][hOwned] == 1)
+            {
+                new ttextt[32], ids = GetPlayerID(HouseInfo[h][hOwner]);
+                if(IsPlayerConnected(ids)) { ttextt = "43dc10"; }
+                else if(!IsPlayerConnected(ids)) { ttextt = "d62f16"; }
+                new tstext[10], takings, rooms;
+                switch(HouseInfo[h][hKlass])
+                {
+                case 1: {
+                        tstext = "D";
+                        rooms = 4;
+                    }
+                case 2: {
+                        tstext = "C";
+                        rooms = 3;
+                    }
+                case 3: {
+                        tstext = "B";
+                        rooms = 5;
+                    }
+                case 4: {
+                        tstext = "A";
+                        rooms = 3;
+                    }
+                case 5: {
+                        tstext = "S";
+                        rooms = 3;
+                    }
+                default: {
+                        tstext = "Nope";
+                        rooms = 1;
+                    }
+                }
+                switch(HouseInfo[h][hKlass]) {
+                case 0: takings = 300;
+                case 1: takings = 600;
+                case 2: takings = 900;
+                case 3: takings = 1200;
+                case 4: takings = 1500;
+                case 5: takings = 1800;
+                }//b - 5, a - 3, nope - 1, d - 4, c - 3, s - 3
+                format(stringhouse, sizeof(stringhouse), "{FFFFFF}Владелец:\t\t\t{%s}%s{ffffff}\n\nКласс:\t\t\t\t%s\nНомер дома:\t\t\t№ %d\nКоличество комнат:\t\t%d\nСтоимость:\t\t\t%d$\nЕжедневная квартплата:\t%d$\nДомашний счёт:\t\t%d$",ttextt,HouseInfo[h][hOwner],tstext,h,rooms,HouseInfo[h][hValue],takings,HouseInfo[h][hTakings]);
+                SPD(playerid,10075,DIALOG_STYLE_MSGBOX,""SERVER"Дом занят",stringhouse,"Войти","Отмена");
+                break ;
+            }
+            else
+            {
+                new tstext[10], takings, rooms;
+                switch(HouseInfo[h][hKlass])
+                {
+                case 1: {
+                        tstext = "D";
+                        rooms = 4;
+                    }
+                case 2: {
+                        tstext = "C";
+                        rooms = 3;
+                    }
+                case 3: {
+                        tstext = "B";
+                        rooms = 5;
+                    }
+                case 4: {
+                        tstext = "A";
+                        rooms = 3;
+                    }
+                case 5: {
+                        tstext = "S";
+                        rooms = 3;
+                    }
+                default: {
+                        tstext = "Nope";
+                        rooms = 1;
+                    }
+                }
+                switch(HouseInfo[h][hKlass]) {
+                case 0: takings = 300;
+                case 1: takings = 600;
+                case 2: takings = 900;
+                case 3: takings = 1200;
+                case 4: takings = 1500;
+                case 5: takings = 1800;
+                }
+                format(stringhouse, sizeof(stringhouse), "{FFFFFF}Стоимость:\t\t\t%s\n{FFFFFF}Класс:\t\t\t\t%s\n{FFFFFF}Номер дома:\t\t\t№ %d\n{FFFFFF}Количество комнат:\t\t%d\n{FFFFFF}Ежедневная квартплата:\t%d$\n{FFFFFF}Домашний счет:\t\t%d$",formatInt(HouseInfo[h][hValue]),tstext,h,rooms,takings,HouseInfo[h][hTakings]);
+                SPD(playerid,10026,DIALOG_STYLE_MSGBOX,"{63CB00}Дом свободен",stringhouse,"Купить","Отмена");
+                break ;
+            }
+        }
+    }
+    for(new idx = 1; idx <= TOTALBIZZ; idx++)
+    {
+        if(pickupid == BizzInfo[idx][bPickup])
+        {
+            PicCP[playerid] = 0;
+            if(!strcmp(BizzInfo[idx][bOwner],"None",true))
+            {
+                SetPVarInt(playerid, "PlayerBizz", idx);
+                format(stringer1,156,"{ffffff}Название:\t\t\t"SERVER"%s\n{FFFFFF}Стоимость:\t\t\t{3399FF}%s\n\n{00cb00}Вы уверены, что хотите войти сюда?",BizzInfo[idx][bName], formatInt(BizzInfo[idx][bPrice]));
+                if(BizzInfo[idx][bType] != 2 && BizzInfo[idx][bType] != 8) return ShowPlayerDialog(playerid, 9291, 0, "{63CB00}Бизнес", stringer1, "Да", "Нет");
+            }
+            else
+            {
+                SetPVarInt(playerid, "PlayerBizz", idx);
+                if(BizzInfo[idx][bEnter] > 0) format(stringer1, 128, "{ffffff}Вход платный и составляет {FFA500}%s\n{00cb00}Вы уверены, что хотите войти сюда?", formatInt(BizzInfo[idx][bEnter]));
+                else format(stringer1, 78, "{ffffff}Вход свободный\n{00cb00}Вы уверены, что хотите войти сюда?");
+                ShowPlayerDialog(playerid, 9291, 0, "Бизнес", stringer1, "Да", "Нет");
+                return 1;
+            }
+        }
+        if(pickupid == BizzInfo[idx][bPickupExit])
+        {
+            SetPVarInt(playerid, "PlayerBizz", idx);
+            return ShowPlayerDialog(playerid, 9292, 0, "Бизнес", "{ffffff}Вы хотите выйти из бизнеса?", "Да", "Нет");
+        }
+        if(pickupid == BizzInfo[idx][bMenu])
+        {
+            if(BizzInfo[idx][bType] == 1) return MagazineList(playerid, idx);
+            else if(BizzInfo[idx][bType] == 3) return EatList(playerid, idx);
+            else if(BizzInfo[idx][bType] == 4 || BizzInfo[idx][bType] == 5) return ClubList(playerid);
+            else if(BizzInfo[idx][bType] == 7) return MagazineAmmoList(playerid, idx);
+            else if(BizzInfo[idx][bType] == 9) return ActsMagazine(playerid, idx);
+        }
+    }
+    if(pickupid == RealtorPickupExit)
+    {
+        new realtor = GetPlayerVirtualWorld(playerid) - 1000;
+        SetPlayerInteriorEx(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPPos(playerid,818.631,-1056.18,26.0533);
+        SetPlayerFacingAngle(playerid, RI[realtor][bAngle]);
+        SetCameraBehindPlayer(playerid);
+        return 1;
+    }
+    else if(pickupid == realtorFreeBusiness)
+    {
+        new itters = 0, fstring[2000] = "{ffffff}";
+        for(new i = 1; i < TOTALBIZZ + 1; i++)
+        {
+            if(!strcmp(BizzInfo[i][bOwner], "None", true))
+            {
+                format(fstring, sizeof(fstring), "%s[%i] %s\n", fstring, i, BizzInfo[i][bName]);
+                itters++;
+            }
+        }
+        if(!itters) return SendClientMessage(playerid, COLOR_GREY, "В штате не найдено свободных бизнесов!");
+        SPD(playerid, 24151, DIALOG_STYLE_LIST, "{00FF00}Список свободных бизнесов", fstring, "Закрыть", "");
+        return 1;
+    }
+    else if(pickupid == adons)
+    {
+        pc_cmd_adonate(playerid);
+        return 1;
+    }
+    //Донат-Очки
+    else if(pickupid == donateoch)
+    {
+        pc_cmd_donate(playerid);
+        return 1;
+    }//
+    else if(pickupid == realtorInfo)
+    {
+        SPD(playerid, 0, DIALOG_STYLE_MSGBOX, "{63CB00}Информация", "{ffffff}\
+        В риелторском агенстве Вы сможете узать дома, которые будут слетать в скором времени.\n\
+        {ffffff}Если на счету дому находится меньше {e6ed11}двух проплат {ffffff}за дом(в соответствии с классом дома), то он будет продан государтсву.\n\n\
+        {ffffff}Используйте: {63CB00}/gethome {ffffff}- Узнать счет дома.\n\
+        {ffffff}Используйте: {63CB00}/real {ffffff}- Узнать местоположение дома.\
+        ", "Закрыть", "");
+        return 1;
+    }
+    else if(pickupid == realtorFreePickup)
+    {
+        new fstring[1700] = "{ffffff}", count = 1, takings;
+        for(new i = 0; i < sizeof HouseInfo; i++)
+        {
+            if(count < 30)
+            {
+                if(HouseInfo[i][hID])
+                {
+                    if(HouseInfo[i][hOwned])
+                    {
+                        switch(HouseInfo[i][hKlass])
+                        {
+                        case 0: takings = 300;
+                        case 1: takings = 600;
+                        case 2: takings = 900;
+                        case 3: takings = 1200;
+                        case 4: takings = 1500;
+                        }
+                        if(HouseInfo[i][hTakings] < takings * 2)
+                        {
+                            format(stringer1, 64, "№ дома %d\tСлетит через %d Деней\t Гос.стоимость %d\n", i, HouseInfo[i][hTakings]/takings, HouseInfo[i][hValue]);
+                            strcat(fstring, stringer1);
+                            //if(count % 10 == 0 && count != 0) format(fstring, sizeof fstring, "%s\t%i\n", fstring, i);
+                            //else format(fstring, sizeof fstring, "%s\t%i", fstring, i);
+                            count++;
+                        }
+                    }
+                }
+                //continue;
+            }
+        }
+        if(count > 1) SPD(playerid, 0, DIALOG_STYLE_LIST, "{00FF00}Номера должников", fstring, "Закрыть", "");
+        else SendClientMessage(playerid, -1, "В штате нет должников!");
+        return 1;
+    }
+    else if(TOTALREALTORS > 0)
+    {
+        if(pickupid >= RI[0][bPickup] && pickupid <= RI[TOTALREALTORS-1][bPickup])
+        {
+            for(new i = 0; i < TOTALREALTORS; i++)
+            {
+                if(pickupid == RI[i][bPickup])
+                {
+                    SetPlayerInteriorEx(playerid, 3);
+                    SetPlayerVirtualWorldEx(playerid, 1000 + i);
+                    SetPPos(playerid, 1494.325195,1304.942871,1093.289062);
+                    SetPlayerFacingAngle(playerid, 0.0);
+                    SetCameraBehindPlayer(playerid);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 1;
+}
+public OnPlayerExitedMenu(playerid) return 1;
+
+public OnPlayerSelectedMenuRow(playerid, row)
+{
+    new Menu:Current = GetPlayerMenu(playerid);
+    if(Current == ChoseSkin)
+    {
+        switch(row)
+        {
+        case 0:
+            {
+                switch (SelectCharID[playerid])
+                {
+                case 1: //МВД Г. Арзамас
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[0][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[0][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[1][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[1][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[2][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[2][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[3][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[3][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[145][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[145][0]; }
+                        else if(SelectCharPlace[playerid] == 6) { SetPlayerSkinEx(playerid, JoinPed[146][0]); SelectCharPlace[playerid] = 7; InviteSkin[playerid] = JoinPed[146][0]; }
+                        else if(SelectCharPlace[playerid] == 7) { SetPlayerSkinEx(playerid, JoinPed[144][0]); SelectCharPlace[playerid] = 8; InviteSkin[playerid] = JoinPed[144][0]; }
+                        else if(SelectCharPlace[playerid] == 8) { SetPlayerSkinEx(playerid, JoinPed[4][0]); SelectCharPlace[playerid] = 9; InviteSkin[playerid] = JoinPed[4][0]; }
+                        else if(SelectCharPlace[playerid] == 9) { SetPlayerSkinEx(playerid, JoinPed[6][0]); SelectCharPlace[playerid] = 10; InviteSkin[playerid] = JoinPed[6][0]; }
+                        else if(SelectCharPlace[playerid] == 10) { SetPlayerSkinEx(playerid, 310); SelectCharPlace[playerid] = 11; InviteSkin[playerid] = 310; }
+                        else if(SelectCharPlace[playerid] == 11) { SetPlayerSkinEx(playerid, 311); SelectCharPlace[playerid] = 12; InviteSkin[playerid] = 311; }
+                        else if(SelectCharPlace[playerid] == 12) { SetPlayerSkinEx(playerid, JoinPed[7][0]); SelectCharPlace[playerid] = 13; InviteSkin[playerid] = JoinPed[7][0]; }
+                        else if(SelectCharPlace[playerid] == 13) { SetPlayerSkinEx(playerid, 306); SelectCharPlace[playerid] = 14; InviteSkin[playerid] = 306; }
+                        else if(SelectCharPlace[playerid] == 14) { SetPlayerSkinEx(playerid, 307); SelectCharPlace[playerid] = 1; InviteSkin[playerid] = 307; }
+                        //ShowMenuForPlayer(ChoseSkin,playerid);
+                    }
+                case 2: //ФСБ
+                    {
+                        if(SelectCharPlace[playerid] == 1) { SetPlayerSkinEx(playerid, JoinPed[8][0]); SelectCharPlace[playerid] = 2; InviteSkin[playerid] = JoinPed[8][0]; }
+                        else if(SelectCharPlace[playerid] == 2) { SetPlayerSkinEx(playerid, JoinPed[9][0]); SelectCharPlace[playerid] = 3; InviteSkin[playerid] = JoinPed[9][0]; }
+                        else if(SelectCharPlace[playerid] == 3) { SetPlayerSkinEx(playerid, JoinPed[10][0]); SelectCharPlace[playerid] = 4; InviteSkin[playerid] = JoinPed[10][0]; }
+                        else if(SelectCharPlace[playerid] == 4) { SetPlayerSkinEx(playerid, JoinPed[11][0]); SelectCharPlace[playerid] = 5; InviteSkin[playerid] = JoinPed[11][0]; }
+                        else if(SelectCharPlace[playerid] == 5) { SetPlayerSkinEx(playerid, JoinPed[12][0]); SelectCharPlace[playerid] = 6; InviteSkin[playerid] = JoinPed[12][0]; }

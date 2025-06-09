@@ -1,0 +1,1000 @@
+                }
+                case 3:
+                {
+                    ap_info [ i ] [ ap_exit_pickup ] = CreateDynamicPickup ( 1318, 23, apartment_exit_top [ 0 ], apartment_exit_top [ 1 ], apartment_exit_top [ 2 ],  -1, -1 ) ;
+                }
+            }
+            */
+
+            /*
+            for ( new k ; k < 6 ; k ++ )
+            {
+                if ( ! ap_info [ i ] [ ap_improve ] [ k ] ) continue;
+                switch ( k )
+                {
+                    case 1:
+                    {
+                        ap_info [ i ] [ ap_safe ] = CreateDynamic3DTextLabel ( "— Сейф —\n{afafaf}Нажмите {FFFFFF}Y{afafaf} для взаимодействия", col_blue, pos_safe [ 0 ], pos_safe [ 1 ], pos_safe [ 2 ] + 0.8, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, ap_info [ i ] [ ap_id ], 3 ) ;
+                        ap_info [ i ] [ ap_safe_object ] = CreateDynamicObject ( 3130, pos_safe [ 0 ], pos_safe [ 1 ], pos_safe [ 2 ], pos_safe [ 3 ], pos_safe [ 4 ], pos_safe [ 5 ], ap_info [ i ] [ ap_id ], 3 ) ;
+                    }
+                    case 2:
+                    {
+                        ap_info [ i ] [ ap_fridge ] = CreateDynamic3DTextLabel ( "— Холодильник —\n{afafaf}Нажмите {FFFFFF}Y{afafaf} для взаимодействия", col_blue, pos_fridge [ 0 ], pos_fridge [ 1 ], pos_fridge [ 2 ] + 0.8, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, ap_info [ i ] [ ap_id ], 3 ) ;
+                        ap_info [ i ] [ ap_fridge_object ] = CreateDynamicObject ( 18762, pos_fridge [ 0 ], pos_fridge [ 1 ], pos_fridge [ 2 ], pos_fridge [ 3 ], pos_fridge [ 4 ], pos_fridge [ 5 ], ap_info [ i ] [ ap_id ], 3 ) ;
+                        SetDynamicObjectMaterial(ap_info [ i ] [ ap_fridge_object ], 0, 4092, "rusrap_main", "ws_roof_white", 0x00000000);
+                    }
+                }
+            }
+            */
+        }
+    }
+    printf ( "[SERVER] Загружено %d квартир. (%d ms)", apartment_count, GetTickCount ( ) - time ) ;
+    return 1 ;
+}
+
+
+stock save_apartment ( houseid )
+{
+    new sql_string [ 226 ] ;
+    format ( sql_string, sizeof sql_string, "UPDATE `apartment` SET `a_owner` = '%d',`a_ownername` = '%s',`a_closed` = '%d' WHERE `a_id` = '%d' LIMIT 1",
+    ap_info [ houseid ] [ ap_owner ], ap_info [ houseid ] [ ap_owner_name ], ap_info [ houseid ] [ ap_closed ], ap_info [ houseid ] [ ap_id ] ) ;
+    mysql_tquery ( connects, sql_string, "", "" ) ;
+
+    if(IsValidDynamicPickup(ap_info [ houseid ] [ ap_pickup ])) DestroyDynamicPickup(ap_info [ houseid ] [ ap_pickup ]);
+    if(ap_info [ houseid ] [ ap_owner ] == -1) ap_info [ houseid ] [ ap_pickup ] = CreateDynamicPickup ( 1273, 23, ap_info [ houseid ] [ ap_pos ] [ 0 ], ap_info [ houseid ] [ ap_pos ] [ 1 ], ap_info [ houseid ] [ ap_pos ] [ 2 ], ap_info [ houseid ] [ ap_vw ], 0 ) ;
+    else ap_info [ houseid ] [ ap_pickup ] = CreateDynamicPickup ( 1272, 23, ap_info [ houseid ] [ ap_pos ] [ 0 ], ap_info [ houseid ] [ ap_pos ] [ 1 ], ap_info [ houseid ] [ ap_pos ] [ 2 ], ap_info [ houseid ] [ ap_vw ], 0 ) ;
+    return 1 ;
+}
+
+stock ShowExcSkin ( playerid )
+{
+    stringer [ 0 ] = EOS;
+    new buy_skin [ 51 ] ;
+    for(new i = 0 ; i < MAX_SKIN_EXC; i ++)
+    {
+        if(i == MAX_SKIN_EXC - 1)
+        {
+            format(buy_skin, sizeof buy_skin, "{FFFFFF}%d. %s \t{9994EB}%d F - Coins", i + 1, exc_skin_name [ i ], exc_skin_price_rub [ i ]);
+            strcat(stringer, buy_skin);
+        }
+        else
+        {
+            format(buy_skin, sizeof buy_skin, "{FFFFFF}%d. %s \t{9994EB}%d F - Coins\n", i + 1, exc_skin_name [ i ], exc_skin_price_rub [ i ]);
+            strcat(stringer, buy_skin);
+        }
+    }
+
+    return SPD(playerid, 1952, DIALOG_STYLE_TABLIST, !""SERVER"Покупка эксклизивного скина |{FF4500} СКИДКИ !", stringer, "Купить", "Назад");
+}
+
+stock ShowExcCar ( playerid )
+{
+    stringer [ 0 ] = EOS;
+    new buy_car [ 51 ] ;
+    for(new i = 0 ; i < MAX_VEHICLE_EXC; i ++)
+    {
+        if(i == MAX_VEHICLE_EXC - 1)
+        {
+            format(buy_car, sizeof buy_car, "{FFFFFF}%d. %s \t{9994EB}%d F - Coins", i + 1, exc_vehicle_name [ i ], exc_vehicle_price_rub [ i ]);
+            strcat(stringer, buy_car);
+        }
+        else
+        {
+            format(buy_car, sizeof buy_car, "{FFFFFF}%d. %s \t{9994EB}%d F - Coins\n", i + 1, exc_vehicle_name [ i ], exc_vehicle_price_rub [ i ]);
+            strcat(stringer, buy_car);
+        }
+    }
+
+    return SPD(playerid, 1951, DIALOG_STYLE_TABLIST, !""SERVER"Покупка эксклизивного авто |{FF4500} СКИДКИ !", stringer, "Купить", "Назад");
+}
+
+
+stock LoadRentBikePickups()
+{
+    for(new i; i < MAX_RENT_BIKE_PICKUPS; i++)
+    {
+        RentBikePickupInfo[i][RentBikePickup_ID] = CreateDynamicPickup(19134, 23,
+                                                RentBikePickupInfo[i][RentBikePickup_PosX],
+                                                RentBikePickupInfo[i][RentBikePickup_PosY],
+                                                RentBikePickupInfo[i][RentBikePickup_PosZ],
+                                                0);
+
+        new string[35+11+1];
+        format(string, sizeof(string), "{CCCCCC}** Аренда мопеда **", GetRentBikePickupMaxTenants(i));
+        RentBikePickupInfo[i][RentBikePickup_3DText] = CreateDynamic3DTextLabel(string, 0xFFFF00FF,
+                                                RentBikePickupInfo[i][RentBikePickup_PosX],
+                                                RentBikePickupInfo[i][RentBikePickup_PosY],
+                                                RentBikePickupInfo[i][RentBikePickup_PosZ],
+                                                30.0, .testlos = 1, .worldid = 0, .interiorid = 0);
+
+        RentBikePickupInfo[i][RentBikePickup_TenantsCount] = 0;
+    }
+}
+
+stock UpdateRentBike3DText(idx)
+{
+    if(!(0 <= idx < sizeof(RentBikePickupInfo)))
+    {
+        return -1;
+    }
+    new string[35+11+1];
+    format(string, sizeof(string), "{CCCCCC}** Аренда мопеда **",
+        GetRentBikePickupMaxTenants(idx)-GetRentBikePickupTenantsCount(idx));
+    UpdateDynamic3DTextLabelText(RentBikePickupInfo[idx][RentBikePickup_3DText], 0xFFFF00FF, string);
+    return 1;
+}
+
+
+stock GetRentBikePickupMaxTenants(idx)
+{
+    if(!(0 <= idx < sizeof(RentBikePickupInfo)))
+    {
+        return -1;
+    }
+    return RentBikePickupInfo[idx][RentBikePickup_MaxTenants];
+}
+
+
+stock GetRentBikePickupID(idx)
+{
+    if(!(0 <= idx < sizeof(RentBikePickupInfo)))
+    {
+        return -1;
+    }
+    return RentBikePickupInfo[idx][RentBikePickup_MaxTenants];
+}
+
+
+stock GetRentBikePickupTenantsCount(idx)
+{
+    if(!(0 <= idx < sizeof(RentBikePickupInfo)))
+    {
+        return -1;
+    }
+    return RentBikePickupInfo[idx][RentBikePickup_TenantsCount];
+}
+
+stock SetRentBikePickupTenantsCount(idx, value)
+{
+    if(!(0 <= idx < sizeof(RentBikePickupInfo)))
+    {
+        return 0;
+    }
+
+    RentBikePickupInfo[idx][RentBikePickup_TenantsCount] = value;
+    UpdateRentBike3DText(idx);
+    return 1;
+}
+
+stock rent_bike(playerid)
+{
+    new idx = GetPVarInt(playerid, pVar__RentBike_PickupIDX);
+    if(GetRentBikePickupMaxTenants(idx) <= GetRentBikePickupTenantsCount(idx))
+    {
+        SendClientMessage(playerid, 0xFFFFFFFF, "Мопедов свободных нет! Закажите такси или езжайте на автобусе.");
+        return 1;
+    }
+
+    return SPD(playerid, 1958, DIALOG_STYLE_MSGBOX, !""SERVER"Аренда мопедов", !"{FFFFFF}Хотите арендовать мопед за {33aa33}5,000 руб.{FFFFFF}?", !"Да", !"Нет");
+}
+
+publics: load_parkings()
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+
+    gParkingsCount = rows;
+
+    if(gParkingsCount >= MAX_PARKINGS)
+        print("Кол-во паркингов в базе превышает количество массива");
+
+    else if(!gParkingsCount)
+        print("Не обнаружено паркингов в базе");
+
+    else for(new i; i < gParkingsCount; i++)
+    {
+        park_info[i][park_id] = cache_get_field_content_int(i, "park_id");
+
+        park_info[i][park_x] = cache_get_field_content_float(i, "park_x");
+        park_info[i][park_y] = cache_get_field_content_float(i, "park_y");
+        park_info[i][park_z] = cache_get_field_content_float(i, "park_z");
+        park_info[i][park_r] = cache_get_field_content_float(i, "park_r");
+
+        park_info[i][park_org] = cache_get_field_content_int(i, "park_org");
+
+        CreateDynamicPickup(19134, 1, park_info[i][park_x],park_info[i][park_y],park_info[i][park_z], -1, -1);
+
+        static const f_str[] = "{FFFF00}Фракционный транспорт (№%d)\n\
+        {FFFFFF}Организация: "SERVER"%s\n\n\
+        {FFFFFF}Подойдите, чтобы выбрать транспорт!";
+
+        new string[sizeof(f_str) + 128];
+
+        format(string, sizeof(string), f_str, i + 1, GetTeamData(park_info[i][park_org], O_NAME));
+        CreateDynamic3DTextLabel(string, 0xFFFFFFFF, park_info[i][park_x],park_info[i][park_y],park_info[i][park_z] + 0.5, 20.0, INVALID_PLAYER_ID,INVALID_VEHICLE_ID, 1, -1, -1);
+
+        parking_area[i] = CreateDynamicSphere(park_info[i][park_x],park_info[i][park_y],park_info[i][park_z],1.5,-1,-1,-1);
+    }
+    printf("[Загрузка ...] Паркинги успешно загружены (%i шт.)", gParkingsCount);
+    return 1;
+}
+
+stock report_Send(playerid, const text[])
+{
+    mysql_query_[0] = EOS;
+
+    new report_id, Cache:insert_result;
+    mysql_format(connects, mysql_query_, sizeof (mysql_query_), "INSERT INTO `"TABLE_REPORTS"` \
+        (player_name, player_id, text) VALUES ('%s', %d, '%s')", PI[playerid][pNames], playerid, text
+    );
+
+    insert_result = mysql_query(connects, mysql_query_);
+
+    mysql_query_[0] = EOS;
+    report_id = cache_insert_id();
+
+    cache_delete(insert_result);
+
+    // находим репорты, считаем их количество и таким образом получаем величину очереди репортов в обработке
+    new Cache:result = mysql_query(connects, "SELECT `id` FROM `"TABLE_REPORTS"` WHERE `status` = 0 AND `admin` = 0"), rows;
+    rows = cache_num_rows();
+
+    format(stringer1, sizeof (stringer1), "{afafaf}Ваш запрос №%d успешно отправлен администрации. Вы на %d месте в очереди!", report_id, rows);
+    SendClientMessage(playerid, COLOR_WHITE, stringer1), stringer1[0] = EOS;
+
+    cache_delete(result);
+
+    format(stringer1, sizeof (stringer1), "{ffa500}[ANS] %s[%d]: %s (%d в очереди) {afafaf}[/reps %d]",
+        PI[playerid][pNames], playerid, text, rows, report_id
+    );
+    SendAdminMessage(COLOR_WHITE, stringer1), stringer1[0] = EOS;
+
+    return true;
+}
+stock report_Show(playerid) {
+    new
+        Cache:result, report_id, report_playerid, report_player_name[MAX_PLAYER_NAME + 1], report_date[20], report_text[144];
+
+    result = mysql_query(connects, "SELECT * FROM `"TABLE_REPORTS"` WHERE `status` = "#REPORT_STATUS_NONE" AND `admin` = 0 LIMIT 1");
+
+    mysql_query_[0] = EOS;
+
+    new rows = cache_num_rows();
+
+    if (!rows) {
+        cache_delete(result);
+        SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}В очереди нет запросов от игроков!");
+        return 1;
+    }
+    report_id = cache_get_field_content_int(0, "id");
+    report_playerid = cache_get_field_content_int(0, "player_id");
+
+    cache_get_field_content(0, "player_name", report_player_name, connects, sizeof(report_player_name));
+
+    cache_get_field_content(0, "text", report_text, connects, sizeof (report_text));
+    cache_get_field_content(0, "date", report_date, connects, sizeof (report_date));
+
+    mysql_format(connects, mysql_query_, sizeof (mysql_query_), "SELECT * FROM `"TABLE_REPORTS"` WHERE \
+        `status` > "#REPORT_STATUS_NONE" AND `player_name` = '%s' ORDER BY `id` DESC LIMIT 3", report_player_name
+    );
+    mysql_tquery(connects, mysql_query_, "report_ShowDialog", "ddsdss", playerid, report_id, report_player_name, report_playerid, report_text, report_date);
+
+    cache_delete(result);
+    return true;
+}
+publics: report_ShowDialog(playerid, report_id, const report_player_name[], report_playerid, const report_text[], const report_date[]) {
+    new rows = cache_num_rows();
+
+    mysql_format(connects, mysql_query_, sizeof (mysql_query_),
+        "UPDATE `"TABLE_REPORTS"` SET `admin` = '%d' WHERE `id` = '%d' LIMIT 1", playerid + 1, report_id
+    );
+    mysql_tquery(connects, mysql_query_, "", ""), mysql_query_[0] = EOS;
+
+    format(stringer, sizeof (stringer), ""SERVER"Предыдущие запросы от %s[%d]:\n \n",
+        report_player_name, report_playerid
+    );
+    if (rows) {
+        for (new i = 0, id, text[144], date_str[20]; i < rows; i++) {
+            id = cache_get_field_content_int(i, "id");
+            cache_get_field_content(i, "text", text, connects, sizeof (text));
+            cache_get_field_content(i, "date", date_str, connects, sizeof (date_str));
+
+            format(stringer1, sizeof (stringer1), ""SERVER"№%d {afafaf}[%s] %s\n", id, date_str, text);
+            strcat(stringer, stringer1), stringer1[0] = EOS;
+        }
+        strcat(stringer, " \n");
+    }
+    format(stringer1, sizeof (stringer1), "\
+        {FFFFFF}Номер запроса: "SERVER"#%i\n\
+        {FFFFFF}Дата подачи: {afafaf}%s\n\
+        {FFFFFF}Запрос: "SERVER"%s",
+        report_id,
+        report_date,
+        report_text
+    );
+    strcat(stringer, stringer1), stringer1[0] = EOS;
+
+    TempReportInfo[playerid][reportID] = report_id;
+    TempReportInfo[playerid][reportPlayerID] = report_playerid;
+    strmid(TempReportInfo[playerid][reportText], report_text, 0, strlen(report_text), 144);
+    strmid(TempReportInfo[playerid][reportDate], report_date, 0, strlen(report_date), 20);
+
+    SPD(playerid, 5512, DIALOG_STYLE_INPUT, !""SERVER"Ответ на запрос игрока", stringer, !"Ответить", !"Пропустить");
+
+    stringer[0] = EOS;
+}
+report_OnGameModeInit() {
+    mysql_tquery(connects, "UPDATE `"TABLE_REPORTS"` SET `status` = "#REPORT_STATUS_SKIPPED" WHERE `status` = 0", "", "");
+    mysql_tquery(connects, "TRUNCATE `"TABLE_REPORTS"`", "", "");
+    mysql_tquery(connects, "ALTER TABLE `"TABLE_REPORTS"` AUTO_INCREMENT=1000", "", "");
+}
+report_OnPlayerDisconnect(playerid) {
+    mysql_query_[0] = EOS;
+
+    mysql_format(connects, mysql_query_, sizeof (mysql_query_),
+        "UPDATE `"TABLE_REPORTS"` SET `status` = "#REPORT_STATUS_DISCONNECT" WHERE \
+        `status` = 0 AND `player_name` = '%s' LIMIT 1", PI[playerid][pNames]
+    );
+    mysql_tquery(connects, mysql_query_, "", ""), mysql_query_[0] = EOS;
+
+    if (TempReportInfo[playerid][reportID]) {
+        mysql_format(connects, mysql_query_, sizeof (mysql_query_),
+            "UPDATE `"TABLE_REPORTS"` SET `admin` = 0 WHERE `admin` = '%d' LIMIT 1", playerid + 1
+        );
+        mysql_tquery(connects, mysql_query_, "", ""), mysql_query_[0] = EOS;
+        TempReportInfo[playerid][reportID] = 0;
+    }
+}
+
+cmd:bizwar(playerid)
+{
+    if (!ISAMAFIA(playerid)) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вам недоступна данная команда");
+    if (PI[playerid][pRank] < 9) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вам недоступна данная команда");
+    if (BizWarTime[0] > 0 || BizWarTime[1] > 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Война за бизнес уже идет");
+
+    new newhour, newminute, newsecond;
+    gettime(newhour, newminute, newsecond);
+
+    if (newhour < 12 || newhour > 22) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Использовать команду можно только с 12:00 до 22:00");
+    if (BizHourTime > gettime())
+    {
+        new string[128];
+        format(string, sizeof(string), "Таймер до следующего захвата {afafaf}[%d мин]", (BizHourTime - gettime()) / 60);
+        SendClientMessage(playerid, COLOR_WHITE, string);
+        return 1;
+    }
+    for (new h = 0; h < TOTALBIZZ; h++)
+    {
+        if (!IsPlayerInRangeOfPoint(playerid, 3, BizzInfo[h][bEntrx], BizzInfo[h][bEntry], BizzInfo[h][bEntrz])) continue;
+
+        if (BizzInfo[h][bMafia] == PI[playerid][pMember]) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Этот бизнес под крышей Вашей ОПГ.");
+        if (BizzInfo[h][bMafia] <= 0)
+        {
+            BizzInfo[h][bMafia] = PI[playerid][pMember];
+
+            SaveBizz(h);
+            UpdateBizz(h);
+
+            return SendClientMessage(playerid, COLOR_BLUE, !"Бизнес взят под крышу Вашей ОПГ.");
+        }
+        else
+        {
+            if (!IsPlayerInBandOnline(BizzInfo[h][bMafia])) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}ОПГ на которую вы собираетесь напасть нет в сети");
+
+            new string[156];
+            format(string, sizeof(string), "{FFFFFF}Данный бизнес {33aa33}%s{ffffff} принадлежит %s\n\n{afafaf}\tВы согласны начать захват бизнеса?", BizzInfo[h][bName], GetTeamData(BizzInfo[h][bMafia], O_NAME));
+            SPD(playerid, 9821, DIALOG_STYLE_MSGBOX, !""SERVER"Атака бизнеса", string, !"Да", !"Нет");
+
+            SetPVarInt(playerid, "bizwar_id", h);
+            return 1;
+        }
+    }
+    return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Необходимо находиться рядом с бизнесом");
+}
+
+stock get_gz_pos ( Float:x, Float:y, Float:radius, &Float:minx, &Float:miny, &Float:maxx, &Float:maxy )
+{
+    minx = x - radius;
+    miny = y - radius;
+    maxx = x + radius;
+    maxy = y + radius;
+    return 1;
+}
+
+stock MafiaTimeCapture(faction, MafiaNapadss)
+{
+    SendFamilyMessage(faction, 0xFF0000FF, "Внимание, стрела началась!");
+    SendFamilyMessage(MafiaNapadss, 0xFF0000FF, "Внимание, стрела началась!");
+    BizWarTime[0] = 0;
+    BizWarTime[1] = 60 * 10;
+    return true;
+}
+BizWarTimer()
+{
+    if (BizWarTime[1] > 0)
+    {
+        BizWarTime[1]--;
+        foreach(new m: Player)
+        {
+            if (gPlayerLogged[m] == 0) continue;
+            new string[128];
+
+            new napad[16], frak_vlad[16];
+
+            switch(MZInfo[bFrakVlad])
+            {
+                case 5: frak_vlad = "Kurganskaya";
+                case 6: frak_vlad = "Tambovskaya";
+                case 14: frak_vlad = "Orexovskaya";
+            }
+
+            switch(MZInfo[bNapad])
+            {
+                case 5: napad = "Kurganskaya";
+                case 6: napad = "Tambovskaya";
+                case 14: napad = "Orexovskaya";
+            }
+
+            if (PlayerPPKFix[m] && !ISAMAFIA(m)) EndBizwar(m);
+            if (MZInfo[bFrakVlad] != PI[m][pMember] && MZInfo[bNapad] != PI[m][pMember]) continue;
+            if (PlayerPPKFix[m] == 0)
+            {
+                TextDrawShowForPlayer(m, Bizwar[0]);
+                format(string, 50, "~w~Time: ~g~%s", date("%ii:%ss", BizWarTime[1]));
+                TextDrawSetString(Bizwar[0], string);
+                format(string, 50, "~w~%s Kills: ~g~0", frak_vlad);
+                TextDrawSetString(Bizwar[1], string);
+                TextDrawShowForPlayer(m, Bizwar[1]);
+                format(string, 50, "~w~%s Kills: ~g~0", napad);
+                TextDrawSetString(Bizwar[2], string);
+                TextDrawShowForPlayer(m, Bizwar[2]);
+                PlayerPPKFix[m] = 1;
+            }
+            else
+            {
+                format(string, 50, "~w~Time: ~g~%s", date("%ii:%ss", BizWarTime[1]));
+                TextDrawSetString(Bizwar[0], string);
+                format(string, 50, "~w~%s Kills: ~g~%d", frak_vlad, MZInfo[bCountDead][MZInfo[bFrakVlad]]);
+                TextDrawSetString(Bizwar[1], string);
+                format(string, 50, "~w~%s Kills: ~g~%d", napad, MZInfo[bCountDead][MZInfo[bNapad]]);
+                TextDrawSetString(Bizwar[2], string);
+            }
+        }
+        if (BizWarTime[1] == 1)
+        {
+            new string[240];
+            if (MZInfo[bCountDead][MZInfo[bFrakVlad]] > MZInfo[bCountDead][MZInfo[bNapad]])
+            {
+                format(string, sizeof(string), "%s не удалось отобрать у вас контроль над бизнесом %s. Бизнес отбит", GetTeamData(MZInfo[bNapad], O_NAME), BizzInfo[MZInfo[bBiz]][bName]);
+                SendFamilyMessage(MZInfo[bFrakVlad], 0xFF0000FF, string);
+                format(string, sizeof(string), "Вам не удалось отобрать у мафии %s котроль над бизнесом %s. Бизнес оставлен", GetTeamData(MZInfo[bFrakVlad], O_NAME), BizzInfo[MZInfo[bBiz]][bName]);
+                SendFamilyMessage(MZInfo[bNapad], 0xFF0000FF, string);
+                UpdateBizz(MZInfo[bBiz]);
+            }
+            else if (MZInfo[bCountDead][MZInfo[bFrakVlad]] == MZInfo[bCountDead][MZInfo[bNapad]])
+            {
+                format(string, sizeof(string), "Стрела за бизнес %s закончилась ничьей. Бизнес потерян", BizzInfo[MZInfo[bBiz]][bName]);
+                SendFamilyMessage(MZInfo[bFrakVlad], 0xFF0000FF, string);
+                format(string, sizeof(string), "Стрела за бизнес %s закончилась ничьей. Бизнес оставлен", BizzInfo[MZInfo[bBiz]][bName]);
+                SendFamilyMessage(MZInfo[bNapad], 0xFF0000FF, string);
+                UpdateBizz(MZInfo[bBiz]);
+            }
+            else
+            {
+                format(string, sizeof(string), "%s забрала у вас контроль над бизнесом %s. Бизнес потерян", GetTeamData(MZInfo[bNapad], O_NAME), BizzInfo[MZInfo[bBiz]][bName]);
+                SendFamilyMessage(MZInfo[bFrakVlad], 0xFF0000FF, string);
+                format(string, sizeof(string), "Вы отобрали контроль над бизнесом %s у мафии %s. Бизнес захвачен", BizzInfo[MZInfo[bBiz]][bName], GetTeamData(MZInfo[bFrakVlad], O_NAME));
+                SendFamilyMessage(MZInfo[bNapad], 0xFF0000FF, string);
+                BizzInfo[MZInfo[bBiz]][bMafia] = MZInfo[bNapad];
+                UpdateBizz(MZInfo[bBiz]);
+                SaveBizz(MZInfo[bBiz]);
+            }
+            new id_killed = -1;
+            new max_killed = -1;
+            foreach(new i: Player)
+            {
+                if (gPlayerLogged[i] == 0) continue;
+                if (GetPVarInt(i, "m_killed_shot"))
+                {
+                    if (GetPVarInt(i, "m_killed_shot") > max_killed)
+                    {
+                        max_killed = GetPVarInt(i, "m_killed_shot");
+                        id_killed = i;
+                    }
+                    DeletePVar(i, "m_killed_shot");
+                }
+            }
+            foreach(new m: Player)
+            {
+                if (gPlayerLogged[m] == 0) continue;
+                if (MZInfo[bFrakVlad] != PI[m][pMember] && MZInfo[bNapad] != PI[m][pMember]) continue;
+                if (id_killed != -1 && max_killed != -1)
+                {
+                    format(string, 128, "Уничтожил больше всего противников {FFFFFF}%s {E6251E}Убийств: {FFFFFF}%d", PI[id_killed][pNames], max_killed);
+                    SendClientMessage(m, 0xE8FF1CFF, string);
+                }
+                EndBizwar(m);
+            }
+            MZInfo[bFrakVlad] = 0;
+            MZInfo[bNapad] = 0;
+            MZInfo[bBiz] = 255;
+
+            GangZoneStopFlashForAll(biz_war_gangzone);
+            GangZoneHideForAll(biz_war_gangzone);
+            GangZoneDestroy(biz_war_gangzone);
+            biz_war_gangzone = - 1;
+            war_gangzone = - 1;
+
+            BizWarTime[1] = 0;
+            BizHourTime = gettime() + 1800;
+            MZInfo[bCountDead][MZInfo[bNapad]] = 0;
+            MZInfo[bCountDead][MZInfo[bFrakVlad]] = 0;
+        }
+    }
+}
+EndBizwar(playerid)
+{
+    TextDrawHideForPlayer(playerid, Bizwar[0]);
+    TextDrawHideForPlayer(playerid, Bizwar[1]);
+    TextDrawHideForPlayer(playerid, Bizwar[2]);
+    PlayerPPKFix[playerid] = 0;
+}
+
+CMD:ptune(playerid)
+{
+    if((IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 0 ] [ 0 ], pos_tuning [ 0 ] [ 1 ], pos_tuning [ 0 ] [ 2 ])
+    || IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 1 ] [ 0 ], pos_tuning [ 1 ] [ 1 ], pos_tuning [ 1 ] [ 2 ])
+    || IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 2 ] [ 0 ], pos_tuning [ 2 ] [ 1 ], pos_tuning [ 2 ] [ 2 ])
+    || IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 3 ] [ 0 ], pos_tuning [ 3 ] [ 1 ], pos_tuning [ 3 ] [ 2 ])) && GetPlayerState(playerid) == 2) // Заехать в тюнинг
+    {
+        if(!IsPlayerInVehicle(playerid, GetPlayerOwnableCar(playerid))) return SendClientMessage(playerid, COLOR_SILVER, "Вы должны быть за рулем своего автомобиля");
+        if(GetVehicleFreeSeat(GetPlayerVehicleID(playerid)) == -1) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Для начала высадите всех пассажиров.");
+
+        SetPVarInt(playerid, "playerTune", 1);
+        SetVehiclePos(GetPlayerOwnableCar(playerid), -33.8039,-704.3562,1201.7804);
+        SetVehicleZAngle(GetPlayerOwnableCar(playerid), 269.3929);
+        SetPlayerVirtualWorldEx(playerid, playerid + 1);
+
+        SetCameraBehindPlayer(playerid);
+        SetVehicleVirtualWorld(GetPlayerOwnableCar(playerid), playerid + 1);
+
+        ShowTuneShowPlayerDialog(playerid);
+
+        TogglePlayerControllable(playerid, false);
+    }
+    else SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы находитесь далеко от бокса.");
+    return 1;
+}
+
+stock load_tuning()
+{
+    for(new i = 0; i < 4; i ++)
+    {
+        CreateDynamicPickup ( 1239, 23, pos_tuning [ i ] [ 0 ], pos_tuning [ i ] [ 1 ], pos_tuning [ i ] [ 2 ], -1, -1 ) ;
+        CreateDynamic3DTextLabel(""SERVER"Тюнинг\n{FFFFFF}Посигнальте {afafaf}[или введите: /ptune]", -1, pos_tuning [ i ] [ 0 ], pos_tuning [ i ] [ 1 ], pos_tuning [ i ] [ 2 ], 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+    }
+}
+/*
+CMD:stolyarov_test(playerid)
+{
+    SPD(playerid, 1972, DIALOG_STYLE_LIST, !""SERVER"Архив области", !"1. Создать семью\n2. Переименовать семью\n3. Список семей", !"Выбрать", !"Закрыть");
+    return 1;
+}
+*/
+//
+
+stock is_text_invalid(text[])
+{
+    new length = strlen(text);
+
+    for(new i = 0; i < length; i ++)
+    {
+        switch(text[i])
+        {
+            case 'А'..'Я', 'а'..'я', 'A'..'Z', 'a'..'z', '0'..'9', '_', '@', '.', ',', '[', ']', ' ': continue;
+            default: return 1;
+        }
+    }
+    return 0;
+}
+
+stock GetString ( param1 [ ], param2 [ ] )
+{
+    return !strcmp ( param1, param2, false ) ;
+}
+
+forward UpdateStrob(vehicleid);
+public UpdateStrob(vehicleid)
+{
+    new panels, tires;
+    GetVehicleDamageStatus(vehicleid, panels, doors, lights, tires);
+    switch(g_vehicle_params[vehicleid][vStrobState])
+    {
+        case 0: UpdateVehicleDamageStatus(vehicleid, panels, doors, 1, tires), g_vehicle_params[vehicleid][vStrobState] = 1;
+        case 1: UpdateVehicleDamageStatus(vehicleid, panels, doors, 4, tires), g_vehicle_params[vehicleid][vStrobState] = 2;
+        case 2: UpdateVehicleDamageStatus(vehicleid, panels, doors, 65, tires), g_vehicle_params[vehicleid][vStrobState] = 3;
+        case 3: UpdateVehicleDamageStatus(vehicleid, panels, doors, 68, tires), g_vehicle_params[vehicleid][vStrobState] = 0;
+    }
+    return 1;
+}
+
+cmd:strobs(playerid)
+{
+    if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return true;
+    if (!IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы должны находиться в транспорте.");
+    if (!IsACar(GetPlayerVehicleID(playerid))) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Данный тип транспорта не поддерживает стробоскопы.");
+    new player_vehicleid = GetPlayerVehicleID(playerid);
+    if (g_vehicle_params[player_vehicleid][vStrobStatus])
+    {
+        KillTimer(g_vehicle_params[player_vehicleid][vStrobTimer]);
+        SetVehicleParam(player_vehicleid, vStrobStatus, false);
+        new panels, tires;
+        GetVehicleDamageStatus(player_vehicleid, panels, doors, lights, tires);
+        UpdateVehicleDamageStatus(player_vehicleid, panels, doors, 0, tires);
+        SetVehicleParamsEx(player_vehicleid,engine,0,alarm,doors,bonnet,boot,objective);
+    }
+    else
+    {
+        SetVehicleParamsEx(player_vehicleid,engine,1,alarm,doors,bonnet,boot,objective);
+        SetVehicleParam(player_vehicleid, vStrobStatus, true);
+        SetVehicleParam(player_vehicleid, vStrobState, random(4));
+        UpdateStrob(player_vehicleid);
+        g_vehicle_params[player_vehicleid][vStrobTimer] = SetTimerEx("UpdateStrob", 400, true, "d", player_vehicleid);
+
+    }
+    return 1;
+}
+
+publics: sms_vladimir(playerid)
+{
+    cars_ugon_count++;
+
+    if(cars_ugon_count >= 9) cars_ugon_count = 0;
+
+    new Float:pos_x = cars_pos_ugon[cars_ugon_count][0];
+    new Float:pos_y = cars_pos_ugon[cars_ugon_count][1];
+    new Float:pos_z = cars_pos_ugon[cars_ugon_count][2];
+    new Float:angle = cars_pos_ugon[cars_ugon_count][3];
+
+    new Random_text = RandomEx(0, 100), random_message[128], vehicle_model, color;
+    switch(Random_text)
+    {
+        case 0..20:
+        {
+            random_message = "Угони чёрненький Mersedes GTR. Координаты тачки отправил на твой радар.";
+            vehicle_model = 429;
+            color = 0;
+        }
+        case 21.40:
+        {
+            random_message = "Угони белый Cadilac Escalade. Координаты тачки отправил на твой радар.";
+            vehicle_model = 505;
+            color = 1;
+        }
+        case 41..60:
+        {
+            random_message = "Угони красный Ferrari. Координаты тачки отправил на твой радар.";
+            vehicle_model = 451;
+            color = 3;
+        }
+        case 61..80:
+        {
+            random_message = "Угони тёмно-синий Ford Mustang. Координаты тачки отправил на твой радар.";
+            vehicle_model = 603;
+            color = 53;
+        }
+        case 81..100:
+        {
+            random_message = "Угони жёлтый Porsche Panamera. Координаты тачки отправил на твой радар.";
+            vehicle_model = 604;
+            color = 6;
+        }
+    }
+    SetPlayerCheckpoint(playerid, pos_x, pos_y, pos_z, 2.5);
+    PI[playerid][pUgonVehicle] = CreateVehicle(vehicle_model, pos_x, pos_y, pos_z, angle, color, color, 600);
+    SetVehicleParam(PI[playerid][pUgonVehicle], V_LOCK, 1);
+
+    PI[playerid][pUgonTimer] = 900;
+
+    stringer1[0] = EOS;
+    format(stringer1, sizeof(stringer1), "[SMS от Володи]: %s", random_message);
+    SendClientMessage(playerid, COLOR_YELLOW, stringer1);
+
+    new scm_string[32];
+    format(scm_string, sizeof(scm_string), "~r~Time: %02i:%02i", (PI[playerid][pUgonTimer]/60), PI[playerid][pUgonTimer] - (60 * (floatround(PI[playerid][pUgonTimer])/60)));
+    GameTextForPlayer(playerid, scm_string, 1000, 4);
+
+    DeletePVar(playerid, "UgonInvite");
+    KillTimer(sms_timer[playerid]);
+    CP[playerid] = 0;
+    PicCP[playerid] = 5;
+
+    return SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, !""SERVER"Информация", !"{FFFFFF}Володя оставил Вам сообщение...\nКоординаты транспорта отмечены на вашей мини-карте. Отправляйтесь в путь!\n\n{afafaf}Не забудьте купить отмычки для взлома.\nКоманда для взлома: /breakcar\nУ вас имеется 15 минут, чтобы найти и угнать автомобиль!", !"Понял", !"");
+}
+
+@__race_timer(playerid);
+@__race_timer(playerid)
+{
+    if(race_timer[playerid]) KillTimer(race_timer[playerid]);
+    DisablePlayerCheckpoint(playerid);
+
+    switch(GetPVarInt(playerid, "race_timer_second"))
+    {
+        case 0:
+        {
+            GameTextForPlayer(playerid, "~g~GO!", 5000, 4);
+            TogglePlayerControllable(playerid, true);
+
+            SetPlayerCheckpoint(playerid, 1881.0179, 1583.1642, 15.7862, 15.0);
+        }
+        case 1..5:
+        {
+            SetPVarInt(playerid, "race_timer_second", GetPVarInt(playerid, "race_timer_second") - 1);
+
+            if(GetPVarInt(playerid, "race_timer_second") != 0)
+            {
+                new scm_string[12];
+                format(scm_string, sizeof(scm_string), "~r~%d...", GetPVarInt(playerid, "race_timer_second"));
+                GameTextForPlayer(playerid, scm_string, 1000, 4);
+            }
+
+            race_timer[playerid] = SetTimerEx("@__race_timer", 1000, false, "d", playerid);
+        }
+    }
+
+    return 1;
+}
+
+CMD:race(playerid, params[])
+{
+    if(IsAGreenZone(playerid)) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Запрещено предлагать гонку в зелёной зоне.");
+    new giveplayerid, money;
+    if(sscanf(params, "dd", giveplayerid, money)) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Используйте: /race [id игрока] [ставка]");
+    if(!IsPlayerConnected(giveplayerid) || giveplayerid == playerid) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Игрок не найден.");
+    if(!ProxDetectorS(10.0, playerid, giveplayerid)) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы слишком далеко друг от друга.");
+    if(PI[playerid][pCash] < money) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}У вас недостаточно средств.");
+    if(PI[giveplayerid][pCash] < money) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}У игрока недостаточно средств.");
+    if(money < 1000 || money > 50000000) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Ставка должна быть не меньше {33aa33}1,000 руб. {FFFFFF}и не больше {33aa33}50,000,000 руб.");
+
+    if(!IsPlayerInVehicle(playerid, GetPlayerOwnableCar(playerid))) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы должны быть за рулём своего автомобиля");
+    if(!IsPlayerInVehicle(giveplayerid, GetPlayerOwnableCar(giveplayerid))) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Игрок не зарулём своего автомобиля");
+
+    SetPVarInt(playerid, "race_offer", giveplayerid);
+    SetPVarInt(giveplayerid, "race_offer", playerid);
+
+    PI[playerid][pRaceMoney] = PI[giveplayerid][pRaceMoney] = money;
+
+    GetPlayerPos(playerid, player_race_pos[playerid][0], player_race_pos[playerid][1], player_race_pos[playerid][2]);
+    GetPlayerFacingAngle(playerid, player_race_pos[playerid][3]);
+
+    GetPlayerPos(giveplayerid, player_race_pos[giveplayerid][0], player_race_pos[giveplayerid][1], player_race_pos[giveplayerid][2]);
+    GetPlayerFacingAngle(giveplayerid, player_race_pos[giveplayerid][3]);
+
+    new format_string[512], modelid_giveplayerid = GetVehicleModel(GetPlayerVehicleID(giveplayerid)), modelid_playerid = GetVehicleModel(GetPlayerVehicleID(playerid));
+
+    format(format_string, sizeof(format_string), ""SERVER"~ {FFFFFF}Вы вызвали игрока %s[%d] на авто-дуэль. Ваша ставка: {33aa33}%s", PI[giveplayerid][pNames], giveplayerid, formatInt(money));
+    SendClientMessage(playerid, COLOR_WHITE, format_string);
+
+    format(format_string, sizeof(format_string), "\
+    {ffffff}Вы умеете гонять?\n\
+    {7B68EE}Игрок %s сомневается в этом и готов надрать вам задницу.\n\n\
+    {ffffff}Если вы хотите доказать обратное, примите авто-дуэль\n\
+    и постарайтесь обогнать игрока %s.\n\n\
+    {ffffff}Денежная ставка: {7B68EE}%s\n\
+    {ffffff}Ваш автомобиль: {7B68EE}%s\n\
+    {ffffff}Автомобиль игрока %s: {7B68EE}%s\n\n\
+    {FFA500}Готовы начать гонку?", PI[playerid][pNames], PI[playerid][pNames], formatInt(money), g_vehicle_info[modelid_giveplayerid - 400][VI_NAME], PI[playerid][pNames], g_vehicle_info[modelid_playerid - 400][VI_NAME]);
+    return SPD(giveplayerid, 1982, DIALOG_STYLE_MSGBOX, !""SERVER"Гоночное соревнование", format_string, !"Начать", !"Отказаться");
+}
+
+CMD:ahelp(playerid)
+{
+    if(!PI[playerid][pAdmin]) return SendClientMessage(playerid, COLOR_GREY, !"Вам не доступна данная команда!");
+    switch(PI[playerid][pAdmin])
+    {
+        case 1: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора", "Далее", "Отмена");
+        case 2: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора", "Далее", "Отмена");
+        case 3: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора", "Далее", "Отмена");
+        case 4: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора", "Далее", "Отмена");
+        case 5: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора", "Далее", "Отмена");
+        case 6: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора", "Далее", "Отмена");
+        case 7: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора", "Далее", "Отмена");
+        case 8: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора\n"SERVER"[8] {ffffff}Восьмой уровень администратора", "Далее", "Отмена");
+        case 9: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора\n"SERVER"[8] {ffffff}Восьмой уровень администратора", "Далее", "Отмена");
+        case 10: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора\n"SERVER"[8] {ffffff}Восьмой уровень администратора", "Далее", "Отмена");
+        case 11: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора\n"SERVER"[8] {ffffff}Восьмой уровень администратора", "Далее", "Отмена");
+        case 12: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора\n"SERVER"[8] {ffffff}Восьмой уровень администратора", "Далее", "Отмена");
+        case 13: SPD(playerid, 10200, DIALOG_STYLE_LIST, ""SERVER"Команды администратора", ""SERVER"[1] {ffffff}Первый уровень администратора\n"SERVER"[2] {ffffff}Второй уровень администратора\n"SERVER"[3] {ffffff}Третий уровень администратора\n"SERVER"[4] {ffffff}Четвёртый уровень администратора\n"SERVER"[5] {ffffff}Пятый уровень администратора\n"SERVER"[6] {ffffff}Шестой уровень администратора\n"SERVER"[7] {ffffff}Седьмой уровень администратора\n"SERVER"[8] {ffffff}Восьмой уровень администратора", "Далее", "Отмена");
+    }
+    return true;
+}
+
+stock show_menu_fixcar(playerid, vehicleid)
+{
+    ShowPlayerDialog(playerid, 8152, DIALOG_STYLE_LIST, !""SERVER"Настройки автомобиля", "{afafaf}- {FFFFFF}Отбуксировать\n{afafaf}- {FFFFFF}Изменить позицию автомобиля\n\
+    {afafaf}- {FFFFFF}Отметить на GPS", !"Выбрать", !"Назад");
+
+    SetPVarInt(playerid, "veh_selected", vehicleid);
+    return 1;
+}
+
+//
+
+forward load_family_vehicles();
+public load_family_vehicles()
+{
+	new fields, rows, time = GetTickCount();
+	cache_get_data(rows, fields);
+	new modelid, family_id, _vehicleid, Float:Coords[4];
+	if( rows)
+	{
+		for(new i = 0; i < rows; i++)
+		{
+			modelid = cache_get_field_content_int(i, "sv_model", connects);
+			family_id = cache_get_field_content_int(i, "sv_owner", connects);
+
+			Coords[0] = cache_get_field_content_float(i,"sv_pos_x", connects);
+			Coords[1] = cache_get_field_content_float(i,"sv_pos_y", connects);
+			Coords[2] = cache_get_field_content_float(i,"sv_pos_z", connects);
+			Coords[3] = cache_get_field_content_float(i,"sv_pos_a", connects);
+
+			_vehicleid = AddStaticVehicleEx(modelid, Coords[0], Coords[1], Coords[2], Coords[3], 1, 1, 600, VEHICLE_ACTION_TYPE_FAMILY);
+			Iter_Add(family_vehicles[family_id], _vehicleid);
+
+		    if(IsValidDynamic3DTextLabel(VehicleText[_vehicleid]))
+			{
+				DestroyDynamic3DTextLabel(VehicleText[_vehicleid]);
+				VehicleText[_vehicleid] = Text3D:INVALID_3DTEXT_ID;
+			}
+
+		    new text_label[144];
+			format(text_label, sizeof text_label, "Семейный транспорт\n{%s}%s", family_chat_color[family_info[family_id - 1][f_chat_color]], family_info[family_id - 1][f_name]);
+			VehicleText[_vehicleid] = CreateDynamic3DTextLabel(text_label, COLOR_WHITE, 0.0, 0.0, 1.3, 10.0, INVALID_PLAYER_ID, _vehicleid, 1);
+		}
+	}
+
+	printf("[SERVER] Загружено %d автомобилей семьи. (%d ms)", rows, GetTickCount() - time);
+   	return 1;
+}
+forward off_family_members_callback(playerid);
+public off_family_members_callback(playerid)
+{
+    new rows, fields, temp [ MAX_PLAYER_NAME ], ofm_string[ 256 ];
+    cache_get_data ( rows, fields ) ;
+    if(rows != 0)
+    {
+        for(new i = 0; i < rows ; i++)
+        {
+            cache_get_field_content ( i, "Name", temp );
+            strcat(ofm_string,temp);
+            strcat(ofm_string,"\n");
+        }
+    }
+    ShowPlayerDialog ( playerid, dFamilyOffMembers, DIALOG_STYLE_LIST, ""SERVER"Члены семьи", ofm_string, !"Назад", !"" ) ;
+    return 1;
+}
+
+publics: check_top_family(playerid)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    new family_name[32], fam_rating;
+    new dialog_string[91];
+
+    stringer[0] = EOS;
+
+    for(new i = 0; i < rows; i ++)
+    {
+        cache_get_field_content(i, "fam_name", family_name, connects, sizeof(family_name));
+        fam_rating = cache_get_field_content_int(i, "fam_rating");
+
+        format(dialog_string, sizeof(dialog_string), ""SERVER"%d. {FFFFFF}%s\tРейтинг: %d\n", i + 1, family_name, fam_rating);
+        strcat(stringer, dialog_string);
+    }
+    return SPD(playerid, 0000, DIALOG_STYLE_TABLIST, !""SERVER"ТОП-10 Семей по рейтингу", stringer, !"Закрыть", !"");
+}
+
+CMD:topfam(playerid)
+{
+    return mysql_tquery(connects, "SELECT `fam_name`, `fam_rating` FROM `family_system` ORDER BY `family_system`.`fam_rating` DESC LIMIT 10", "check_top_family", "i", playerid);
+}
+
+publics: check_roulette(playerid, listitem)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+
+    prize_info[playerid][sPrice][listitem] = cache_get_field_content_int(0, "sell_price");
+
+    SetPVarInt(playerid, "prize_id", listitem);
+    new fmt_str[218];
+    format(fmt_str, 218, "{ffffff}Вы хотите продать предмет {ffff00}%s (значение %d){ffffff} за {ffff00}%d F - Coins?{ffffff}\n Если нет нажмите кнопку {ffff00}'Забрать'{ffffff}\n Внимание данное действие отменить нельзя!",category_name[prize_info[playerid][sCategory][listitem]-1],prize_info[playerid][sValue][listitem],prize_info[playerid][sPrice][listitem]);
+    ShowPlayerDialog(playerid, 2231, DIALOG_STYLE_MSGBOX, "Рулетка", fmt_str, "Забрать", "Продать");
+    return 1;
+}
+
+publics: check_cars(playerid)
+{
+    new fmt_text[640], id_car;
+
+    new rows, fields;
+    cache_get_data(rows, fields);
+
+    if(!rows) SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}У Вас нет личного транспорта");
+
+    else
+    {
+        new query[80],
+        model_id,
+        car_number[7];
+
+        format(fmt_text, sizeof fmt_text, "");
+
+        for(new i = 0; i < rows; i ++)
+        {
+            id_car = cache_get_field_content_int(i, "id");
+            model_id = cache_get_field_content_int(i, "model_id") - 400;
+            cache_get_field_content(i, "number", car_number);
+
+            format(query, sizeof query, "{FFFFFF}№%d. %s (%d) [%s]\n", i + 1, GetVehicleInfo(model_id, VI_NAME), model_id + 400, car_number);
+            strcat(fmt_text, query);
+            SetPlayerListitemValue(playerid, i, id_car);
+        }
+
+        ShowPlayerDialog        (
+        playerid, DIALOG_OWNABLE_CAR_LIST, DIALOG_STYLE_LIST,
+        !""SERVER"Ваш транспорт",
+        fmt_text,
+        !"Выбрать", !"Закрыть"
+        );
+    }
+
+    return 1;
+}
+
+stock IsIpFound(const string[])
+{
+    if(strlen(string) > 90) return false;
+    if(strfind(string, "хуй", false) != -1 || strfind(string, "пизда", false) != -1) return 1;
+    if(!reklamka) reklamka= regex_build("(((\\w+):\\/\\/)|(www\\.|\\,|))+(([\\w\\.\\,_-]{2,}(\\s+|\\S+|)(\\s|\\.|\\,|[^0-9])(?i)(biz|info|name|net|org|bg|by|бел|kg|kz|ua|укр|com|рф|ru|))|(([\\d]{1,3}(\\b))(\\s+|\\S+|)(\\.|\\,|\\s|[^0-9])(\\s+|\\S+|)[\\d]{1,3}(\\s+|\\S+|)(\\.|\\,|\\s|[^0-9])(\\s+|\\S+|)[\\d]{1,3}(\\s+|\\S+|)(\\.|\\,|\\s|[^0-9])(\\s+|\\S+|)[\\d]{1,3}))(((\\s+|\\S+|)(\\:|\\;|\\s)(\\s+|\\S+|)[\\d\\s]{2,}(\\b))|\\b)(\\/[\\w\\&amp\\;\\%_\\.\\/\\-\\~\\-]*)?");
+    return regex_search_exid(string, reklamka);
+}
+
+publics: report_checked(playerid, response, inputtext[])
+{
+    new report_id = TempReportInfo[playerid][reportID], status = REPORT_STATUS_ANSWERED;
+    if (!response) status = REPORT_STATUS_SKIPPED;
+
+    new rows, fields;
+    cache_get_data(rows, fields);
+
+    if(!rows)
+    {
+        SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}На данный запрос уже был дан ответ!");
+        return 1;
+    }
+    mysql_format(connects, mysql_query_, sizeof (mysql_query_), "UPDATE "TABLE_REPORTS" SET status = '%d', answer = '%s' WHERE `id` = '%d' AND `status` = 0", status, inputtext, report_id);
+    mysql_tquery(connects, mysql_query_);
+    new targetid = TempReportInfo[playerid][reportPlayerID];
+    TempReportInfo[playerid][reportID] = 0;
+
+    ShowPlayerDialog(playerid, 5513, DIALOG_STYLE_MSGBOX, ""SERVER"Вы ответили на запрос", "\
+        {FFFFFF}Хотите посмотреть следующий запрос?", "Да", "Отмена"
+    );
+    if (!response) {
+        format(stringer, sizeof (stringer), "Ваш запрос №%d был пропущен администратором %s[%d].",
+            report_id, PI[playerid][pNames], playerid
+        );
+        SendClientMessage(targetid, COLOR_YELLOW, stringer), stringer[0] = EOS;
+
+        format(stringer1, sizeof(stringer1), "{afafaf}[A] %s[%d] пропустил запрос №%d игрока %s[%d].",
+            PI[playerid][pNames], playerid, report_id, PI[targetid][pNames], targetid
+        );
+        SendAdminMessage(0xFfa500AA, stringer1);
+
+        if(PI[playerid][pAdmin]) PI[playerid][pRepAdm]--;
+        else PI[playerid][pHotvet]--;
+
+        return true;
+    }
+    format(stringer, sizeof (stringer), "\

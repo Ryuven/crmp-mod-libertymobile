@@ -1,0 +1,1000 @@
+    TextDrawHideForPlayer(playerid, BlackJackBetShow[tableid][0]);
+    TextDrawHideForPlayer(playerid, BlackJackBetShow[tableid][1]);
+    TextDrawHideForPlayer(playerid, BlackJackPointsShow[tableid][0]);
+    TextDrawHideForPlayer(playerid, BlackJackPointsShow[tableid][1]);
+    TextDrawHideForPlayer(playerid, BlackJackPointsShow[tableid][2]);
+    TextDrawHideForPlayer(playerid, BlackJackExit);
+    for(new i = 0; i < 4; i++)
+    {
+        TextDrawHideForPlayer(playerid, BlackJackBorder[i]);
+    }
+    for(new i = 0; i < 15; i++)
+    {
+        TextDrawHideForPlayer(playerid, BlackJackCardShow[tableid][i]);
+    }
+}
+forward RouleTimer(tableid);
+public RouleTimer(tableid)
+{
+    RouleTableInfo[tableid][rTime]--;
+    if(RouleTableInfo[tableid][rTime] <= 1)
+    {
+        KillTimer(TimerRoule[tableid]);
+        KillTimer(TimerRouleGame[tableid]);
+        EndRoule(tableid);
+    }
+    return 1;
+}
+
+
+forward RouleGameTimer(tableid);
+public RouleGameTimer(tableid)
+{
+    new rand = random(37), str[8];
+    foreach (new i : Player)
+    {
+        if(RouleTable[i] != tableid) continue;
+        {
+            format(str, sizeof(str), "%s%d", GetNumberColor(rand), rand);
+            GameTextForPlayer(i, str, 3000, 6);
+        }
+    }
+    return 1;
+}
+
+publics:OnCheckRoulette(playerid)
+{
+    new fmt_str[164],big_fmt[568];
+
+    new rows, fields;
+    cache_get_data(rows, fields);
+
+    if(rows)
+    {
+        for(new i=0; i < rows; i++)
+        {
+            prize_info[playerid][sCategory][i] = cache_get_field_content_int(i, "p_id");
+            prize_info[playerid][sValue][i] = cache_get_field_content_int(i, "p_value");
+            prize_info[playerid][sID][i] = cache_get_field_content_int(i, "p_number");
+
+            format(fmt_str, 164, "{ffffff}ID %d | %s | Значение %d\n",i+1, category_name[prize_info[playerid][sCategory][i]-1], prize_info[playerid][sValue][i]);
+            strcat(big_fmt, fmt_str);
+        }
+        ShowPlayerDialog(playerid, 2230, DIALOG_STYLE_LIST, "Рулетка", big_fmt, "Забрать", "Закрыть");
+    }
+    else SendClientMessage(playerid, -1, "Призов не найдено!");
+    return 1;
+}
+
+new donate_timer[MAX_PLAYERS];
+
+publics: check_donate(playerid)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+
+    if(rows)
+    {
+        new new_donate;
+        new_donate = cache_get_field_content_int(0, "pNewDonateNAX");
+
+        if(new_donate > 0)
+        {
+            new mysql_string[256];
+            mysql_format(connects, mysql_string, sizeof(mysql_string), "UPDATE `accounts` SET `pNewDonateNAX` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+            mysql_tquery(connects, mysql_string);
+
+            if(Config[sDonPower] != 1)
+            {
+                format(mysql_string, sizeof(mysql_string), ""SERVER"~ {FFFFFF}С учетом акции X%d на аккаунт зачислено "SERVER"%d F - Coins!",Config[sDonPower], new_donate * Config[sDonPower]);
+                SendClientMessage(playerid, COLOR_WHITE, mysql_string);
+            }
+            else
+            {
+                format(mysql_string, sizeof(mysql_string), ""SERVER"~ {FFFFFF}Ваш баланс успешно пополнен на "SERVER"%d F - Coins!", new_donate);
+                SendClientMessage(playerid, COLOR_WHITE, mysql_string);
+            }
+            PI[playerid][pDonateRubNew] += new_donate * Config[sDonPower];
+            UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+        }
+    }
+    return 1;
+}
+
+publics: OnCheckDonations(playerid)
+{
+    if(donate_timer[playerid]) KillTimer(donate_timer[playerid]);
+
+    format(mysql_query_, sizeof(mysql_query_), "SELECT `pNewDonateNAX` FROM `accounts` WHERE `pID` = '%d' LIMIT 1", PI[playerid][pID]);
+    mysql_tquery(connects, mysql_query_, "check_donate", "d", playerid);
+
+    donate_timer[playerid] = SetTimerEx("@__donate_timer", 500, false, "d", playerid);
+    return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Подождите, данные о ваших донатах загружаются...");
+}
+
+@__donate_timer(playerid);
+@__donate_timer(playerid)
+{
+    KillTimer(donate_timer[playerid]);
+
+    new rubdonate[41];
+    format(rubdonate, sizeof(rubdonate), ""SERVER"Ваш баланс: %d Wipe - Coins", PI[playerid][pDonateRubNew]);
+    ShowPlayerDialog(playerid, 9642, DIALOG_STYLE_LIST, rubdonate, "\
+    1. {FFCD00}[TOP] {FFFFFF}Создать семью\t{8BD032}2.000.000 рублей.\n\
+    2. Изменить ник\t\t{8BD032}40 F - Coins\n\
+    3. Разблокировка своего аккаунта\t\t{8BD032}200 F - Coins\n\
+    4. Пополнить склад своей организации\t{8BD032}50 F - Coins\n\
+    5. Покупка донат очков\n\
+    6. Военный билет\t{8BD032}20 F - Coins\n\
+    {00FF00}[NEW]{FFFFFF} 8. +1 СЛОТ НА ЛИЧНОЕ АВТО\t\t{8BD032}120 F - Coins\n\
+    {00FF00}[NEW]{FFFFFF} 9. VIP номер на личное авто\t\t{8BD032}100 F - Coins\n\
+    {00FF00}[NEW]{FFFFFF} 10. МАГНИТОФОН\t\t{8BD032}170 F - Coins\n\
+    {00FF00}[NEW]{FFFFFF} 11. Купить Эксклюзивное авто\t\t >>\n\
+    {00FF00}[NEW]{FFFFFF} 12. Купить Эксклюзивный скин\t\t >>\n\
+    {ffffff}————————————————————\n\
+    {FFCD00}Как получить F - Coins? | {FF4500}WIPE PROJECT -> Донат", "Далее", "Отмена");
+
+    return 1;
+}
+
+forward EndRoule(tableid);
+public EndRoule(tableid)
+{
+    new rand = random(37), str[8], message[64], line[14];
+    valstr(line, rand);
+    format(str, sizeof(str), "%s%d", GetNumberColor(rand), rand);
+    foreach (new i : Player)
+    {
+        if(RouleTable[i] != tableid) continue;
+        {
+            GameTextForPlayer(i, str, 3000, 6);
+            if(ChooseBet[i] != 1) continue;
+            {
+                ChooseBet[i] = 0;
+                DestroyObject(RouleChip[i]);
+                switch(Casino[i])
+                {
+                case 1:
+                    {
+                  //      RouleChip[i] = CreateDynamicObject(1900, RouleTables[tableid][0]+RouleVertikalCoords[RouleVertikal[i]][0], RouleTables[tableid][1]+RouleHorizontCoords[RouleHorizont[i]][0], 992.335, 0.0, 0.0, 0.0);
+                    }
+                case 2:
+                    {
+                     //   RouleChip[i] = CreateDynamicObject(1900, RouleTables[tableid][0]-RouleHorizontCoords[RouleHorizont[i]][0], RouleTables[tableid][1]+RouleVertikalCoords[RouleVertikal[i]][0], 1006.06, 0.0, 0.0, 0.0);
+                    }
+                }
+                if(strfind(RouleNumber[i], "1-12", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 1..12:
+                        {
+                            GiveMoney(i, RouleBet[i]*3);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*3);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "2-12", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 13..24:
+                        {
+                            GiveMoney(i, RouleBet[i]*3);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*3);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "3-12", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 25..36:
+                        {
+                            GiveMoney(i, RouleBet[i]*3);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*3);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "1-18", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 1..18:
+                        {
+                            GiveMoney(i, RouleBet[i]*2);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*2);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "19-36", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 19..36:
+                        {
+                            GiveMoney(i, RouleBet[i]*2);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*2);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "Red", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36:
+                        {
+                            GiveMoney(i, RouleBet[i]*2);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*2);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "Black", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35:
+                        {
+                            GiveMoney(i, RouleBet[i]*2);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*2);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "Even", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36:
+                        {
+                            GiveMoney(i, RouleBet[i]*2);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*2);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "Odd", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35:
+                        {
+                            GiveMoney(i, RouleBet[i]*2);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*2);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strfind(RouleNumber[i], "3-1", false) != -1)
+                {
+                    switch(rand)
+                    {
+                    case 1,4,7,10,13,16,19,22,25,28,31,34:
+                        {
+                            if(RouleVertikal[i] == 2)
+                            {
+                                GiveMoney(i, RouleBet[i]*3);
+                                format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*3);
+                                SendClientMessage(i, COLOR_ORANGE, message);
+                                continue;
+                            }
+                        }
+                    case 2,5,8,11,14,17,20,23,26,29,32,35:
+                        {
+                            if(RouleVertikal[i] == 4)
+                            {
+                                GiveMoney(i, RouleBet[i]*3);
+                                format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*3);
+                                SendClientMessage(i, COLOR_ORANGE, message);
+                                continue;
+                            }
+                        }
+                    case 3,6,9,12,15,18,21,24,27,30,33,36:
+                        {
+                            if(RouleVertikal[i] == 6)
+                            {
+                                GiveMoney(i, RouleBet[i]*3);
+                                format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*3);
+                                SendClientMessage(i, COLOR_ORANGE, message);
+                                continue;
+                            }
+                        }
+                    }
+                }
+                else if(strlen(RouleNumber[i]) >= 3 && strlen(RouleNumber[i]) <= 6)
+                {
+                    new d = strfind(RouleNumber[i], line, false);
+                    if(d != -1)
+                    {
+                        strmid(RouleNumber[i], RouleNumber[i], d-1, d+2, strlen(RouleNumber[i]));
+                        for(new a = 0; a < 2; a++)
+                        {
+                            d = strfind(RouleNumber[i], ",", false);
+                            if(d != -1)
+                            {
+                                strdel(RouleNumber[i], d, d+1);
+                            }
+                        }
+                        if(strlen(RouleNumber[i]) == strlen(line))
+                        {
+                            GiveMoney(i, RouleBet[i]*9);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*9);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else if(strlen(RouleNumber[i]) >= 7 && strlen(RouleNumber[i]) <= 12)
+                {
+                    new d = strfind(RouleNumber[i], line, false);
+                    if(d != -1)
+                    {
+                        strmid(RouleNumber[i], RouleNumber[i], d-1, d+2, strlen(RouleNumber[i]));
+                        for(new a = 0; a < 2; a++)
+                        {
+                            d = strfind(RouleNumber[i], ",", false);
+                            if(d != -1)
+                            {
+                                strdel(RouleNumber[i], d, d+1);
+                            }
+                        }
+                        if(strlen(RouleNumber[i]) == strlen(line))
+                        {
+                            GiveMoney(i, RouleBet[i]*5);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*5);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    if(strcmp(RouleNumber[i], line, false, strlen(RouleNumber[i])) == 0)
+                    {
+                        if(rand != 0)
+                        {
+                            GiveMoney(i, RouleBet[i]*10);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*10);
+                            SendClientMessage(i, COLOR_ORANGE, message);
+                        }
+                        else
+                        {
+                            GiveMoney(i, RouleBet[i]*11);
+                            format(message, sizeof(message), "Выпало %d. Поздравляем! Вы выиграли %d руб.", rand, RouleBet[i]*11);
+                        }
+                        SendClientMessage(i, COLOR_ORANGE, message);
+                        continue;
+                    }
+                }
+                format(message, sizeof(message), "Выпало %d. К сожалению, ваша ставка проиграна", rand);
+                SendClientMessage(i, COLOR_RED, message);
+            }
+            if(GetPlayerNearestRouleTable(i) == -1)
+            {
+                OnPlayerExitRouleTable(i, tableid);
+            }
+        }
+    }
+    StartRoule[tableid] = 0;
+    for(new i = 0; i < 5; i++)
+    {
+        TextDrawSetString(RouleNumberShow[tableid][i], "-------");
+        TextDrawSetString(RouleBetShow[tableid][i], "-------");
+    }
+    return 1;
+}
+
+forward BlackJackTimer(tableid);
+public BlackJackTimer(tableid)
+{
+    new gamers, stand;
+    foreach (new i : Player)
+    {
+        if(BlackJackTable[i] != tableid) continue;
+        {
+            if(ChooseBet[i] != 1) continue;
+            {
+                new time[5];
+                gamers++;
+                if(BlackJackTime[i] == 0)
+                {
+                    stand++;
+                }
+                else
+                {
+                    BlackJackTime[i]--;
+                    valstr(time, BlackJackTime[i]);
+                    GameTextForPlayer(i, time, 1000, 6);
+                }
+            }
+        }
+    }
+    if(gamers == stand)
+    {
+        new rand[2], TotalPoints, points[5];
+        rand[0] = random(13), rand[1] = random(13);
+        TotalPoints = GetBlackJackPoints(rand[0]) + GetBlackJackPoints(rand[1]);
+        TextDrawSetString(BlackJackCardShow[tableid][10], Cards[rand[0]]);
+        TextDrawSetString(BlackJackCardShow[tableid][11], Cards[rand[1]]);
+        valstr(points, TotalPoints);
+        TextDrawSetString(BlackJackPointsShow[tableid][2], points);
+        if(TotalPoints < 17)
+        {
+            for(new i = 12; i < 15; i++)
+            {
+                new CroupierPoints = random(13);
+                TotalPoints += GetBlackJackPoints(CroupierPoints);
+                TextDrawSetString(BlackJackCardShow[tableid][i], Cards[CroupierPoints][0]);
+                valstr(points, TotalPoints);
+                TextDrawSetString(BlackJackPointsShow[tableid][2], points);
+                if(TotalPoints >= 17) break;
+            }
+        }
+        foreach (new i : Player)
+        {
+            if(BlackJackTable[i] != tableid) continue;
+            {
+                if(ChooseBet[i] != 1) continue;
+                {
+                    if(BlackJackPoints[i] > TotalPoints || TotalPoints > 21)
+                    {
+                        new str[64];
+                        format(str, sizeof(str), "Поздравляем! Вы обыграли дилера и получаете выиграш %d$", BlackJackBet[i]*2);
+                        SendClientMessage(i, COLOR_ORANGE, str);
+                        GiveMoney(i, BlackJackBet[i]*2);
+                    }
+                    else if(BlackJackPoints[i] < TotalPoints)
+                    {
+                        SendClientMessage(i, COLOR_RED, "К сожалению, вы проиграли");
+                    }
+                    else
+                    {
+                        SendClientMessage(i, COLOR_ORANGE, "Ничья. Вы ничего не выйграли, но и не проиграли");
+                        GiveMoney(i, BlackJackBet[i]);
+                    }
+                    ResetPlayerBlackJackGame(i);
+                }
+                if(GetPlayerNearestBlackJackTable(i) == -1)
+                {
+                    OnPlayerExitBlackJackTable(i, tableid);
+                }
+            }
+        }
+        KillTimer(TimerBlackJack[tableid]);
+        SetTimerEx("EndBlackJackGame", 5000, false, "d", tableid);
+    }
+    else if(gamers == 0)
+    {
+        KillTimer(TimerBlackJack[tableid]);
+        SetTimerEx("EndBlackJackGame", 5000, false, "d", tableid);
+    }
+}
+
+forward EndBlackJackGame(tableid);
+public EndBlackJackGame(tableid)
+{
+    StartBlackJack[tableid] = 0;
+    for(new i = 0; i < 15; i++)
+    {
+        switch(i)
+        {
+        case 0,1: TextDrawSetString(BlackJackCardShow[tableid][i], "ld_card:cdback");
+        case 5,6: TextDrawSetString(BlackJackCardShow[tableid][i], "ld_card:cdback");
+        case 10,11: TextDrawSetString(BlackJackCardShow[tableid][i], "ld_card:cdback");
+        default: TextDrawSetString(BlackJackCardShow[tableid][i], "_");
+        }
+    }
+    TextDrawSetString(BlackJackBetShow[tableid][0], "_");
+    TextDrawSetString(BlackJackBetShow[tableid][1], "_");
+    TextDrawSetString(BlackJackPointsShow[tableid][0], "_");
+    TextDrawSetString(BlackJackPointsShow[tableid][1], "_");
+    TextDrawSetString(BlackJackPointsShow[tableid][2], "_");
+}
+
+forward DiceTimer(tableid);
+public DiceTimer(tableid)
+{
+    new time[2], players, throws;
+    DiceTableInfo[tableid][dTime]--;
+    valstr(time, DiceTableInfo[tableid][dTime]);
+    foreach (new i : Player)
+    {
+        if(DiceTable[i] == tableid && ChooseBet[i] == 1)
+        {
+            players++;
+            GameTextForPlayer(i, time, 1000, 6);
+        }
+        if(Glasses[i] != 0)
+        {
+            throws++;
+        }
+    }
+    if(players == 0)
+    {
+        KillTimer(TimerDice[tableid]);
+        DiceTableInfo[tableid][dTime] = 20;
+        StartDice[tableid] = 0;
+        DiceTableInfo[tableid][dBet] = 0;
+        DiceTableInfo[tableid][dBank] = 0;
+        TextDrawSetString(DiceBetShow[tableid], "0$");
+        TextDrawSetString(DiceBankShow[tableid], "0$");
+        return 1;
+    }
+    if(players == throws && DiceTableInfo[tableid][dTime] > 4)
+    {
+        DiceTableInfo[tableid][dTime] = 4;
+    }
+    if(DiceTableInfo[tableid][dTime] <= 1)
+    {
+        new WinNumber, winner, str[48], repeat;
+        foreach (new i : Player)
+        {
+            if(DiceTable[i] == tableid && ChooseBet[i] == 1)
+            {
+                if(Glasses[i] == 0)
+                {
+                    Glasses[i] = 2 + random(10);
+                    format(str, sizeof(str), "Вы кинули на %i", Glasses[i]);
+                    SendClientMessage(i, COLOR_ORANGE, str);
+                }
+                if(Glasses[i] > WinNumber)
+                {
+                    WinNumber = Glasses[i];
+                    winner = i;
+                }
+            }
+        }
+        foreach (new i : Player)
+        {
+            if(DiceTable[i] == tableid && ChooseBet[i] == 1)
+            {
+                if(Glasses[i] == WinNumber)
+                {
+                    repeat++;
+                    Glasses[i] = 0;
+                    TextDrawSetString(BetGamer[tableid][DiceGamer[i]], "[+]");
+                }
+                else
+                {
+                    ChooseBet[i] = 0;
+                    Glasses[i] = 0;
+                    TextDrawSetString(BetGamer[tableid][DiceGamer[i]], "[...]");
+                }
+            }
+        }
+        if(repeat > 1)
+        {
+            DiceTableInfo[tableid][dTime] = 20;
+            return 1;
+        }
+        format(str, sizeof(str), "Поздравляем! Победил %s", PI[winner][pNames]);
+        foreach (new i : Player)
+        {
+            if(DiceTable[i] != tableid) continue;
+            {
+                ChooseBet[i] = 0;
+                Glasses[i] = 0;
+                SendClientMessage(i, COLOR_ORANGE, str);
+                TextDrawSetString(BetGamer[tableid][DiceGamer[i]], "[...]");
+                if(GetPlayerNearestDiceTable(i) == -1)
+                {
+                    OnPlayerExitDiceTable(i, tableid);
+                }
+            }
+        }
+        new money[20];
+        GiveMoney(winner, DiceTableInfo[tableid][dBank]);
+        DiceTableInfo[tableid][dBank] = 0;
+        DiceTableInfo[tableid][dBet] = 0;
+        format(money, sizeof(money), "%i$", PI[winner][pCash]);
+        TextDrawSetString(DiceBetShow[tableid], "0$");
+        TextDrawSetString(DiceBankShow[tableid], "0$");
+        if(DiceGamer[winner] != -1) TextDrawSetString(DiceMoneyShow[tableid][DiceGamer[winner]], money);
+        KillTimer(TimerDice[tableid]);
+        StartDice[tableid] = 0;
+    }
+    return 1;
+}
+
+publics: Checkban(playerid, name[])
+{
+    new
+    rows,
+    fields,
+    admin[24],
+    data,
+    unbandate,
+    reason[50]
+    ;
+    cache_get_data(rows, fields);
+    if(rows)
+    {
+        cache_get_field_content(0, "admin",admin);
+        data = cache_get_field_content_int(0, "date");
+        cache_get_field_content(0, "reason",reason);
+        unbandate = cache_get_field_content_int(0, "unbandate");
+        if(unbandate > gettime())
+        {
+            new ban_date[6], unban_date[6];
+            gmtime(data, ban_date[0], ban_date[1], ban_date[2], ban_date[3], ban_date[4], ban_date[5]);
+            gmtime(unbandate, unban_date[0], unban_date[1], unban_date[2], unban_date[3], unban_date[4], unban_date[5]);
+
+            format(stringer, sizeof(stringer), "{FFFFFF}Аккаунт: "SERVER"%s\n{FFFFFF}Дата блокировки: "SERVER"%02d.%02d.%04d {FFFFFF}в"SERVER" %02d:%02d:%02d\n{FFFFFF}Администратор: "SERVER"%s\n{FFFFFF}Причина: "SERVER"%s\n\n{FFFFFF}Дата разблокировки: "SERVER"%02d.%02d.%04d {FFFFFF}в"SERVER" %02d:%02d:%02d",
+            name, ban_date[2], ban_date[1], ban_date[0], ban_date[3]+3, ban_date[4], ban_date[5], admin, reason,
+            unban_date[2], unban_date[1], unban_date[0], unban_date[3]+3, unban_date[4], unban_date[5]);
+
+            SPD(playerid,91,0,""SERVER"Аккаунт заблокирован:",stringer,"Закрыть","");
+            KickEx(playerid);
+            return 1;
+        }
+        else {
+            format(stringer, sizeof(stringer), "DELETE FROM `"TABLE_BANLOG"` WHERE `name` = '%s'",name);
+            mysql_function_query(connects, stringer, false, "","");
+        }
+    }
+    GoServer(playerid);
+    return 1;
+}
+publics: AdminCheckBan(playerid, name[], type)
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows)
+    {
+        new unbandate_IP = cache_get_field_content_int(0, "unbandate", connects),
+        bandate_IP = cache_get_field_content_int(0, "date", connects),
+        reason[50], admin[24];
+        cache_get_field_content(0, "reason", reason, connects, 50);
+        cache_get_field_content(0, "admin", admin, connects, 24);
+
+        new ban_date[6], unban_date[6];
+        gmtime(bandate_IP, ban_date[0], ban_date[1], ban_date[2], ban_date[3], ban_date[4], ban_date[5]);
+        gmtime(unbandate_IP, unban_date[0], unban_date[1], unban_date[2], unban_date[3], unban_date[4], unban_date[5]);
+
+        format(stringer, sizeof(stringer), "{FF6347}%s: %s\nДата блокировки: %02d.%02d.%04d в %02d:%02d:%02d\nАдминистратор: %s\nПричина: %s\n\nДата разблокировки: %02d.%02d.%04d в %02d:%02d:%02d", (!type) ? ("Аккаунт") : ("IP адрес"),
+        name, ban_date[2], ban_date[1], ban_date[0], ban_date[3]+3, ban_date[4], ban_date[5], admin, reason,
+        unban_date[2], unban_date[1], unban_date[0], unban_date[3]+3, unban_date[4], unban_date[5]);
+
+        SPD(playerid,91,0,"{FF6347}Информация о блокировке:", stringer, "Закрыть", "");
+    }
+    else SendMes(playerid, -1, "Указанный %s не заблокирован.", (!type) ? ("аккаунт") : ("IP адрес"));
+    return 1;
+}
+
+cmd:sellcar(playerid, params[])
+{
+    new vehicleid = GetPlayerOwnableCar(playerid);
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        new model_id = GetVehicleData(vehicleid, V_MODELID);
+        if(model_id)
+        {
+            new fmt_str[270];
+
+            new price = 0;
+
+            for(new i = 0; i < sizeof(car_autosalon); i ++)
+            {
+                if(car_autosalon[i][0] == model_id)
+                {
+                    price = car_autosalon[i][1];
+                    break;
+                }
+            }
+
+            format
+            (
+            fmt_str, sizeof fmt_str,
+            "{FFFFFF}Модель:\t"SERVER"%s (№%d)\n"\
+            "{FFFFFF}Стоимость:\t{33aa33}%s\n\n"\
+            "{FFFFFF}Вы уверены что хотите продать транспорт?\n"\
+            "{FFFFFF}Если Вы хотите продать его другому игроку,\n"\
+            "{FFFFFF}используйте команду /sellmycar",
+            GetVehicleName(vehicleid),
+            model_id,
+            formatInt(price)
+            );
+            ShowPlayerDialog(playerid, DIALOG_OWNABLE_CAR_SELL, DIALOG_STYLE_MSGBOX, "Продажа личного транспорта", fmt_str, "Да", "Нет");
+        }
+    }
+    else
+    {
+        if(GetPlayerOwnableCars(playerid) == 0)
+        SendClientMessage(playerid, 0xCECECEFF, "У Вас нет личного транспорта");
+        else
+        SendClientMessage(playerid, 0xCECECEFF, "Ваш личный транспорт не загружен на сервер");
+    }
+
+    return 1;
+}
+
+cmd:sellmycar(playerid, params[])
+{
+    if(PI[playerid][pPayDayHad] < 24) return SendClientMessage(playerid, COLOR_WHITE, "{0095FF}Необходимо отыграть {00cc00}24 {0095FF}часа на сервере (/mm - Статистика персонажа)!");
+    new vehicleid = GetPlayerOwnableCar(playerid);
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        //    if(IsPlayerInRangeOfPoint(playerid, 45.0, 333.7647, -1797.5499, 3.7115))
+        //  {
+        if(!strlen(params))
+        return SendClientMessage(playerid, 0xCECECEFF, "Используйте: /sellmycar [id игрока] [стоимость]");
+
+        extract params -> new to_player, price;
+
+        new model_id = GetVehicleData(vehicleid, V_MODELID);
+        if(model_id)
+        {
+            if(!IsPlayerConnected(to_player) || to_player == playerid)
+                return SendClientMessage(playerid, 0xCECECEFF, "Такого игрока нет");
+
+            if((GetPlayerOwnableCars(to_player) + 1) > PI[to_player][P_CAR_SLOT])
+                return SendClientMessage(playerid, 0xCECECEFF, "У этого игрока нет свободных слотов для транспорта");
+
+            if(GetPlayerOwnableCar(to_player) != INVALID_VEHICLE_ID)
+                return SendClientMessage(playerid, 0xCECECEFF, "Этот игрок должен выгрузить его личный транспорт с сервера {888888}(/car > 7)");
+
+            if(PI[to_player][pCash] < price)
+                return SendClientMessage(playerid, 0xCECECEFF, "У этого игрока нет такой суммы");
+
+            new  Float: car_x, Float: car_y, Float: car_z;
+            GetVehiclePos(vehicleid, car_x, car_y, car_z);
+
+            if(IsPlayerInRangeOfPoint(playerid, 15.0, car_x, car_y, car_z) && IsPlayerInRangeOfPoint(to_player, 15.0, car_x, car_y, car_z))
+            {
+                SendPlayerOffer(playerid, to_player, OFFER_TYPE_SELL_OWNABLE_CAR, price, vehicleid);
+            }
+            else SendClientMessage(playerid, 0xCECECEFF, "Вы и покупатель должны находиться около ТС");
+        }
+        //}
+        //else SendClientMessage(playerid, 0xCECECEFF, "Вы не на Б/У рынке.");
+    }
+    else
+    {
+        if(GetPlayerOwnableCars(playerid) == 0)
+        SendClientMessage(playerid, 0xCECECEFF, "У Вас нет личного транспорта");
+        else
+        SendClientMessage(playerid, 0xCECECEFF, "Ваш личный транспорт не загружен на сервер");
+    }
+
+    return 1;
+}
+
+
+stock Weaponpb(playerid)
+{
+    new weapon = random(4);
+    switch(weapon)
+    {
+    case 0: return GiveWeapon(playerid, 24, 100), GiveWeapon(playerid, 33, 50), GiveWeapon(playerid, 31, 500);
+    case 1: return GiveWeapon(playerid, 23, 100), GiveWeapon(playerid, 34, 50), GiveWeapon(playerid, 30, 500);
+    case 2: return GiveWeapon(playerid, 25, 100), GiveWeapon(playerid, 24, 50), GiveWeapon(playerid, 16, 1);
+    case 3: return GiveWeapon(playerid, 29, 500), GiveWeapon(playerid, 23, 50), GiveWeapon(playerid, 17, 1);
+    }
+    return 1;
+}
+stock CheckTheftCar(playerid)
+{
+    if(TheftCarID[playerid] != 0)
+    {
+        TheftCarID[playerid] = 0;
+        TheftKey[playerid] = 0;
+        TheftTime[playerid] = 0;
+        TheftCount[playerid] = 0;
+        HidePlayerTapeText(playerid);
+        HidePlayerActionBand(playerid);
+    }
+    return 1;
+}
+public OnPlayerEditDynamicObject(playerid, objectid, response, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz)
+{
+    if(PI[playerid][pAdmin] == 12)
+    {
+        if(!IsValidDynamicObject(objectid)) return 1;
+        MoveDynamicObject(objectid, x, y, z, 10.0, rx, ry, rz);
+    }
+    return 0;
+}
+stock DelAdmin(playerid)
+{
+    SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, !"Попытка слива", !"Ваши права администратора были аннулированы.\n\
+    Причина: попытка слива\n\n\
+    Если вы не согласны с наказанием, то напишите Магомеду: vk.com/yaganster, vk.com/arab.gangster", !"ОК", !"");
+
+    PI[playerid][pAdmin] = 0;
+    PI[playerid][pDostup] = 0;
+    PI[playerid][pVigs] = 0;
+    dostup[playerid] = 0;
+
+    new CMDaccess[CMD_NUM + 1];
+    cache_get_field_content(0, "CMDaccess", CMDaccess, connects, sizeof(CMDaccess));
+    sscanf("[A]", "s[16+1]", PI[playerid][pPrefix]);
+    for(new i = 0; i < sizeof CMD_names; i++)
+    {
+        CMDaccess[i] = '0';
+        PI[playerid][aiCMDaccess][i] = '0';
+    }
+    CMDaccess[CMD_setadmin] = '0';
+    PI[playerid][aiCMDaccess][CMD_setadmin] = '0';
+    new query[144];
+
+
+    PI[playerid][pInv] = 1;
+
+    PI[playerid][pRepAdm] =
+    PI[playerid][pKickAdm] =
+    PI[playerid][pWarnAdm] =
+    PI[playerid][pBanAdm] =
+    PI[playerid][pMuteAdm] =
+    PI[playerid][pJailAdm] =
+    PI[playerid][pUsedJail] = 0;
+
+    UpdatePlayerData(playerid, "pInv", PI[playerid][pInv]);
+    UpdatePlayerData(playerid, "pRepAdm", PI[playerid][pRepAdm]);
+    UpdatePlayerData(playerid, "pKickAdm", PI[playerid][pKickAdm]);
+    UpdatePlayerData(playerid, "pWarnAdm", PI[playerid][pWarnAdm]);
+    UpdatePlayerData(playerid, "pBanAdm", PI[playerid][pBanAdm]);
+    UpdatePlayerData(playerid, "pMuteAdm", PI[playerid][pMuteAdm]);
+    UpdatePlayerData(playerid, "pJailAdm", PI[playerid][pJailAdm]);
+    UpdatePlayerData(playerid, "pUsedJail", PI[playerid][pUsedJail]);
+
+    mysql_format(connects, query, sizeof(query), "UPDATE `accounts` SET `CMDaccess` = '%s', `pPrefix` = '%s' WHERE `Name` = '%e'", CMDaccess,PI[playerid][pPrefix],PI[playerid][pNames]);
+    mysql_function_query(connects, query, false, "", "");
+
+
+    Iter_Remove(Admin, playerid);
+    ClearKillFeed(playerid);
+    format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pAdmin` = '0', `pDostup` = '0', `vigs` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    return 1;
+}
+stock showSettings(playerid) {
+    new spawn[25],walk[25],talk[25];
+    switch(PI[playerid][Settings][2]) {
+    case 0: spawn = "{33AA33}Стандарт. спавн";
+    case 1: spawn = "{33AA33}Фракция";
+    case 2: spawn = "{33AA33}Квартира";
+    }
+    switch(PI[playerid][Settings][3]) {
+    case 0: walk = "{33AA33}Стандартная";
+    default: format(walk,sizeof(walk),"{33AA33}Походка %d",PI[playerid][Settings][3]);
+    }
+    switch(PI[playerid][Settings][4]) {
+    case 0: talk = "{33AA33}Стандартный";
+    default: format(talk,sizeof(talk),"{33AA33}Стиль %d",PI[playerid][Settings][4]);
+    }
+    format(stringer,sizeof(stringer),"\
+    {ffffff}1. Показывать действия администрации\t %s\n\
+    {ffffff}2. Чат организации\t %s\n\
+    {ffffff}3. Спавн персонажа\t %s\n\
+    {ffffff}4. Стиль походки\t %s\n\
+    {ffffff}5. Стиль разговора\t %s\n\
+    {ffffff}6. Установить время\n\
+    {ffffff}7. Очистить чат",
+    (PI[playerid][Settings][1] < 1) ? ("{33AA33}Да") : ("{AA3333}Нет"),
+    (PI[playerid][Settings][5] < 1) ? ("{33AA33}Да") : ("{AA3333}Нет"),
+    spawn, walk, talk);
+    SPD(playerid,9973,2,""SERVER"Личные настройки | Settings",stringer,"Дальше","Назад");
+    return 1;
+}
+public OnPlayerStreamIn(playerid, forplayerid) {
+    if(PI[playerid][Settings][0] == 1) ShowPlayerNameTagForPlayer(playerid,forplayerid,0);
+    return 1;
+}
+publics: AnimationWalk(playerid) {
+    new keyss, updown, leftright;
+    GetPlayerKeys(playerid,keyss,updown,leftright);
+    if(PI[playerid][Settings][3] != 0) {
+        if ((keyss & KEY_WALK && updown & KEY_UP) || (keyss & KEY_WALK && updown & KEY_DOWN) || (keyss & KEY_WALK && leftright & KEY_LEFT) || (keyss & KEY_WALK && leftright & KEY_RIGHT)) {
+            KillTimer(GetPVarInt(playerid,"playerWalkTimer"));
+            if(GetPlayerAnimationIndex(playerid) != 1161 && GetPlayerAnimationIndex(playerid) != 1167 && GetPlayerAnimationIndex(playerid) != 1163 && AntiSbiv[playerid] < gettime())
+            {
+                FIXES_ApplyAnimation(playerid,"PED",Anims[PI[playerid][Settings][3] - 1],4.1,1,1,1,1,1);
+                SetPVarInt(playerid,"playerWalkTimer",_:SetTimerEx("AnimationWalk",200,0,"d",playerid));
+            }
+        }
+        else {
+            if(GetPlayerAnimationIndex(playerid) != 1161 && GetPlayerAnimationIndex(playerid) != 1167 && GetPlayerAnimationIndex(playerid) != 1163 && AntiSbiv[playerid] < gettime()) FIXES_ApplyAnimation(playerid,"PED",Anims[PI[playerid][Settings][3] - 1],4.0,0,0,0,0,1);
+            KillTimer(GetPVarInt(playerid,"playerWalkTimer"));
+        }
+    }
+    return 1;
+}
+stock ToggleLock(playerid,vehicleid)
+{
+    if(GetVehicleParam(vehicleid, V_LOCK))
+    {
+        SetPlayerChatBubble(playerid,"открыл(а) автомобиль",COLOR_PURPLE,30.0,10000);
+        SetVehicleParam(vehicleid, V_LOCK, 0);
+
+        GameTextForPlayer(playerid, "~w~~n~~n~~n~~n~~n~~n~~n~~n~~n~~n~CAR~g~ OPEN", 3000, 3);
+    }
+    else
+    {
+        SetPlayerChatBubble(playerid,"закрыл(а) автомобиль",COLOR_PURPLE,30.0,10000);
+        SetVehicleParam(vehicleid, V_LOCK, 1);
+
+        GameTextForPlayer(playerid, "~w~~n~~n~~n~~n~~n~~n~~n~~n~~n~~n~CAR~r~ LOCK", 3000, 3);
+    }
+    return 1;
+}
+
+stock IsACar(vehicleid)
+{
+    switch (GetVehicleModel(vehicleid))
+    {
+        case 416, 445, 602, 485, 568, 429, 499, 424, 536, 496, 504, 422, 609,
+        498, 401, 575, 518, 402, 541, 482, 431, 438, 457, 527, 483, 524, 415,
+        542, 589, 480, 596, 599, 597, 598, 578, 486, 507, 562, 585, 427, 419,
+        587, 490, 528, 533, 544, 407, 565, 455, 530, 526, 466, 604, 492, 474,
+        434, 502, 503, 494, 579, 545, 411, 546, 559, 508, 571, 400, 403, 517,
+        410, 551, 500, 418, 572, 423, 516, 582, 467, 404, 514, 603, 600, 413,
+        426, 436, 547, 489, 441, 594, 564, 515, 479, 534, 505, 442, 440, 475,
+        543, 605, 495, 567, 428, 405, 535, 458, 580, 439, 561, 409, 560, 550,
+        506, 601, 574, 566, 549, 420, 459, 576, 583, 451, 558, 552, 540, 491,
+        412, 478, 421, 529, 555, 456, 554, 477: return 1;
+    }
+    return 0;
+}
+
+public OnVehicleDeath(vehicleid, killerid)
+{
+    new action_type2 = GetVehicleData(vehicleid, V_ACTION_TYPE);
+    if(action_type2 == VEHICLE_ACTION_TYPE_RAZVOZ)
+    {
+        DestroyVehicle(vehicleid);
+        foreach(new i : Player)
+        {
+            if(moped_online[i] == vehicleid)
+            {
+                moped_online[i] = INVALID_VEHICLE_ID;
+                break;
+            }
+
+        }
+    }
+
+    //стробскопы
+    if (g_vehicle_params[vehicleid][vStrobStatus])
+    {
+        KillTimer(g_vehicle_params[vehicleid][vStrobTimer]);
+        SetVehicleParam(vehicleid, vStrobStatus, false);
+    }
+
+    if(VehicleTeam[vehicleid])
+    {
+        for(new i = 0; i < sizeof(ORGANIZATION_CAR_INFO); i ++)
+        {
+            if(ORGANIZATION_CAR_INFO[i][TEAM_ID] == VehicleTeam[vehicleid] && ORGANIZATION_CAR_INFO[i][MODEL_ID] == GetVehicleModel(vehicleid))
+            {
+                ORGANIZATION_CAR_INFO[i][CARS_COUNT]++;
+                DestroyVehicle(vehicleid);
+
+                VehicleTeam[vehicleid] =
+                PlayerVeh[VehicleOwner[vehicleid]] =
+                VehicleOrg[VehicleOwner[vehicleid]] =
+                VehicleOwner[vehicleid] = 0;
+
+                break;
+            }
+        }
+    }
+
+    if(RentBikePickupIDX[vehicleid] != -1)
+    {
+        DestroyVehicle(vehicleid);
+        SetRentBikePickupTenantsCount(RentBikePickupIDX[vehicleid], GetRentBikePickupTenantsCount(RentBikePickupIDX[vehicleid])-1);

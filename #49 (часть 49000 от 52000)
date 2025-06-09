@@ -1,0 +1,1000 @@
+
+    for(new i=0;i<6;i++)
+    {
+        if(PI[playerid][pSlotItem][i]!=0) GiveItem(playerid,PI[playerid][pSlotItem][i]);
+    }
+
+    format(mystring, 18, "%s", PI[playerid][pSex] ? ("Переоделся") : ("Переоделась"));
+    SetPlayerChatBubble(playerid, mystring, COLOR_GREEN, 10.0, 5000);
+
+    if(!PI[playerid][pMember])
+    {
+        PI[playerid][pChar] = skinid;
+        mysql_format(connects, mystring, sizeof mystring, "UPDATE `accounts` SET `pChar` = '%d' WHERE `Name` = '%s'", PI[playerid][pChar], PI[playerid][pNames]);
+    }
+    else
+    {
+        PI[playerid][pModel] = skinid;
+        mysql_format(connects, mystring, sizeof mystring, "UPDATE `accounts` SET `pModel` = '%d' WHERE `Name` = '%s'", PI[playerid][pModel], PI[playerid][pNames]);
+    }
+
+    if(save) mysql_tquery(connects, mystring);
+
+    return 1;
+}
+
+stock ClearKillFeed(playerid = INVALID_PLAYER_ID)
+{
+    if((playerid != INVALID_PLAYER_ID) && (0 == IsPlayerConnected(playerid)))
+    return 0;
+    goto L_start;
+    {
+        new dummy[16/(cellbits/charbits)];
+        #emit const.pri dummy
+    }
+#if __Pawn < 0x030A
+    SendDeathMessage(0, 0, 0),
+    SendDeathMessageToPlayer(0, 0, 0, 0);
+#endif
+    L_start:
+    const SDM_MAGIC_ID = INVALID_PLAYER_ID-1;
+    new i = 5;
+    #emit    push.c    SDM_MAGIC_ID
+    #emit    push.c    SDM_MAGIC_ID
+    if(playerid == INVALID_PLAYER_ID)
+    {
+        #emit    push.c    12
+        do{
+            #emit    sysreq.c    SendDeathMessage
+        }while(--i != 0);
+        #emit    stack    12
+    }
+    else
+    {
+        #emit    push.s    playerid
+        #emit    push.c    16
+        do{
+            #emit    sysreq.c    SendDeathMessageToPlayer
+        }while(--i != 0);
+        #emit    stack    16
+    }
+    return 1;
+}
+stock ServerBan(playerid, name[], time, reason[], type = 0)
+{
+    new unbandate = gettime() + time*86400;
+    if(!type) mysql_format(connects, mysql_query_, sizeof(mysql_query_), "INSERT INTO `"TABLE_BANLOG"` (`name`, `admin`, `date`, `unbandate`, `reason`) VALUES ('%s', '%s', '%d', '%d', '%e')", name, PI[playerid][pNames], gettime(), unbandate, reason);
+    else mysql_format(connects, mysql_query_, sizeof(mysql_query_), "INSERT INTO `baniplog` (`ip`, `admin`, `date`, `unbandate`, `reason`) VALUES ('%s', '%s', '%d', '%d', '%e')", name, PI[playerid][pNames], gettime(), unbandate, reason);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    return 1;
+}
+stock ExitCasino(playerid)
+{
+    if(DiceTable[playerid] != -1)
+    {
+        if(StartDice[DiceTable[playerid]] != 1)
+        {
+            if(ChooseBet[playerid] == 1)
+            {
+                new str[18];
+                GiveMoney(playerid, DiceTableInfo[DiceTable[playerid]][dBet]);
+                DiceTableInfo[DiceTable[playerid]][dBank] -= DiceTableInfo[DiceTable[playerid]][dBet];
+                format(str, sizeof(str), "%i$", DiceTableInfo[DiceTable[playerid]][dBank]);
+                TextDrawSetString(DiceBankShow[DiceTable[playerid]], str);
+            }
+        }
+        OnPlayerExitDiceTable(playerid, DiceTable[playerid]);
+    }
+    else if(RouleTable[playerid] != -1)
+    {
+        if(ChooseBet[playerid] == 1)
+        {
+            if(StartRoule[RouleTable[playerid]] != 1)
+            {
+                GiveMoney(playerid, RouleBet[playerid]);
+            }
+        }
+        OnPlayerExitRouleTable(playerid, RouleTable[playerid]);
+    }
+    else if(BlackJackTable[playerid] != -1)
+    {
+        if(ChooseBet[playerid] == 1)
+        {
+            if(StartBlackJack[BlackJackTable[playerid]] != -1)
+            {
+                GiveMoney(playerid, BlackJackBet[playerid]);
+            }
+        }
+        OnPlayerExitBlackJackTable(playerid, BlackJackTable[playerid]);
+    }
+    else if(CroupierTable[playerid] != -1)
+    {
+        switch(CroupierGame[playerid])
+        {
+        case 1: OnPlayerExitDiceTable(playerid, CroupierTable[playerid]);
+        case 2: OnPlayerExitRouleTable(playerid, CroupierTable[playerid]);
+        case 3: OnPlayerExitBlackJackTable(playerid, CroupierTable[playerid]);
+        }
+    }
+    return 1;
+}
+stock SpawnPlayerEx(playerid) {
+    new vid = GetPlayerVehicleID(playerid);
+    if(vid) {
+        new Float:pos[3];
+        GetVehiclePos(vid, pos[0], pos[1], pos[2]),
+        SetPPos(playerid, pos[0], pos[1], pos[2]);
+    }
+    return SpawnPlayer(playerid);
+}
+static stock _FIXES_GetAnimLibIndex(animlib[]) // бинарный поиск
+{
+    new
+    diff,
+    idx = animlib[0] & ~0x20;
+    if (_FIXES_IN_RANGE(idx, 'A', 'W' + 1))
+    {
+        new
+        upper = FIXES_gscAnimIndexes[idx - ('A' - 1)],
+        lower = FIXES_gscAnimIndexes[idx - 'A'];
+        while (upper != lower)
+        {
+            idx = (upper - lower) / 2 + lower;
+            if ((diff = strcmp(FIXES_gscAnimLib[idx], animlib, true)))
+            {
+                if (diff > 0) upper = idx;
+                else lower = idx + 1;
+            }
+            else
+            {
+                return idx;
+            }
+        }
+    }
+    return -1;
+}
+static stock _FIXES_ApplyAnimationDelay(animname[], playerid, idx, Float:fDelta, loop, lockx, locky, freeze, time, forcesync = 0)
+{
+    if (FIXES_gsPlayerAnimTimer[playerid]) {
+        KillTimer(FIXES_gsPlayerAnimTimer[playerid]),
+        FIXES_gsPlayerAnimTimer[playerid] = 0;
+    }
+    if (FIXES_gsPlayerAnimLibs[playerid][idx >>> 5] & (1 << (idx & 0x1F))) {
+        FIXES_gsPlayerAnimLibs[playerid][idx >>> 5] &= ~(1 << (idx & 0x1F)),
+        FIXES_gsPlayerAnimName[playerid][0] = '\0',
+        strcat(FIXES_gsPlayerAnimName[playerid], animname);
+        FIXES_gsPlayerAnimTimer[playerid] = SetTimerEx("_FIXES_ApplyAnimation", 350, false, "ddfdddddd", playerid, idx, fDelta, loop, lockx, locky, freeze, time, forcesync);
+    }
+}
+publics: _FIXES_ApplyAnimation(playerid, animlib, Float:fDelta, loop, lockx, locky, freeze, time, forcesync) {
+    ApplyAnimation(playerid, FIXES_gscAnimLib[animlib], FIXES_gsPlayerAnimName[playerid], fDelta, loop, lockx, locky, freeze, time, forcesync),
+    FIXES_gsPlayerAnimTimer[playerid] = 0;
+}
+stock FIXES_ApplyAnimation(playerid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time, forcesync = 0)
+{
+    new idx = _FIXES_GetAnimLibIndex(animlib);
+    if(idx != -1) {
+        _FIXES_ApplyAnimationDelay(animname, playerid, idx, fDelta, loop, lockx, locky, freeze, time, forcesync);
+        return ApplyAnimation(playerid, animlib, animname, fDelta, loop, lockx, locky, freeze, time, forcesync);
+    }
+    return 0;
+}
+
+new temp_timer[MAX_PLAYERS];
+
+stock PlayerRegisterMySQL(playerid)
+{
+    GetDevice(playerid);
+    new year, month, day, hour, minuite, second, strstre[50],
+    randphone = 100000 + random(899999);
+    getdate(year, month, day);
+    gettime(hour,minuite,second);
+    format(strstre,sizeof(strstre),"%d/%d/%d %d:%d",day,month,year,hour,minuite);
+    strmid(PI[playerid][pIpReg], PI[playerid][pIP], 0, strlen(PI[playerid][pIP]), 17);
+    PI[playerid][pPnumber] = randphone;
+    for(new i; i < 10; i++) PI[playerid][pSalt][i] = random(79) + 47;
+    PI[playerid][pSalt][10] = 0;
+    SHA256_PassHash(CheckPass[playerid], PI[playerid][pSalt], PI[playerid][pPassword], 65);
+    SetPlayerVirtualWorld(playerid, 0);
+    mysql_format(connects, mysql_query_, sizeof(mysql_query_), "INSERT INTO `"TABLE_ACCOUNT"` (`password`, `salt`, `Name`, `pSex`, `pChar`, `pPnumber`, `pDataReg`, `pIpReg`, `pEmail`, `pOnline`, `pGetonIP`, `age`, `national`) VALUES ('%e', '%e', '%e', '%d', '%d', '%d', '%s', '%s', '%s', '%d', '%s', '%d', '%d')",
+    PI[playerid][pPassword], PI[playerid][pSalt], PI[playerid][pNames], PI[playerid][pSex], PI[playerid][pChar], PI[playerid][pPnumber], strstre, PI[playerid][pIpReg], PI[playerid][pEmail], playerid, PI[playerid][pIP], PI[playerid][pAge], PI[playerid][pNational]);
+    mysql_tquery(connects, mysql_query_, "OnAccountCreated", "d", playerid);
+    PI[playerid][pDonatemoney2] = 0; // Бонус доната
+    PI[playerid][pCash] = 500; // Бонус денег
+    PI[playerid][pMobile] = 0; // Сколько на мобильник ложит автоматически
+    PI[playerid][pVodPrava] = 0; // Водительские права [1 - Есть | 0 - Нет ]
+    PI[playerid][pGunLic] = 1; // Лицензия на оружие [1 - Есть | 0 - Нет ]
+    PI[playerid][P_CAR_SLOT] = 1; // слоты доступные
+    gPlayerLogged[playerid] = 1;
+    DeletePVar(playerid, "Registration");
+    SpawnPlayerEx(playerid);
+    CheckPass[playerid][0] = 0;
+    SetPlayerScore(playerid, PI[playerid][pLevel]);
+    ClearBank(playerid);
+
+    reg_players++;
+    return 1;
+}
+
+@_give_premium_car_to_player(playerid);
+@_give_premium_car_to_player(playerid)
+{
+    new random_time;
+    random_time = RandomEx(1, 5);
+
+    PI[playerid][pPremiumCar] = 1;
+    UpdatePlayerData(playerid, "pPremiumCar", PI[playerid][pPremiumCar]);
+
+    PI[playerid][pPremiumHours] = random_time;
+    UpdatePlayerData(playerid, "pPremiumHours", PI[playerid][pPremiumHours]);
+
+    new scm_string[94];
+    if(random_time != 1) format(scm_string, sizeof(scm_string), "Вы сможете забрать премиум автомобиль через %d час(-а), используя команду: {FF9900}/premcar", random_time - 1);
+    else format(scm_string, sizeof(scm_string), "Вы можете забрать премиум автомобиль сейчас, используя команду: {FF9900}/premcar");
+    SendClientMessage(playerid, COLOR_WHITE, scm_string);
+    return KillTimer(temp_timer[playerid]);
+}
+
+publics: OnAccountCreated(playerid) {
+    PI[playerid][pID] = cache_insert_id();
+    OnPlayerUpdateRL(playerid);
+    return 1;
+}
+stock gmtime(timestamp, &year = EPOCH_YR, &month = 1, &day = 1, &hour = 0, &minute = 0, &second = 0) // Конвертер из UNIX времени
+{
+    static dayclock;
+
+    year = EPOCH_YR;
+    dayclock = timestamp % SECS_DAY;
+    day = timestamp / SECS_DAY;
+
+    second = dayclock % 60;
+    minute = (dayclock % 3600) / 60;
+    hour = dayclock / 3600;
+
+    while (day >= YEARSIZE(year)) {
+        day -= YEARSIZE(year);
+        year++;
+    }
+
+    month = 0;
+
+    while (day >= _ytab[LEAPYEAR(year)][month]) {
+        day -= _ytab[LEAPYEAR(year)][month];
+        month++;
+    }
+
+    day++;
+    month++;
+}
+stock fracSpawn(playerid,team_id)
+{
+    SetPlayerPosEx
+    (
+    playerid,
+    GetTeamData(team_id, O_SPAWN)[0],
+    GetTeamData(team_id, O_SPAWN)[1],
+    GetTeamData(team_id, O_SPAWN)[2],
+    GetTeamData(team_id, O_SPAWN)[3],
+    GetTeamData(team_id, O_SPAWN_INT),
+    GetTeamData(team_id, O_SPAWN_VW)
+    );
+    SetPlayerSkin(playerid, PI[playerid][pModel]);
+    return 1;
+}
+stock SetPlayerPosEx(playerid, Float: x, Float: y, Float: z, Float: angle, interior = -1, virtual_world = -1)
+{
+    SetPlayerPos(playerid, x, y, z);
+
+    SetPlayerFacingAngle(playerid, angle);
+    SetCameraBehindPlayer(playerid);
+
+    if(interior != -1 && GetPlayerInterior(playerid) != interior)
+    {
+        SetPlayerInterior(playerid, interior);
+    }
+    if(virtual_world != -1 && GetPlayerVirtualWorld(playerid) != virtual_world)
+    {
+        SetPlayerVirtualWorld(playerid, virtual_world);
+    }
+    return 1;
+}
+stock GetPlayerAdmin(playerid)
+{
+    if(PI[playerid][pAdmin] >= 1) return 1;
+    return 0;
+}
+/*
+stock RandomCase(playerid, number)
+{
+    switch(number)
+    {
+        case 0:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 100 Donate Rub");
+            PI[playerid][pRub] += 100;
+        }
+        case 1:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 150 Donate Rub");
+            PI[playerid][pRub] += 150;
+        }
+        case 2:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 200 Donate Rub");
+            PI[playerid][pRub] += 200;
+        }
+        case 3:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 250 Donate Rub");
+            PI[playerid][pRub] += 250;
+        }
+        case 4:
+        {
+        /    SendClientMessage(playerid, -1, "Вы выйграли 290 Donate Rub");
+            PI[playerid][pRub] += 290;
+        }
+        case 5:
+        {
+            if(PI[playerid][pAdmin] == 12)
+            return SendClientMessage(playerid, -1, "Вы выйграли ADMIN +1 lvl, но вы уже максимальный уровень!");
+
+            SendClientMessage(playerid, -1, "Вы выйграли АДМИН +1 lvl");
+            PI[playerid][pAdmin] += 1;
+        }
+        case 6:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 500.000$");
+            PI[playerid][pCash] += 500000;
+        }
+        case 7:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 1.500.000$");
+            PI[playerid][pCash] += 1500000;
+        }
+        case 8:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 2.500.000$");
+            PI[playerid][pCash] += 2500000;
+        }
+        case 9, 10:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 3.500.000$");
+            PI[playerid][pCash] += 3500000;
+        }
+        case 10:
+        {
+            if(PI[playerid][pHelper] == 8)
+            return SendClientMessage(playerid, -1, "Вы выйграли HELPER +1 lvl, но вы уже максимальный уровень!");
+
+            SendClientMessage(playerid, -1, "Вы выйграли HELPER +1 lvl");
+            PI[playerid][pHelper] += 1;
+        }
+        case 15:
+        {
+            switch(random(5))
+            {
+           case 0:
+                {
+                    SendClientMessage(playerid, -1, "Вы выйграли HELPER 3 lvl");
+                    PI[playerid][pHelper] = 3;
+                }
+            case 1:
+                {
+                    SendClientMessage(playerid, -1, "Вы выйграли Admin 3 lvl");
+                    PI[playerid][pAdmin] = 3;
+                }
+            case 2:
+                {
+                    SendClientMessage(playerid, -1, "Вы выйграли АДМИНКУ 12 УРОВНЯ!!!");
+                    PI[playerid][pAdmin] = 12;
+                }
+            default: SendClientMessage(playerid, -1, "Коэффициент удачи повышен!");
+            }
+        }
+        default:
+        {
+            SendClientMessage(playerid, -1, "Вы выйграли 30.500.000$");
+            PI[playerid][pCash] += 30500000;
+        }
+    }
+    UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+    UpdatePlayerData(playerid, "pAdmin", PI[playerid][pAdmin]);
+    // UpdatePlayerData(playerid, "pHelper", PI[playerid][pHelper]);
+    UpdatePlayerData(playerid, "pCash", PI[playerid][pCash]);
+    return 1;
+}
+*/
+stock BuyAdminPoint(playerid, lvl, price, donate)
+{
+    if(PI[playerid][year_point] < price)
+    {
+        SendClientMessage(playerid, COLOR_GREY, "У Вас недостаточно донат поинтов, Заработать их выполняя задания от дед мороза");
+
+        if(donate > PI[playerid][pDonateRubNew])
+        SendClientMessage(playerid, COLOR_GREY, "У вас недостаточно F - Coins Пополнить свой счет можно у нас на сайте > > {FF4500}WIPE PROJECT");
+        return 1;
+    }
+    PI[playerid][year_point] -= price;
+    PI[playerid][pDonateRubNew] -= donate;
+    new string[246];
+
+    PI[playerid][pAdmin] = lvl;
+    mysql_format(connects,string, 246, "UPDATE `"TABLE_ACCOUNT"` SET `pAdmin` = '%d', `pRubNAX` = '%d' WHERE `pID` = '%d'", PI[playerid][pAdmin], PI[playerid][pDonateRubNew], PI[playerid][pID]);
+    SendClientMessage(playerid, COLOR_GREEN, ""SERVER"Вы успешно повысили свой уровень админ-прав !");
+    SendClientMessage(playerid, COLOR_GREEN, ""SERVER"Используйте "SERVER"/ahelp, "SERVER"чтобы узнать о новых возможностях");
+    format(stringer, sizeof(stringer), "[ADM-LOG] Администратор %s повысил свой уровень админ-прав до {00ff00}'%d уровня' |", PI[playerid][pNames], PI[playerid][pAdmin]);
+    SendAdminMessage(COLOR_GREY, stringer); // сообщение админам при повышении админ-уровн
+    return 1;
+}
+
+forward ContTimer(cont_id);
+public ContTimer(cont_id)
+{
+    new string[216];
+    if(g_cont[cont_id][C_TIME] > gettime())
+    {
+        format(string, 216, "{FFFFFF}Контейнер {FFFF00}№%d\n{FFFFFF}Может содержать {FFFF00}%s\n{FFFFFF}Текущая ставка {FFFF00}%s от %s\n{FFFF00} Поставить ставку /betcont\n(осталось %d секунд)",cont_id+1, g_cont[cont_id][C_NAME], formatInt(g_cont[cont_id][C_BET]), PI[g_cont[cont_id][C_LEADER_BET]][pNames],g_cont[cont_id][C_TIME]-gettime());
+    }
+    else
+    {
+        new playerid = g_cont[cont_id][C_LEADER_BET];
+        KillTimer(g_cont[cont_id][C_TIMER]);
+
+        PI[playerid][P_OPEN_CONT] ++;
+
+        UpdatePlayerData(playerid, "open_cont", PI[playerid][P_OPEN_CONT]);
+
+        if(PI[playerid][P_OPEN_CONT] == 3)
+        {
+            //PI[playerid][pDonateRubNew] += 20;
+            PI[playerid][P_QUEST][3] = 1;
+            UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+            UpdatePlayerData(playerid, "quest_3", PI[playerid][P_QUEST][3]);
+        }
+
+        g_cont[cont_id][C_BET] = g_cont[cont_id][C_PRICE];
+        switch(g_cont[cont_id][C_TYPE_GIFT])
+        {
+        case 1:
+            {
+
+                new model = GiftCar[random(4)];
+                SetPVarInt(g_cont[cont_id][C_LEADER_BET], "PriseCar", model);
+                format(string, 64, "Модель: "SERVER"%s", g_vehicle_info[model-400][VI_NAME]);
+                ShowPlayerDialog
+                (
+                g_cont[cont_id][C_LEADER_BET],2325,DIALOG_STYLE_MSGBOX,
+                string,
+                "{ffffff}Вы действительно хотите забрать данный транспорт?",
+                "Принять","Закрыть"
+                );
+
+            }
+        case 2:
+            {
+                new skin = GiftSkin[random(4)];
+                SetPlayerSkin(g_cont[cont_id][C_LEADER_BET], skin);
+                UpdatePlayerData(playerid, "pChar", skin);
+
+                SendClientMessage(g_cont[cont_id][C_LEADER_BET], COLOR_WHITE, !"{afafaf}Ваш приз - скин.");
+            }
+       // case 3:RandomAks(g_cont[cont_id][C_LEADER_BET]);
+        case 3:
+            {
+                new donate_win = random(15)+5;
+                SCMF(g_cont[cont_id][C_LEADER_BET], -1, "Вы выйграли {FFFF00}%d{ffffff} F - Coins использовать их вы можете{FFFF00} /drub", donate_win);
+                PI[g_cont[cont_id][C_LEADER_BET]][pDonateRubNew] += donate_win;
+            }
+
+        }
+
+        format(string, 186, "{FFFFFF}Контейнер {FFFF00}№%d\n{FFFFFF}Может содержать {FFFF00}%s\n{FFFFFF}Стартовая цена {FFFF00}%s\n{FFFF00} Поставить ставку /betcont",cont_id+1, g_cont[cont_id][C_NAME], formatInt(g_cont[cont_id][C_PRICE]));
+        g_cont[cont_id][C_LEADER_BET] = -1;
+    }
+    UpdateDynamic3DTextLabelText(g_cont[cont_id][C_LABEL], 0xFFFF00FF, string);
+    return 1;
+}
+publics: LoadCont()
+{
+    new string[186];
+    for(new i = 0; i < sizeof(g_cont); i++)
+    {
+        format(string, 186, "{FFFFFF}Контейнер {FFFF00}№%d\n{FFFFFF}Может содержать {FFFF00}%s\n{FFFFFF}Стартовая цена {FFFF00}%d$\n{FFFF00} Поставить ставку /betcont",i+1, g_cont[i][C_NAME], g_cont[i][C_PRICE]);
+        // CreateDynamicObject(2932, g_cont[i][C_SPAWN][0], g_cont[i][C_SPAWN][1], g_cont[i][C_SPAWN][2], 0.0, 0.0, 90.0);
+
+        g_cont[i][C_LABEL] = CreateDynamic3DTextLabel(string, COLOR_GREEN, g_cont[i][C_SPAWN][0]+3.7399, g_cont[i][C_SPAWN][1], g_cont[i][C_SPAWN][2], 10.0);
+        g_cont[i][C_BET] = g_cont[i][C_PRICE];
+    }
+    return 1;
+}
+stock IsAPointContainter(playerid)
+{
+    for(new i = 0; i < sizeof(g_cont); i++)
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 2.0, g_cont[i][C_SPAWN][0]+3.7399, g_cont[i][C_SPAWN][1], g_cont[i][C_SPAWN][2])) return i+1;
+    }
+    return 0;
+}
+cmd:betcont(playerid)
+{
+    if(PI[playerid][pPayDayHad] < 3) return SendClientMessage(playerid, COLOR_WHITE, "{0095FF}Необходимо отыграть {00cc00}3 {0095FF}часа на сервере (/mm - Статистика персонажа)!");
+
+    new newhour, newminute, newsecond;
+    gettime(newhour, newminute, newsecond);
+
+  //    if(newhour < 12 || newhour > 21) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Контейнеры доступны с 12:00 до 21:00");
+
+    new l_string[32],string[158];
+    if(IsAPointContainter(playerid))
+    {
+        if(g_cont[IsAPointContainter(playerid)-1][C_TYPE_GIFT] == 1)
+        {
+            if(GetPlayerOwnableCar(playerid) != INVALID_VEHICLE_ID)
+            {
+                SendClientMessage(playerid, 0xCECECEFF, "Для игры тут нужно выгрузить уже загруженный транспорт с сервера");
+                RemovePlayerFromVehicle(playerid);
+                return -1;
+            }
+
+            if((GetPlayerOwnableCars(playerid) + 1) > PI[playerid][P_CAR_SLOT])
+            {
+                SendClientMessage(playerid, 0x1E90FFFF, "Все слоты для транспорта заняты. Вы можете увеличить их: {6666CC}/mm > Дополнительные возможности");
+                RemovePlayerFromVehicle(playerid);
+                return -1;
+            }
+        }
+        format(string, 158,  "{FFFFFF}Текущая ставка {ffff00}%d\n{FFFFFF} Введите вашу ставку в окошко ниже\n{FF4500} ВНИМАНИЕ ЕСЛИ ВАШУ СТАВКУ ПЕРЕБЬЮТ ДЕНЬГИ НЕ БУДЕТ ВОЗВРАЩЕНЫ!!\nТак же ваша ставка должна быть выше ставки оппонента не менее чем на 100.000$", g_cont[IsAPointContainter(playerid)-1][C_BET]);
+        format(l_string, 32, "{ffff00}%s", g_cont[IsAPointContainter(playerid)-1][C_NAME]);
+        SPD(playerid, 2228, DIALOG_STYLE_INPUT, l_string, string, "Далее", "Отмена");
+    }
+    return 1;
+}
+stock IsNumeric(dest[], pos=0)
+{
+    new is_numeric = true;
+    do
+    {
+        switch(dest[pos])
+        {
+        case '0'..'9': continue;
+        default:
+            {
+                is_numeric = false;
+                break;
+            }
+        }
+    }
+    while(dest[++pos]);
+
+    return is_numeric;
+}
+
+/*
+stock RandomAks(playerid)
+{
+    switch(random(4))
+    {
+        case 0:
+        {
+            switch(random(2))
+            {
+            case 0:
+                {
+                    GiveItem(playerid,19487);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][0]=19487;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальный колпак. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            case 1:
+                {
+                    GiveItem(playerid,19352);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][0]=19352;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальный колпак. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            }
+        }
+        case 1:
+        {
+            switch(random(2))
+            {
+                case 0:
+                {
+                    GiveItem(playerid,19351);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][3]=19351;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальные усы. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 1:
+                {
+                    GiveItem(playerid,19350);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][3]=19350;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальные усы. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            }
+        }
+        case 2:
+        {
+            switch(random(3))
+            {
+                case 0:
+                {
+                    GiveItem(playerid,19319);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][5]=19319;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальную гитару. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 1:
+                {
+                    GiveItem(playerid,19318);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][5]=19318;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальную гитару. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 2:
+                {
+                    GiveItem(playerid,19317);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][5]=19317;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальную гитару. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            }
+        }
+        case 3:
+        {
+            switch(random(2))
+            {
+                case 0:
+                {
+                    GiveItem(playerid,19487);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][0]=19487;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальный колпак. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 1:
+                {
+                    GiveItem(playerid,19352);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][0]=19352;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальный колпак. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            }
+            switch(random(2))
+            {
+                case 0:
+                {
+                    GiveItem(playerid,19351);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][3]=19351;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальные усы. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 1:
+                {
+                    GiveItem(playerid,19350);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][3]=19350;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальные усы. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            }
+            switch(random(3))
+            {
+                case 0:
+                {
+                    GiveItem(playerid,19319);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][5]=19319;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальную гитару. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 1:
+                {
+                    GiveItem(playerid,19318);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][5]=19318;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальную гитару. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+                case 2:
+                {
+                    GiveItem(playerid,19317);
+                    FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+                    PI[playerid][pSlotItem][5]=19317;
+                    SendClientMessage(playerid,COLOR_YELLOW,"Поздравляем! В этот раз вам удалось купить уникальную гитару. (Если вы хотите получить всю сборку, пробуйте еще раз!)");
+                }
+            }
+
+        }
+    }
+    format(PI[playerid][pSlotItems],64,"%d,%d,%d,%d,%d,%d",PI[playerid][pSlotItem][0],PI[playerid][pSlotItem][1],PI[playerid][pSlotItem][2],PI[playerid][pSlotItem][3],PI[playerid][pSlotItem][4],PI[playerid][pSlotItem][5]);
+    format(mysql_query_, sizeof(mysql_query_),"UPDATE `"TABLE_ACCOUNT"` SET `acessories` = '%s' WHERE `pID` = '%d'", PI[playerid][pSlotItems], PI[playerid][pID]);
+    mysql_tquery(connects, mysql_query_, "", "");
+    PlayerPlaySound(playerid, 30802, 0.0, 0.0, 0.0);
+    Buyitem[playerid] = -1;
+    PI[playerid][pType]=-1;
+    SetPVarInt(playerid,"timetobuy2",0);
+}
+*/
+cmd:connectpc(playerid)
+{
+    if(FD(playerid))
+    {
+        allow_pc = allow_pc ^ true;
+        SCMF(playerid, -1, "Вход с ПК %s",allow_pc ? ("{66CC33}Открыт") : ("{CC3333}Закрыт"));
+    }
+}
+cmd:serverset(playerid)
+{
+    if(FD(playerid))
+    {
+        new fmt_settings[356];
+        format(
+        fmt_settings, sizeof(fmt_settings),
+        "Вход с ПК > %s <\n\
+            Цена на админку > %d rub <\n\
+            Цена на хелперку > %d rub <\n\
+            {ffff00}Настройки АНТИЧИТА\n\
+            Текущий средний tickrate: %d", allow_pc ? ("Включен"): ("Отключен"), adminprice, helpprice, GetServerTickRate());
+        SPD
+        (
+        playerid, 2226, DIALOG_STYLE_LIST,
+        "Настройки сервера",
+        fmt_settings,
+        "Изменить", "Закрыть"
+        );
+    }
+}
+
+/*
+stock //RemoveBadWords(text[])
+{
+    for(new i = sizeof(bad_words) - 1, l = strlen(text), f, d; i != -1; --i)
+    {
+        f = -1;
+        d = strlen(bad_words[i]);
+        while((f = strfind(text, bad_words[i], true, f + 1)) > 0)
+        {
+            switch(text[f - 1])
+            {
+                case 0..64, 91..96, 123..127:
+                {
+                    if(f + d >= l) return 1;
+                    switch(text[f + d])
+                    {
+                        case 0..64, 91..96, 123..127: return 1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+
+}
+*/
+stock GetDevice(playerid)
+{
+    new buffer[40+1];
+    gpci(playerid, buffer, sizeof(buffer));
+
+    if(!strcmp(buffer, "3952314F524834355456464955525858554F3353"))
+    {
+        PI[playerid][P_PLAYER_DEVICE] = 1;
+        return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Спасибо Вам, что используете наш клиент!");
+    }
+    if(!strcmp(buffer, "952314F54834355456464955525858554F3353"))
+    {
+        PI[playerid][P_PLAYER_DEVICE] = 2;
+        SPD
+        (
+        playerid, 0, DIALOG_STYLE_MSGBOX, "ВНИМАНИЕ",
+        "ПОЖАЛУЙСТА, ОБНОВИТЕ КЛИЕНТ НА НОВЫЙ, В НЕМ ИСПРАВЛЕНЫ ОШИБКИ И КРАШИ.\n\
+            НАЙТИ ИНСТРУКЦИЮ ПО ОБНОВЛЕНИЮ КЛИЕНТА МОЖНО В ГРУППЕ ВК vk.com/futile.russia",
+        "Okey",""
+        );
+        return 2;
+    }
+    return 0;
+}
+
+stock WHITELIST(playerid)
+{
+    new name[64];
+    GetPlayerName(playerid, name, 64);
+    mysql_format(connects, stringer1, sizeof(stringer1), "SELECT * FROM `white_list` WHERE name = '%s'", name);
+    mysql_query(connects, stringer1, true);
+    if(cache_num_rows())
+    return 1;
+    else
+    return 0;
+}
+
+stock FD(playerid)
+{
+    new name[64];
+    GetPlayerName(playerid, name, 64);
+    mysql_format(connects, stringer1, sizeof(stringer1), "SELECT * FROM `full_dostup` WHERE name = '%s'", name);
+    mysql_query(connects, stringer1, true);
+    if(cache_num_rows())
+    return 1;
+    else
+    return 0;
+}
+
+stock IsTrailerAttachedToAnyVehicle(trailerid)
+{
+    for(new i = 1; i < MAX_VEHICLES; i ++)
+    {
+        if(!IsValidVehicle(i)) continue;
+
+        if(GetVehicleTrailer(i) == trailerid)
+        return 1;
+    }
+
+    return 0;
+}
+stock IsAOwnableCar(vehicleid)
+{
+    if(IsValidVehicleID(vehicleid))
+    {
+        if(GetVehicleData(vehicleid, V_ACTION_TYPE) == VEHICLE_ACTION_TYPE_OWNABLE_CAR)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+stock BuyOwnableExcCar(playerid, modelid, type)
+{
+    new Cache: result,
+    idx;
+
+    idx = GetFreeOwnableCarID();
+
+
+    new buy_cars_count = cars_after_purchase_count[1]++;
+
+    if(buy_cars_count >= 19) cars_after_purchase_count[1] = 0;
+
+    new Float: pos_x = cars_pos_after_purchase[1][buy_cars_count][0];
+    new Float: pos_y = cars_pos_after_purchase[1][buy_cars_count][1];
+    new Float: pos_z = cars_pos_after_purchase[1][buy_cars_count][2];
+    new Float: angle = cars_pos_after_purchase[1][buy_cars_count][3];
+
+    // ----------------------------------------------------------------------------------------
+    SetOwnableCarData(idx, OC_OWNER_ID,     PI[playerid][pID]);
+
+    SetOwnableCarData(idx, OC_MODEL_ID,     modelid);
+    SetOwnableCarData(idx, OC_COLOR_1,      random(20));
+    SetOwnableCarData(idx, OC_COLOR_2,      random(20));
+
+    SetOwnableCarData(idx, OC_POS_X,        pos_x);
+    SetOwnableCarData(idx, OC_POS_Y,        pos_y);
+    SetOwnableCarData(idx, OC_POS_Z,        pos_z);
+    SetOwnableCarData(idx, OC_ANGLE,        angle);
+
+    strmid(g_ownable_car[idx][OC_NUMBER], "------", 0, 8, 8);
+
+    SetOwnableCarData(idx, OC_KEY_IN,       false);
+
+    SetOwnableCarData(idx, OC_CREATE,       gettime());
+
+    SetOwnableCarData(idx, OC_SOZDAL, 1);
+
+    SetOwnableCarData(idx, OC_FUEL,         50.0);
+
+    format(g_ownable_car[idx][OC_OWNER_NAME], 21, PI[playerid][pNames]);
+    // ----------------------------------------------------------------------------------------
+
+    new vehicleid = CreateVehicle
+    (
+    GetOwnableCarData(idx, OC_MODEL_ID),
+    GetOwnableCarData(idx, OC_POS_X),
+    GetOwnableCarData(idx, OC_POS_Y),
+    GetOwnableCarData(idx, OC_POS_Z),
+    GetOwnableCarData(idx, OC_ANGLE),
+    GetOwnableCarData(idx, OC_COLOR_1),
+    GetOwnableCarData(idx, OC_COLOR_2),
+    -1,
+    0,
+    VEHICLE_ACTION_TYPE_OWNABLE_CAR,
+    idx
+    );
+
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        CreateVehicleLabel(vehicleid, GetOwnableCarData(idx, OC_NUMBER), 0x6666CCEE, 0.0, 0.0, 1.3, 20.0);
+        SetVehicleNumberPlate(vehicleid, GetOwnableCarData(idx, OC_NUMBER));
+        SetVehicleParam(vehicleid, V_LOCK, false);
+
+        SetVehicleData(vehicleid, V_MILEAGE, 0.0);
+        SetVehicleData(vehicleid, V_FUEL, 50.0);
+        PI[playerid][P_OWNABLE_CAR] = vehicleid;
+
+
+    }
+
+    format
+    (
+    stringer, sizeof stringer,
+    "INSERT INTO ownable_cars \
+        (owner_id,model_id,color_1,color_2,pos_x,pos_y,pos_z,angle,create_time) \
+        VALUES \
+        ('%d','%d','%d','%d','%f','%f','%f','%f','%d')",
+    PI[playerid][pID],
+    modelid,
+    GetOwnableCarData(idx, OC_COLOR_1),
+    GetOwnableCarData(idx, OC_COLOR_2),
+    pos_x,
+    pos_y,
+    pos_z,
+    angle,
+    gettime()
+    );
+
+    result = mysql_query(connects, stringer, true);
+
+    SetOwnableCarData(idx, OC_SQL_ID, cache_insert_id());
+    cache_delete(result);
+
+    if(type == 1)
+    {
+        SendClientMessage(playerid, 0x32a44bFF, "Поздравляем с активацией Lamborghini Aventador! Он был доставлен к автосалону Среднего класса!");
+        SendClientMessage(playerid, 0x32a44bFF, "Транспорт можно припарковать в любом доступном месте командой /park");
+        SendClientMessage(playerid, -1, "Вы можете улучшить свой автомобиль! Введите {6666CC}/car {ffffff}и прокачайте его прямо сейчас");
+    }
+    else
+    {
+        SendClientMessage(playerid, 0x32a44bFF, "Поздравляем с покупкой нового транспорта! Он был доставлен к автосалону Среднего класса!");
+        SendClientMessage(playerid, 0x32a44bFF, "Транспорт можно припарковать в любом доступном месте командой /park");
+        SendClientMessage(playerid, -1, "Вы можете улучшить свой автомобиль! Введите {6666CC}/car {ffffff}и прокачайте его прямо сейчас");
+    }
+
+    return 1;
+}
+
+stock buy_ownable_car(playerid, marketid, modelid)
+{
+    new idx;
+    idx = GetFreeOwnableCarID();
+
+    new buy_cars_count = cars_after_purchase_count[marketid]++;
+
+    if(buy_cars_count >= 19) cars_after_purchase_count[marketid] = 0;
+
+    new Float:pos_x = cars_pos_after_purchase[marketid][buy_cars_count][0];
+    new Float:pos_y = cars_pos_after_purchase[marketid][buy_cars_count][1];
+    new Float:pos_z = cars_pos_after_purchase[marketid][buy_cars_count][2];
+    new Float:angle = cars_pos_after_purchase[marketid][buy_cars_count][3];
+
+    // ----------------------------------------------------------------------------------------
+    SetOwnableCarData(idx, OC_OWNER_ID,     PI[playerid][pID]);
+
+    SetOwnableCarData(idx, OC_MODEL_ID,     modelid);
+    SetOwnableCarData(idx, OC_COLOR_1,      random(20));
+    SetOwnableCarData(idx, OC_COLOR_2,      random(20));
+
+    SetOwnableCarData(idx, OC_POS_X,        pos_x);
+    SetOwnableCarData(idx, OC_POS_Y,        pos_y);
+    SetOwnableCarData(idx, OC_POS_Z,        pos_z);
+    SetOwnableCarData(idx, OC_ANGLE,        angle);
+
+    strmid(g_ownable_car[idx][OC_NUMBER], "------", 0, 8, 8);
+
+    SetOwnableCarData(idx, OC_KEY_IN,       false);
+
+    SetOwnableCarData(idx, OC_CREATE,       gettime());
+
+    SetOwnableCarData(idx, OC_SOZDAL, 1);
+
+    SetOwnableCarData(idx, OC_FUEL,         50.0);
+
+    format(g_ownable_car[idx][OC_OWNER_NAME], 21, PI[playerid][pNames]);
+
+    // ----------------------------------------------------------------------------------------
+
+    new vehicleid = CreateVehicle(GetOwnableCarData(idx, OC_MODEL_ID), GetOwnableCarData(idx, OC_POS_X), GetOwnableCarData(idx, OC_POS_Y), GetOwnableCarData(idx, OC_POS_Z), GetOwnableCarData(idx, OC_ANGLE), GetOwnableCarData(idx, OC_COLOR_1), GetOwnableCarData(idx, OC_COLOR_2), -1, 0, VEHICLE_ACTION_TYPE_OWNABLE_CAR, idx);
+
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        CreateVehicleLabel(vehicleid, GetOwnableCarData(idx, OC_NUMBER), 0x6666CCEE, 0.0, 0.0, 1.3, 20.0);
+        SetVehicleNumberPlate(vehicleid, GetOwnableCarData(idx, OC_NUMBER));

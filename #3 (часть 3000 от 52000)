@@ -1,0 +1,1000 @@
+new mysql_query_[512];
+new Float:PickupX[MAX_PLAYERS],Float:PickupY[MAX_PLAYERS];
+#define TIME_PAINTBALL      600
+#define REGISTER_PAINTBALL  300
+
+new paintball,
+ScorePB[2],
+Text:PaintText[3],
+StartPaintBall,
+TimerPaintBall,
+TeamPain[MAX_PLAYERS],
+KillPain[MAX_PLAYERS],
+DeathPain[MAX_PLAYERS],
+PlayerPB[2]
+;
+
+enum PaINFO
+{
+    Name[24],
+    Kills,
+    Deaths,
+    Type,
+};
+new PaintInfo[51][PaINFO], PaintList = 0;
+//------------------------------------------------------[ Переменные ] ------------
+new bool:gIsRequestClassCalled[MAX_PLAYERS char];
+new objectplayerid;
+new bool:AlhambraDJ = true;
+new bool:JizzyDJ = true;
+new JizzyDJID = INVALID_PLAYER_ID;
+new AlhambraDJID = INVALID_PLAYER_ID;
+new JobsDJ[2];
+new Float:GMHP[MAX_PLAYERS][2];
+new Float:VEHHP[MAX_PLAYERS][2];
+new Float:GMARMOUR[MAX_PLAYERS][1];
+new parashut;
+new bool:times[MAX_PLAYERS];
+new paintulicpic,paintulicpic1,paintvnutrpic,paintvnutrpic1;
+new connects;
+new derby[11];
+new kazna = 0,nalog = 0;
+new seans[MAX_PLAYERS];
+new takephone[MAX_PLAYERS];
+new gag[MAX_PLAYERS];
+new ProposeOffer[MAX_PLAYERS];
+new soglasen[MAX_PLAYERS];
+
+// -------------------------------------------
+
+#define GetTeamData(%0,%1)              g_organization[%0-1][%1]
+
+#define GetOwnableCarData(%0,%1)        g_ownable_car[%0][%1]
+#define SetOwnableCarData(%0,%1,%2)     g_ownable_car[%0][%1] = %2
+#define AddOwnableCarData(%0,%1,%2,%3)  g_ownable_car[%0][%1] %2= %3
+
+#define GetPlayerData(%0,%1)        PI[%0][%1]
+#define SetPlayerData(%0,%1,%2)     PI[%0][%1] = %2
+#define AddPlayerData(%0,%1,%2,%3)  PI[%0][%1] %2= %3
+
+#define GetRealtorsrData(%0,%1)        RI[%0][%1]
+
+#define IsOwnableCarOwned(%0)           (GetOwnableCarData(%0, OC_OWNER_ID) > 0)
+#define GetPlayerOwnableCar(%0)         PI[%0][P_OWNABLE_CAR]    // ид личного ТС
+#define GetPlayerAccountID(%0)          PI[%0][pID]     // ид аккаунта
+
+#define GetPlayerListitemValue(%0,%1)       g_player_listitem[%0][%1]
+#define SetPlayerListitemValue(%0,%1,%2)    g_player_listitem[%0][%1] = %2
+
+// ------------------------------------------
+#define PT_ITEM_TYPE_NONE           (0)
+#define PT_ITEM_TYPE_ENGINE         (1)
+#define PT_ITEM_TYPE_BRAKE          (2)
+#define PT_ITEM_TYPE_STABILITY      (3)
+
+// ------------------------------------------
+new g_player_listitem[MAX_PLAYERS][32];
+
+// ------------------------------------------
+
+//new Float: vehicle_old_z_angle[MAX_VEHICLES],
+//Float: vehicle_old_speed[MAX_VEHICLES],
+//player_holding_key_down[MAX_PLAYERS];
+
+/*
+new max_veh_speed [ 212 ] = { 160,160,200,120,150,165,110,170,110,180,160,240,160,160,140,230,155,200,150,160,180,180,
+    165,145,170,200,200,170,170,200,190,130,80,180,200,120,160,160,160,160,160,75,150,150,110,
+    165,280,200,190,150,120,240,190,190,190,140,160,160,165,160,200,190,190,190,75,75,160,160,
+    190,200,170,160,190,190,160,160,200,200,150,165,200,120,150,120,190,160,100,200,200,170,170,
+    160,160,190,220,170,200,200,140,140,160,75,220,220,160,170,230,165,140,120,140,200,200,200,120,
+    120,165,165,160,330,330,190,190,190,110,160,160,160,170,160,60,70,140,200,160,160,160,110,110,150,
+    160,230,160,165,170,160,160,160,200,160,160,165,160,200,170,180,110,110,200,200,200,200,200,200,75,
+    200,160,160,170,110,110,90,60,110,60,160,160,200,110,160,165,190,160,170,120,165,190,200,140,200,110,
+    120,200,200,60,190,200,200,200,160,165,110,200,200,160,165,160,160,160,140,160,160 } ;
+*/
+// ------------------------------------------
+enum E_PLAYER_OFFER_STURCT
+{
+    O_OUTCOMIG_PLAYER,  // отправленое предложение игроку
+    O_INCOMING_PLAYER,  // входящее предложение от игрока
+    O_INCOMING_TYPE,    // входящее предложение
+    O_INCOMING_VALUE[2] // значение входящего предложения
+};
+
+new g_player_offer[MAX_PLAYERS][E_PLAYER_OFFER_STURCT];
+new const
+g_offer_default_values[E_PLAYER_OFFER_STURCT] =
+{
+    INVALID_PLAYER_ID,  // отправленое предложение игроку
+    INVALID_PLAYER_ID,  // входящее предложение от игрока
+    -1,                 // входящее предложение
+    {-1, -1}            // значение входящего предложения
+};
+
+
+enum // типы предложений
+{
+    OFFER_TYPE_DEFAULT = -1,
+    OFFER_TYPE_SELL_OWNABLE_CAR,// продать личный ТС
+};
+
+
+#define GetPlayerOfferInfo(%0,%1)       g_player_offer[%0][%1]
+#define SetPlayerOfferInfo(%0,%1,%2)    g_player_offer[%0][%1] = %2
+
+#define SetPlayerOfferValue(%0,%1,%2) g_player_offer[%0][O_INCOMING_VALUE][%1] = %2
+#define ClearPlayerOffer(%0) g_player_offer[%0] = g_offer_default_values
+
+#define c_b     	        "{FFFFFF}"
+/******************************************************************************/
+
+enum E_OWNABLE_CAR_STRUCT
+{
+    OC_SQL_ID,          // ид в базе
+    OC_OWNER_ID,        // ид владельца
+    OC_OWNER_NAME[21],  // имя владельца
+    OC_NUMBER[8],       // номер ТС
+    OC_MODEL_ID,        // модель
+    OC_COLOR_1,         // цвет 1
+    OC_COLOR_2,         // цвет 2
+    Float: OC_POS_X,    // позиции ТС
+    Float: OC_POS_Y,    // позиции ТС
+    Float: OC_POS_Z,    // позиции ТС
+    Float: OC_ANGLE,    // позиции ТС (угол поворота)
+    OC_World,
+    OC_Int,
+    bool: OC_KEY_IN,    // вставлен ли ключ
+    OC_CREATE,          // время создания
+    Float: OC_FUEL,     // топливо
+    OC_PT_ENGINE,       // performance tuning двигатель
+    OC_PT_BRAKE,        // performance tuning тормоза
+    OC_PT_STABILITY,    // performance tuning устойчивость
+    OC_TUNING_[64],     // Тюнинг
+    OC_TUNING[15],      // Тюнинг
+    OC_SKIN,            // Мигалка
+    OC_SOZDAL,           // ЕГО МАТЬ Я ЕБАЛ
+    OC_VINIL,
+    OC_NEON,
+    OC_NEON_P,
+    OC_NEON_D,
+    OC_STRAB,
+};
+
+new g_ownable_car[4000][E_OWNABLE_CAR_STRUCT];
+
+/******************************************************************************/
+enum ADVERT_DATA
+{
+    adSender[24],
+    adCheker[24],
+    adPhone,
+    adText[100],
+    adTime,
+    adMoney,
+    bool:adCheked,
+    bool:adBusy,
+    bool:adCheking
+}
+new gAdvert[MAX_ADVERT_COUNT][ADVERT_DATA];
+new gAdvertCount;
+new addd;
+new adverttime;
+//
+
+enum // типы авто
+{
+    VEHICLE_ACTION_TYPE_FAMILY = 1, // Транспорт семьи
+    VEHICLE_ACTION_TYPE_OWNABLE_CAR,// Личный транспорт
+    VEHICLE_ACTION_TYPE_BUY_FAMILY, // Авторынок семьи
+    VEHICLE_ACTION_TYPE_MEDIC_LS,   // Мед центр ЛС
+    VEHICLE_ACTION_TYPE_CALLIGULA,  // Калигула
+    VEHICLE_ACTION_TYPE_4DRAGON,    // 4 Дракона
+    VEHICLE_ACTION_TYPE_MVD,        // МВД
+    VEHICLE_ACTION_TYPE_RM,         // Ореховская ОПГ
+    VEHICLE_ACTION_TYPE_LCN_MAFIA,  // Курганская ОПГ
+    VEHICLE_ACTION_TYPE_TAXI,       // Такси
+    VEHICLE_ACTION_TYPE_HOTDOG,     // Хот дог
+    VEHICLE_ACTION_TYPE_HITCAR,     // Хитманы
+    VEHICLE_ACTION_TYPE_AP,         // Администрация призидента
+    VEHICLE_ACTION_TYPE_STREET,     // Стритрейсеры
+    VEHICLE_ACTION_TYPE_LVPD,       // LVPD
+    VEHICLE_ACTION_TYPE_NEWS,       // Россия 24
+    VEHICLE_ACTION_TYPE_MAYOR,      // Мэрия
+    VEHICLE_ACTION_TYPE_MECHANIK,   // Механики
+    VEHICLE_ACTION_TYPE_LIC,        // Автошкола
+    VEHICLE_ACTION_TYPE_YAKUDZA,    // Yakudza
+    VEHICLE_ACTION_TYPE_LSPD,       // МВД Г. Арзамас
+    VEHICLE_ACTION_TYPE_FBI,        // FBI
+    VEHICLE_ACTION_TYPE_FOOD,       // Продуктовоз
+    VEHICLE_ACTION_TYPE_FUEL,       // Бензовоз
+    VEHICLE_ACTION_TYPE_SWAT,       // SWAT
+    VEHICLE_ACTION_TYPE_ARMY,       // Авианосец и Зона 51
+    VEHICLE_ACTION_TYPE_INKOS,      // Инкасаторы
+    VEHICLE_ACTION_TYPE_ADMIN,      // Админ транспорт
+    VEHICLE_ACTION_TYPE_NRG,        // NRG на Спавнах
+    VEHICLE_ACTION_TYPE_RENT_BIKE,
+    VEHICLE_ACTION_TYPE_RAZVOZ // Работа развозчика [яндекс еда]
+
+}
+
+enum // Диалоги
+{
+    DIALOG_OWNABLE_CAR = 4433,       // система управления транспортом
+    DIALOG_OWNABLE_CAR_LOAD,        // загрузить транспорт
+    DIALOG_OWNABLE_CAR_LIST,        // выбор транспорта из списка
+    DIALOG_OWNABLE_CAR_SELL,        // продажа личного ТС
+    DIALOG_OWNABLE_CAR_NUMBER,      // получение номера на ТС
+    DIALOG_CHANGE_COLOR_CAR,        // покраска авто
+    DIALOG_OFFER_TOPLAYER,          // предложение для игрока
+    DIALOG_PRIZE_DAY_LIST,          // Лист призов
+    DIALOG_PRIZE_DAY_MENU,          // Ежедневный приз выбор продажа/получение
+    DIALOG_PRIZE_DAY_GET,           // Ежедневный приз получение
+    DIALOG_PRIZE_DAY_SELL,          // Ежедневный приз продажа
+    DIALOG_every_ENTER_PRIZE,        // Ежедневный приз (подряд)
+    DIALOG_BIZ_CAR_MARKET,			// авторынок
+    DIALOG_BIZ_CAR_MARKET_BUY_CAR,	// покупка авто
+    DIALOG_BIZ_CAR_MARKET_CAR_INFO,	// информация об авто
+    DIALOG_HELPABOT,                // помощник админам
+}
+/******************************************************************************/
+new Text3D:blocktext[MAX_PLAYERS];
+new rbtime[MAX_PLAYERS];
+new TicketOffer[MAX_PLAYERS];
+new TicketMoney[MAX_PLAYERS];
+new udar[MAX_PLAYERS];
+new zvonok[MAX_PLAYERS];
+new Shot[MAX_PLAYERS];
+new mast[3];
+new PicCP[MAX_PLAYERS];
+new Text3D:kaznameria;
+new createdvehicles[MAX_VEHICLES];
+new createdvehs;
+//new carvid;
+new WeaponNames[][32] = {
+    {"Unarmed (Fist)"}, // 0
+    {"Brass Knuckles"}, // 1
+    {"Golf Club"}, // 2
+    {"Night Stick"}, // 3
+    {"Knife"}, // 4
+    {"Baseball Bat"}, // 5
+    {"Shovel"}, // 6
+    {"Pool Cue"}, // 7
+    {"Katana"}, // 8
+    {"Chainsaw"}, // 9
+    {"Purple Dildo"}, // 10
+    {"Big White Vibrator"}, // 11
+    {"Medium White Vibrator"}, // 12
+    {"Small White Vibrator"}, // 13
+    {"Flowers"}, // 14
+    {"Cane"}, // 15
+    {"Grenade"}, // 16
+    {"Teargas"}, // 17
+    {"Molotov"}, // 18
+    {" "}, // 19
+    {" "}, // 20
+    {" "}, // 21
+    {"Colt 45"}, // 22
+    {"Colt 45 (Silenced)"}, // 23
+    {"Desert Eagle"}, // 24
+    {"Normal Shotgun"}, // 25
+    {"Sawnoff Shotgun"}, // 26
+    {"Combat Shotgun"}, // 27
+    {"Micro Uzi (Mac 10)"}, // 28
+    {"MP5"}, // 29
+    {"AK47"}, // 30
+    {"M4"}, // 31
+    {"Tec9"}, // 32
+    {"Country Rifle"}, // 33
+    {"Sniper Rifle"}, // 34
+    {"Rocket Launcher"}, // 35
+    {"Heat-Seeking Rocket Launcher"}, // 36
+    {"Flamethrower"}, // 37
+    {"Minigun"}, // 38
+    {"Satchel Charge"}, // 39
+    {"Detonator"}, // 40
+    {"Spray Can"}, // 41
+    {"Fire Extinguisher"}, // 42
+    {"Camera"}, // 43
+    {"Night Vision Goggles"}, // 44
+    {"Infrared Vision Goggles"}, // 45
+    {"Parachute"}, // 46
+    {"Fake Pistol"} // 47
+};
+
+enum ENTER_PRIZE_STRUCT
+{
+    Name[32],
+    Value,
+    Type
+}
+new enter_prize[7][ENTER_PRIZE_STRUCT] =
+{
+    {"10.000.00$", 10000000, 1},
+    {"30.000.00$", 30000000, 1},
+    {"50.000.00$", 50000000, 1},
+    {"100.000.00$", 100000000, 1},
+    {"200.000.00$", 200000000, 1},
+    {"5 F - Coins", 5, 2},
+    {"Бесплатная прокрутка рулетки", 1, 3}
+};
+new JobCarTime[MAX_PLAYERS];
+new PEfir[MAX_PLAYERS];
+new Pefir[MAX_PLAYERS];
+new TransportDuty[MAX_PLAYERS];
+new TransportValue[MAX_PLAYERS];
+new TransportDriver[MAX_PLAYERS];
+new TransportMoney[MAX_PLAYERS];
+new TransportTime[MAX_PLAYERS];
+new TransportCost[MAX_PLAYERS];
+new HealOffer[MAX_PLAYERS];
+new HealPrice[MAX_PLAYERS];
+new lights1;
+new robbanks;
+new robbankstime[MAX_PLAYERS];
+new bankdoors;
+new bankdoortime[MAX_PLAYERS];
+new FreeOffer[MAX_PLAYERS];
+new SposobOffer[MAX_PLAYERS];
+new FreePrice[MAX_PLAYERS];
+new TakingLesson[MAX_PLAYERS];
+new vehcreat[MAX_VEHICLES];
+new minigun[MAX_PLAYERS];
+new toggotome[MAX_PLAYERS];
+new DoorOpen[2];
+new crashcuff[MAX_PLAYERS];
+new minstr,fight,ring = 0,zakonn = 0;
+new boy[MAX_PLAYERS];
+new fightid[MAX_PLAYERS];
+new TimeBox[MAX_PLAYERS];
+new TimeBoxAll[MAX_PLAYERS];
+new bool:Music[MAX_PLAYERS];
+new URLW[128];
+new Float: MGM[5] = 0.0;
+
+new healpric = 100,smspricels = 50,smsls = 0;
+new gcontract[MAX_PLAYERS];
+new Text3D:taxi3d[MAX_VEHICLES];
+new Text3D:Meh3d[MAX_VEHICLES];
+new keys[MAX_PLAYERS];
+new HotdogOffer[MAX_PLAYERS];
+new HotdogPrice[MAX_PLAYERS];
+
+new	car_autosalon[44][2] = {
+    {420, 150000}, //1 - Эконом
+    {421, 1500000}, //2 - Эконом
+    {436, 500000}, //3 - Эконом
+    {438, 500000}, //4 - Эконом
+    {467, 400000}, //5 - Эконом
+    {474, 250000}, //6 - Эконом
+    {479, 500000}, //7 - Эконом
+    {518, 300000}, //9 - Эконом
+    {526, 500000}, //10 - Эконом
+    {527, 800000}, //11 - Эконом
+    {401, 800000}, //12 - Эконом
+    {475, 500000}, //13 - Эконом
+    {529, 800000}, //25 - Средний
+
+    {402, 1100000}, //14 - Средний
+    {404, 800000}, //15 - Средний
+    {412, 1500000}, //16 - Средний
+    {426, 1000000}, //17 - Средний
+    {458, 4000000}, //18 - Средний
+    {470, 5000000}, //19 - Средний
+    {492, 1000000}, //21 - Средний
+    {507, 1000000}, //22 - Средний
+    {516, 1500000}, //23 - Средний
+    {529, 8000000}, //24 - Средний
+
+    {410, 7000000}, //28 - Высокий
+    {415, 15000000}, //29 - Высокий
+    {419, 15000000}, //30 - Высокий
+    {429, 10000000}, //31 - Высокий
+    {477, 12000000}, //32 - Высокий
+    {480, 15000000}, //33 - Высокий
+    {495, 15000000}, //34 - Высокий
+    {505, 7000000}, //35 - Высокий
+    {534, 10000000}, //36 - Высокий
+    {541, 20000000}, //37 - Высокий
+    {543, 20000000}, //38 - Высокий
+    {546, 15000000}, //39 - Высокий
+    {547, 5000000}, //40 - Высокий
+    {551, 12000000}, //41 - Высокий
+    {558, 15000000}, //42 - Высокий
+    {561, 5000000}, //43 - Высокий
+    {566, 6000000}, //44 - Высокий
+    {579, 20000000}, //45 - Высокий
+    {587, 15000000}, //46 - Высокий
+    {603, 18000000}, //47 - Высокий
+    {517, 200000000} //48 - Высокий
+};
+
+
+new TheftCount[MAX_PLAYERS];
+new TheftCarID[MAX_PLAYERS];
+new TheftTime[MAX_PLAYERS];
+new TheftKey[MAX_PLAYERS];
+// ВАЛИДНОСТЬ АВТО5
+
+
+// ВАЛИДНОСТЬ ОРУЖИЯ
+stock static IsFirearmWeapon(weaponid)
+{
+    return (22 <= weaponid <= 34) || weaponid == 38;
+}
+new Menu:ChoseSkin;
+new useguns[MAX_PLAYERS];
+new ChosenPlayer[MAX_PLAYERS];
+new usemats[MAX_PLAYERS];
+new OldSkin[MAX_PLAYERS];
+new zavodis[MAX_PLAYERS];
+new dostup[MAX_PLAYERS];
+new forma[MAX_PLAYERS];
+new proverkaforma[MAX_PLAYERS];
+new Army;
+new TieTime[MAX_PLAYERS];
+new Tazer[MAX_PLAYERS];
+new MarryWitness[MAX_PLAYERS];
+new MarryWitnessOffer[MAX_PLAYERS];
+new Medics = 0,Mechanics = 0,TaxiDrivers = 0,Police = 0;
+new MechanicCall = INVALID_PLAYER_ID,TaxiCall = INVALID_PLAYER_ID,PoliceCall = INVALID_PLAYER_ID,MedicCall = INVALID_PLAYER_ID;
+new PlayerTied[MAX_PLAYERS];
+new LiveOffer[MAX_PLAYERS];
+new LiveOfferls[MAX_PLAYERS];
+new TalkingLive[MAX_PLAYERS];
+new TalkingLivels[MAX_PLAYERS];
+new SelectChar[MAX_PLAYERS];
+new SelectCharID[MAX_PLAYERS];
+new SelectCharPlace[MAX_PLAYERS];
+new CharPrice[MAX_PLAYERS];
+new ChosenSkin[MAX_PLAYERS];
+new InviteSkin[MAX_PLAYERS];
+new CP[MAX_PLAYERS];
+new RepairOffer[MAX_PLAYERS];
+new RepairPrice[MAX_PLAYERS];
+new RefillOffer[MAX_PLAYERS];
+new RefillPrice[MAX_PLAYERS];
+new RepairCar[MAX_PLAYERS];
+new gPlayerCheckpointStatus[MAX_PLAYERS];
+new PlayerCuffed[MAX_PLAYERS];
+new PlayerCuffedTime[MAX_PLAYERS];
+new BigEar[MAX_PLAYERS];
+new BigEarSms[MAX_PLAYERS];
+new PhoneOnline[MAX_PLAYERS];
+new Mobile[MAX_PLAYERS];
+new ghour = 0,gminute = 0,gsecond = 0;
+new realchat = 1,levelexp = 4;
+new MatsArmyCar[MAX_PLAYERS];
+new VertMats[MAX_PLAYERS], ggtime;
+new vertmatbi = 0;new armmatbi = 100000;new armmatsf = 50000;new lspdmatbi = 50000;new sfpdmats = 50000;new lvpdmats = 50000;new fbimats = 50000;new yakuzamats = 50000;new rmmats = 50000;new lcnmats = 50000;
+new hitss[3];
+new sportzal[2],lspic[3],medpic[6],rmpic[2],lcnpic[2],yakexit[2],buygunzakon[6],fbi[8],lspd[6],sf[5],lvpdpic[7];
+new marenter[6],bankpic[8],serdce[5],hospital[13],ballasvhod[2],rifa[2],mo[2],vagospic[2],aztecpic[2],grooveexit,swatenter,swatenter2,swatexit,swatexit2,grooveenter,gunarm[2],plen[2],zona,zonaa,sklad[2];
+//
+static VehicleID[MAX_PLAYERS];
+static CheckVehicle[MAX_PLAYERS];
+
+new Text3D:VehicleText[MAX_PLAYERS];
+
+new SELL[3][MAX_PLAYERS];
+//
+enum cInfo
+{
+    cZakaz,
+    cHitman
+};
+new ContractInfo[MAX_PLAYERS][cInfo];
+
+// ОБМЕН
+enum sChange
+{
+    cSeller,
+    cBuyer,
+    cPrice,
+    cType
+};
+new ChangeAll[MAX_PLAYERS][sChange];
+//---------------------------------------[ Банки ] -----------------------
+enum nInfo
+{
+    nLcn,
+    nYakuza,
+    nRm,
+};
+enum fInfo
+{
+    fLsnews,
+    fBallas,
+    fVagos,
+    fGrove,
+    fAztek,
+    fRifa,
+    fAmmo,
+    fBallasn,
+    fVagosn,
+    fGroven,
+    fAztekn,
+    fRifan,
+    fLock[5]
+};
+new MafiaBank[1][nInfo];
+new FracBank[1][fInfo];
+
+enum PickInfo
+{
+Float: PickX,
+Float: PickY,
+Float: PickZ
+}
+new PickupInfo[MAX_PICKUPS][PickInfo];
+
+static const SkinMen[7][1] ={
+    {234},{235},{235},{236},{239},{235},{234}};
+static const SkinMale[5][1] ={{231},{231},{232},{232},{231}};
+
+stock CreatePickupAC(model, type, Float:X, Float:Y, Float:Z, virtualworld = 0)
+{
+    new TempID = CreatePickup(model, type, X, Y, Z, virtualworld);
+    PickupInfo[TempID][PickX] = X;
+    PickupInfo[TempID][PickY] = Y;
+    PickupInfo[TempID][PickZ] = Z;
+    return TempID;
+}
+
+enum bzInfo
+{
+    bID,
+Float:bEntrx,
+Float:bEntry,
+Float:bEntrz,
+Float:bExitx,
+Float:bExity,
+Float:bExitz,
+Float:bMenux,
+Float:bMenuy,
+Float:bMenuz,
+    bOwner[MAX_PLAYER_NAME],
+    bPrice,
+    bBuyPrice,
+    bMoney,
+    bType,
+    bInt,
+    bVirtual,
+    bLock,
+    bEnter,
+    bMIcon,
+    bIcon,
+    bPickup,
+    bPickupExit,
+    bName[MAX_PLAYER_NAME],
+    bProduct,
+    bTill,
+    bMenu,
+    bLockTime,
+    bMafia,
+bool:bProdStat
+};
+new Menu:BuyClothes;
+new ChangeSkinv[MAX_PLAYERS];
+new BizzInfo[200][bzInfo], TOTALBIZZ = 0,TOTALHOUSE = 0;
+new Text3D:LABELBIZZ[200];
+new BizzPay[200];
+//
+
+//
+new addbizz[256][MAX_PLAYERS];
+
+enum AmmoLists
+{
+    Name[20],
+    gunid,
+    Cost
+};
+new AmmoList[5][AmmoLists] = {
+    {"Deagle",24,20},
+    {"ShotGun",25,25},
+    {"MP5",29,20},
+    {"AK-47",30,30},
+    {"M4",31,30}
+};
+
+enum pinfo
+{
+    pName[MAX_PLAYER_NAME],
+    pBizzid,
+    pPrice,
+    pTill,
+    pType,
+bool:pStatus
+};
+new ProductInfo[100][pinfo], TOTALPRODUCT = 0;
+
+enum grzone
+{
+    grid,
+Float:grX,
+Float:grY,
+Float:grZ,
+Float:grD,
+    grName[50],
+    grVirt
+}
+new GREENZONE[100][grzone], TOTALZONE = 0;
+
+stock IsVehicleOccupied(vehicleid)
+{
+    foreach(new i : Player)
+    {
+        if(!IsPlayerInAnyVehicle(i)) continue;
+
+        if(GetPlayerVehicleID(i) == vehicleid)
+        return 1;
+    }
+
+    return 0;
+}
+stock Float:GetDistanceBetweenPlayers(p1,p2)
+{
+    new Float:x1,Float:y1,Float:z1,Float:x2,Float:y2,Float:z2;
+    if(!IsPlayerConnected(p1) || !IsPlayerConnected(p2)) return -1.00;
+    GetPlayerPos(p1,x1,y1,z1);
+    GetPlayerPos(p2,x2,y2,z2);
+    return floatsqroot(floatpower(floatabs(floatsub(x2,x1)),2)+floatpower(floatabs(floatsub(y2,y1)),2)+floatpower(floatabs(floatsub(z2,z1)),2));
+}
+
+new Float:gInviteSpawns[0][4] = {
+    {222.3489,-8.5845,1002.2109,266.7302}
+};
+
+enum pInfo
+{
+    pID,
+    pPassword[65],
+    pSalt[11],
+    pEmail[64],
+    pLevel,
+    pAdmin,
+    youtube,
+    dalbaeb,
+    eblan,
+    year_count,
+    year_quest,
+    year_point,
+    house_id,
+    total_hour,
+    pNames[24],
+    pYtADM,
+    pMestoJail,
+    pIpReg[16],
+    pHousecash,
+    pHeadValue,
+    pContract,
+    pDataReg,
+    pCar,
+    pCar2,
+Float:pFuelcar,
+    pNumbercar[25],
+    pProz,
+    pDonateRank,
+    Text3D:pFamilyText,
+    pDonatemoney2,
+    pMats,
+    pSex,
+    pExp,
+    pCash,
+    pKills,
+    pPayCheck,
+    pJailed,
+    pJailTime,
+    pHeal,
+    pClist,
+    pLeader,
+    pMember,
+    pRank,
+    pChar,
+    pJob,
+    pInt,
+    pVirt,
+    pLocal,
+    pModel,
+    pPnumber,
+    //--------
+    pVodPrava,
+    pFlyLic,
+    pBoatLic,
+    pFishLic,
+    pGunLic,
+    pPhousekey,
+    pZakonp,
+    pNarcoLomka,
+    //---------------[ Скилы ]-----
+    pSDPistol,
+    pDesertEagle,
+    pShotGun,
+    pMP5,
+    pAK47,
+    pM4,
+    pPayDayHad,
+    pWarns,
+    punWarns,
+    punWarnstime,
+    pFuel,
+    pMarried,
+    pMuteTime,
+    pBank,
+    pUsePromo,
+    pMobile,
+    pDostup,
+    pWanted,
+    pGunfbiTime,
+    pGun51Time,
+    pGunlspdTime,
+    pGunaviaTime,
+    pDrugtime,
+    pRobTime,
+    pReportTime,
+    pVerevka,
+    pOtmbI4ka,
+    pAutoTime,
+    pAutoSkill,
+    pBoxstyle,
+    pKstyle,
+    pKickstyle,
+    pBoxSkill,
+    pKongfuSkill,
+    pKickboxSkill,
+    pFightSkill,
+    pFightSkil,
+    pFightTime,
+    pHospital,
+    pIzol,
+    Weapon[13],
+    pWeapons[64],
+    Ammo[13],
+    Ammos[64],
+Float:pPos_x,
+Float:pPos_y,
+Float:pPos_z,
+    pFacePass,//Поддельный паспорт
+    pIP[16],
+    pTexts[16],
+    Texts[3],
+    pSkinhome[3],
+    pHomez,//куда заселяем игрока
+    pSatiety,
+    pCheckIp,
+    pGetonIP[20],
+    pKeyIp[32],
+    pGetondate[17],
+    SalonCar,
+    SalonTime,
+    pHotvet,
+    pDayOnline,
+    pMask,
+    Settings[7],
+    pOdet,
+    pVoenBill,
+    pMedCard,
+    p_drugs[7],
+    pGM,
+    pSlotItems[64],
+    pSlotItem[6],
+    pType,
+    pType2,
+    pLimit,
+    pVigs,
+    pAge,
+    pNational,
+    pRub,
+    pDonateRubNew,
+    pKillsOnDM,
+    pPrefix[32],
+    pInv,
+    aiCMDaccess[CMD_NUM+1],
+    pDayAfk,
+    pOnlineYes,
+    pAfkYes,
+    pSelectPlayer,
+    pTargetPlayer,
+    pTargetAction,
+    pBlNick,
+    pcWarn,
+    pcBan,
+    pCountry[24],
+    pAdminCountry[24],
+    pOffCountry,
+    pOffBH,
+    pKInCapt,
+    pDist,
+    pAccent[32],
+    pRepAdm,
+    pKickAdm,
+    pWarnAdm,
+    pBanAdm,
+    pMuteAdm,
+    pJailAdm,
+    pUsedJail,
+    P_PLAYER_DEVICE,
+    P_QUEST[6],
+    P_OPEN_CONT,
+    last_login,
+    every_enter,
+    pRemCar,
+    connect_timer,
+    get_adm_status,
+    get_adm_hour,
+    // TIMER NEW SYSTEM
+    P_CLIST_TIMER,
+    PICKUP_TIME,
+    MASK_TIMER,
+    TIE_TIMER,
+    //
+    P_OWNABLE_CAR,
+    P_CAR_SLOT,
+    SELECT_PANEL_TYPE_NONE, // использует ли панель выбора
+    boombox,
+    P_PRIZE_DAY,
+    P_PRIZE_EVERY,
+    P_OLD_SKIN,
+    AFK_Tick,
+    AFK_Time,
+    AFK_Check,
+
+    APARTMENT,
+    pPremiumCar,
+    pPremiumHours,
+
+    pUgonVehicle,
+    pUgonTimer,
+
+    pRaceMoney,
+    pGivePizzaTimer,
+    pZakazov
+};
+new PI[MAX_PLAYERS][pInfo];
+
+native gpci(playerid, buffer[], size = sizeof(buffer));
+//#include <anticheat>
+//#include <nex-acer>
+
+new SpawnReset[MAX_PLAYERS];
+
+new BarHouse[2];
+
+new bar_menu[9][32] =
+{
+    {"Вода"},
+    {"Сода"},
+    {"Coca-Cola"},
+    {"Пиво"},
+    {"Вино"},
+    {"Абсент"},
+    {"Виски"},
+    {"Водка"},
+    {"Коньяк"}
+};
+
+new category_name[6][32] =
+{
+    {"F - Coins"},
+    {"Деньги"},
+    {"Авто"},
+    {"Одежда"},
+    {"Хелперка"},
+    {"Админка"}
+
+};
+enum site_prize
+{
+    sID[15],
+    sCategory[15],
+    sPrice[15],
+    sValue[15]
+};
+
+new prize_info[MAX_PLAYERS][site_prize];
+
+
+new NULL_PI[pInfo];
+
+#define MAX_HOUSES 250
+
+enum hInfo
+{
+    hID,
+    Float:hEntrancex,
+    Float:hEntrancey,
+    Float:hEntrancez,
+    Float:hExitx,
+    Float:hExity,
+    Float:hExitz,
+    Float:hCarx,
+    Float:hCary,
+    Float:hCarz,
+    Float:hCarc,
+    hOwner[24],
+    hValue,
+    hHel,
+    hInt,
+    hLock,
+    hOwned,
+    hTakings,
+    hKlass,
+    hVec,
+    hPickup,
+    hMIcon,
+    hVehSost,
+    hNark,//11
+    hMoney,//11
+    hMatel,//11
+    hduggl,//11
+    hak47,//11
+    hshotgun,//11
+    hm4,//11
+    hsdpist,//11
+    hrifle,//11
+    hsmg,//11
+    hdrugs[7],
+    bool:hRobhouse,
+    hSquare,
+    hObject[10]
+};
+new HouseInfo[MAX_HOUSES][hInfo];
+//---------------------------------------[ Фуры]-------------------
+
+enum pMat
+{
+    mCapasity,
+    mLoad,
+};
+
+new MatHaul[7][pMat];
+new JoinPed[151][1] = {
+    {280},//МВД Г. Арзамас1
+    {281},//МВД Г. Арзамас2
+    {282},//МВД Г. Арзамас3
+    {283},//МВД Г. Арзамас4
+    {284},//МВД Г. Арзамас5
+    {285},//МВД Г. Арзамас6
+    {288},//МВД Г. Арзамас7
+    {76},//МВД Г. Арзамас8
+    //============
+    {286},//FBI1
+    {163},//FBI2
+    {164},//FBI3
+    {165},//FBI4
+    {166},//FBI5
+    {141},//FBI6
+    //============
+    {287},//armySF1
+    {191},//armySF2
+    //============
+    {70},//Mediki1
+    {274},//Mediki2
+    {275},//Mediki3
+    {276},//Mediki4
+    {219},//Mediki5
+    //============
+    {223},//Курганская ОПГ1
+    {124},//Курганская ОПГ2
+    {113},//Курганская ОПГ3
+    {214},//Курганская ОПГ4
+    //============
+    {120},//Тамбовская ОПГ1
+    {123},//Тамбовская ОПГ3
+    {169},//Тамбовская ОПГ2
+    {186},//Тамбовская ОПГ4
+    //============
+    {57},//Meria1
+    {150},//Meria2
+    {98},//Meria3
+    {187},//Meria4
+    {147},//Meria5
+    //============
+    {280},//SFPD1
+    {281},//SFPD2
+    {282},//SFPD3
+    {283},//SFPD4
+    {284},//SFPD5
+    {285},//SFPD6
+    {288},//SFPD7
+    {76},//SFPD8

@@ -1,0 +1,1000 @@
+                }
+                else if(listitem == 2)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "Медики в сети:");
+                    foreach(Player,i)
+                    {
+                        if(IsPlayerConnected(i))
+                        {
+                            if(PI[i][pMember] == 4 || PI[i][pLeader] == 4) SendMes(playerid,COLOR_GRAD1,"%s | Телефонный номер: %d", PI[i][pNames], PI[i][pPnumber]);
+                        }
+                    }
+                }
+                else if(listitem == 3)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "СМИ в сети:");
+                    foreach(Player,i)
+                    {
+                        if(IsPlayerConnected(i))
+                        {
+                            if(PI[i][pMember] == 16 || PI[i][pLeader] == 16) SendMes(playerid,COLOR_GRAD1,"%s | Телефонный номер: %d", PI[i][pNames], PI[i][pPnumber]);
+                        }
+                    }
+                }
+                else if(listitem == 4)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "Инструкторы в сети:");
+                    foreach(Player,i)
+                    {
+                        if(IsPlayerConnected(i))
+                        {
+                            if(PI[i][pMember] == 11 || PI[i][pLeader] == 11) SendMes(playerid,COLOR_GRAD1,"%s | Телефонный номер: %d", PI[i][pNames], PI[i][pPnumber]);
+                        }
+                    }
+                }
+                else if(listitem == 5) SPD(playerid,5454,DIALOG_STYLE_LIST,"{CCFF00}Игровой справочник","{99FF99}Государственные сотрудники:{FFFFFF}\n1) Адвокаты\n2) Медики\n3) Пресса\n4) Инструкторы\n \n{99FF99}Рабочая группа:{FFFFFF}\n1) Механики\n2) Таксисты\n3) Развозчики продуктов\n \n{99FF99}Руководство:{FFFFFF}\n1) Администрация\n2) Лидеры","Выбрать","Отмена");
+                else if(listitem == 6) SPD(playerid,5454,DIALOG_STYLE_LIST,"{CCFF00}Игровой справочник","{99FF99}Государственные сотрудники:{FFFFFF}\n1) Адвокаты\n2) Медики\n3) Пресса\n4) Инструкторы\n \n{99FF99}Рабочая группа:{FFFFFF}\n1) Механики\n2) Таксисты\n3) Развозчики продуктов\n \n{99FF99}Руководство:{FFFFFF}\n1) Администрация\n2) Лидеры","Выбрать","Отмена");
+                else if(listitem == 7)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "Механики в сети:");
+                    foreach(Player,i)
+                    {
+                        if(IsPlayerConnected(i))
+                        {
+                            if(PI[i][pJob] == 2) SendMes(playerid,COLOR_GRAD1,"%s | Телефонный номер: %d", PI[i][pNames], PI[i][pPnumber]);
+                        }
+                    }
+                }
+                else if(listitem == 8)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "Таксисты в сети:");
+                    foreach(Player,i)
+                    {
+                        if(IsPlayerConnected(i))
+                        {
+                            if(PI[i][pJob] == 4) SendMes(playerid,COLOR_GRAD1,"%s | Телефонный номер: %d", PI[i][pNames], PI[i][pPnumber]);
+                        }
+                    }
+                }
+                else if(listitem == 9)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "Развозчики продуктов в сети:");
+                    foreach(Player,i)
+                    {
+                        if(IsPlayerConnected(i))
+                        {
+                            if(PI[i][pJob] == 5) SendMes(playerid,COLOR_GRAD1,"%s | Телефонный номер: %d", PI[i][pNames], PI[i][pPnumber]);
+                        }
+                    }
+                }
+                else if(listitem == 10) SPD(playerid,5454,DIALOG_STYLE_LIST,"{CCFF00}Игровой справочник","{99FF99}Государственные сотрудники:{FFFFFF}\n1) Адвокаты\n2) Медики\n3) Пресса\n4) Инструкторы\n \n{99FF99}Рабочая группа:{FFFFFF}\n1) Механики\n2) Таксисты\n3) Развозчики продуктов\n \n{99FF99}Руководство:{FFFFFF}\n1) Администрация\n2) Лидеры","Выбрать","Отмена");
+                else if(listitem == 11) SPD(playerid,5454,DIALOG_STYLE_LIST,"{CCFF00}Игровой справочник","{99FF99}Государственные сотрудники:{FFFFFF}\n1) Адвокаты\n2) Медики\n3) Пресса\n4) Инструкторы\n \n{99FF99}Рабочая группа:{FFFFFF}\n1) Механики\n2) Таксисты\n3) Развозчики продуктов\n \n{99FF99}Руководство:{FFFFFF}\n1) Администрация\n2) Лидеры","Выбрать","Отмена");
+                else if(listitem == 12) pc_cmd_admins(playerid, "");
+                else if(listitem == 13) pc_cmd_leaders(playerid, "");
+            }
+            else return 1;
+        }
+    case 8240:
+        {
+            if(response)
+            {
+                SetPlayerInteriorEx(playerid,7);
+                SetPlayerVirtualWorldEx(playerid, 15);
+                SetPPos(playerid,302.3128,-140.9305,1004.0625);
+                SetPlayerFacingAngle(playerid, 318.5262);
+                return 1;
+            }
+            else
+            {
+                SetPlayerInteriorEx(playerid, 0);
+                SetPPos(playerid,2278.3853,2460.9187,38.6837);
+                SetPlayerFacingAngle(playerid, 357.9236);
+                return 1;
+            }
+        }
+    case 8241:
+        {
+            if(response)
+            {
+                SetPlayerInteriorEx(playerid,7);
+                SetPlayerVirtualWorldEx(playerid, 15);
+                SetPPos(playerid,302.3128,-140.9305,1004.0625);
+                SetPlayerFacingAngle(playerid, 318.5262);
+                return 1;
+            }
+            else
+            {
+                SetPlayerInteriorEx(playerid, 0);
+                SetPPos(playerid,2294.0447,2468.8052,10.8203);
+                SetPlayerFacingAngle(playerid, 90.8629);
+                return 1;
+            }
+        }
+    case 8242:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+                case 0:
+                {
+                    SetPlayerInteriorEx(playerid,0);
+                    SetPPos(playerid, -2670.5986,-1821.2335,4.1045);
+                    SetPlayerFacingAngle(playerid, 268.9622);
+                    SetPlayerVirtualWorldEx(playerid, 1);
+                }
+            }
+            return 1;
+        }
+    case 8243:
+        {
+            if(response)
+            {
+                SetPlayerInteriorEx(playerid,0);
+                SetPPos(playerid,1658.2383,-1693.4553,15.6094);
+                SetPlayerFacingAngle(playerid, 175.8234);
+                SetPlayerVirtualWorldEx(playerid, 0);
+                if(PEfir[playerid] != 255)
+                {
+                    SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+                    PEfir[playerid] = 255;
+                }
+                if(Pefir[playerid] == 1 || Pefir[playerid] == 2)
+                {
+                    Pefir[playerid] = 0;
+                    PEfir[playerid] = 255;
+                    SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+                }
+                return 1;
+            }
+            else
+            {
+                SetPlayerInteriorEx(playerid,0);
+                SetPPos(playerid,1650.2810,-1640.6709,83.7788);
+                SetPlayerFacingAngle(playerid, 313.9981);
+                SetPlayerVirtualWorldEx(playerid, 0);
+                if(PEfir[playerid] != 255)
+                {
+                    SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+                    PEfir[playerid] = 255;
+                }
+                if(Pefir[playerid] == 1 || Pefir[playerid] == 2)
+                {
+                    Pefir[playerid] = 0;
+                    PEfir[playerid] = 255;
+                    SendClientMessage(playerid,COLOR_WHITE, "Вы вышли из прямого эфира");
+                }
+                return 1;
+            }
+        }
+    case 2013:
+        {
+            if(response)
+            {
+                if(listitem == 0)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!"); //дигл
+                    gun = 24; ammo = 50;
+                    yakuzamats -= 70;
+                }
+                else if(listitem == 1)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!"); //шотган
+                    gun = 25; ammo = 15;
+                    yakuzamats -= 50;
+                }
+                else if(listitem == 2)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!"); //riфл
+                    gun = 33; ammo = 10;
+                    yakuzamats -= 100;
+                }
+                else if(listitem == 3)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");//m4
+                    gun = 31; ammo = 100;
+                    yakuzamats -= 500;
+                }
+                else if(listitem == 4)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!"); //ak47
+                    gun = 30; ammo = 100;
+                    yakuzamats -= 500;
+                }
+                else if(listitem == 5)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!"); //mp5
+                    gun = 29; ammo = 200;
+                    yakuzamats -= 400;
+                }
+                else if(listitem == 6)
+                {
+                    if(yakuzamats <= 50)return SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!"); //sdpistol
+                    gun = 23; ammo = 100; yakuzamats -= 100;
+                }
+                GetWeaponName(gun, gunname, sizeof(gunname));
+                GiveWeapon(playerid, gun, ammo);
+                SendClientMessage(playerid,COLOR_WHITE,"Вы взяли оружие со склада");
+                format(stringer, sizeof(stringer), "%s взял(а) оружие со склада", PI[playerid][pNames]);
+                ProxDetector(playerid, 20.0, COLOR_PURPLE, stringer);
+                SetOtherInt("yakuzamats", yakuzamats);
+                return 1;
+            }
+            else { return 1; }
+        }
+    case 2014:
+        {
+            if(response)
+            {
+                if(listitem == 0)
+                {
+                    if(lcnmats <= 50) return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 24; ammo = 50; lcnmats -= 70;
+                }
+                else if(listitem == 1)
+                {
+                    if(lcnmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 25; ammo = 15; lcnmats -= 50;
+                }
+                else if(listitem == 2)
+                {
+                    if(lcnmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 33; ammo = 10; lcnmats -= 100;
+                }
+                else if(listitem == 3)
+                {
+                    if(lcnmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 31; ammo = 100; lcnmats -= 500;
+                }
+                else if(listitem == 4)
+                {
+                    if(lcnmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 30; ammo = 100; lcnmats -= 500;
+                }
+                else if(listitem == 5)
+                {
+                    if(lcnmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 29; ammo = 200; lcnmats -= 400;
+                }
+                else if(listitem == 6)
+                {
+                    if(lcnmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 23; ammo = 100; lcnmats -= 100;
+                }
+                GetWeaponName(gun, gunname, sizeof(gunname));
+                GiveWeapon(playerid, gun, ammo);
+                SendClientMessage(playerid, 0x6ab1ffaa, "Вы взяли оружие со склада");
+                format(stringer, sizeof(stringer), "%s взял(а) оружие со склада", PI[playerid][pNames]);
+                ProxDetector(playerid, 20.0, COLOR_PURPLE, stringer);
+                SetOtherInt("lcnmats", lcnmats);
+                return 1;
+            }
+            else { return 1; }
+        }
+    case 2015:
+        {
+            if(response)
+            {
+                if(listitem == 0)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 24; ammo = 50; rmmats -= 70;
+                }
+                else if(listitem == 1)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 25; ammo = 15; rmmats -= 50;
+                }
+                else if(listitem == 2)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 33; ammo = 10; rmmats -= 100;
+                }
+                else if(listitem == 3)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 31; ammo = 100; rmmats -= 500;
+                }
+                else if(listitem == 4)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 30; ammo = 100; rmmats -= 500;
+                }
+                else if(listitem == 5)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 29; ammo = 200; rmmats -= 400;
+                }
+                else if(listitem == 6)
+                {
+                    if(rmmats <= 50)  return  SendClientMessage(playerid,COLOR_GRAD1,"На складе нет материалов!");
+                    gun = 23; ammo = 100; rmmats -= 100;
+                }
+
+                GetWeaponName(gun, gunname, sizeof(gunname));
+                GiveWeapon(playerid, gun, ammo);
+                SendClientMessage(playerid, 0x6ab1ffaa, "Вы взяли оружие со склада");
+
+                format(stringer, sizeof(stringer), "%s взял(а) оружие со склада", PI[playerid][pNames]);
+                ProxDetector(playerid, 20.0, COLOR_PURPLE, stringer);
+                SetOtherInt("rmmats", rmmats);
+                return 1;
+            }
+            else { return 1; }
+        }
+        //==================================[MMenu]=================
+    case 9596:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        switch(PI[playerid][pMember])
+                        {
+                        case 6: return SendMes(playerid,0x6ab1ffaa,"В банке мафии Тамбовская ОПГ: %s руб.", formatInt(MafiaBank[0][nYakuza]));
+                        case 14: return SendMes(playerid,0x6ab1ffaa,"В банке Русской мафии: %s руб.", formatInt(MafiaBank[0][nRm]));
+                        case 5: return SendMes(playerid,0x6ab1ffaa,"В банке мафии Курганская ОПГ: %s руб.", formatInt(MafiaBank[0][nLcn]));
+                        }
+                    }
+                case 1:
+                    {
+                        format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                        SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pRank] < 9) return SendClientMessage(playerid,COLOR_GREY,"Вам не доступна данная команда.");
+                        format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                        SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                    }
+                case 3:
+                    {
+                        switch(PI[playerid][pMember])
+                        {
+                        case 6: return SendMes(playerid,0x6ab1ffaa,"На складе мафии %d матов", yakuzamats);
+                        case 5: return SendMes(playerid,0x6ab1ffaa,"На складе мафии %d матов", lcnmats);
+                        case 14: return SendMes(playerid,0x6ab1ffaa,"На складе мафии %d матов", rmmats);
+                        }
+                    }
+                case 4: pc_cmd_bizlist(playerid, "");
+                }
+            }
+        }
+    case 22255:
+        {
+            if(response)
+            {
+                switch(PI[playerid][pMember])
+                {
+                case 6:
+                    {
+                        if(!strlen(inputtext))
+                        {
+                            format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                            SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                        }
+                        new dengi = strval(inputtext);
+                        if(dengi < 1 || dengi > 10000000)
+                        {
+                            SendClientMessage(playerid,COLOR_GRAD1,"Нельзя пополнить счет меньше 1 и больше 10000000 руб.");
+                            format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                            SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                            return 1;
+                        }
+                        if(PI[playerid][pCash] < dengi) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько денег");
+                        PI[playerid][pCash] -= dengi;
+                        MafiaBank[0][nYakuza] += dengi;
+                        SendMes(playerid,0x6ab1ffaa,"Вы положили в банк мафии Тамбовская ОПГ: %s руб.", formatInt(dengi));
+                        format(stringer, sizeof(stringer), "%s положил в банк мафии %s руб.", PI[playerid][pNames],formatInt(dengi));
+                        SendFamilyMessage(6, COLOR_YELLOW2, stringer);
+                        SetOtherInt("rmmats", rmmats);
+                        return 1;
+                    }
+                case 14:
+                    {
+                        if(!strlen(inputtext))
+                        {
+                            format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                            SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Ок","X");
+                        }
+                        new dengi = strval(inputtext);
+                        if(dengi < 1 || dengi > 10000000)
+                        {
+                            SendClientMessage(playerid,COLOR_GRAD1,"Нельзя пополнить счет меньше 1 и больше 10000000 руб.");
+                            format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                            SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Ок","X");
+                            return 1;
+                        }
+                        if(PI[playerid][pCash] < dengi) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько денег");
+                        PI[playerid][pCash] -= dengi;
+                        MafiaBank[0][nRm] += dengi;
+                        SendMes(playerid,0x6ab1ffaa,"Вы положили в банк Русской мафии: %s руб.", formatInt(dengi));
+                        format(stringer, sizeof(stringer), "%s положил в банк мафии %s руб.", PI[playerid][pNames],formatInt(dengi));
+                        SendFamilyMessage(14, COLOR_YELLOW2, stringer);
+                        SetOtherInt("rmmats", rmmats);
+                        return 1;
+                    }
+                case 5:
+                    {
+                        if(!strlen(inputtext))
+                        {
+                            format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                            SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Ок","X");
+                        }
+                        new dengi = strval(inputtext);
+                        if(dengi < 1 || dengi > 10000000)
+                        {
+                            SendClientMessage(playerid,COLOR_GRAD1,"Нельзя пополнить счет меньше 1 и больше 10000000 руб.");
+                            format(stringer,sizeof(stringer),"Пополнение счета банка мафии");
+                            SPD(playerid,22255,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Ок","X");
+                            return 1;
+                        }
+                        if(PI[playerid][pCash] < dengi) return SendClientMessage(playerid,COLOR_GRAD1,"У вас нет столько денег");
+                        PI[playerid][pCash] -= dengi;
+                        MafiaBank[0][nLcn] += dengi;
+                        SendMes(playerid,0x6ab1ffaa,"Вы положили в банк мафии Курганская ОПГ: %s руб.", formatInt(dengi));
+                        format(stringer, sizeof(stringer), "%s положил в банк мафии %s руб.", PI[playerid][pNames],formatInt(dengi));
+                        SendFamilyMessage(5, COLOR_YELLOW2, stringer);
+                        SetOtherInt("rmmats", rmmats);
+                        return 1;
+                    }
+                }
+            }
+        }//case 22255
+    case 22256:
+        {
+            if(response)
+            {
+                switch(PI[playerid][pMember])
+                {
+                case 6:
+                    {
+                        if(!strlen(inputtext))
+                        {
+                            format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                            SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                        }
+                        new dengi = strval(inputtext);
+                        if(dengi < 1 || dengi > 10000000)
+                        {
+                            SendClientMessage(playerid,COLOR_GRAD1,"Нельзя снять меньше 1 и больше 10000000 руб.");
+                            format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                            SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                            return 1;
+                        }
+                        if(MafiaBank[0][nYakuza] < dengi) return SendClientMessage(playerid,COLOR_GRAD1,"В Банке Тамбовская ОПГ нет столько денег");
+                        GiveMoney(playerid, dengi);
+                        MafiaBank[0][nYakuza] -= dengi;
+                        SendMes(playerid,0x6ab1ffaa,"Вы сняли с банка мафии Тамбовская ОПГ: %s руб.", formatInt(dengi));
+                        format(stringer, sizeof(stringer), "%s снял с банка мафии %s руб.", PI[playerid][pNames],formatInt(dengi));
+                        SendFamilyMessage(6, COLOR_YELLOW2, stringer);
+                        SetOtherInt("MafiaBank[0][nYakuza]", MafiaBank[0][nYakuza]);
+                        return 1;
+                    }
+                case 14:
+                    {
+                        if(!strlen(inputtext))
+                        {
+                            format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                            SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                        }
+                        new dengi = strval(inputtext);
+                        if(dengi < 1 || dengi > 10000000)
+                        {
+                            SendClientMessage(playerid,COLOR_GRAD1,"Нельзя снять меньше 1 и больше 10000000 руб.");
+                            format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                            SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                            return 1;
+                        }
+                        if(MafiaBank[0][nRm] < dengi) return SendClientMessage(playerid,COLOR_GRAD1,"В Банке Тамбовская ОПГ нет столько денег");
+                        GiveMoney(playerid, dengi);
+                        MafiaBank[0][nRm] -= dengi;
+                        SendMes(playerid,0x6ab1ffaa,"Вы сняли с банка мафии Russan Mafia: %s руб.", formatInt(dengi));
+                        format(stringer, sizeof(stringer), "%s снял с банка мафии %s руб.", PI[playerid][pNames],formatInt(dengi));
+                        SendFamilyMessage(14, COLOR_YELLOW2, stringer);
+                        SetOtherInt("MafiaBank[0][nRm]", MafiaBank[0][nRm]);
+                        return 1;
+                    }
+                case 5:
+                    {
+                        if(!strlen(inputtext))
+                        {
+                            format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                            SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                        }
+                        new dengi = strval(inputtext);
+                        if(dengi < 1 || dengi > 10000000)
+                        {
+                            SendClientMessage(playerid,COLOR_GRAD1,"Нельзя снять меньше 1 и больше 10000000 руб.");
+                            format(stringer,sizeof(stringer),"Снятие денег с банка мафии");
+                            SPD(playerid,22256,DIALOG_STYLE_INPUT,"Введите сумму",stringer,"Oк","X");
+                            return 1;
+                        }
+                        if(MafiaBank[0][nLcn] < dengi) return SendClientMessage(playerid,COLOR_GRAD1,"В Банке Тамбовская ОПГ нет столько денег");
+                        GiveMoney(playerid, dengi);
+                        MafiaBank[0][nLcn] -= dengi;
+                        SendMes(playerid,0x6ab1ffaa,"Вы сняли с банка мафии Курганская ОПГ: %s руб.", formatInt(dengi));
+                        format(stringer, sizeof(stringer), "%s снял с банка мафии %s руб.", PI[playerid][pNames],formatInt(dengi));
+                        SendFamilyMessage(5, COLOR_YELLOW2, stringer);
+                        SetOtherInt("MafiaBank[0][nLcn]", MafiaBank[0][nLcn]);
+                        return 1;
+                    }
+                }
+            }
+        }
+    case 9391:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: {
+                    mysql_format(connects, mysql_query_,sizeof(mysql_query_) ,"SELECT `pMember`,`pRank`,`Name`,`pGetonDate`,`pID` FROM `"TABLE_ACCOUNT"` WHERE `pMember` = '%d' AND `pLeader` = '0' AND `pOnline` = '1001' ORDER BY `pRank` DESC LIMIT 0,15",PI[playerid][pMember]);
+                    mysql_tquery(connects, mysql_query_, "OnLeaderPanel", "dd",playerid, 1);
+                }
+            case 1..4:
+                {
+                    stringer[0] = 0;
+                    for(new i; i < 15; i++)
+                    {
+                        if(!strlen(fRankName[PI[playerid][pMember]-1][i])) continue;
+                        format(stringer,sizeof(stringer),"%s%i. %s%s\n", stringer,i+1,(i+1==gFractionRank[PI[playerid][pMember]-1][listitem-1])?("{FF4500}"):("{FFFFFF}"),fRankName[PI[playerid][pMember]-1][i]);
+                    }
+                    SetPVarInt(playerid,"leader_rank", listitem);
+                    SPD(playerid,9392,DIALOG_STYLE_LIST,"{ffff00}Выберите ранг",stringer,"Выбрать", "Закрыть");
+                }
+            case 5:
+                {
+                    stringer[0] = 0;
+                    for(new i; i < 15; i++)
+                    {
+                        if(!strlen(fRankName[PI[playerid][pMember]-1][i])) continue;
+                        format(stringer,sizeof(stringer),"%s%s\n",stringer,fRankName[PI[playerid][pMember]-1][i]);
+                    }
+                    SPD(playerid,9393,DIALOG_STYLE_LIST,"{ffff00}Выберите ранг",stringer,"Выбрать","Закрыть");
+                    return 1;
+                }
+            }
+            return 1;
+        }
+    case 9392:
+        {
+            if(!response) return DeletePVar(playerid,"leader_rank");
+            if(!PI[playerid][pMember]) return 1;
+            new select_listitem = GetPVarInt(playerid,"leader_rank");
+            gFractionRank[PI[playerid][pMember]-1][select_listitem-1] = listitem + 1;
+            format(mysql_query_, sizeof(mysql_query_),"UPDATE `fraction_ranks` SET `settings` = '%i,%i,%i,%i' WHERE `fracid` = '%i'",gFractionRank[PI[playerid][pMember]-1][0],gFractionRank[PI[playerid][pMember]-1][1],gFractionRank[PI[playerid][pMember]-1][2],gFractionRank[PI[playerid][pMember]-1][3],PI[playerid][pMember]-1);
+            mysql_tquery(connects,mysql_query_,"","");
+            DeletePVar(playerid,"leader_rank");
+            pc_cmd_lpanel(playerid);
+            return 1;
+        }
+    case 9393:
+        {
+            if(!response) return 1;
+            if(!PI[playerid][pMember]) return 1;
+            SPD(playerid, 9394, DIALOG_STYLE_LIST, "{ffff00}Управление рангом", "{FFFFFF}Изменение названия ранга", "Выбрать", "Отмена");
+            return SetPVarInt(playerid,"edit_rank",listitem);
+        }
+    case 9394:
+        {
+            if(!response) return DeletePVar(playerid,"edit_rank");
+            if(!PI[playerid][pMember]) return 1;
+            switch(listitem)
+            {
+            case 0: ShowPlayerDialog(playerid, 9395, DIALOG_STYLE_INPUT, "{ffff00}Изменение названия ранга", "{FFFFFF}Используйте название ранга", "Выбрать", "Отмена");
+            }
+            return 1;
+        }
+    case 9395:
+        {
+            if(!response) return DeletePVar(playerid,"edit_rank");
+            if(!PI[playerid][pMember]) return 1;
+            if(strlen(inputtext) <= 0 || strlen(inputtext) >= 40) return SPD(playerid, 9395, DIALOG_STYLE_INPUT, "{ffff00}Изменение названия ранга", "{FFFFFF}Используйте название ранга", "Выбрать", "Отмена");
+            new slot = GetPVarInt(playerid, "edit_rank");
+            SendMes(playerid, -1, "Вы изменили ранг №%d с %s на %s",slot+1,fRankName[PI[playerid][pMember]-1][slot],inputtext);
+            strmid(fRankName[PI[playerid][pMember]-1][slot], inputtext, 0, strlen(inputtext));
+            mysql_format(connects, mysql_query_, sizeof(mysql_query_),"UPDATE `fraction_ranks` SET `rang_%i` = '%e' WHERE `fracid` = '%i'",slot,fRankName[PI[playerid][pMember]-1][slot], PI[playerid][pMember]-1);
+            mysql_tquery(connects,mysql_query_,"","");
+            DeletePVar(playerid,"edit_rank");
+            return 1;
+        }
+    case 6050:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(PI[playerid][pAdmin] >= 6)
+                        {
+                            for(new i; i<50; i++) SendClientMessageToAll(0x00000000,"");
+                            SendClientMessageToAll(COLOR_LIGHTRED,"Чат был очищен администрацией!");
+                        }
+                    }
+                case 1: SPD(playerid, 10098, DIALOG_STYLE_LIST, "Устройство на работу"," Механик (( 2 лвл ))\n Таксист (( 2 лвл ))\n Продавец хотдогов (( 3 лвл )\n Инкосатор (( 3 лвл ))\n Развозчик продуктов (( 4 лвл ))\n Тренер (( 5 лвл ))", "Устроиться", "Выход");
+                case 2:
+                    {
+                        SendMes(playerid,COLOR_GRAD1,"На складе Зоны 51: %d/500000 матов", armmatbi),SendMes(playerid,COLOR_GRAD1,"На складе армии Авианосец: %d/100000 матов", armmatsf);
+                        SendMes(playerid,COLOR_GRAD1,"На складе ФСБ %d/100000 матов", fbimats),SendMes(playerid,COLOR_GRAD1,"На складе МВД Г. Арзамас %d/100000 матов", lspdmatbi);
+                        SendMes(playerid,COLOR_GRAD1,"На складе SFPD %d/100000 матов", sfpdmats),SendMes(playerid,COLOR_GRAD1,"На складе LVPD %d/100000 матов", lvpdmats);
+                        SendMes(playerid,COLOR_GRAD1,"На складе мафии Якудза %d/50000 матов", yakuzamats),SendMes(playerid,COLOR_GRAD1,"На складе мафии Курганская ОПГ %d/50000 матов", lcnmats);
+                        SendMes(playerid,COLOR_GRAD1,"На складе Русской Мафии %d/50000 матов", rmmats);
+                    }
+                case 3: SPD(playerid,4385,DIALOG_STYLE_LIST, "Список погоды", "[1] Солнечная погода\n[2] Очень солнечная погода\n[3] Гроза\n[4] Пасмурно и туман\n[5] Хмурая и дождливая\n[6] Песчаная буря\n[7] Туманный и зеленоватый\n[8] В красках бледного Апельсина\n[9] Свежая в синих красках\n[10] Туманно и серо\n[11] Темный неясный коричневый", "Поставить", "Меню");
+                case 4: SPD(playerid,4395,DIALOG_STYLE_LIST, "Изменить время суток", "Ночь - 0 часов\nНочь - 1 час\nНочь - 2 часа\nНочь - 3 часа\nНочь - 4 часа\nНочь - 5 часов\nУтро - 6 часов\nУтро - 7 часов\nУтро - 8 часов\nУтро - 9 часов\nУтро - 10 часов\nУтро - 11 часов\nУтро - 12 часов\nДень - 13 часов\nДень - 14 часов\nДень - 15 часов\nДень - 16 часов\nДень - 17 часов\nВечер - 18 часов\nВечер - 19 часов\nВечер - 20 часов\nВечер - 21 час\nНочь - 22 часа\nНочь - 23 часа", "Установить", "Меню");
+                }
+            }
+            else return pc_cmd_apanel(playerid, "");
+        } //===================================================================================================================================================================== //
+    case 6056: {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 2:pc_cmd_mp(playerid, "");
+            }
+            return 1;
+        }
+        //===================================================================================================================================================================== //
+
+        //==================================================================================================================================================================================//
+    case 6019:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                        {
+                            if(FD(playerid)) // Проверка
+                            {
+                                SaveAccounts(); SaveOther(); SaveHousee();
+                                SaveAll();
+                                SendClientMessage(playerid,COLOR_GRAD1,"{00FF00}[Успешно] {FFFFFF}Сохранено");
+                            }
+                        }
+                    case 1: { if(FD(playerid)) SaveAll(),SaveHousee(),SendClientMessage(playerid,COLOR_GRAD1,"Дома и бизнесы сохранены - {00FF00}[Успешно] {FFFFFF}!"); }
+                    case 2: { if(FD(playerid)) PayDay(); }
+                    case 3: SPD(playerid,6029,DIALOG_STYLE_LIST,""SERVER"Ускорители | {ffffff}BOOST-"SERVER"System","{FFFFFF}PayDay x2 [Включить]\nPayDay x3 [Включить]\nPayDay x4 [Включить]\nPayDay x5 [Включить]\nPayDay x10 [Включить]\nВыключить множители опыта","Далее","Закрыть");
+                    case 4:pc_cmd_dvall(playerid);
+                }
+            }
+            else return pc_cmd_apanel(playerid, "");
+        }
+        //==================================================================================================================================================================================//
+    case 6029:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        PayDayBoost = 2;
+                        format(stringer1, sizeof(stringer1), "[A] Основатель %s включил X2 опыт на сервере !", PI[playerid][pNames]);
+                        SendAdminMessage(COLOR_GREY, stringer1);
+                        format(stringer1, sizeof(stringer1), ""SERVER_NAME" | {FFFFFF}На сервере включен X2 {FFFFFF}опыт !");
+                        SendClientMessageToAll(0x00cc00ff,stringer1);
+                    }
+                case 1:
+                    {
+                        PayDayBoost = 3;
+                        format(stringer1, sizeof(stringer1), "[A] Основатель %s включил X3 опыт на сервере !", PI[playerid][pNames]);
+                        SendAdminMessage(COLOR_GREY, stringer1);
+                        format(stringer1, sizeof(stringer1), ""SERVER_NAME" | {FFFFFF}На сервере включен X3 {FFFFFF}опыт ! | Наш сайт - "SERVER_WEBSITE"");
+                        SendClientMessageToAll(0x00cc00ff, stringer1); // Бежевый(похожий) - {ff9b2c} | Зеленый -  {219915}
+                    }
+                case 2:
+                    {
+                        PayDayBoost = 4;
+                        format(stringer1, sizeof(stringer1), "[A] Основатель %s включил X4 опыт на сервере !", PI[playerid][pNames]);
+                        SendAdminMessage(COLOR_GREY, stringer1);
+                        format(stringer1, sizeof(stringer1), ""SERVER_NAME" | {FFFFFF}На сервере включен X4 {FFFFFF}опыт ! | Наш сайт - "SERVER_WEBSITE"");
+                        SendClientMessageToAll(0x00cc00ff, stringer1); // Бежевый(похожий) - {ff9b2c} | Зеленый -  {219915}
+                    }
+                case 3:
+                    {
+                        PayDayBoost = 5;
+                        format(stringer1, sizeof(stringer1), "[A] Основатель %s включил X5 опыт на сервере !", PI[playerid][pNames]);
+                        SendAdminMessage(COLOR_GREY, stringer1);
+                        format(stringer1, sizeof(stringer1), ""SERVER_NAME" | {FFFFFF}На сервере включен X5 {FFFFFF}опыт ! | Наш сайт - "SERVER_WEBSITE"");
+                        SendClientMessageToAll(0x00cc00ff, stringer1); // Бежевый(похожий) - {ff9b2c} | Зеленый -  {219915}
+                    }
+                case 4:
+                    {
+                        PayDayBoost = 10;
+                        format(stringer1, sizeof(stringer1), "[A] Основатель %s включил X10 опыт на сервере !", PI[playerid][pNames]);
+                        SendAdminMessage(COLOR_GREY, stringer1);
+                        format(stringer1, sizeof(stringer1), ""SERVER_NAME" | {FFFFFF}На сервере включен X10 {FFFFFF}опыт ! | Наш сайт - "SERVER_WEBSITE"");
+                        SendClientMessageToAll(0x00cc00ff, stringer1); // Бежевый(похожий) - {ff9b2c} | Зеленый -  {219915}
+                    }
+                case 5:
+                    {
+                        PayDayBoost = 1;
+                        format(stringer1, sizeof(stringer1), "[A] Основатель %s выключил все EXP бонусы !", PI[playerid][pNames]);
+                        SendAdminMessage(COLOR_GREY, stringer1);
+                        format(stringer1, sizeof(stringer1), ""SERVER_NAME" | {FFFFFF}Все {FF4500}EXP {FFFFFF}бонусы были выключены ! | Наш сайт - "SERVER_WEBSITE"");
+                        SendClientMessageToAll(0x00cc00ff, stringer1); // Бежевый(похожий) - {ff9b2c} | Зеленый -  {219915}
+                    }
+                }
+            }
+        }
+        //==================================================================================================================================================================================//
+    case 4385:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetWeather(10);
+                case 1: SetWeather(2);
+                case 2: SetWeather(8);
+                case 3: SetWeather(9);
+                case 4: SetWeather(14);
+                case 5: SetWeather(19);
+                case 6: SetWeather(20);
+                case 7: SetWeather(23);
+                case 8: SetWeather(27);
+                case 9: SetWeather(30);
+                case 10: SetWeather(33);
+                }
+                format(stringer1, sizeof(stringer1), "[A] %s сменил погоду", PI[playerid][pNames]);
+                SendAdminMessage(COLOR_GREY,stringer1);
+            }
+            else { pc_cmd_apanel(playerid, ""); return 1; }
+        }
+        //==================================================================================================================================================================================//
+    case 4395:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetWorldTime(0);
+                case 1: SetWorldTime(1);
+                case 2: SetWorldTime(2);
+                case 3: SetWorldTime(3);
+                case 4: SetWorldTime(4);
+                case 5: SetWorldTime(5);
+                case 6: SetWorldTime(6);
+                case 7: SetWorldTime(7);
+                case 8: SetWorldTime(8);
+                case 9: SetWorldTime(9);
+                case 10: SetWorldTime(10);
+                case 11: SetWorldTime(11);
+                case 12: SetWorldTime(12);
+                case 13: SetWorldTime(13);
+                case 14: SetWorldTime(14);
+                case 15: SetWorldTime(15);
+                case 16: SetWorldTime(16);
+                case 17: SetWorldTime(17);
+                case 18: SetWorldTime(18);
+                case 19: SetWorldTime(19);
+                case 20: SetWorldTime(20);
+                case 21: SetWorldTime(21);
+                case 22: SetWorldTime(22);
+                case 23: SetWorldTime(23);
+                case 24: SetWorldTime(24);
+                }
+                format(stringer1, sizeof(stringer1), "[A] %s сменил время суток", PI[playerid][pNames]);
+                SendAdminMessage(COLOR_GREY,stringer1);
+            }
+            else { pc_cmd_apanel(playerid, ""); return 1; }
+        }
+        //=======================================[GMENU]============================
+    case 8454:
+        {
+            if(!response) return DeletePVar(playerid,"advert");
+            if(gAdvertCount >= MAX_ADVERT_COUNT) return SendClientMessage(playerid,COLOR_GREY,"К сожалению, очередь на объявления занята, попробуйте позже");
+            new texts1[100];
+            GetPVarString(playerid,"advert",texts1,100);
+            DeletePVar(playerid,"advert");
+            new price = strlen(texts1) * addd;
+            if(PI[playerid][pCash] < price) return SendClientMessage(playerid, COLOR_WHITE,  "У Вас не достаточно денег");
+            gAdvertCount ++;
+            new slot = -1;
+            for(new i;i<MAX_ADVERT_COUNT;i++)
+            {
+                if(!gAdvert[i][adBusy]) {slot = i; break;}
+            }
+            if(slot == -1) return SendClientMessage(playerid,COLOR_GREY,"Ошибка (#111)");
+            PI[playerid][pCash] -= price;
+            FracBank[0][fLsnews] += price;
+            gAdvert[slot][adMoney] = price;
+            format(gAdvert[slot][adSender],24,"%s",PI[playerid][pNames]);
+            gAdvert[slot][adPhone] = PI[playerid][pPnumber];
+            format(gAdvert[slot][adText],100,"%s",texts1);
+            gAdvert[slot][adBusy] = true;
+            adverttime = gettime()+30;
+            SendClientMessage(playerid,-1,"Ваше объявление отправлено на обработку.");
+            SendFamilyMessage(16,CBLUE, "[R] Пришло новое объявление | Смотрите: /n");
+        }
+    case 8455:
+        {
+            if(!response) return DeletePVar(playerid,"advert");
+            if(gVipAdvertCount >= MAX_VIP_ADVERT_COUNT) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}К сожалению, очередь на объявления занята, попробуйте позже");
+
+            new texts1[100];
+            GetPVarString(playerid,"advert",texts1,100);
+            DeletePVar(playerid,"advert");
+
+            gVipAdvertCount ++;
+            new slot = -1;
+            for(new i = 0; i < MAX_VIP_ADVERT_COUNT; i++)
+            {
+                if(!gVipAdvert[i][vadBusy]) {slot = i; break;}
+            }
+            if(slot == -1) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Ошибка (#111)");
+
+            format(gVipAdvert[slot][vadSender],24,"%s",PI[playerid][pNames]);
+            gVipAdvert[slot][vadPhone] = PI[playerid][pPnumber];
+            format(gVipAdvert[slot][vadText],100,"%s",texts1);
+            gVipAdvert[slot][vadBusy] = true;
+            vipadverttime = gettime()+60;
+            SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Ваше объявление отправлено на обработку.");
+            SendAdminMessage(COLOR_WHITE, !""SERVER"[A] Пришло новое VIP-объявление {afafaf}(Редактировать: /edit)");
+        }
+    /*
+    case 8000:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 2)) RemovePlayerAttachedObject(objectplayerid, 2);
+                        SetPlayerAttachedObject(objectplayerid,2,19137,2,0.100000,0.000000,0.000000,0.000000,0.000000,0.000000,1.000000,1.000000,1.000000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Шляпа Курицы]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Шляпа Курицы]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 1:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 7)) RemovePlayerAttachedObject(objectplayerid, 7);
+                        SetPlayerAttachedObject(objectplayerid,7, 19270, 2, 0.111052, 0.021643, -0.000846, 92.280899, 92.752510, 358.071044, 1.200000, 1.283168, 1.200000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Огонь на голову]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Огонь на голову]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 2:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 4)) RemovePlayerAttachedObject(objectplayerid, 4);
+                        SetPlayerAttachedObject(objectplayerid,4, 18646, 2, 0.111052, 0.021643, -0.000846, 92.280899, 92.752510, 358.071044, 1.200000, 1.283168, 1.200000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Мигалка на голову]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Мигалка на голову]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 3:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 7)) RemovePlayerAttachedObject(objectplayerid, 7);
+                        SetPlayerAttachedObject(objectplayerid,7, 19163, 2, 0.111052, 0.021643, -0.000846, 100.280899, 100.752510, 445.071044, 1.100000, 1.300000, 1.300000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Черная маска]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Черная маска]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 4:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
+                        SetPlayerAttachedObject(objectplayerid,0, 18915, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Бандана №1]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Бандана №1]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 5:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
+                        SetPlayerAttachedObject(objectplayerid,0, 18912, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Бандана №2]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Бандана №2]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 6:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
+                        SetPlayerAttachedObject(objectplayerid,0, 18916, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Бандана №3]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Бандана №3]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 7:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
+                        SetPlayerAttachedObject(objectplayerid,0, 18917, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Бандана №4]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Бандана №4]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 8:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
+                        SetPlayerAttachedObject(objectplayerid,0, 18918, 2, 0.1, 0.03, -0.005, 90.0, 180.0, 90.0);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Бандана №5]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Бандана №5]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 9:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 4)) RemovePlayerAttachedObject(objectplayerid, 4);
+                        SetPlayerAttachedObject(objectplayerid,4, 3528, 2, 0.111052, 0.021643, -0.000846, 92.280899, 92.752510, 358.071044, 0.100000, 0.100000, 0.100000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Маска Дракона]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Маска Дракона]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 10:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 4)) RemovePlayerAttachedObject(objectplayerid, 4);
+                        SetPlayerAttachedObject(objectplayerid,4, 18643, 2, 0.111052, 0.021643, -0.000846, 92.280899, 92.752510, 358.071044, 1.200000, 1.283168, 1.200000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Лазер на голову]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Лазер на голову]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 11:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0) || IsPlayerAttachedObjectSlotUsed(objectplayerid, 1) || IsPlayerAttachedObjectSlotUsed(objectplayerid, 4))
+                        {
+                            RemovePlayerAttachedObject(objectplayerid, 0);
+                            RemovePlayerAttachedObject(objectplayerid, 1);
+                            RemovePlayerAttachedObject(objectplayerid, 4);
+                        }
+                        SetPlayerAttachedObject(objectplayerid,0, 18693, 5, 1.983503, 1.558882, -0.129482, 86.705787, 308.978118, 268.198822, 1.500000, 1.500000, 1.500000);
+                        SetPlayerAttachedObject(objectplayerid,1, 18693, 6, 1.983503, 1.558882, -0.129482, 86.705787, 308.978118, 268.198822, 1.500000, 1.500000, 1.500000);
+                        SetPlayerAttachedObject(objectplayerid,4, 18965, 2, 0.111052, 0.021643, -0.000846, 92.280899, 92.752510, 358.071044, 1.200000, 1.283168, 1.200000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Комплект всемогущий]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Комплект всемогущий]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 12:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 7)) RemovePlayerAttachedObject(objectplayerid, 7);
+                        SetPlayerAttachedObject(objectplayerid,7, 19078, 1, 0.329150, -0.072101, 0.156082, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, 1.000000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Попугай на плечо]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Попугай на плечо]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 13:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 7)) RemovePlayerAttachedObject(objectplayerid, 7);
+                        SetPlayerAttachedObject(objectplayerid,7, 354, 1, 0.329150, -0.072101, 0.156082, 0.000000, 0.000000, 0.000000, 1.000000, 1.000000, 1.000000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Яркий свет]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Яркий свет]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 14:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 1)) RemovePlayerAttachedObject(objectplayerid, 1);
+                        SetPlayerAttachedObject(objectplayerid,1, 356, 6, 0.013610, -0.021393, -0.144862, 2.354303, 354.413848, 0.219168, 3.034477, 3.000000, 3.000000);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Большой М4 в руку]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Большой М4 в руку]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 15:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 1)) RemovePlayerAttachedObject(objectplayerid, 1);
+                        SetPlayerAttachedObject(objectplayerid,1, 19086, 8, -0.049768, -0.014062, -0.108385, 87.458297, 263.478149, 184.123764, 0.622413, 1.041609, 1.012785);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Пенис]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Пенис]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 16:
+                    {
+                        if(IsPlayerAttachedObjectSlotUsed(objectplayerid, 0)) RemovePlayerAttachedObject(objectplayerid, 0);
+                        SetPlayerAttachedObject(objectplayerid,0, 19078, 1, -1.097527, -0.348305, -0.008029, 0.000000, 0.000000, 0.000000, 8.073966, 8.073966, 8.073966);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s выдал вам объект [Костюм попугая]",PI[playerid][pNames]);
+                        SendMes(playerid,0x6ab1ffaa,"Вы выдали объект игроку %s [Костюм попугая]",PI[objectplayerid][pNames]);
+                        return 1;
+                    }
+                case 17:
+                    {
+                        RemovePlayerAttachedObject(objectplayerid, 0);
+                        RemovePlayerAttachedObject(objectplayerid, 1);
+                        RemovePlayerAttachedObject(objectplayerid, 2);
+                        RemovePlayerAttachedObject(objectplayerid, 3);
+                        RemovePlayerAttachedObject(objectplayerid, 4);
+                        RemovePlayerAttachedObject(objectplayerid, 5);
+                        RemovePlayerAttachedObject(objectplayerid, 6);
+                        RemovePlayerAttachedObject(objectplayerid, 7);
+                        RemovePlayerAttachedObject(objectplayerid, 8);
+                        RemovePlayerAttachedObject(objectplayerid, 9);
+                        SendMes(objectplayerid,0x6ab1ffaa,"Администратор %s удалил все ваши объекты",PI[playerid][pNames]);

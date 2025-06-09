@@ -1,0 +1,1000 @@
+                    SetPlayerCheckpoint(playerid,-1607.2913,683.5955,-5.2422,6.0);
+                    MatsArmyCar[playerid] = 35;
+                }
+            case 6: return SPD(playerid, 3232, DIALOG_STYLE_LIST, "Развозка материалов бандам", "- Разгрузка The Ballas\n- Разгрузка The Vagos\n- Разгрузка The Grove\n- Разгрузка The Aztek\n- Разгрузка The Rifa", "Выбрать", "Отмена");
+            case 7:
+                {
+                    SetPlayerCheckpoint(playerid,2292.0837,2458.9941,10.8203,6.0);
+                    MatsArmyCar[playerid] = 150;//lvpd
+                }
+            }
+            return 1;
+        }
+        //------------------------------[ маты бандам ] -------------------------
+    case 3232:
+        {
+            if(response)
+            {
+                if (PI[playerid][pMember] == 19 || proverkaforma[playerid] == 1)
+                {
+                    if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 433) return SendClientMessage(playerid,COLOR_GREY,"Вы не в матовозе!");
+                    switch(listitem)
+                    {
+                    case 0:
+                        {
+                            SetPlayerCheckpoint(playerid,2645.9717,-2005.8618,13.3828,6.0);
+                            MatsArmyCar[playerid]= 100;
+                            return 1;
+                        }
+                    case 1:
+                        {
+                            SetPlayerCheckpoint(playerid,2795.7639,-1619.4196,10.9219,6.0);
+                            MatsArmyCar[playerid]= 101;
+                            return 1;
+                        }
+                    case 2:
+                        {
+                            SetPlayerCheckpoint(playerid,2489.2656,-1670.0692,13.3359,6.0);
+                            MatsArmyCar[playerid]= 102;
+                            return 1;
+                        }
+                    case 3:
+                        {
+                            SetPlayerCheckpoint(playerid,1715.4744,-2112.1699,13.3828,6.0);
+                            MatsArmyCar[playerid]= 103;
+                            return 1;
+                        }
+                    case 4:
+                        {
+                            SetPlayerCheckpoint(playerid,2176.5503,-1803.5483,13.3692,6.0);
+                            MatsArmyCar[playerid]= 104;
+                            return 1;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return 1;
+            }
+        }
+    case 4819:
+        {
+            if(!response || listitem == 7 || listitem == 8 || listitem == 19 || listitem == 21) return 1;
+            stringer[0] = 0;
+            for(new i; i < 12; i++)
+            {
+                if(!gFractionSkin[listitem][i]) continue;
+                format(stringer, sizeof(stringer), "%sСкин [%i]\n",stringer,gFractionSkin[listitem][i]);
+            }
+            SPD(playerid, 4820, DIALOG_STYLE_LIST, "Выберите скин", stringer, "Выбрать", "Закрыть");
+            return SetPVarInt(playerid, "spy_member", listitem);
+        }
+    case dColorGun:
+        {
+            if(!response)return 1;
+            SendClientMessage(playerid,-1,"Выберите цвет:");
+            stringer[0]=EOS;
+            for(new i=0;i<6;i++) format(stringer,1000,"%s{%06x}%s\n",stringer,_weapon_colors[i]>>>8,_weapon_color_name[i]);
+            ShowPlayerDialog(playerid,dColorGun2,DIALOG_STYLE_LIST,"   ", stringer,"Выбор","Отмена");
+            SetPVarInt(playerid,"_select_color_gun",listitem);
+            return 1;
+        }
+    case dColorGun2:
+        {
+            if(!response)return 1;
+            new _sprite_slotid=GetWeaponSpriteSlotID(allow_guns_print[GetPVarInt(playerid,"_select_color_gun")]);
+            weapon_sprit_select[playerid][_sprite_slotid]=listitem;
+            format(stringer,144,"Успешно, вы выбрали цвет для оружия '%s' - %s", WeaponNames[allow_guns_print[GetPVarInt(playerid,"_select_color_gun")]],_weapon_color_name[listitem]);
+            SendClientMessage(playerid,_weapon_colors[listitem],stringer);
+            return 1;
+        }
+    case 667:
+        {
+            if(response)
+            {
+                if(!IsACop(playerid))
+                {
+                    SetPPos(playerid,2147.862,1601.332,1006.168);
+                    SetPlayerInteriorEx(playerid,1);
+                    SetPlayerVirtualWorldEx(playerid,3);
+                    SetPlayerFacingAngle(playerid, 180.0);
+                    SetPlayerExtra(playerid, INVALID_PLAYER_ID, 2, "Проникновение в хранилище банка");
+                    SetCameraBehindPlayer(playerid);
+                }
+            }
+        }
+    case 4820:
+        {
+            if(!response) return DeletePVar(playerid,"spy_member");
+            new fraction = GetPVarInt(playerid,"spy_member")+1;
+            SetPlayerSkinEx(playerid, gFractionSkin[fraction-1][listitem]);
+            SetPVarInt(playerid,"mask", fraction);
+            SetPlayerColor(playerid, fraction);
+            colorchat(playerid, 2);
+            SendMes(playerid, COLOR_ISPOLZUY, "Вы скрылись в одежде фракции {FFFFFF}'%s'", GetPlayerFracName[fraction]);
+            SendClientMessage(playerid,COLOR_ISPOLZUY,"Используйте /spy еще раз чтобы снять маскировку");
+            DeletePVar(playerid,"spy_member");
+            return 1;
+        }
+    case 10054: {
+            if(!response) return pc_cmd_mainmenu(playerid);
+            switch(listitem) {
+            case 0: pc_cmd_donaterub(playerid);
+            case 1: SPD(playerid, 10057, DIALOG_STYLE_LIST, "{CCFF00}Обмен доната на игровую валюту", "1) 1.000.000 руб за 50 очков;\n2) 2.000.000 руб за 100 очков;\n3) 6.000.000 руб за 300 очков;\n4) 12.000.000 руб за 600 очков;\n5) 20.000.000 руб за 1000 очков.", "Обменять", "Назад");
+            case 2: {
+                    if(PI[playerid][pDonatemoney2] < 1000) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    PI[playerid][pDonatemoney2] -= 1000;
+                    GameTextForPlayer(playerid, "~r~-1000 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pNarcoLomka] += 1000;
+                }
+            case 3: {
+                    if(PI[playerid][pDonatemoney2] < 1000) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    PI[playerid][pDonatemoney2] -= 1000;
+                    GameTextForPlayer(playerid, "~r~-1000 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pNarcoLomka] -= 1000;
+                    if(PI[playerid][pNarcoLomka] < 0) PI[playerid][pNarcoLomka] = 0;
+                }
+            case 4: {
+                    if(PI[playerid][pDonatemoney2] < 500) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    PI[playerid][pDonatemoney2] -= 500;
+                    PI[playerid][pGunLic] = 1;
+                    PI[playerid][pBoatLic] = 1;
+                    PI[playerid][pFishLic] = 1;
+                    PI[playerid][pFlyLic] = 1;
+                    PI[playerid][pVodPrava] = 1;
+                    format(stringer, sizeof(stringer), "~r~-500 Donate ~g~Thanks!"); GameTextForPlayer(playerid, stringer, 5000, 1);
+                }
+            case 5: {
+                    if(PI[playerid][pDonatemoney2] < 500) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-500 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 500;
+                    PI[playerid][pSDPistol] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1000);
+                    PI[playerid][pDesertEagle] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1000);
+                    PI[playerid][pShotGun] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1000);
+                    PI[playerid][pMP5] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1000);
+                    PI[playerid][pAK47] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1000);
+                    PI[playerid][pM4] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1000);
+                }
+            case 6: SPD(playerid, 26366, DIALOG_STYLE_LIST, "{CCFF00}Премиум аккаунт", "1) Bronze VIP за 100 очков;\n2) Silver VIP за 200 очков;\n3) Gold VIP за 300 очков.", "Обменять", "Назад");
+            case 7: {
+                    if(PI[playerid][pDonatemoney2] < 100) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    PI[playerid][pDonatemoney2] -= 100;
+                    PI[playerid][pZakonp] += 10;
+                    GameTextForPlayer(playerid, "~r~-100 Donate ~g~Thanks!", 5000, 1);
+                }
+            case 8: {
+                    if(PI[playerid][pDonatemoney2] < 5000) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    if(PI[playerid][pOffBH] > 0) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] У вас уже куплена эта функция!");
+                    PI[playerid][pDonatemoney2] -= 5000;
+                    PI[playerid][pOffBH] = 1;
+                    GameTextForPlayer(playerid, "~r~-5000 Donate ~g~Thanks!", 5000, 1);
+                    format(stringer1, sizeof(stringer1), "UPDATE `accounts` SET `pOffBH` = '1' WHERE `pID` = '%d'", PI[playerid][pID]);
+                    mysql_function_query(connects, stringer1, false, "", "");
+                }
+            case 9: {
+                    if(PI[playerid][pDonatemoney2] < 1000) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    if(PI[playerid][pWarns] <= 0) return SendClientMessage(playerid, COLOR_RED, "Варнов нет");
+                    PI[playerid][pDonatemoney2] -= 1000;
+                    PI[playerid][pWarns] = 0;
+                    PI[playerid][punWarnstime] = 0;
+                    PI[playerid][punWarns] = 0;
+                    GameTextForPlayer(playerid, "~r~-1000 Donate ~g~Thanks!", 5000, 1);
+                }
+            case 10: {
+                    if(PI[playerid][pDonatemoney2] < 200) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    if(PI[playerid][pWanted] < 1) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Вы не находитесь в розыске");
+                    PI[playerid][pDonatemoney2] -= 200;
+                    PI[playerid][pWanted] = 0;
+                    SetPlayerWantedLevel(playerid, 0);
+                    GameTextForPlayer(playerid, "~r~-200 Donate ~g~Thanks!", 5000, 1);
+                }
+            case 11: {
+                    if(PI[playerid][pDonatemoney2] < 500) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    PI[playerid][pDonatemoney2] -= 500;
+                    GameTextForPlayer(playerid, "~r~-500 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][Texts][2] += 15;
+                }
+            case 12: {
+                    if(PI[playerid][pDonatemoney2] < 500) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    PI[playerid][pDonatemoney2] -= 500;
+                    GameTextForPlayer(playerid, "~r~-500 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pHeal] += 50;
+                }
+            }
+            return 1;
+        }
+    case 26364:
+        {
+            if(!response) return pc_cmd_donate(playerid);
+            switch(listitem)
+            {
+            case 0:
+                {
+                    if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 30;
+                    PI[playerid][pSDPistol] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1000);
+                }
+            case 1:
+                {
+                    if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 30;
+                    PI[playerid][pDesertEagle] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1000);
+                }
+            case 2:
+                {
+                    if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 30;
+                    PI[playerid][pShotGun] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1000);
+                }
+            case 3:
+                {
+                    if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 30;
+                    PI[playerid][pMP5] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1000);
+                }
+            case 4:
+                {
+                    if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 30;
+                    PI[playerid][pAK47] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1000);
+                }
+            case 5:
+                {
+                    if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 30;
+                    PI[playerid][pM4] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1000);
+                }
+            case 6:
+                {
+                    if(PI[playerid][pDonatemoney2] < 100) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                    GameTextForPlayer(playerid, "~r~-100 Donate ~g~Thanks!", 5000, 1);
+                    PI[playerid][pDonatemoney2] -= 100;
+                    PI[playerid][pSDPistol] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_PISTOL_SILENCED, 1000);
+                    PI[playerid][pDesertEagle] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_DESERT_EAGLE, 1000);
+                    PI[playerid][pShotGun] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_SHOTGUN, 1000);
+                    PI[playerid][pMP5] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_MP5, 1000);
+                    PI[playerid][pAK47] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_AK47, 1000);
+                    PI[playerid][pM4] = 100; SetPlayerSkillLevel(playerid, WEAPONSKILL_M4, 1000);
+                }
+            }
+        }
+    case 10057:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 50) return SendClientMessage(playerid, COLOR_GREY, "Вы не имеете 50 очков.");
+                        GiveMoney(playerid, 1000000);
+                        GameTextForPlayer(playerid, "~g~+1.000.000 B BANK~n~~r~-50 donate", 5000, 1);
+                        PI[playerid][pDonatemoney2] -= 50;
+                    }
+                case 1:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 100) return SendClientMessage(playerid, COLOR_GREY, "Вы не имеете 100 очков.");
+                        GiveMoney(playerid, 2000000);
+                        GameTextForPlayer(playerid, "~g~+2.000.000 B BANK~n~~r~-100 donate", 5000, 1);
+                        PI[playerid][pDonatemoney2] -= 100;
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 300) return SendClientMessage(playerid, COLOR_GREY, "Вы не имеете 300 очков.");
+                        GiveMoney(playerid, 6000000);
+                        GameTextForPlayer(playerid, "~g~+6.000.000 B BANK~n~~r~-300 donate", 5000, 1);
+                        PI[playerid][pDonatemoney2] -= 300;
+                    }
+                case 3:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 600) return SendClientMessage(playerid, COLOR_GREY, "Вы не имеете 600 очков.");
+                        GiveMoney(playerid, 12000000);
+                        GameTextForPlayer(playerid, "~g~+12.000.000 B BANK~n~~r~-600 donate", 5000, 1);
+                        PI[playerid][pDonatemoney2] -= 600;
+                    }
+                case 4:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 1000) return SendClientMessage(playerid, COLOR_GREY, "Вы не имеете 1000 очков.");
+                        GiveMoney(playerid, 20000000);
+                        GameTextForPlayer(playerid, "~g~+20.000.000 B BANK~n~~r~-1000 donate", 5000, 1);
+                        PI[playerid][pDonatemoney2] -= 1000;
+                    }
+                }
+            }
+            else return pc_cmd_donate(playerid);
+        }
+    case 26366:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 100) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        if(PI[playerid][pPayDayHad] < 1) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Для приобрете VIP статуса 1 лвл нужно отыграть 1 час минимум (/mm - Статистика персонажа)!");
+                        PI[playerid][pDonateRank] = 1;
+                        PI[playerid][pDonatemoney2] -= 100;
+                        GameTextForPlayer(playerid, "~r~-100 Donate ~g~Thanks!", 5000, 1);
+                    }
+                case 1:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 200) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        if(PI[playerid][pPayDayHad] < 2) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Для приобрете VIP статуса 2 лвл нужно отыграть 2 часа минимум (/mm - Статистика персонажа)!");
+                        PI[playerid][pDonateRank] = 2;
+                        PI[playerid][pDonatemoney2] -= 200;
+                        format(stringer, sizeof(stringer), "~r~-200 Donate ~g~Thanks!"); GameTextForPlayer(playerid, stringer, 5000, 1);
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 300) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        if(PI[playerid][pPayDayHad] < 3) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Для приобрете VIP статуса 3 лвл нужно отыграть 3 часа минимум (/mm - Статистика персонажа)!");
+                        PI[playerid][pDonateRank] = 3;
+                        PI[playerid][pDonatemoney2] -= 300;
+                        format(stringer, sizeof(stringer), "~r~-300 Donate ~g~Thanks!"); GameTextForPlayer(playerid, stringer, 5000, 1);
+
+                    }
+                }
+            }
+            else pc_cmd_donate(playerid);
+        }
+    case 26367:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(PI[playerid][pWarns] <= 0) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] У вас нет предупреждений!");
+                        if(PI[playerid][pDonatemoney2] < 200) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        if(PI[playerid][pWarns] == 1) PI[playerid][punWarnstime] = 0, PI[playerid][punWarns] = 0, PI[playerid][pWarns] -= 1;
+                        else if(PI[playerid][pWarns] > 1) PI[playerid][punWarnstime] = 0, PI[playerid][punWarns] = 1, PI[playerid][pWarns] -= 1;
+                        PI[playerid][pDonatemoney2] -= 200;
+                        GameTextForPlayer(playerid, "~r~-200 Donate ~g~Thanks!", 5000, 1);
+                    }
+                case 1:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        SetVehicleData(GetPlayerVehicleID(playerid), V_FUEL, 100);
+                        PI[playerid][pFuelcar] = 100;
+                        PI[playerid][pDonatemoney2] -= 30;
+                        GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 100) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pBoxSkill] = 999999;
+                        PI[playerid][pKongfuSkill] = 999999;
+                        PI[playerid][pKickboxSkill] = 9999999;
+                        PI[playerid][pDonatemoney2] -= 100;
+                        GameTextForPlayer(playerid, "~r~-100 Donate ~g~Thanks!", 5000, 1);
+                    }
+                case 3:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 50) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pDonatemoney2] -= 50;
+                        PI[playerid][pZakonp] = 100;
+                        GameTextForPlayer(playerid, "~r~-50 Donate ~g~Thanks!", 5000, 1);
+                    }
+                case 4:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 70) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        SPD(playerid,3421,1,"Смена номера SIM-карты","{ffffff}Введите новый шестизначный номер телефона","Купить","Отмена");
+                    }
+                case 5:
+                    {
+                        SPD(playerid, 354, DIALOG_STYLE_LIST,"{FFD300}С какой машины удалить тюнинг?","Вы действительно хотите удалить весь тюнинг безвозвратно?\n C текущего загруженного транспорта?","Далее","Выход");
+                    }
+                case 6:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 100) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pHeal] +=50;
+                        PI[playerid][pDonatemoney2] -= 100;
+                        GameTextForPlayer(playerid, "~r~-100 Donate ~g~Thanks!", 5000, 1);
+                    }
+
+                }
+            }
+            else pc_cmd_donate(playerid);
+        }
+    case 26370:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 50) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pDonatemoney2] -= 50;
+                        GameTextForPlayer(playerid, "~r~-50 Donate ~g~Thanks!", 5000, 1);
+                        PI[playerid][p_drugs][random(7)] += 500;
+                    }
+                case 1:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 50) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pDonatemoney2] -= 50;
+                        GameTextForPlayer(playerid, "~r~-50 Donate ~g~Thanks!", 5000, 1);
+                        PI[playerid][pNarcoLomka] = 0;
+                    }
+                case 2:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pDonatemoney2] -= 30;
+                        GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+                        PI[playerid][pNarcoLomka] = 3000;
+                    }
+                case 3:
+                    {
+                        if(PI[playerid][pDonatemoney2] < 50) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+                        PI[playerid][pDonatemoney2] -= 50;
+                        GameTextForPlayer(playerid, "~r~-50 Donate ~g~Thanks!", 5000, 1);
+                        PI[playerid][pNarcoLomka] = 5000;
+                    }
+                }
+            }
+            else pc_cmd_donate(playerid);
+        }
+    case 3421:
+        {
+            if(!response) return 1;
+            if(!IsNumericc(inputtext) || strlen(inputtext) != 6 || inputtext[0] == '0')
+            {
+                SendClientMessage(playerid,COLOR_GREY,"Номер должен состоять из {FFFFFF}6 {BBBBBB}цифр. Первая цифра не должны быть {FFFFFF}\"ноль\"");
+                SPD(playerid,3421,1,"Смена номера SIM-карты","{ffffff}Введите новый шестизначный номер телефона","Купить","Отмена");
+                return 1;
+            }
+            format(mysql_query_, sizeof(mysql_query_), "SELECT * FROM `"TABLE_ACCOUNT"` WHERE `pPnumber` = '%d'", strval(inputtext));
+            mysql_function_query(connects, mysql_query_, true, "OnPlayerCheckPhone", "id", playerid, strval(inputtext));
+        }
+    case 8291: {
+            if(!response) return 1;
+            switch(listitem) {
+            case 0: sscanf("Американский акцент", "s[32]", PI[playerid][pAccent]);
+            case 1: sscanf("Итальянский акцент", "s[32]", PI[playerid][pAccent]);
+            case 2: sscanf("Русский акцент", "s[32]", PI[playerid][pAccent]);
+            case 3: sscanf("Японский акцент", "s[32]", PI[playerid][pAccent]);
+            case 4: sscanf("Немецкий акцент", "s[32]", PI[playerid][pAccent]);
+            case 5: sscanf("Армянский акцент", "s[32]", PI[playerid][pAccent]);
+            case 6: sscanf("-", "s[32]", PI[playerid][pAccent]);
+            }
+            new string[144];
+            format(string, sizeof(string), "UPDATE `accounts` SET `pAccent` = '%s' WHERE `pID` = '%d'", PI[playerid][pAccent], PI[playerid][pID]);
+            mysql_function_query(connects, string, false, "", "");
+            if(listitem != 6) format(string, sizeof(string), "Вы успешно выбрали себе %s", PI[playerid][pAccent]), SendClientMessage(playerid, -1, string);
+            else SendClientMessage(playerid, -1, "Вы успешно избавились от акцента!");
+            return 1;
+        }
+
+    case 354:
+        {
+
+            if(!response) return 1;
+            if(PI[playerid][pDonatemoney2] < 30) return SendClientMessage(playerid, COLOR_WHITE, "{BBBBBB}[Ошибка] Не достаточно DonateMoney!");
+
+            if(GetPlayerOwnableCar(playerid) == INVALID_VEHICLE_ID)
+            {
+                if(GetPlayerOwnableCars(playerid) == 0)
+                return SendClientMessage(playerid, 0xCECECEFF, "У Вас нет личного транспорта");
+                else
+                return SendClientMessage(playerid, 0xCECECEFF, "Ваш личный транспорт не загружен на сервер");
+            }
+
+            PI[playerid][pDonatemoney2] -= 30;
+            GameTextForPlayer(playerid, "~r~-30 Donate ~g~Thanks!", 5000, 1);
+
+
+            return DeleteVehicleTune(playerid, GetPlayerOwnableCar(playerid), 1);
+        }
+    case 6565:
+        {
+            if(!response) return 1;
+            if(!listitem) return SPD(playerid, 6566, DIALOG_STYLE_INPUT, "Редактор", "Введите ID объекта:", "Готово", "Отмена");
+            else return SelectObject(playerid);
+        }
+    case 6566:
+        {
+            if(!response) return SPD(playerid, 6565, DIALOG_STYLE_LIST, "Редактор","[1] Создать объект\n[2] Редактировать объекты","Выбрать","Отмена");
+            new Float:X, Float:Y, Float:Z, price;
+            if(sscanf(inputtext,"d",price)) return SPD(playerid, 6566, DIALOG_STYLE_INPUT, "Редактор", "Введите ID объекта:", "Готово", "Назад");
+            GetPlayerPos(playerid, X, Y, Z);
+            new Object = CreateDynamicObject(price, X + 0.0, Y + 3.0, Z + 1.0, 0.0, 0.0, 0.0);
+            return EditDynamicObject(playerid, Object);
+        }
+    case 6567:
+        {
+            if(response) EditDynamicObject(playerid, GetPVarInt(playerid, "SelectedObject"));
+            else
+            {
+                DestroyDynamicObject(GetPVarInt(playerid, "SelectedObject"));
+                SelectObject(playerid);
+            }
+            return DeletePVar(playerid, "SelectedObject");
+        }
+    case 385:
+        {
+            if(!response) return 1;
+            if(BaseStarting[1] != 3) return SendClientMessage(playerid, -1, "• {AC0000}[Ошибка] {ffffff}Регистрация на бейсджампинг закрыта.");
+            if(PlayersInBase{0} >= 30) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}К сожалению все места заняты.");
+            if(PI[playerid][pCash] < 15000) return SendClientMessage(playerid, -1, "У вас нехватает денег ;(");
+            SetPVarInt(playerid, "PlayerInBase", 1);
+            PlayersInBase{0}++;
+            Iter_Add(BaseList, playerid);
+            SendClientMessage(playerid, -1, "Вы успешно записались на бейсджампинг.");
+            PI[playerid][pCash] -= 15000;
+            return 1;
+        }
+    case 4312:
+        {
+            if(!response) return DeletePVar(playerid,#DialogShow);
+            if(RaceStarting[2] != 3) return SendClientMessage(playerid, -1, "• {AC0000}[Ошибка] {ffffff}Регистрация на гоночные мероприятия закрыта."), DeletePVar(playerid,#DialogShow);
+            if (PlayersInRace{0} >= 40) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Нет мест."), DeletePVar(playerid,#DialogShow);
+            if (GetPVarInt(playerid, #PlayerInRace)) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Вы уже зарегистрированы на гонку."), DeletePVar(playerid,#DialogShow);
+            switch(listitem)
+            {
+            case 0:SetPVarInt(playerid,"rVehicle",503);
+            case 1:SetPVarInt(playerid,"rVehicle",506);
+            case 2:SetPVarInt(playerid,"rVehicle",541);
+            case 3:SetPVarInt(playerid,"rVehicle",603);
+            case 4:SetPVarInt(playerid,"rVehicle",411);
+            case 5:SetPVarInt(playerid,"rVehicle",451);
+            }
+            ShowPlayerDialog(playerid,4313,DIALOG_STYLE_LIST,"{FF6F00}Регистрация на гонку #2 {FFFFFF}(Выберите цвет)","{2D26FF}Синий\n{FF4500}Красный\n{F7FF03}Желтый\n{26FF05}Зеленый\n{FFBA19}Оранжевый\n{FFFFFF}Белый\n{CF29BE}Фиолетовый","Выбрать","Отмена");
+            return 1;
+        }
+    case 4313:
+        {
+            if(!response) return ShowPlayerDialog(playerid,4313,DIALOG_STYLE_LIST,"{FF6F00}Регистрация на гонку #2{FFFFFF}(Выберите цвет)","{2D26FF}Синий\n{FF4500}Красный\n{F7FF03}Желтый\n{26FF05}Зеленый\n{FFBA19}Оранжевый\n{FFFFFF}Белый\n{CF29BE}Фиолетовый","Выбрать","Отмена");
+            if(RaceStarting[2] != 3) return SendClientMessage(playerid, -1, "• {AC0000}[Ошибка] {ffffff}Регистрация на гоночные мероприятия закрыта."), DeletePVar(playerid,#DialogShow);
+            if (PlayersInRace{0} >= 40) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Нет мест."), DeletePVar(playerid,#DialogShow);
+            if (GetPVarInt(playerid, #PlayerInRace)) return SendClientMessage(playerid,-1,"• {AC0000}[Ошибка] {ffffff}Вы уже зарегистрированы на гонку."), DeletePVar(playerid,#DialogShow);
+            switch(listitem)
+            {
+                case 0: SetPVarInt(playerid,"rColor",198);
+                case 1: SetPVarInt(playerid,"rColor",181);
+                case 2: SetPVarInt(playerid,"rColor",194);
+                case 3: SetPVarInt(playerid,"rColor",154);
+                case 4: SetPVarInt(playerid,"rColor",183);
+                case 5: SetPVarInt(playerid,"rColor",1);
+                case 6: SetPVarInt(playerid,"rColor",171);
+            }
+            SetPVarInt(playerid, #PlayerInRace, 1);
+            PlayersInRace{0}++;
+            Iter_Add(RacersList, playerid);
+            PlayerPosition{playerid} = PlayersInRace{0} - 1;
+            format(stringer1,sizeof(stringer1),"Зарегистрирован новый участник под номером: %d | %s(%d)", PlayersInRace{0}, PI[playerid][pNames], playerid);
+            RaceChat(COLOR_LIGHTBLUE, stringer1);
+            SendClientMessage(playerid, COLOR_GREY, "Вы зарегистрировались на гонку, ожидайте начала гонки.");
+            SendClientMessage(playerid, COLOR_GREY, "Правила / Помощь:");
+            SendClientMessage(playerid, COLOR_GREY, "- Запрещено покидать транспортное средство во время гонки. (Вы будете изгнаны с гоночных мероприятий).");
+            SendClientMessage(playerid, COLOR_GREY, "- Если Вы умираете, гонка для Вас моментально окончена.");
+            SendClientMessage(playerid, COLOR_GREY, "- Запрещено ехать не по трассе, иначе, Вам не будут засчитаны очки.");
+            DeletePVar(playerid,"DialogShow");
+            return 1;
+        }
+        //------------------------------------------ [ mainmenu ] ---------------------------------------------
+    case 9624:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: {
+                        new Float:distance = 1000000.0, biz = -1, Float:pX, Float:pY, Float:pZ;
+                        GetPlayerPos(playerid, pX, pY, pZ);
+                        for(new i = 0; i < sizeof BizzInfo; i++)
+                        {
+                            if(strcmp(BizzInfo[i][bOwner],"None",true) && BizzInfo[i][bType] == 1 && !BizzInfo[i][bLock])
+                            {
+                                if(GetPlayerDistanceFromPoint(playerid, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz]) < distance)
+                                {
+                                    distance = GetPlayerDistanceFromPoint(playerid, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz]);
+                                    biz = i;
+                                }
+                            }
+                        }
+                        if(biz != -1)  SetPVarInt(playerid, "Gps24", biz), SetPlayerCheckpoint(playerid, BizzInfo[biz][bEntrx], BizzInfo[biz][bEntry], BizzInfo[biz][bEntrz], 4.0);
+                        else return SendClientMessage(playerid, -1, "Ошибка при поиске 24/7");
+                        SendClientMessage(playerid, -1, "Метка поставлена");
+                        CP[playerid] = 0;
+                        PicCP[playerid] = 5;
+                    }
+                case 1: {
+                        new Float:distance = 1000000.0, biz = -1, Float:pX, Float:pY, Float:pZ;
+                        GetPlayerPos(playerid, pX, pY, pZ);
+                        for(new i = 0; i < sizeof BizzInfo; i++)
+                        {
+                            if(strcmp(BizzInfo[i][bOwner],"None",true) && BizzInfo[i][bType] == 2 && !BizzInfo[i][bLock])
+                            {
+                                if(GetPlayerDistanceFromPoint(playerid, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz]) < distance)
+                                {
+                                    distance = GetPlayerDistanceFromPoint(playerid, BizzInfo[i][bEntrx], BizzInfo[i][bEntry], BizzInfo[i][bEntrz]);
+                                    biz = i;
+                                }
+                            }
+                        }
+                        if(biz != -1) SetPlayerCheckpoint(playerid, BizzInfo[biz][bEntrx], BizzInfo[biz][bEntry], BizzInfo[biz][bEntrz], 4.0);
+                        else return SendClientMessage(playerid, -1, "Ошибка при поиске АЗС");
+                        SendClientMessage(playerid, -1, "Метка поставлена");
+                        CP[playerid] = 0;
+                        PicCP[playerid] = 5;
+                    }
+                case 2: {
+                        SendClientMessage(playerid, COLOR_WHITE, !"Ближайший банкомат находится в отделении Сбербанка. Координаты на вашем навигаторе.");
+                        SetPlayerCheckpoint(playerid,  2377.3486, -2141.3796, 21.9716, 4.0);
+                        CP[playerid] = 0;
+                        PicCP[playerid] = 5;
+                        return 1;
+                    }
+                case 3: SPD(playerid, 9625, DIALOG_STYLE_LIST, ""SERVER"Основное", "1. {FFFFFF}Мэрия\n2. {FFFFFF}Автовокзал\n3. {FFFFFF}Церковь\n4. {FFFFFF}Автосервис\n5. {FFFFFF}Лион\n6. {FFFFFF}Казино\n7. {FFFFFF}Дома на воде\n8. {FFFFFF}Ночной клуб\n9. {FFFFFF}Автошкола", "Выбрать", "Назад");
+                case 4: SPD(playerid, 9626, DIALOG_STYLE_LIST, ""SERVER"Автосалоны", "1. {FFFFFF}Автосалон (Эконом класс)\n2. {FFFFFF}Автосалон (Премиум класс)\n3. {FFFFFF}Автосалон (Средний класс)\n4. {FFFFFF}Б/У рынок", "Выбрать", "Назад");
+                case 5: SPD(playerid, 9627, DIALOG_STYLE_LIST, ""SERVER"Бизнесы", "1. {FFFFFF}Магазины 24/7\n2. {FFFFFF}Автозаправочные станции (АЗС)\n3. {FFFFFF}Закусочные\n4. {FFFFFF}Клубы\n5. {FFFFFF}Бары\n6. {FFFFFF}Магазины одежды\n7. {FFFFFF}Оружейные магазины\n8. {FFFFFF}Автомастерские\n9. {FFFFFF}Магазины аксессуаров", "Выбрать", "Назад");
+                case 6: SPD(playerid, 9628, DIALOG_STYLE_LIST, ""SERVER"Работы", "1. {FFFFFF}Работа автоугонщика\n2. {FFFFFF}Работа воришки\n3. {FFFFFF}Развозчик пиццы", "Выбрать", "Назад");
+                case 7: SPD(playerid, 9629, DIALOG_STYLE_LIST, ""SERVER"База организаций", "1. {FFFFFF}Государственные организации\n2. {FFFFFF}Группировки\n3. {FFFFFF}Бизнес организации", "Выбрать", "Назад");
+                case 8: SPD(playerid, 9637, DIALOG_STYLE_LIST, ""SERVER"Банки", "1. {FFFFFF}Банк г. Южный\n2. {FFFFFF}Банк г. Арзамас\n3. {FFFFFF}Банк с. Батырево", "Выбрать", "Назад");
+                case 9:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"[Контейнеры]{afafaf} Отмечены на вашем GPS-Навигаторе.");
+                        SetPlayerCheckpoint(playerid, 2484.6267,301.8949,29.4973, 4.0);
+                        CP[playerid] = 0;
+                        PicCP[playerid] = 5;
+                        return true;
+                    }
+                }
+            }
+        }
+    case 9637:
+        {
+            if(!response) return pc_cmd_gps(playerid);
+            switch(listitem)
+            {
+            case 0: SetPlayerCheckpoint(playerid, 2376.6389,-2139.2036,22.0886, 3.0);
+            case 1: SetPlayerCheckpoint(playerid, 409.1250,742.1978,12.0006, 3.0);
+            case 2: SetPlayerCheckpoint(playerid, 1852.1744, 2039.6898, 15.8927, 3.0);
+            }
+            CP[playerid] = 0;
+            PicCP[playerid] = 5;
+            SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+        }
+    case 9636:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, 585.0516,1756.1005,12.0710, 3.0);
+                //case 1: SetPlayerCheckpoint(playerid, 1872.1956, -2304.2114, 14.1014, 3.0);
+                //case 2: SetPlayerCheckpoint(playerid, 507.263 ,-1609.7 ,16.267, 3.0);
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 2453:
+        {
+                /*
+                if(!response) return 1;
+                if(PI[playerid][pCash] < 1200) return SendClientMessage(playerid, COLOR_WHITE, "Стоимость данной услуги 1.200 $.");
+                PI[playerid][pCash] -= 1200;
+                SendClientMessage(playerid,COLOR_GREEN,"Весь свободный транспорт доставлен на базу организации");
+                GameTextForPlayer(playerid, "~r~-1200$", 2000, 1);
+                switch(PI[playerid][pLeader])
+                {
+                    case 5: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= lcncar[0] && x <= lcncar[1])) SetVehicleToRespawn(x);
+                    case 6: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= yakcar[0] && x <= yakcar[1])) SetVehicleToRespawn(x);
+                    case 12: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= ballascar[0] && x <= ballascar[1] || x == matsfuraballas)) SetVehicleToRespawn(x);
+                    case 13: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= vagoscar[0] && x <= vagoscar[1] || x == matsfuravagos)) SetVehicleToRespawn(x);
+                    case 14: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= ruscar[0] && x <= ruscar[1])) SetVehicleToRespawn(x);
+                    case 15: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= grovecar[0] && x <= grovecar[1] || x == matsfuragrove)) SetVehicleToRespawn(x);
+                    case 17: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= coronoscar[0] && x <= coronoscar[1] || x == matsfuraactek)) SetVehicleToRespawn(x);
+                    case 18: foreach(new x : valid_vehicles) if(!IsVehicleOccupied(x) && (x >= rifacar[0] && x <= rifacar[1] || x == matsfurarifa)) SetVehicleToRespawn(x);
+                }
+                return 1;
+                */
+        }
+    case 9625:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, -73.7082,855.6496,12.5978, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, 1866.9399,2263.9692,15.2740, 6.0);
+                case 2: SetPlayerCheckpoint(playerid, 1879.8152,1170.2408,30.0091, 6.0);
+                case 3: SetPlayerCheckpoint(playerid, 2060.8562,1883.6046,15.3945, 6.0);
+                case 4: SetPlayerCheckpoint(playerid, 1141.6102,2672.2502,11.9558, 6.0); // izmen
+                case 5: SetPlayerCheckpoint(playerid, -111.6671,983.6417,12.6053, 6.0);
+                case 6: SetPlayerCheckpoint(playerid, -2041.5071,-1063.0607,32.9824, 6.0);
+                case 7: SetPlayerCheckpoint(playerid, 2092.5913,-2283.7986,23.1030, 6.0);
+                case 8: SetPlayerCheckpoint(playerid, -509.8445,56.6495,13.7661, 6.0);
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 603:
+        {
+            if(!response) return pc_cmd_gps(playerid);
+            switch(listitem) {
+            case 0: SetPlayerCheckpoint(playerid, 1219.0984,-1415.1229,13.3540, 3.0);
+            case 1: SetPlayerCheckpoint(playerid, 1168.8788,1366.4899,10.8125, 3.0);
+            }
+            CP[playerid] = 0;
+            PicCP[playerid] = 5;
+            return SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+        }
+    case 9626:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, 2329.2073,-1803.9750,22.4540, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, 431.5799,1180.1960,12.0006, 6.0);
+                case 2: SetPlayerCheckpoint(playerid, 450.6642,2201.9504,12.1033, 6.0);
+                case 3: SetPlayerCheckpoint(playerid, -879.656372,1189.587524,10.482780, 6.0);
+               // case 3: SetPlayerCheckpoint(playerid, 2200.1370,1391.9717,10.8203, 6.0);
+               // case 4: SetPlayerCheckpoint(playerid, 1449.3038, -2214.9922, 12.5302, 6.0);
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 9627:
+        {
+            if(!response) return pc_cmd_gps(playerid);
+            SetPVarInt(playerid, "GPSbizz", listitem+1);
+            new Float:coords[3], check_cunt = 1;
+            GetPlayerPos(playerid, coords[0], coords[1], coords[2]);
+            stringer[0] = 0;
+            format(stringer, sizeof(stringer),"{FFFFFF}#\t{FFFFFF}Название\t{FFFFFF}Статус\t{FFFFFF}Расстояние\n");
+            for(new idx = 1; idx <= TOTALBIZZ; idx++)
+            {
+                if(BizzInfo[idx][bType] != listitem+1) continue;
+                format(stringer,sizeof(stringer), "%s%d.\t%s\t%s{FFFFFF}\t%.1f метров\n",stringer,check_cunt,BizzInfo[idx][bName], (!BizzInfo[idx][bLock]) ? ("{00CC00}Открыт") : ("{FF4500}Закрыт"), GetDistanceBetweenPoints(coords[0], coords[1], coords[2], BizzInfo[idx][bEntrx], BizzInfo[idx][bEntry], BizzInfo[idx][bEntrz]));
+                check_cunt++;
+            }
+            return SPD(playerid, 604, DIALOG_STYLE_TABLIST_HEADERS, ""SERVER"Бизнесы", stringer, "Принять", "Назад");
+        }
+    case 604:
+        {
+            if(!response)
+            {
+                DeletePVar(playerid,"GPSbizz");
+                return pc_cmd_gps(playerid);
+            }
+            new bizz = GetPVarInt(playerid,"GPSbizz"), check_cunt;
+            for(new idx = 1; idx <= TOTALBIZZ; idx++)
+            {
+                if(BizzInfo[idx][bType] != bizz) continue;
+                if(check_cunt == listitem)
+                {
+                    SendMes(playerid, COLOR_WHITE, ""SERVER"[ GPS: Бизнесы ] {FFFFFF}%s отмечен на карте красной меткой", BizzInfo[idx][bName]);
+                    SetPlayerCheckpoint(playerid, BizzInfo[idx][bEntrx], BizzInfo[idx][bEntry], BizzInfo[idx][bEntrz], 6.0);
+                    CP[playerid] = 0;
+                    PicCP[playerid] = 5;
+                    break;
+                }
+                check_cunt ++;
+            }
+            DeletePVar(playerid,"GPSbizz");
+            return 1;
+        }
+    case 9628:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, 2566.1592,-2005.2791,21.9609, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, 239.9099,1726.0103,12.1002, 6.0);
+                case 2: SetPlayerCheckpoint(playerid, -43.111511,919.642456,12.001962, 6.0);
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 9629:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SPD(playerid, 9630, DIALOG_STYLE_LIST, ""SERVER"Государственные организации", "1. {FFFFFF}Мэрия\n2. {FFFFFF}ФСБ\n3. {FFFFFF}МВД Г. Арзамас\n4. {FFFFFF}Россия 24\n5. {FFFFFF}Сухопутные войска", "Выбрать", "Назад");
+                case 1: SPD(playerid, 9631, DIALOG_STYLE_LIST, ""SERVER"Группировки", "1. {FFFFFF}Курганская ОПГ\n2. {FFFFFF} Ореховская ОПГ\n3. {FFFFFF}Тамбовская ОПГ", "Выбрать", "Назад");
+                case 2: SPD(playerid, 9632, DIALOG_STYLE_LIST, ""SERVER"Бизнес организации", "1. {FFFFFF}Стритрейсеры\n2. {FFFFFF}Похоронное бюро", "Выбрать", "Назад");
+                }
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 9630:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, -73.7082,855.6496,12.5978, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, 522.6404,300.6389,13.6113, 6.0);
+                case 2: SetPlayerCheckpoint(playerid, 150.8344,1263.2776,13.2951, 6.0);
+                case 3: SetPlayerCheckpoint(playerid, 2126.7786,-1959.7334,20.2422, 6.0);
+                case 4: SetPlayerCheckpoint(playerid, 1816.7157,1780.4041,15.5142, 6.0); //
+                /*
+                case 5: SetPlayerCheckpoint(playerid, -1632.8252,687.8867,7.1875, 6.0);
+                case 6: SetPlayerCheckpoint(playerid, 2235.4844,2453.8391,10.7495, 6.0);
+                case 7: SetPlayerCheckpoint(playerid, 1177.7603,-1323.6040,14.0866, 6.0);
+                case 8: SetPlayerCheckpoint(playerid, -2046.6017,-77.4933,35.1719, 6.0);
+                case 9: SetPlayerCheckpoint(playerid, 1658.6249,-1693.4465,15.6094, 6.0);
+                case 10: SetPlayerCheckpoint(playerid, -1530.6942,484.4259,7.1797, 6.0);
+                case 11: SetPlayerCheckpoint(playerid, 348.2563,1795.4601,18.2253, 6.0);
+                */
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 9631:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, 1919.1376,2183.4368,15.6974, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, -2354.7004,63.9308,21.4585, 6.0);
+                case 2: SetPlayerCheckpoint(playerid, 174.2726,458.0867,13.1506, 6.0);
+                /*
+                case 3: SetPlayerCheckpoint(playerid, 2743.0103,-1177.4921,69.4034, 6.0);
+                case 4: SetPlayerCheckpoint(playerid, 2002.2544,-1129.0349,25.4454, 6.0);
+                case 5: SetPlayerCheckpoint(playerid, 2463.8145,-1659.1553,13.3093, 6.0);
+                case 6: SetPlayerCheckpoint(playerid, 1702.4064,-2112.7881,13.3828, 6.0);
+                case 7: SetPlayerCheckpoint(playerid, 2184.7957,-1774.6335,13.3667, 6.0);
+                */
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 9632:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, -227.4272,453.0845,12.8854, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, -1043.6232,2208.3596,38.1197, 6.0);
+                //case 2: SetPlayerCheckpoint(playerid, 2021.1836,1007.8068,10.8203, 6.0);
+                // case 3: SetPlayerCheckpoint(playerid, 2195.1516,1677.0779,12.3672, 6.0);
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 9635:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SetPlayerCheckpoint(playerid, 1955.0999,-2282.3293,13.2740, 6.0);
+                case 1: SetPlayerCheckpoint(playerid, 232.0125,-1887.5105,0.7440, 6.0);
+                case 2: SetPlayerCheckpoint(playerid, 557.3915,-1260.4789,16.9693, 6.0);
+                case 3: SetPlayerCheckpoint(playerid, -1982.4783,289.1433,34.6962, 6.0);
+                case 4: SetPlayerCheckpoint(playerid, 2107.2559,1386.7733,10.5474, 6.0);
+                }
+                CP[playerid] = 0;
+                PicCP[playerid] = 5;
+                SendClientMessage(playerid, COLOR_YELLOW, "GPS: Место на карте помечено красной меткой");
+            }
+            else pc_cmd_gps(playerid);
+        }
+    case 7555:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: ShowPlayerDialog(playerid, 7556, DIALOG_STYLE_INPUT, "Создать зеленую зону", "Введите название зоны и дистанцию через знак ','", "Далее", "Закрыть");
+            default:
+                {
+                    SetPVarInt(playerid,"ZONEID",listitem);
+                    ShowPlayerDialog(playerid,7557,DIALOG_STYLE_LIST,"Редактирование зоны","Изменить название\nИзменить положение\nИзменить дистанцию", "Далее", "Закрыть");
+                }
+            }
+        }
+    case 7556:
+        {
+            if(!response) return 1;
+            new price,name[32];
+            if(sscanf(inputtext,"p<,>s[32]i",name,price)) return ShowPlayerDialog(playerid, 7556, DIALOG_STYLE_INPUT, "Создать зеленую зону", "Введите название зоны и дистанцию через знак ','", "Далее", "Закрыть");
+            TOTALZONE++;
+            GetPlayerPos(playerid, GREENZONE[TOTALZONE][grX],GREENZONE[TOTALZONE][grY],GREENZONE[TOTALZONE][grZ]);
+            GREENZONE[TOTALZONE][grVirt] = GetPlayerVirtualWorld(playerid);
+            mysql_format(connects, mysql_query_, sizeof(mysql_query_), "INSERT INTO `"TABLE_GREENZONE"` (`grname`) VALUES ('%e')",name);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+            strmid(GREENZONE[TOTALZONE][grName],name, 0, strlen(name), 32);
+            GREENZONE[TOTALZONE][grid] = TOTALZONE;
+            GREENZONE[TOTALZONE][grD] = float(price);
+            SaveZone(TOTALZONE);
+            return SendMes(playerid,COLOR_WHITE,"Зеленая зона под номером %i создана!",TOTALZONE);
+        }
+    case 7557:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: ShowPlayerDialog(playerid, 7558, DIALOG_STYLE_INPUT, "Изменить название", "Введите название зоны:", "Далее", "Закрыть");
+            case 1:
+                {
+                    GetPlayerPos(playerid, GREENZONE[GetPVarInt(playerid,"ZONEID")][grX],GREENZONE[GetPVarInt(playerid,"ZONEID")][grY],GREENZONE[GetPVarInt(playerid,"ZONEID")][grZ]);
+                    GREENZONE[GetPVarInt(playerid,"ZONEID")][grVirt] = GetPlayerVirtualWorld(playerid);
+                    SaveZone(GetPVarInt(playerid,"ZONEID"));
+                }
+            case 2: ShowPlayerDialog(playerid, 7559, DIALOG_STYLE_INPUT, "Изменить дистанцию", "Введите дистанцию для зоны:", "Далее", "Закрыть");
+            }
+            return 1;
+        }
+    case 7558:
+        {
+            if(!response) return 1;
+            strmid(GREENZONE[GetPVarInt(playerid,"ZONEID")][grName],inputtext, 0, strlen(inputtext), 32);
+            SaveZone(GetPVarInt(playerid,"ZONEID"));
+        }
+    case 7559:
+        {
+            if(!response) return 1;
+            GREENZONE[GetPVarInt(playerid,"ZONEID")][grD] = float(strval(inputtext));
+            SaveZone(GetPVarInt(playerid,"ZONEID"));
+        }
+    case 9623:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: ShowStats(playerid,playerid);
+                case 1: SPD(playerid, 10025, DIALOG_STYLE_LIST, ""SERVER"Команды сервера", "{63CB00}1. Получить описание\n2. Обычные\n3. Общение\n4. Телефон\n{3399FF}5. Мои команды\n6. Лидерам\n7. Дома\n8. Бизнес и АЗС\n9. Транспорт\n10. Семья", "Выбрать", "Назад");
+                case 2: pc_cmd_report(playerid);
+                case 3: showSettings(playerid);
+                case 4:
+                    {
+                        format(stringer,sizeof(stringer),""SERVER"В данном разделе вы можете просмотреть\nпоследний вход на сервер с вашего аккаунта\nа также IP при регистрации и ваш IP на данный момент\n\n{ffffff}Последний вход на сервер: %s\nIP при регистрации: %s\nВаш IP: %s",PI[playerid][pGetondate],PI[playerid][pIpReg],PI[playerid][pIP]);
+                        ShowPlayerDialog(playerid, 84, DIALOG_STYLE_MSGBOX, ""SERVER"IP проверка",stringer, "Параметры", "Назад");
+                    }
+                case 5:
+                    {
+                        if(PI[playerid][pDonateRank] < 1) return SendClientMessage(playerid, COLOR_GREY, "Для доступа в этот раздел нужно иметь VIP статус");
+                        ShowPlayerDialog(playerid, 9487, DIALOG_STYLE_LIST, ""SERVER"VIP панель", "1. Выключить или включить телефон\n2. Уволиться с организации\n3. Уменьшить срок заключения\n4. Пополнить мобильный счет на 2000$\n5. Помощь (/viphelp)", "Далее", "Отмена");
+                    }
+                case 6: Myitems(playerid);
+                case 7: pc_cmd_donate(playerid);
+                case 8:
+                {
+                    ShowPlayerDialog(playerid, 9284, DIALOG_STYLE_LIST, ""SERVER"Выберите тип промокода", "1. Обычный промокод\n2. Ютуберский промокод", "Далее", "Назад");
+                    //ShowPlayerDialog(playerid, 9283, DIALOG_STYLE_INPUT, ""SERVER"Промокод", "{FFFFFF}Введите название промокода в поле ниже:\n", "Далее", "Назад");
+                }
+                case 9: pc_cmd_donaterub(playerid);
+                }
+            }
+            else return 1;
+        }
+    case 9285:

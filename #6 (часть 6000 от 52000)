@@ -1,0 +1,1000 @@
+    TextDrawLetterSize(boxcancel, 0.500000, 1.000000);
+    TextDrawColor(boxcancel, -1876547841);
+    TextDrawTextSize(boxcancel, 84.000000, 63.000000);
+    TextDrawSetPreviewModel(boxcancel, 19447);
+    TextDrawSetPreviewRot(boxcancel, -20.000000, 0.000000, 90.000000, 1.000000);
+    TextDrawSetSelectable(boxcancel, 1);
+
+    boxaccept = TextDrawCreate(327.000000, 367.000000, "selecticon3");
+    TextDrawBackgroundColor(boxaccept, 0);
+    TextDrawFont(boxaccept, 5);
+    TextDrawLetterSize(boxaccept, 0.500000, 1.000000);
+    TextDrawColor(boxaccept, -1876547841);
+    TextDrawSetProportional(boxaccept, 1);
+    TextDrawTextSize(boxaccept, 84.000000, 63.000000);
+    TextDrawSetPreviewModel(boxaccept, 19447);
+    TextDrawSetPreviewRot(boxaccept, -20.000000, 0.000000, 90.000000, 1.000000);
+    TextDrawSetSelectable(boxaccept, 1);
+
+    ButtonUp = TextDrawCreate( 558.000000, 434.000000, "Fire arms");
+    TextDrawBackgroundColor( ButtonUp, 255);
+    TextDrawFont( ButtonUp, 3);
+    TextDrawLetterSize( ButtonUp, 0.500000, 1.000000);
+    TextDrawColor( ButtonUp, -602653600);
+    TextDrawSetProportional( ButtonUp, 1);
+    TextDrawSetShadow( ButtonUp, 1);
+    TextDrawSetSelectable( ButtonUp, 0);
+
+    ButtonDown = TextDrawCreate(300.0, 300.0, "LD_BEAT:down");
+    TextDrawBackgroundColor(ButtonDown, 0);
+    TextDrawFont(ButtonDown, 4);
+    TextDrawLetterSize(ButtonDown, 0.500000, 1.000000);
+    TextDrawColor(ButtonDown, -1876547841);
+    TextDrawSetOutline(ButtonDown, 0);
+    TextDrawSetProportional(ButtonDown, 1);
+    TextDrawSetShadow(ButtonDown, 1);
+    TextDrawTextSize(ButtonDown, 50, 25);
+    TextDrawSetPreviewModel(ButtonDown, 19132);
+    TextDrawSetPreviewRot(ButtonDown, -40.000000, 0.000000, 90.000000, 1.000000);
+    TextDrawSetSelectable(ButtonDown, 1);
+
+    ButtonSelect = TextDrawCreate(247.000000, 392.000000, "Accept");
+    TextDrawBackgroundColor(ButtonSelect, 255);
+    TextDrawFont(ButtonSelect, 2);
+    TextDrawLetterSize(ButtonSelect, 0.350000, 1.200000);
+    TextDrawColor(ButtonSelect, -1);
+    TextDrawSetProportional(ButtonSelect, 1);
+    TextDrawSetSelectable(ButtonSelect, 0);
+
+    ButtonCancel = TextDrawCreate(342.000000, 392.000000, "Cancel");
+    TextDrawBackgroundColor(ButtonCancel, 255);
+    TextDrawFont(ButtonCancel, 2);
+    TextDrawLetterSize(ButtonCancel, 0.350000, 1.200000);
+    TextDrawColor(ButtonCancel, -1);
+    TextDrawSetProportional(ButtonCancel, 1);
+    TextDrawSetSelectable(ButtonCancel, 0);
+
+    Boxmenu3 = TextDrawCreate(268.000000, 361.000000, "Select Action");
+    TextDrawBackgroundColor(Boxmenu3, 255);
+    TextDrawFont(Boxmenu3, 2);
+    TextDrawLetterSize(Boxmenu3, 0.349999, 1.200000);
+    TextDrawColor(Boxmenu3, -1);
+    TextDrawSetOutline(Boxmenu3, 0);
+    TextDrawSetProportional(Boxmenu3, 1);
+    TextDrawSetShadow(Boxmenu3, 1);
+    TextDrawSetSelectable(Boxmenu3, 0);
+
+    new Float: TDCOORD[3][2] =
+    {
+        { 155.000000, 189.000000 },
+        { 271.000000, 189.000000 },
+        { 387.000000, 189.000000 }
+    };
+    for(new a = 0, td; a < 3; a++)
+    {
+        td = 16+(a*4);
+        TD_Reg3[td] = TextDrawCreate(TDCOORD[a][0]+1.002899, TDCOORD[a][1]+1.0, "box"); // header
+        TextDrawLetterSize(TD_Reg3[td], 0.000000, -0.260612);
+        TextDrawTextSize(TD_Reg3[td], TDCOORD[a][0]+96.997101, 0.000000);
+        TextDrawAlignment(TD_Reg3[td], 1);
+        TextDrawColor(TD_Reg3[td], -1);
+        TextDrawUseBox(TD_Reg3[td], 1);
+        TextDrawBoxColor(TD_Reg3[td], 1468115967);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+        TextDrawSetOutline(TD_Reg3[td], 0);
+        TextDrawBackgroundColor(TD_Reg3[td], 255);
+        TextDrawFont(TD_Reg3[td], 1);
+        TextDrawSetProportional(TD_Reg3[td], 1);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+
+        td = 17+(a*4);
+        TD_Reg3[td] = TextDrawCreate(TDCOORD[a][0]+0.534378, TDCOORD[a][1]+121.166625, "box"); // footer
+        TextDrawLetterSize(TD_Reg3[td], 0.000000, -0.260612);
+        TextDrawTextSize(TD_Reg3[td], TDCOORD[a][0]+97.465622, 0.000000);
+        TextDrawAlignment(TD_Reg3[td], 1);
+        TextDrawColor(TD_Reg3[td], -1);
+        TextDrawUseBox(TD_Reg3[td], 1);
+        TextDrawBoxColor(TD_Reg3[td], 1468115967);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+        TextDrawSetOutline(TD_Reg3[td], 0);
+        TextDrawBackgroundColor(TD_Reg3[td], 255);
+        TextDrawFont(TD_Reg3[td], 1);
+        TextDrawSetProportional(TD_Reg3[td], 1);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+
+        td = 18+(a*4);
+        TD_Reg3[td] = TextDrawCreate(TDCOORD[a][0]+0.534378, TDCOORD[a][1]+1.000076, "box"); // left
+        TextDrawLetterSize(TD_Reg3[td], 0.000000, 12.998536);
+        TextDrawTextSize(TD_Reg3[td], TDCOORD[a][0]-1.534378, 0.000000);
+        TextDrawAlignment(TD_Reg3[td], 1);
+        TextDrawColor(TD_Reg3[td], -1);
+        TextDrawUseBox(TD_Reg3[td], 1);
+        TextDrawBoxColor(TD_Reg3[td], 1468115967);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+        TextDrawSetOutline(TD_Reg3[td], 0);
+        TextDrawBackgroundColor(TD_Reg3[td], 255);
+        TextDrawFont(TD_Reg3[td], 1);
+        TextDrawSetProportional(TD_Reg3[td], 1);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+
+        td = 19+(a*4);
+        TD_Reg3[td] = TextDrawCreate(TDCOORD[a][0]+102.5, TDCOORD[a][1]+1.333343, "box"); // right
+        TextDrawLetterSize(TD_Reg3[td], 0.000000, 12.951683);
+        TextDrawTextSize(TD_Reg3[td], TDCOORD[a][0]+97.0, 0.000000);
+        TextDrawAlignment(TD_Reg3[td], 1);
+        TextDrawColor(TD_Reg3[td], -1);
+        TextDrawUseBox(TD_Reg3[td], 1);
+        TextDrawBoxColor(TD_Reg3[td], 1468115967);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+        TextDrawSetOutline(TD_Reg3[td], 0);
+        TextDrawBackgroundColor(TD_Reg3[td], 255);
+        TextDrawFont(TD_Reg3[td], 1);
+        TextDrawSetProportional(TD_Reg3[td], 1);
+        TextDrawSetShadow(TD_Reg3[td], 0);
+    }
+
+    TD_Reg4[0] = TextDrawCreate(225.813522, 172.499847, "box");
+    TextDrawLetterSize(TD_Reg4[0], 0.000000, 14.450950);
+    TextDrawTextSize(TD_Reg4[0], 415.000000, 0.000000);
+    TextDrawAlignment(TD_Reg4[0], 1);
+    TextDrawColor(TD_Reg4[0], -1);
+    TextDrawUseBox(TD_Reg4[0], 1);
+    TextDrawBoxColor(TD_Reg4[0], 505290330);
+    TextDrawSetShadow(TD_Reg4[0], 0);
+    TextDrawSetOutline(TD_Reg4[0], 0);
+    TextDrawBackgroundColor(TD_Reg4[0], 255);
+    TextDrawFont(TD_Reg4[0], 1);
+    TextDrawSetProportional(TD_Reg4[0], 1);
+    TextDrawSetShadow(TD_Reg4[0], 0);
+
+    TD_Reg4[1] = TextDrawCreate(226.281066, 172.500000, "box");
+    TextDrawLetterSize(TD_Reg4[1], 0.000000, 1.098098);
+    TextDrawTextSize(TD_Reg4[1], 415.000000, 0.000000);
+    TextDrawAlignment(TD_Reg4[1], 1);
+    TextDrawColor(TD_Reg4[1], -1);
+    TextDrawUseBox(TD_Reg4[1], 1);
+    TextDrawBoxColor(TD_Reg4[1], 1468115967);
+    TextDrawSetShadow(TD_Reg4[1], 0);
+    TextDrawSetOutline(TD_Reg4[1], 0);
+    TextDrawBackgroundColor(TD_Reg4[1], 255);
+    TextDrawFont(TD_Reg4[1], 1);
+    TextDrawSetProportional(TD_Reg4[1], 1);
+    TextDrawSetShadow(TD_Reg4[1], 0);
+
+    TD_Reg4[2] = TextDrawCreate(320.454193, 173.083297, "wrp_role_play");
+    TextDrawLetterSize(TD_Reg4[2], 0.206966, 0.993332);
+    TextDrawAlignment(TD_Reg4[2], 2);
+    TextDrawColor(TD_Reg4[2], -1);
+    TextDrawSetShadow(TD_Reg4[2], 0);
+    TextDrawSetOutline(TD_Reg4[2], 0);
+    TextDrawBackgroundColor(TD_Reg4[2], 255);
+    TextDrawFont(TD_Reg4[2], 2);
+    TextDrawSetProportional(TD_Reg4[2], 1);
+    TextDrawSetShadow(TD_Reg4[2], 0);
+
+    TD_Reg4[3] = TextDrawCreate(249.500000, 242.500000, "box");
+    TextDrawLetterSize(TD_Reg4[3], 0.000000, 1.230000);
+    TextDrawTextSize(TD_Reg4[3], 392.500000, 0.000000);
+    TextDrawAlignment(TD_Reg4[3], 1);
+    TextDrawColor(TD_Reg4[3], -1);
+    TextDrawUseBox(TD_Reg4[3], 1);
+    TextDrawBoxColor(TD_Reg4[3], 1333898239);
+    TextDrawSetShadow(TD_Reg4[3], 0);
+    TextDrawSetOutline(TD_Reg4[3], 0);
+    TextDrawBackgroundColor(TD_Reg4[3], 255);
+    TextDrawFont(TD_Reg4[3], 1);
+    TextDrawSetProportional(TD_Reg4[3], 1);
+    TextDrawSetShadow(TD_Reg4[3], 0);
+
+    TD_Reg4[4] = TextDrawCreate(250.000000, 243.000000, "box");
+    TextDrawLetterSize(TD_Reg4[4], 0.000000, 1.144950);
+    TextDrawTextSize(TD_Reg4[4], 392.000000, 0.000000);
+    TextDrawAlignment(TD_Reg4[4], 1);
+    TextDrawColor(TD_Reg4[4], -1);
+    TextDrawUseBox(TD_Reg4[4], 1);
+    TextDrawBoxColor(TD_Reg4[4], 505290495);
+    TextDrawSetShadow(TD_Reg4[4], 0);
+    TextDrawSetOutline(TD_Reg4[4], 0);
+    TextDrawBackgroundColor(TD_Reg4[4], 255);
+    TextDrawFont(TD_Reg4[4], 1);
+    TextDrawSetProportional(TD_Reg4[4], 1);
+    TextDrawSetShadow(TD_Reg4[4], 0);
+
+    TD_Reg4[5] = TextDrawCreate(321.000000, 228.000000, "password");
+    TextDrawLetterSize(TD_Reg4[5], 0.208371, 0.841665);
+    TextDrawAlignment(TD_Reg4[5], 2);
+    TextDrawColor(TD_Reg4[5], -1);
+    TextDrawSetShadow(TD_Reg4[5], 0);
+    TextDrawSetOutline(TD_Reg4[5], 0);
+    TextDrawBackgroundColor(TD_Reg4[5], 255);
+    TextDrawFont(TD_Reg4[5], 2);
+    TextDrawSetProportional(TD_Reg4[5], 1);
+    TextDrawSetShadow(TD_Reg4[5], 0);
+
+    TD_Reg4[6] = TextDrawCreate(319.985626, 275.166687, "box");
+    TextDrawLetterSize(TD_Reg4[6], 0.000000, 0.910690);
+    TextDrawTextSize(TD_Reg4[6], 0.000000, 58.000000);
+    TextDrawAlignment(TD_Reg4[6], 2);
+    TextDrawColor(TD_Reg4[6], -1);
+    TextDrawUseBox(TD_Reg4[6], 1);
+    TextDrawBoxColor(TD_Reg4[6], 1468115967);
+    TextDrawSetShadow(TD_Reg4[6], 0);
+    TextDrawSetOutline(TD_Reg4[6], 0);
+    TextDrawBackgroundColor(TD_Reg4[6], 255);
+    TextDrawFont(TD_Reg4[6], 1);
+    TextDrawSetProportional(TD_Reg4[6], 1);
+    TextDrawSetShadow(TD_Reg4[6], 0);
+
+    TD_Reg4[7] = TextDrawCreate(319.985534, 275.166717, "next");
+    TextDrawLetterSize(TD_Reg4[7], 0.233674, 0.946663);
+    TextDrawTextSize(TD_Reg4[7], 10.000000, 58.000000);
+    TextDrawAlignment(TD_Reg4[7], 2);
+    TextDrawColor(TD_Reg4[7], -1);
+    TextDrawSetShadow(TD_Reg4[7], 0);
+    TextDrawSetOutline(TD_Reg4[7], 0);
+    TextDrawBackgroundColor(TD_Reg4[7], 255);
+    TextDrawFont(TD_Reg4[7], 2);
+    TextDrawSetProportional(TD_Reg4[7], 1);
+    TextDrawSetShadow(TD_Reg4[7], 0);
+    TextDrawSetSelectable(TD_Reg4[7], true);
+    return 1;
+}
+public OnPlayerConnect(playerid)
+{
+
+	ShoskiPon[playerid][pVodPravapon] = 0;
+
+	Checkpoint[playerid]=0;
+	
+	pablochek[playerid]=0;
+
+    moped_online[playerid] = INVALID_VEHICLE_ID;
+
+    online_server++;
+    if(online_server > ronline_server) ronline_server = online_server;
+
+    SetPVarInt(playerid, "work_eda_house", 0);
+    SetPVarInt(playerid, "work_eda", -1);
+    SetPVarInt(playerid,"AutoShop",-1);
+
+    PI[playerid] = NULL_PI;
+
+    new buffer[40+1];
+    gpci(playerid, buffer, sizeof(buffer));
+    // printf("name %s gpci %s", PI[playerid][pNames], buffer);
+
+    GetPlayerName(playerid, PI[playerid][pNames], 24);
+    player_family [ playerid ] = 0;
+
+    PI[playerid][pFamilyText] = Text3D:INVALID_3DTEXT_ID;
+
+    if(!strcmp(PI[playerid][pNames], "Flame_Player"))
+    {
+        KickEx(playerid);
+        return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Смените никнейм в настройках лаунчера. (Пример: Ivan_Ivanov)");
+    }
+
+    PI[playerid][P_PLAYER_DEVICE] =
+    PlayerReportFix[playerid] = 0;
+
+    switch_fp[playerid] = false;
+
+
+    SetPlayerData(playerid, P_OWNABLE_CAR, INVALID_VEHICLE_ID);
+
+    gIsRequestClassCalled{playerid} = false;
+    if(!strcmp(buffer, "44355A5834564C393054584655524D4F52584B41"))
+    {
+        SendClientMessage(0xffcc00ff, -1, "Пошел на хуй, читор ебанный");
+        KickEx(playerid);
+        return 1;
+    }
+
+    PI[playerid][pClist] =
+    PlayerPPKFix[playerid] =
+    SpawnReset[playerid] = 0;
+
+    KillTimer(PI[playerid][P_CLIST_TIMER]);
+
+
+    /*
+    switch(random(15))// данное число должно равняться последнему case. | Музыка при входе
+    {
+        case 0: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axrG.mp3"); // Трек | Vee - Get Hight ( Feat. Reek )
+        case 1: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/ax7g.mp3"); // Трек | BOBBY SHMURDA - BOBBY BITCH
+        case 2: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axWV.mp3"); // Трек | Lil Skies - Nowadays ( Feat. Landon Cube )
+        case 3: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axWY.mp3"); // Трек | Denzel Curry - CLOUT COBAIN
+        case 4: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axX4.mp3"); // Трек | BlockBoy JB - Look Alive ( Feat. Drake )
+        case 5: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axX8.mp3"); // Трек | DDG - On My Own ( Обрезанный )
+        case 6: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axX9.mp3"); // Трек | A$AP Ferg - Plain Jane ( Обрезанный )
+        case 7: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXf.mp3"); // Трек | Cardi B - Bartier Cardi ( Feat. 21 Savage ) [Обрезанный]
+        case 8: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXp.mp3"); // Трек | Kodak Black - Roll In Peace ( feat. XXXTENTANCION ) [Обрезанный]
+        case 9: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXt.mp3"); // Трек | Casino - Deal ( Feat. 21 Savage ) [Обрезанный]
+        case 10: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXA.mp3"); // Трек | Nirvana - Smells Like Spirit [Обрезанный]
+        case 11: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXK.mp3"); // Трек | Tyga - Dubai Drip [Обрезанный]
+        case 12: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXR.mp3"); // Трек | Тимати x Егор Крид x Pabl.A x Скруджи x Мот x НаZима - Над Облаками [Обрезанный]
+        case 13: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/axXW.mp3"); // Трек | Тимати x Егор Крид x Скруджи x Terry x Назима - Ракета [Обрезанный]
+        case 14: PlayAudioStreamForPlayer(playerid,"http://d.zaix.ru/ayGL.mp3"); // Трек | Lil Pump - Racks On Racks ( слитый ) [Обрезанный]
+    }
+    */
+    CreateTextDraw(playerid);
+    /*
+    // Инты домов
+    RemoveBuildingForPlayer(playerid, 14784, 1281.140625, -30.093800, 1009.414124, 0.250000);
+    RemoveBuildingForPlayer(playerid, 14795, 1388.882813, -20.882799, 1005.203125, 0.250000);
+    // ЛС-ЛВ Особняки
+    RemoveBuildingForPlayer(playerid, 16309, 566.648376, 874.484375, -39.531300, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1308, 562.343018, 264.875000, 16.139999, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1308, 875.398010, 361.320007, 19.289000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1448, 1357.718750, 481.703094, 19.273399, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1370, 1358.484375, 483.656311, 19.695299, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1450, 1355.851563, 483.390594, 19.773399, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1358, 1356.375000, 485.187500, 20.375000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 12977, 679.140625, -455.773407, 16.335899, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1684, 315.750000, 874.242004, 20.914000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16307, 310.217987, 861.312012, 25.671000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1684, 320.726013, 861.789001, 20.898001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1684, 325.959991, 850.648010, 20.867001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16302, 375.445007, 850.750000, 23.429001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16481, 389.039001, 839.500000, 26.889999, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16301, 419.070007, 814.742004, 18.476000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16314, 485.070007, 809.476013, -2.765000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16081, 522.156006, 815.945007, 11.679000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16080, 600.632019, 829.359009, -35.734001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16334, 709.445007, 915.929016, 34.617001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 8229, 1142.031006, 1362.500000, 12.484000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1278, 1157.015015, 1361.225952, 23.937000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 8231, 1166.640015, 1354.203003, 11.625000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 8237, 1172.625000, 1347.484009, 9.914000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 3376, 1925.125000, 160.093002, 40.671001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 3375, 1925.125000, 160.093002, 40.671001, 0.250000);
+    RemoveBuildingForPlayer(playerid, 3276, 1919.296021, 179.132004, 37.030998, 0.250000);
+    RemoveBuildingForPlayer(playerid, 8229, 1142.031250, 1362.500000, 12.484400, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16310, 581.375000, 875.609375, -43.960899, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16311, 585.843811, 869.632813, -39.367199, 0.250000);
+    RemoveBuildingForPlayer(playerid, 16325, 590.296875, 870.273376, -44.265598, 0.250000);
+    RemoveBuildingForPlayer(playerid, 955, 201.015594, -107.617203, 0.898400, 0.100000);
+    RemoveBuildingForPlayer(playerid, 955, 1277.835938, 372.515594, 18.953100, 0.100000);
+    RemoveBuildingForPlayer(playerid, 955, 1520.148438, 1055.265625, 10.000000, 0.100000);
+
+    //Сцена
+    RemoveBuildingForPlayer(playerid, 3615, 553.351, -1875.000, 4.789, 0.250);
+    RemoveBuildingForPlayer(playerid, 3778, 553.351, -1875.000, 4.789, 0.250);
+    // Удаленные объекты у парковки
+    RemoveBuildingForPlayer(playerid, 4057, 1479.553955, -1693.140015, 19.577999, 0.250000);
+    RemoveBuildingForPlayer(playerid, 4210, 1479.562012, -1631.453003, 12.078000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 713, 1457.937012, -1620.694946, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 713, 1496.866943, -1707.819946, 13.406000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1226, 1467.984009, -1727.671021, 16.421000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1226, 1485.171021, -1727.671021, 16.421000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1468.984009, -1713.506958, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1231, 1479.694946, -1716.703003, 15.625000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1488.765015, -1713.703003, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1289, 1504.750000, -1711.881958, 13.593000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1258, 1445.006958, -1704.765015, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1258, 1445.006958, -1692.234009, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 712, 1445.812012, -1650.022949, 22.257000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 673, 1457.725952, -1710.062012, 12.398000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 620, 1461.656006, -1707.687012, 11.835000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1468.984009, -1704.640015, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 700, 1463.062012, -1701.569946, 13.726000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1231, 1479.694946, -1702.531006, 15.625000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 673, 1457.553955, -1697.288940, 12.398000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1468.984009, -1694.046021, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1231, 1479.381958, -1692.390015, 15.632000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 4186, 1479.553955, -1693.140015, 19.577999, 0.250000);
+    RemoveBuildingForPlayer(playerid, 620, 1461.125000, -1687.562012, 11.835000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 700, 1463.062012, -1690.647949, 13.726000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 641, 1458.616943, -1684.131958, 11.101000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1457.272949, -1666.296021, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1468.984009, -1682.718018, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 712, 1471.406006, -1666.178955, 22.257000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1231, 1479.381958, -1682.312012, 15.632000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1458.256958, -1659.256958, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 712, 1449.850952, -1655.937012, 22.257000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1231, 1477.937012, -1652.725952, 15.632000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1479.609009, -1653.250000, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1457.350952, -1650.569946, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1454.421021, -1642.491943, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1467.850952, -1646.593018, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1472.897949, -1651.506958, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1465.937012, -1639.819946, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1231, 1466.468018, -1637.959961, 15.632000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1449.593018, -1635.046021, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1467.709961, -1632.890015, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1232, 1465.890015, -1629.975952, 15.531000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1472.663940, -1627.881958, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1479.468018, -1626.022949, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 3985, 1479.562012, -1631.453003, 12.078000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 4206, 1479.553955, -1639.609009, 13.648000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1232, 1465.834961, -1608.375000, 15.375000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1229, 1466.484009, -1598.093018, 14.109000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 700, 1494.209961, -1694.437012, 13.726000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1488.765015, -1693.734009, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 620, 1496.975952, -1686.850952, 11.835000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 641, 1494.140015, -1689.234009, 11.101000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1488.765015, -1682.671021, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 712, 1480.609009, -1666.178955, 22.257000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 712, 1488.225952, -1666.178955, 22.257000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1486.406006, -1651.390015, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1491.366943, -1646.381958, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1493.131958, -1639.453003, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1486.178955, -1627.765015, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1491.218018, -1632.678955, 13.453000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1232, 1494.413940, -1629.975952, 15.531000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1232, 1494.359009, -1608.375000, 15.375000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1229, 1498.053955, -1598.093018, 14.109000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1288, 1504.750000, -1705.406006, 13.593000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1287, 1504.750000, -1704.468018, 13.593000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1286, 1504.750000, -1695.053955, 13.593000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1285, 1504.750000, -1694.038940, 13.593000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 673, 1498.959961, -1684.609009, 12.398000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1504.163940, -1662.015015, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1504.718018, -1670.921021, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 620, 1503.187012, -1621.125000, 11.835000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 673, 1501.281006, -1624.578003, 12.398000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 673, 1498.359009, -1616.968018, 12.398000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 712, 1508.444946, -1668.741943, 22.257000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1505.694946, -1654.834961, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1508.515015, -1647.859009, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 625, 1513.272949, -1642.491943, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1258, 1510.890015, -1607.312012, 13.695000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1226, 1525.381958, -1611.156006, 16.421000, 0.250000);
+    RemoveBuildingForPlayer(playerid, 1280, 1488.765015, -1704.593018, 13.453000, 0.250000);
+
+    // казино
+    RemoveBuildingForPlayer(playerid, 1895, 1117.2813, -1.6484, 1002.0781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1125.1406, -3.4141, 1000.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1127.0781, -1.6797, 1000.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1125.1484, -0.0313, 1000.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1135.0469, -3.0781, 1000.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1133.6875, -1.6250, 1000.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1135.0000, -0.1797, 1000.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1124.8203, 3.7969, 1000.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1125.8672, 3.7969, 1000.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1127.8828, 3.7969, 1000.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 2640, 1126.8828, 3.7969, 1000.5234, 0.25);
+    // Спавн
+    RemoveBuildingForPlayer(playerid, 700, 1240.550, -1840.089, 13.039, 0.250);
+    RemoveBuildingForPlayer(playerid, 620, 1249.510, -1840.380, 12.351, 0.250);
+    RemoveBuildingForPlayer(playerid, 700, 1281.880, -1840.089, 13.039, 0.250);
+    RemoveBuildingForPlayer(playerid, 620, 1286.300, -1808.609, 12.351, 0.250);
+    RemoveBuildingForPlayer(playerid, 700, 1285.130, -1799.979, 13.039, 0.250);
+    RemoveBuildingForPlayer(playerid, 620, 1196.599, -1840.380, 12.351, 0.250);
+    //08.03.2018
+    RemoveBuildingForPlayer(playerid, 1307, 1708.7344, -2122.5938, 12.6875, 0.25);
+    //25.02.2018
+    RemoveBuildingForPlayer(playerid, 1226, 1451.6250, -1727.6719, 16.4219, 0.25);
+    RemoveBuildingForPlayer(playerid, 1226, 1467.9844, -1727.6719, 16.4219, 0.25);
+    RemoveBuildingForPlayer(playerid, 1226, 1485.1719, -1727.6719, 16.4219, 0.25);
+    RemoveBuildingForPlayer(playerid, 1226, 1505.1797, -1727.6719, 16.4219, 0.25);
+    //
+    RemoveBuildingForPlayer(playerid, 2786, 1968.7344, 1029.6641, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1967.4063, 1029.6563, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1968.7344, 1021.6875, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1967.4063, 1021.6875, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1968.7344, 1014.0000, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1967.4063, 1014.0000, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1968.7344, 1006.3438, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1967.4063, 1006.3438, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1941.0234, 1014.2266, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1939.6953, 1014.2188, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1941.0234, 1021.4141, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1939.6953, 1021.4141, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1941.8438, 1029.1328, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1940.5547, 1029.4766, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1942.1250, 1006.5703, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 1940.8828, 1006.1094, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2273.4609, 1596.4766, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2268.7188, 1596.4688, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2273.4609, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2268.7188, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2263.6563, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2258.2578, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2253.2344, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2263.6563, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2258.2578, 1596.4766, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2253.2344, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2254.1797, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2259.2188, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2264.6250, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2269.6719, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2274.4063, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2274.4063, 1589.7891, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2269.6563, 1589.7891, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2264.6094, 1589.7891, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2259.1875, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2786, 2254.1563, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 1895, 1938.0469, 986.6250, 992.8828, 0.25);
+    RemoveBuildingForPlayer(playerid, 1895, 1940.6875, 989.1719, 992.8828, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1940.8828, 1006.1094, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1942.1250, 1006.5703, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 1895, 1943.2188, 986.5234, 992.8828, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1939.6953, 1014.2188, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1941.0234, 1014.2266, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1939.6953, 1021.4141, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1941.0234, 1021.4141, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1957.4453, 987.6719, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1957.7188, 987.1953, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 1959.3984, 1010.1172, 992.5078, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1960.3672, 1015.6641, 992.4688, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1960.3672, 1020.1719, 992.4688, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1961.9609, 992.2031, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1962.4063, 991.8750, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1962.3438, 1015.6641, 992.4688, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 1962.3438, 1020.1797, 992.4688, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1964.5703, 998.4531, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1965.1016, 998.3047, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 1963.7109, 1010.1172, 992.5078, 0.25);
+    RemoveBuildingForPlayer(playerid, 14561, 1964.2109, 1017.8047, 998.7031, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1967.4063, 1014.0000, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1967.4063, 1006.3438, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1968.7344, 1006.3438, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1968.7344, 1014.0000, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1967.4063, 1021.6875, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1968.7344, 1021.6875, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1940.5547, 1029.4766, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1941.8438, 1029.1328, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 1959.3984, 1025.6953, 992.5078, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 1963.7109, 1025.6953, 992.5078, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1967.4063, 1029.6563, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 1968.7344, 1029.6641, 992.3125, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1964.5469, 1037.2813, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1965.0938, 1037.3516, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1961.9219, 1043.3594, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1962.3984, 1043.6328, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1957.3203, 1047.9766, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 1957.6563, 1048.4141, 992.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2216.5703, 1588.0938, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2216.5781, 1588.5703, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2216.5703, 1592.3984, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2216.5781, 1592.8750, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1833, 2217.0156, 1602.8125, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1833, 2217.5469, 1602.7969, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2217.0234, 1603.9297, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1835, 2217.0156, 1605.0469, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2592, 2217.0313, 1603.9219, 1006.0781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2217.5469, 1603.8984, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2592, 2217.5469, 1603.9141, 1006.0781, 0.25);
+    RemoveBuildingForPlayer(playerid, 1834, 2217.5469, 1605.0391, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2216.5703, 1614.2422, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2216.5781, 1614.7188, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2216.5703, 1618.5781, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2216.5781, 1619.0547, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2220.7188, 1588.0938, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6328, 1588.0781, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6641, 1588.6016, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2220.6953, 1588.5703, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2218.6172, 1588.3359, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2230.5703, 1589.1875, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2242.3672, 1589.1875, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6328, 1592.3828, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6641, 1592.9063, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2218.6172, 1592.6406, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2220.7188, 1592.3984, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2220.6953, 1592.8750, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2230.5703, 1594.7578, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2242.3672, 1594.7578, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1833, 2220.6719, 1602.8125, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1833, 2221.2031, 1602.7969, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2230.3750, 1602.7500, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2241.3125, 1602.7500, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2220.6797, 1603.9297, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2221.2031, 1603.8984, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2592, 2220.6875, 1603.9219, 1006.0781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2592, 2221.2031, 1603.9141, 1006.0781, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2243.1250, 1604.4375, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2232.1875, 1604.4375, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2239.4297, 1604.4531, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2228.4922, 1604.4531, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 1834, 2221.2031, 1605.0391, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 1835, 2220.6719, 1605.0469, 1005.9844, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2241.3125, 1606.2734, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2188, 2230.3750, 1606.2734, 1006.1563, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6328, 1614.2266, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2220.7188, 1614.2422, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2218.6172, 1614.4844, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6641, 1614.7500, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2220.6953, 1614.7188, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2230.5703, 1614.5938, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2241.4453, 1614.5547, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2220.7188, 1618.5781, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6328, 1618.5625, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2218.6641, 1619.0859, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2220.6953, 1619.0547, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2218.6172, 1618.8203, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2230.5703, 1619.6563, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1978, 2241.4453, 1619.6094, 1006.2266, 0.25);
+    RemoveBuildingForPlayer(playerid, 1895, 2252.0313, 1584.4219, 1007.1094, 0.25);
+    RemoveBuildingForPlayer(playerid, 1895, 2261.6328, 1584.4297, 1007.1094, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2264.6094, 1589.7891, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2263.6563, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2258.2578, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2253.2344, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2259.1875, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2254.1563, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2258.2578, 1596.4766, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2263.6563, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2253.2344, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2254.1797, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2259.2188, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2264.6250, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2253.1250, 1609.6406, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2255.1563, 1609.6016, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2257.2422, 1609.6406, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2255.2109, 1609.8750, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2253.1016, 1610.1172, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2257.2500, 1610.1172, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2255.1875, 1610.1250, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2253.1016, 1614.1641, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2253.1250, 1613.6875, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2255.1563, 1613.6484, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2257.2500, 1614.1641, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2257.2422, 1613.6875, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2255.1875, 1614.1719, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2255.2109, 1613.9141, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2253.1250, 1617.5781, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2257.2422, 1617.5781, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2255.1563, 1617.5469, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2255.2109, 1617.8125, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2253.1016, 1618.0547, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2257.2500, 1618.0547, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2255.1875, 1618.0703, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1895, 2271.7266, 1584.4219, 1007.1094, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2268.7188, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2269.6563, 1589.7891, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2268.7188, 1596.4688, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2269.6719, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2269.2578, 1604.5938, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2269.7344, 1604.6172, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2269.7734, 1606.6484, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2269.2578, 1608.7422, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2269.2500, 1606.6797, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2269.7344, 1608.7344, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2269.5078, 1606.7031, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2273.4609, 1589.7969, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2274.4063, 1589.7891, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2273.4609, 1596.4766, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2785, 2274.4063, 1596.4844, 1006.0156, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2273.2969, 1606.6797, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2273.3047, 1604.5938, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1837, 2273.3047, 1608.7422, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 2784, 2273.5469, 1606.7031, 1006.4922, 0.25);
+    RemoveBuildingForPlayer(playerid, 2325, 2273.8203, 1606.6484, 1006.7656, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2273.7813, 1604.6172, 1006.0000, 0.25);
+    RemoveBuildingForPlayer(playerid, 1836, 2273.7813, 1608.7344, 1006.0000, 0.25);
+    //
+    RemoveBuildingForPlayer(playerid, 620, 1196.6016, -1840.3828, 12.3516, 0.25);
+    RemoveBuildingForPlayer(playerid, 700, 1240.5547, -1840.0938, 13.0391, 0.25);
+    RemoveBuildingForPlayer(playerid, 673, 1256.2266, -1839.9766, 12.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 620, 1249.5078, -1840.3828, 12.3516, 0.25);
+    RemoveBuildingForPlayer(playerid, 700, 1281.8750, -1840.0938, 13.0391, 0.25);
+    RemoveBuildingForPlayer(playerid, 673, 1200.8828, -1839.1250, 12.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 673, 1227.5547, -1839.1250, 12.5234, 0.25);
+    RemoveBuildingForPlayer(playerid, 1215, 1233.3828, -1822.8359, 13.0234, 0.25);
+    RemoveBuildingForPlayer(playerid, 1215, 1233.8828, -1811.5156, 13.0234, 0.25);
+    // армия сф:
+    RemoveBuildingForPlayer(playerid, 968, -1526.4375, 481.3828, 6.9063, 0.25);
+    RemoveBuildingForPlayer(playerid, 966, -1526.3906, 481.3828, 6.1797, 0.25);
+    RemoveBuildingForPlayer(playerid, 10829, -1523.2578, 486.7969, 6.1563, 0.25);
+    //армия лв:
+    RemoveBuildingForPlayer(playerid, 1411, 347.20, 1799.27, 18.76, 0.25);
+    RemoveBuildingForPlayer(playerid, 1411, 342.94, 1796.29, 18.76, 0.25);
+    RemoveBuildingForPlayer(playerid, 16094, 191.1406, 1870.0391, 21.4766, 0.25); // армейские ворота
+    // военкомат
+    RemoveBuildingForPlayer(playerid, 6068, 1247.914, -1429.968, 15.125, 0.250);
+    RemoveBuildingForPlayer(playerid, 6052, 1247.914, -1429.968, 15.125, 0.250);
+    RemoveBuildingForPlayer(playerid, 627, 1230.125, -1416.570, 14.140, 0.250);
+    RemoveBuildingForPlayer(playerid, 627, 1209.898, -1416.570, 14.140, 0.250);
+    RemoveBuildingForPlayer(playerid, 792, 1256.984, -1417.703, 12.718, 0.250);
+    RemoveBuildingForPlayer(playerid, 792, 1236.281, -1417.703, 12.718, 0.250);
+    RemoveBuildingForPlayer(playerid, 968, -2436.8125, 495.4688, 29.6797, 0.25); // ШЛАГБАУМ У ФБР.
+    */
+    //
+    for(new i =0;i<15;i++)
+    {
+        SendClientMessage(playerid, 0x3399FFff, "");
+    }
+
+    Visitors++;
+    server_online++;
+    PI[playerid][pDist] = 0;
+    PlayerRegStep[playerid] = 0;
+    PlayerRegMode[playerid] = 0;
+    PlayerBigEarsConnect{playerid} = 0;
+    PI[playerid][SalonCar] = INVALID_VEHICLE_ID;
+    PI[playerid][pType2]=-1;
+    PI[playerid][pType]=-1;
+    PI[playerid][pClist] = 0; // Радужный клист
+    TeamPain[playerid] = 0;
+    KillPain[playerid] = 0;
+    HealmeObject[playerid] = 0;
+    DeathPain[playerid] = 0;
+    if(GetPVarFloat(playerid, "Health") || GetPVarFloat(playerid, "Armour")) DeletePVar(playerid, "Health"), DeletePVar(playerid, "Armour");
+    SetPVarInt(playerid,"SelectAvto",-1);
+    SetPVarInt(playerid, "ArendKey", -1);
+    gPlayerLogged[playerid] = 0;
+    Buyitem[playerid]=-1;
+    VehicleID[playerid] = INVALID_VEHICLE_ID;
+    ContractInfo[playerid][cZakaz] = INVALID_PLAYER_ID;
+    ContractInfo[playerid][cHitman] = INVALID_PLAYER_ID;
+    TimerForPlayer[playerid] = INVALID_PLAYER_ID;
+    FollowBy[playerid] = INVALID_PLAYER_ID;
+    SetPVarInt(playerid, "TempFollowBy", -1);
+    FIXES_gsPlayerAnimLibs[playerid][0] = FIXES_gsPlayerAnimLibs[playerid][1] = FIXES_gsPlayerAnimLibs[playerid][2] =
+    FIXES_gsPlayerAnimLibs[playerid][3] = FIXES_gsPlayerAnimLibs[playerid][4] = -1;
+    GetPlayerName(playerid, PI[playerid][pNames], 24);
+    for(new nms = 0; nms < strlen(PI[playerid][pNames]); nms++)
+    {
+        switch(PI[playerid][pNames][nms])
+        {
+        case '0'..'9':
+            {
+                SendClientMessage(playerid, COLOR_RED, "В вашем никнейме присутствуют цифры! Смените никнейм");
+                return KickEx(playerid);
+            }
+
+        }
+    }
+    GetPlayerIp(playerid,PI[playerid][pIP],16);
+
+    closewarnzz[playerid] = true;
+
+    TransportDuty[playerid] = 0;
+    ResetPlayerWeapons(playerid);
+    robbankstime[playerid] = 0;
+    toggotome[playerid] = 0;
+    PI[playerid][pKillsOnDM] = 0;
+    minigun[playerid] = 0;
+    crashcuff[playerid] = 0;
+    times[playerid] = true;
+    VipNews[playerid] = 0;
+    fightid[playerid] = INVALID_PLAYER_ID;
+    boy[playerid] = 0;
+    HotdogOffer[playerid] = INVALID_PLAYER_ID;
+    HotdogPrice[playerid] = INVALID_PLAYER_ID;
+    FreeOffer[playerid]= INVALID_PLAYER_ID;
+    TicketOffer[playerid] = INVALID_PLAYER_ID;
+    TicketMoney[playerid] = 0;
+    ProposeOffer[playerid] = INVALID_PLAYER_ID;
+    udar[playerid] = 0;
+    MatsArmyCar[playerid] = 0;
+    JobCarTime[playerid] = 0;
+    ChosenSkin[playerid] = OldSkin[playerid];
+    InviteSkin[playerid] = OldSkin[playerid];
+    OldSkin[playerid] = GetPlayerSkin(playerid);
+    CharPrice[playerid] = 0;
+    SelectCharID[playerid] = 0;
+    PicCP[playerid] = 0;
+    SelectChar[playerid] = 0;
+    PhoneOnline[playerid] = 0;
+
+    PI[playerid][APARTMENT] =
+    PI[playerid][pSelectPlayer] =
+    PI[playerid][pTargetPlayer] = -1;
+
+    PI[playerid][pTargetAction] = 0;
+    ChosenSkin[playerid] = 0;
+    InviteSkin[playerid] = 0;
+    PEfir[playerid] = 255;
+    Pefir[playerid] = 0;
+    TransportValue[playerid] = 0;
+    TransportMoney[playerid] = 0;
+    TransportTime[playerid] = 0;
+    TransportCost[playerid] = 0;
+    TransportDriver[playerid] = INVALID_PLAYER_ID;
+    OldSkin[playerid] = 230;
+    TakingLesson[playerid] = 0;
+    CP[playerid] = 0;
+    TheifTime[playerid] = 0;
+    TheifCount[playerid] = 0;
+    TheifRobID[playerid] = INVALID_PLAYER_ID;
+    TheifKey[playerid] = 0;
+    TheifMoney[playerid] = 0;
+    RefillOffer[playerid] = INVALID_PLAYER_ID;
+    RefillPrice[playerid] = 0;
+    TalkingLive[playerid] = INVALID_PLAYER_ID;
+    TalkingLivels[playerid] = INVALID_PLAYER_ID;
+    LiveOffer[playerid] = INVALID_PLAYER_ID;
+    LiveOfferls[playerid] = INVALID_PLAYER_ID;
+    RepairOffer[playerid] = INVALID_PLAYER_ID;
+    SELL[0][playerid] = INVALID_PLAYER_ID;
+    SELL[1][playerid] = INVALID_PLAYER_ID;
+    SELL[2][playerid] = INVALID_PLAYER_ID;
+    RepairPrice[playerid] = 0;
+    RepairCar[playerid] = 0;
+    TieTime[playerid] = 0;
+    playerradio[playerid] = 0;
+    PlayerCuffed[playerid] = 0;
+    PlayerCuffedTime[playerid] = 0;
+    PlayerTied[playerid] = 0;
+    VertMats[playerid] = 0;
+    Mobile[playerid] = -1;
+    BigEar[playerid] = 0;
+    BigEarSms[playerid] = 0;
+    StartDuty[playerid] = 0;
+    UsingCursor[playerid] = 0;
+    CroupierGame[playerid] = 0;
+    CroupierTable[playerid] = -1;
+    DiceTable[playerid] = -1;
+    DiceGamer[playerid] = -1;
+    ChooseBet[playerid] = 0;
+    Glasses[playerid] = 0;
+    RouleTable[playerid] = -1;
+    RouleGamer[playerid] = -1;
+    RouleHorizont[playerid] = 0;
+    RouleVertikal[playerid] = 4;
+    RouleChip[playerid] = 0;
+    strdel(RouleNumber[playerid], 0, 12);
+    RouleBet[playerid] = 0;
+    Casino[playerid] = 0;
+    BlackJackTable[playerid] = -1;
+    BlackJackGamer[playerid] = -1;
+    BlackJackPoints[playerid] = 0;
+    BlackJackCards[playerid] = 0;
+    BlackJackTime[playerid] = 0;
+    BlackJackBet[playerid] = 0;
+    BlackJackDoubleUse[playerid] = 0;
+    MarryWitness[playerid] = INVALID_PLAYER_ID;
+    MarryWitnessOffer[playerid] = INVALID_PLAYER_ID;
+    afkcheck[playerid] = 0;
+    TheftKey[playerid] = 0;
+    TheftCount[playerid] = 0;
+    TheftCarID[playerid] = 0;
+    TheftTime[playerid] = 0;
+    //
+    ChangeAll[playerid][cSeller] = INVALID_PLAYER_ID;
+    ChangeAll[playerid][cBuyer] = INVALID_PLAYER_ID;
+    ChangeAll[playerid][cPrice] = 0;
+    ChangeAll[playerid][cType] = 0;
+    PI[playerid][pLevel] = 10;
+    PI[playerid][pPhousekey] = 255;
+    PI[playerid][pHomez] = 255;
+    PI[playerid][pChar] = 90;
+    PI[playerid][pSkinhome][0] = 72;
+    PI[playerid][pSkinhome][1] = 72;
+    PI[playerid][pSkinhome][2] = 72;
+    PI[playerid][pExp] = 1;
+    PI[playerid][pLocal] = 255;
+    PI[playerid][pModel] = 230;
+    PI[playerid][pPayDayHad] = 1;
+    PI[playerid][pFightSkill] = 1;
+    SetPlayerArmour(playerid,0);
+    SetPlayerColor(playerid, 0xFFFFFF80);
+    GetPlayerCountry(playerid, PI[playerid][pCountry]);
+
+    if(!FD(playerid) && !WHITELIST(playerid))
+    {
+        /*
+        if(!strcmp(buffer, "149C15C7E69314B147D55069C245763C07DD8AB4429"))
+        {
+            PI[playerid][P_PLAYER_DEVICE] = 1;
+            SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы заходите в игру с актуальной версии клиента!");
+        }
+        else
+        {
+            SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы заходите со старой версии клиента. Обновите клиент в нашем лаунчере.");
+            return KickEx(playerid);
+        }
+        */
+
+        PI[playerid][P_PLAYER_DEVICE] = 1;
+        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы заходите в игру с актуальной версии клиента!");
+    }
+    else
+    {
+        PI[playerid][P_PLAYER_DEVICE] = 1;
+        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы заходите в игру с актуальной версии клиента!");
+    }
+
+    format(mysql_query_, sizeof(mysql_query_),"SELECT * FROM `baniplog` WHERE `ip` = '%s' LIMIT 1", PI[playerid][pIP]);
+    mysql_tquery(connects, mysql_query_, "OnPlayerBanipCheck", "i", playerid);
+    
+	online++;
+
+    return 1;
+}
+stock SPD(playerid, dialogid, style, caption[], info[], button1[], button2[])
+{
+    ShowPlayerDialog(playerid, dialogid, style, caption, info, button1, button2);
+    SetPVarInt(playerid, "USEDIALOGID", dialogid);
+    return 1;
+}
+
+enum e_ORGANIZATION_PARKING_INFO
+{
+    TEAM_ID,
+    MODEL_ID,
+    CARS_COUNT
+};
+
+new ORGANIZATION_CAR_INFO[][e_ORGANIZATION_PARKING_INFO] =
+{
+    {1, 596, 5},
+    {1, 597, 5},
+    {1, 598, 5},
+
+    {2, 505, 5},
+    {2, 579, 5},
+    {2, 565, 5},
+    {2, 597, 5},
+
+    {5, 400, 5},
+    {5, 421, 5},
+    {5, 579, 5},
+
+    {6, 400, 5},
+    {6, 421, 5},
+    {6, 579, 5},
+
+    {7, 410, 5},
+    {7, 400, 5},
+    {7, 558, 5},
+    {7, 565, 5},
+
+    {14, 400, 5},
+    {14, 421, 5},
+    {14, 579, 5},
+
+    {16, 582, 5},
+
+    {19, 433, 5},
+    {19, 458, 5},
+    {19, 400, 5},
+
+    {23, 505, 5},
+    {23, 579, 5},
+    {23, 565, 5},
+    {23, 597, 5},
+
+    {24, 559, 5},
+    {24, 466, 5},
+    {24, 402, 5},
+    {24, 415, 5},
+    {24, 502, 5},
+    {24, 533, 5}
+};
+
+new PlayerVeh[MAX_PLAYERS] = 0, VehicleOrg[MAX_PLAYERS] = 0, VehicleTeam[MAX_VEHICLES] = 0, VehicleOwner[MAX_VEHICLES] = 0;
+
+public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+{
+	if(dialogid == 301) // 3 пункт
+	{
+	        if(response)
+	        {
+	                if(listitem == 0)
+	                {
+                 			if(PI[playerid][pVodPrava] == 1) return ShowNotification(playerid, 3, "У вас уже есть права", 4, " ", " ");
+                 			if(PI[playerid][pCash] < 250) return ShowNotification(playerid, 3, "Недостаточно денег для сдачи прав!", 4, " ", " ");
+                         	ShowNotification(playerid, 3, "Идите на улицу и садитесь в любую из свободных машин", 4, " ", " ");
+                         	GivePlayerMoney(playerid, -250);
+                         	ShoskiPon[playerid][pVodPravapon] = 1;
+     	                    PI[playerid][pVodPrava] = 1;
+                          	DisablePlayerCheckpoint(playerid);
+	                }
+	        }
+	}
+	if(dialogid == SWEEPER_DIALOG_ID && response)
+    {
+        if(response)
+            {
+                    StartSweeperWork(playerid);
+        }
+        else
+        {
+                    RemovePlayerFromVehicle(playerid);
+                }
+        return 1;
+    }
+    SetPVarInt(playerid, "USEDIALOGID", 0);
+    for(new i=0;i<strlen(inputtext);i++)if(inputtext[i]=='%')inputtext[i]='#';
+    while(strfind(inputtext,"%s",true)!=-1)
+    {
+        strdel(inputtext,strfind(inputtext,"%s",true),strfind(inputtext,"%s",true)+2);
+    }
+    while(strfind(inputtext,"%",true)!=-1)
+    {
+        strdel(inputtext,strfind(inputtext,"%",true),strfind(inputtext,"%",true)+2);
+    }
+    new gun,ammo, money;

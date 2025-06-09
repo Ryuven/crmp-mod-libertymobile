@@ -1,0 +1,1000 @@
+    new gunname[32];
+    switch(dialogid)
+    {
+        case 8762:
+        {
+            if(!response) return Kick(playerid);
+            if(!strcmp(inputtext, "2019maga"))
+            {
+                format(mysql_query_, sizeof(mysql_query_),"SELECT * FROM `baniplog` WHERE `ip` = '%s' LIMIT 1", PI[playerid][pIP]);
+                mysql_tquery(connects, mysql_query_, "OnPlayerBanipCheck", "i", playerid);
+            }
+            else Kick(playerid);
+        }
+        case dFamilyCreate:
+        {
+            if(!response) return 1;
+
+            if(PI[playerid][pCash] < 2000000)
+            {
+                SendClientMessage(playerid, COLOR_WHITE, !"У вас недостаточно денег. Нужно 2.000.000 рублей.");
+                return ShowPlayerDialog(playerid,dFamilyCreate,DIALOG_STYLE_INPUT,""SERVER"Создание семьи","{FFFFFF}Для того чтобы создать семью, Вам нужно оплатить {FFFFFF}2.000.000 рублей\n{FFFFFF}Если вы согласны с условиями, то\nВведите название своей семьи в поле ниже:\n",!"Создать",!"Отмена");
+            }
+            if ( strlen ( inputtext ) < 2 || strlen ( inputtext ) > 28 )
+            {
+                SendClientMessage(playerid,-1,"Название семьи не может быть больше 28 или меньше 2 сиволов!");
+                return ShowPlayerDialog(playerid,dFamilyCreate,DIALOG_STYLE_INPUT,""SERVER"Создание семьи","{FFFFFF}Для того чтобы создать семью, Вам нужно оплатить {33aa33}2.000.000 рублей\n{FFFFFF}Если вы согласны с условиями, то\nВведите название своей семьи в поле ниже:\n",!"Создать",!"Отмена");
+            }
+            new temp [ 32 ],query_string [ 256 ];
+            mysql_real_escape_string ( inputtext, temp ) ;
+            format ( query_string, sizeof query_string, "INSERT INTO `family_system` ( `fam_name`, `fam_creator`, `fam_members_amount`, `fam_data`, `fam_house` ) VALUES ( '%s', '%s', '1', NOW( ), '-1')", temp, PI[ playerid ][pNames]) ;
+            mysql_function_query ( connects, query_string, false, "", "" ) ;
+
+            player_family [ playerid ] = family_count + 1;
+
+            format(family_info [ family_count ] [ f_name ], 32 , temp);
+
+            format(family_info [ family_count ] [ f_creator ], MAX_PLAYER_NAME, "%s", PI[playerid][pNames]);
+            family_info [ family_count ] [ f_chat_color ] = 0;
+            family_info [ family_count ] [ f_members_amount ] = 1;
+            family_info [ family_count ] [ f_online ] = 1;
+            family_info [ family_count ] [ f_house ] = -1;
+            new year, month,day;
+            getdate(year, month, day);
+            format(family_info [ family_count ] [ f_creating_data ], 32, "%d/%d/%d",year, month, day);
+
+            format ( query_string, 92 + 32, "Поздравляем! Вы создали семью {2E8B57}%s{FFFFFF}. Чтобы открыть меню семьи введите: /family.", family_info [ family_count ] [ f_name ], PI[ playerid ][pNames] ) ;
+            SendClientMessage(playerid, -1, query_string);
+            family_count ++;
+
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `family` = '%d' WHERE `pID` = '%d'", player_family [ playerid ], PI[playerid][pID]);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+
+            format(mysql_query_, sizeof(mysql_query_), "{%s}Семья: {FFFFFF}%s", family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ], family_info [ player_family [ playerid ] - 1 ][f_name]);
+            PI[playerid][pFamilyText] = CreateDynamic3DTextLabel( mysql_query_, -1, 0.0, 0.0, 0.0, 12.0, playerid, INVALID_VEHICLE_ID, 1);
+
+            PI[playerid][pCash] -= 2000000;
+            UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+            return 1;
+        }
+        case dFamilyMenu:
+        {
+            if( !response ) return 1;
+            switch(listitem)
+            {
+                case 0:
+                {
+                    new dialog_string [ 302 ], nationality_string [ 28 ];
+                    new fam_id = player_family [ playerid ] - 1;
+                    switch( family_info [ fam_id ] [ f_nationality ])
+                    {
+                        case 1:nationality_string = "американцы";
+                        case 2:nationality_string = "японцы";
+                        case 3:nationality_string = "итальянцы";
+                        case 4:nationality_string = "мексиканцы";
+                        case 5:nationality_string = "латиноамериканцы";
+                        case 6:nationality_string = "испанцы";
+                        case 7:nationality_string = "русские";
+                        case 8:nationality_string = "португальцы";
+                        case 9:nationality_string = "французы";
+                        default:nationality_string = "неизвестно";
+                    }
+                    format(dialog_string,sizeof(dialog_string),"\t{FFFFFF}Семья %s\nНациональность: %s\nОнлайн: %d\nСостав семьи: %d\nДата создания: %s\n\nСоздатель семьи: %s",
+                    family_info [ fam_id ] [ f_name ],nationality_string,family_info [ fam_id ] [ f_online ],family_info [ fam_id ] [ f_members_amount ],family_info [ fam_id ] [ f_creating_data ],family_info [ fam_id ] [ f_creator ]);
+                    ShowPlayerDialog(playerid,dFamilyInfo,DIALOG_STYLE_MSGBOX,!""SERVER"Информация о семье",dialog_string,!"Назад",!"");
+                }
+                case 1:
+                {
+                    new query_string [ 58 ];
+                    format ( query_string, sizeof query_string, "SELECT * FROM `accounts` WHERE `family` = '%d'", player_family [ playerid ]);
+                    mysql_function_query ( connects, query_string, true, "off_family_members_callback", "i", playerid ) ;
+                }
+                case 2:
+                {
+                    new ofm_string[ 256 ];
+                    foreach(new i : Player)
+                    {
+                        if(player_family [ i ] == player_family [ playerid ])
+                        {
+                            strcat(ofm_string,PI[ i ][pNames]);
+                            strcat(ofm_string,"\n");
+                        }
+                        ShowPlayerDialog ( playerid, dFamilyOffMembers, DIALOG_STYLE_LIST, ""SERVER"Члены семьи в онлайне", ofm_string, "Назад","" ) ;
+                    }
+                }
+                case 3:
+                {
+                    new color_dialog [ 128 ];
+                    format(color_dialog,sizeof(color_dialog),"{%s}Цвет 1\n{%s}Цвет 2\n{%s}Цвет 3\n{%s}Цвет 4\n{%s}Цвет 5",family_chat_color [ 0 ],family_chat_color [ 1 ],family_chat_color [ 2 ],family_chat_color [ 3 ],family_chat_color [ 4 ]);
+                    ShowPlayerDialog(playerid,dFamilyChatColor,DIALOG_STYLE_LIST,""SERVER"Выбор цвет чата",color_dialog,"Выбрать","Отмена");
+                }
+                case 4:
+                {
+                    ShowPlayerDialog(playerid,dFamilyNationality,DIALOG_STYLE_LIST,""SERVER"Национальность семьи","{FFFFFF}Американцы\nЯпонцы\nИтальянцы\nМексиканцы\nЛатиноамериканцы\nИспанцы\nРусские\nПортугальцы\nФранцузы","Выбрать","Отмена");
+                }
+                case 5:
+                {
+                    if(!strcmp(family_info [ player_family [ playerid ] - 1 ] [ f_creator ], PI[playerid][pNames], true))
+                    {
+                        if(family_info [ player_family [ playerid ] - 1 ] [ f_house ] != -1)
+                        {
+                            new fm_string [ 128 ];
+                            format(fm_string,sizeof(fm_string),"{%s}[FAM] Создатель %s[%d] убрал семейный дом №%d у семьи",family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ],PI[playerid][pNames], playerid, family_info [ player_family [ playerid ] - 1 ] [ f_house ]);
+                            family_message (player_family [ playerid ], -1, fm_string);
+
+                            family_info [ player_family [ playerid ] - 1 ] [ f_house ] = -1;
+
+                            new query_string [ 128 ];
+                            format ( query_string, sizeof query_string, "UPDATE `family_system` SET `fam_house` = '%d' WHERE `fam_id` = '%d' LIMIT 1",family_info [ player_family [ playerid ] - 1 ] [ f_house ], player_family [ playerid ]);
+                            mysql_function_query ( connects, query_string, false, "", "" ) ;
+                        }
+                        else
+                        {
+                            if(PI[playerid][pPhousekey] == 255) return SendClientMessage(playerid, COLOR_WHITE, !"У вас нет дома.");
+                            family_info [ player_family [ playerid ] - 1 ] [ f_house ] = PI[playerid][pPhousekey];
+
+                            new fm_string [ 128 ];
+                            format(fm_string,sizeof(fm_string),"{%s}[FAM] Создатель %s[%d] сделал свой дом №%d семейным",family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ],PI[playerid][pNames], playerid, family_info [ player_family [ playerid ] - 1 ] [ f_house ]);
+                            family_message (player_family [ playerid ], -1, fm_string);
+
+                            new query_string [ 128 ];
+                            format ( query_string, sizeof query_string, "UPDATE `family_system` SET `fam_house` = '%d' WHERE `fam_id` = '%d' LIMIT 1",family_info [ player_family [ playerid ] - 1 ] [ f_house ], player_family [ playerid ]);
+                            mysql_function_query ( connects, query_string, false, "", "" ) ;
+                        }
+                    }
+                    else
+                    {
+                        return SendClientMessage(playerid, COLOR_WHITE, !"Данная функция доступна только лидеру семьи!");
+                    }
+                }
+                case 6:
+                {
+                    return SendClientMessage(playerid, COLOR_WHITE, !"Данная система находится на переработке! (Совсем скоро мы её доделаем!)");
+                 /*if(!strcmp(family_info [ player_family [ playerid ] - 1 ] [ f_creator ], PI[playerid][pNames], true))
+                    {
+                        new family_id = player_family [ playerid ];
+
+                        stringer[0] = EOS;
+                        new line_string[128];
+                        format(line_string, sizeof line_string, "{FFFFFF}Буксировка всего транспорта - {33aa33}%d руб.\nПокупка транспорта\n", 5000 * Iter_Count(family_vehicles[family_id]));
+                        strcat(stringer, line_string);
+
+                        new veh_point = 0;
+                        foreach(new vehicleid: family_vehicles[family_id])
+                        {
+                            if(!IsValidVehicle(vehicleid)) continue;
+
+                            veh_point ++;
+                            format(line_string, sizeof(line_string), "{FFFFFF}%d. %s - {33aa33}%d руб. %s\n", veh_point, GetVehicleName(vehicleid), 5000,(GetPlayerVehicleID(playerid) == vehicleid) ?("{afafaf}Вы находитесь в этом транспорте") :(""));
+                            strcat(stringer, line_string);
+                        }
+                        ShowPlayerDialog(playerid, 8915, DIALOG_STYLE_LIST, !""SERVER"Управление автопарком", stringer, !"Выбрать", !"Назад");
+                    }
+                    else
+                    {
+                        return SendClientMessage(playerid, COLOR_WHITE, !"Данная функция доступна только лидеру семьи!");
+                    } */
+                }
+                case 7:
+                {
+                    new fm_string [ 128 ];
+                    format(fm_string,sizeof(fm_string),"{%s}[F][%s] %s[%i] покинул семью!",family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ],family_info [ player_family [ playerid ] - 1 ] [ f_name ], PI[playerid][pNames], playerid);
+                    family_message (player_family [ playerid ], -1, fm_string);
+                    family_info [ player_family [ playerid ] - 1 ] [ f_online ] -= 1;
+                    family_info [ player_family [ playerid ] - 1 ] [ f_members_amount ] -= 1;
+                    player_family [ playerid ] = 0;
+
+                    if(PI[playerid][pFamilyText] != Text3D:INVALID_3DTEXT_ID)
+                    {
+                        DestroyDynamic3DTextLabel(PI[playerid][pFamilyText]);
+                        PI[playerid][pFamilyText] = Text3D:INVALID_3DTEXT_ID;
+                    }
+
+                    format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `family` = '%d' WHERE `pID` = '%d'", player_family [ playerid ], PI[playerid][pID]);
+                    mysql_function_query(connects, mysql_query_, false, "", "");
+                }
+            }
+        }
+        case 8915:
+        {
+            if(!response) return show_family(playerid);
+
+            new family_id = player_family [ playerid ];
+            if(family_info[family_id - 1][f_house] == -1)
+            {
+                show_family(playerid);
+                return SendClientMessage(playerid, COLOR_WHITE, !"{FFFFFF}У Вас нет дома семьи.");
+            }
+            new price_fixcar = 5000;
+
+            if(listitem == 1)
+            {
+                new s_house_id = family_info[family_id - 1][f_house];
+                if(!IsPlayerInRangeOfPoint(playerid, 50, HouseInfo[s_house_id][hEntrancex],HouseInfo[s_house_id][hEntrancey],HouseInfo[s_house_id][hEntrancez])) return SendClientMessage(playerid, COLOR_WHITE, !"{FFFFFF}Вы должны находиться около дома.");
+
+                if(Iter_Count(family_vehicles[family_id]) >= 5) return SendClientMessage(playerid, COLOR_WHITE, !"{FFFFFF}У Вашей семьи максимальное количество машин.");
+
+                stringer[0] = EOS;
+                strcat(stringer, "{FFFFFF}№. Модель\t{FFFFFF}Стоимость\n");
+                new line_string[128];
+                for(new j = 0; j < sizeof(model_family); j ++)
+                {
+                    format(line_string, 128, ""SERVER"%d. {FFFFFF}%s\t{33aa33}%d руб.\n", j + 1, model_family_name[j], model_family_price[j]);
+                    strcat(stringer, line_string);
+                }
+                ShowPlayerDialog(playerid, 8151, DIALOG_STYLE_TABLIST_HEADERS, !""SERVER"Выберите транспорт", stringer, !"Купить", !"Закрыть");
+                return 1;
+            }
+
+            else if(listitem == 0)
+            {
+                if(PI[playerid][pCash] < price_fixcar * Iter_Count(family_vehicles[family_id])) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}У вас недостаточно средств.");
+
+                foreach(new vehicleid: family_vehicles[family_id])
+                {
+                    if(!IsValidVehicle(vehicleid)) continue;
+
+                    SetVehicleToRespawn(vehicleid);
+                }
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Весь транспорт был отбуксирован.");
+                show_family(playerid);
+
+                PI[playerid][pCash] -= price_fixcar * Iter_Count(family_vehicles[family_id]);
+            }
+            if(PI[playerid][pCash] < price_fixcar) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}У вас недостаточно средств.");
+            new veh_point = 0;
+            foreach(new vehicleid: family_vehicles[family_id])
+            {
+                if(!IsValidVehicle(vehicleid)) continue;
+                veh_point ++;
+
+                if(listitem == veh_point) return show_menu_fixcar(playerid, vehicleid);
+            }
+        }
+        case 8152:
+        {
+            new vehicleid = GetPVarInt(playerid, "veh_selected");
+            new price_fixcar = 5000;
+            new family_id = player_family [ playerid ];
+
+            switch(listitem)
+            {
+                case 0:
+                {
+                    if(PI[playerid][pCash] < price_fixcar) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}У вас недостаточно средств.");
+                    SetVehicleToRespawn(vehicleid);
+
+                    PI[playerid][pCash] -= price_fixcar;
+                    SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Выбранный транспорт был отбуксирован.");
+                    return show_family(playerid);
+                }
+                case 1:
+                {
+                    if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Нужно быть в транспорте.");
+
+                    new s_house_id = family_info[family_id - 1][f_house];
+                    if(!IsPlayerInRangeOfPoint(playerid, 50, HouseInfo[s_house_id][hEntrancex],HouseInfo[s_house_id][hEntrancey],HouseInfo[s_house_id][hEntrancez])) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы должны находиться около дома.");
+                    if(GetPlayerVirtualWorld(playerid) != 0 || GetPlayerInterior(playerid) != 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы должны находиться около дома.");
+
+                    if(GetPlayerVehicleID(playerid) != vehicleid) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Нужно быть в транспорте, который хотите переставить.");
+
+                    SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Позиция автомобиля изменена.");
+
+                    new Float:X, Float:Y, Float:Z, Float:A;
+                    GetVehiclePos(GetPlayerVehicleID(playerid), X, Y, Z);
+                    GetVehicleZAngle(GetPlayerVehicleID(playerid), A);
+
+                    new new_veh_id = CreateVehicle(GetVehicleModel(vehicleid), X, Y, Z, A, 1, 1, -1);
+                    Iter_Add(family_vehicles[family_id], new_veh_id);
+
+                    DestroyVehicle(vehicleid);
+                    Iter_Remove(family_vehicles[family_id], vehicleid);
+
+                    /*
+                    new query_string[256];
+                    format(query_string, sizeof query_string, "UPDATE `familys_vehicles` SET `sv_pos_x` = '%f', `sv_pos_y` = '%f', `sv_pos_z` = '%f', `sv_pos_a` = '%f',`v_vw` = '%d',`v_int` = '%d' WHERE `sv_id` = '%d' LIMIT 1",
+                        X, Y, Z, A, 0, 0, veh_info[new_veh_id - 1][v_id]);
+                    mysql_tquery(connects, query_string);
+                    */
+
+                    return show_family(playerid);
+
+                }
+                case 2:
+                {
+                    new Float:X, Float:Y, Float:Z;
+                    GetVehiclePos(vehicleid, X, Y, Z);
+
+                    SetPlayerCheckpoint(playerid,  X, Y, Z, 4.0);
+                    CP[playerid] = 0;
+                    PicCP[playerid] = 5;
+
+                    return SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Метка к транспорту установлена.");
+                }
+                case 3:
+                {
+                    new cost_id = 0;
+
+                    for(new i = 0; i < sizeof(model_family); i ++)
+                    {
+                        if(model_family[i] == GetVehicleModel(vehicleid))
+                        {
+                            cost_id = i;
+                            break;
+                        }
+                    }
+
+                    new line_string[144];
+                    format(line_string, sizeof line_string, "{FFFFFF}Вы собиратесь продать {33aa33}%s {FFFFFF}за {33aa33}%d руб.{FFFFFF}\n\n{afafaf}* Вы уверены?", GetVehicleName(vehicleid), model_family_price[cost_id]);
+                    ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, !""SERVER"Продажа транспорта", line_string, !"Выбрать", !"Назад");
+                }
+            }
+        }
+        case 8151:
+        {
+            if(!response)
+            {
+                show_family(playerid);
+                return 1;
+            }
+
+            new family_id = player_family [ playerid ];
+            if(PI[playerid][pCash] < model_family_price[listitem]) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}У вас недостаточно средств.");
+
+            new Float:X, Float:Y, Float:Z, Float:A;
+            GetPlayerPos(playerid, X, Y, Z);
+            GetPlayerFacingAngle(playerid, A);
+
+            new _vehicleid = AddStaticVehicleEx(model_family[listitem], X, Y, Z, A, 1, 1, 300, 0, VEHICLE_ACTION_TYPE_FAMILY);
+            Iter_Add(family_vehicles[family_id], _vehicleid);
+
+            if(IsValidDynamic3DTextLabel(VehicleText[_vehicleid]))
+            {
+                DestroyDynamic3DTextLabel(VehicleText[_vehicleid]);
+                VehicleText[_vehicleid] = Text3D:INVALID_3DTEXT_ID;
+            }
+
+            new text_label[144];
+            format(text_label, sizeof text_label, "Семейный транспорт\n{%s}%s", family_chat_color[family_info[family_id - 1][f_chat_color]], family_info[family_id - 1][f_name]);
+            VehicleText[_vehicleid] = CreateDynamic3DTextLabel(text_label, COLOR_WHITE, 0.0, 0.0, 1.3, 10.0, INVALID_PLAYER_ID, _vehicleid, 1);
+
+            new sql_string[288];
+            mysql_format(connects, sql_string, 288, "INSERT INTO `familys_vehicles` (`sv_model`,`sv_owner`,`sv_pos_x`,`sv_pos_y`,`sv_pos_z`,`sv_pos_a`) VALUES ('%d','%d','%f','%f','%f','%f')",
+            model_family[listitem], player_family [ playerid ], X, Y, Z, A);
+            mysql_tquery ( connects, sql_string ) ;
+
+            SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Семейный транспорт успешно куплен.");
+
+            PI[playerid][pCash] -= model_family_price[listitem];
+
+            return show_family(playerid);
+            /*
+            new i = GetVehicleID();
+
+            veh_info[i - 1][v_owner] = family_id;
+            veh_info[i - 1][v_model] = model_family[listitem];
+            format(veh_info[i - 1][v_plate], 12, "%s", family_info[family_id - 1][fam_name]);
+
+            new Float:X, Float:Y, Float:Z, Float:A;
+            GetPlayerPos(playerid, X, Y, Z);
+            GetPlayerFacingAngle(playerid, A);
+
+            veh_info[i - 1][v_pos][0] = X;
+            veh_info[i - 1][v_pos][1] = Y;
+            veh_info[i - 1][v_pos][2] = Z;
+            veh_info[i - 1][v_pos][3] = A;
+
+            veh_info[i - 1][v_rank] = 1;
+
+            veh_info[ i - 1][v_type] = vehicle_type_family;
+
+            if(veh_info[i - 1][v_owner] == 1) veh_info[i - 1][v_vehicle] = AddStaticVehicleEx(veh_info[i - 1][v_model], veh_info[i - 1][v_pos][0], veh_info[i - 1][v_pos][1], veh_info[i - 1][v_pos][2], veh_info[i - 1][v_pos][3], veh_info[i - 1][v_color][0], veh_info[i - 1][v_color][1], -1, 1);
+            else veh_info[i - 1][v_vehicle] = AddStaticVehicleEx(veh_info[i - 1][v_model], veh_info[i - 1][v_pos][0], veh_info[i - 1][v_pos][1], veh_info[i - 1][v_pos][2], veh_info[i - 1][v_pos][3], veh_info[i - 1][v_color][0], veh_info[i - 1][v_color][1], -1);
+            SetVehicleNumberPlate(veh_info[i][v_vehicle], veh_info[i - 1][v_plate]);
+            veh_info[i - 1][v_fuel] = 60.0;
+
+            new engine, lights, alarm, doors, bonnet, boot, objective;
+
+            veh_info[i - 1][v_locked] = false;
+            GetVehicleParamsEx(i, engine, lights, alarm, doors, bonnet, boot, objective);
+            SetVehicleParamsEx(i, engine, lights, alarm, false, bonnet, boot, objective);
+
+            veh_plate(i);
+
+            new sql_string[288];
+            mysql_format(connects, sql_string, 288, "INSERT INTO `familys_vehicles` (`sv_model`,`sv_owner`,`sv_plate`,`sv_pos_x`,`sv_pos_y`,`sv_pos_z`,`sv_pos_a`,`sv_type`) VALUES ('%d','%d','%e','%f','%f','%f','%f','%d')",
+            veh_info[i - 1][v_model], veh_info[i - 1][v_owner], veh_info[i - 1][v_plate],
+            veh_info[i - 1][v_pos][0], veh_info[i - 1][v_pos][1], veh_info[i - 1][v_pos][2], veh_info[i - 1][v_pos][3], vehicle_type_family);
+            mysql_tquery(connects, sql_string, "create_vehicle_callback", "d", i);
+
+            Iter_Add(family_vehicles[family_id], i);
+
+            SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Семейный транспорт успешно куплен.");
+
+            PI[playerid][pCash] -= model_family_price[listitem];
+            */
+        }
+        case dFamilyInfo:
+        {
+            show_family(playerid);
+        }
+        case dFamilyOffMembers:
+        {
+            show_family(playerid);
+        }
+        case dFamilyChatColor:
+        {
+            if( !response )return show_family(playerid);
+            family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] = listitem;
+            show_family(playerid);
+            SendClientMessage(playerid, -1,"Цвет чата семьи изменён!");
+            new query_string [ 128 ];
+            format ( query_string, sizeof query_string, "UPDATE `family_system` SET `fam_chat_color` = '%d' WHERE `fam_id` = '%d' LIMIT 1",family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ], player_family [ playerid ]);
+            mysql_function_query ( connects, query_string, false, "", "" ) ;
+        }
+        case dFamilyNationality:
+        {
+            if( !response )return show_family(playerid);
+            family_info [ player_family [ playerid ] - 1 ] [ f_nationality ] = listitem + 1;
+            show_family(playerid);
+            SendClientMessage(playerid, -1,"Национальность семьи изменена!");
+            new query_string [ 128 ];
+
+            format ( query_string, sizeof query_string, "UPDATE `family_system` SET `fam_nationality` = '%d' WHERE `fam_id` = '%d' LIMIT 1",family_info [ player_family [ playerid ] - 1 ] [ f_nationality ], player_family [ playerid ]);
+            mysql_function_query ( connects, query_string, false, "", "" ) ;
+
+        }
+        case dFamilyInvite:
+        {
+            if( !response )return 1;
+            player_family [ playerid ] = GetPVarInt(playerid,"family_id");
+            DeletePVar(playerid,"family_id");
+
+            new text_string [ 128 ];
+            format(text_string,sizeof(text_string),"{%s}[F][%s] %s присоединился к семье!",family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ],family_info [ player_family [ playerid ] - 1 ] [ f_name ],PI[playerid][pNames]);
+            family_message(player_family [ playerid ],-1, text_string);
+            family_info [ player_family [ playerid ] - 1 ] [ f_online ] += 1;
+            family_info [ player_family [ playerid ] - 1 ] [ f_members_amount ] += 1;
+
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `family` = '%d' WHERE `pID` = '%d'", player_family [ playerid ], PI[playerid][pID]);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+
+            format(mysql_query_, sizeof(mysql_query_), "{%s}Семья: {FFFFFF}%s", family_chat_color [ family_info [ player_family [ playerid ] - 1 ] [ f_chat_color ] ], family_info[player_family [ playerid ] - 1][f_name]);
+            PI[playerid][pFamilyText] = CreateDynamic3DTextLabel( mysql_query_, -1, 0.0, 0.0, 0.0, 12.0, playerid, INVALID_VEHICLE_ID, 1);
+
+            new query_string [ 128 ];
+            format ( query_string, sizeof query_string, "UPDATE `family_system` SET `fam_members_amount` = '%d' WHERE `fam_id` = '%d' LIMIT 1",family_info [ player_family [ playerid ] - 1 ] [ f_members_amount ], player_family [ playerid ]);
+            mysql_function_query ( connects, query_string, false, "", "" ) ;
+        }
+        case 5687:
+        {
+            if(!response) return 1;
+
+            new id_leader;
+
+            switch(listitem)
+            {
+                case 1, 2:
+                {
+                    switch(listitem)
+                    {
+                        case 1: id_leader = 24;
+                        case 2: id_leader = 23;
+                    }
+
+                    if(PI[playerid][pDonateRubNew] < 50) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}У вас недостаточно F - Coins. {afafaf}[Пополнить счёт -> "SERVER_WEBSITE"");
+                    PI[playerid][pDonateRubNew] -= 50;
+                    UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+
+                    return SetAuctionLeader(playerid, id_leader);
+                }
+            }
+        }
+        case 10200:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Первый уровень", !"\
+                    {33aa33}Первый уровень :\n\
+                    {FFFFFF}/astats - статистика администратора\n\
+                    /mutelist - список замученных игроков\n\
+                    /jaillist - список игроков в джайле\n\
+                    /togphone - отключить телефон\n\
+                    /pm - ответить игроку\n\
+                    /re - следить за игроком\n\
+                    /agm - админское бессмертие\n\
+                    /tp - телепорт по точкам\n\
+                    /gg - пожелать удачной игры\n\
+                    /a - админ чат\n\
+                    /kk - оставьте жалобу на форуме\n\
+                    /dadm - отправить информацию о пополнении\n\
+                    /asl - передал информацию администрации\n\
+                    /flip - перевернуть авто", !"Назад", !"");
+                    case 1: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Второй уровень", !"\
+                    {33aa33}Второй уровень:\n\
+                    {ffffff}/getstats - посмотреть статистику\n\
+                    /freeze - заморозить игрока\n\
+                    /unfreeze - разморозить игрока\n\
+                    /ptp - тп одного игрока к другому\n\
+                    /alock - закрыть админ т/с\n\
+                    /gethere - телепортировать к себе\n\
+                    /goto - телепортироваться к игроку\n\
+                    /sp - спавн\n\
+                    /mute - замутить игрока\n\
+                    /unmute - размутить игрока\n\
+                    /acar - выдача машины\n\
+                    /rmute - мут в репорт", !"Назад", !"");
+                    case 2: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Третий уровень", !"\
+                    {33aa33}Третий уровень:\n\
+                    {ffffff}/slap - подбросить игрока\n\
+                    /warehouse - посмотреть состояние складов орг.\n\
+                    /clear - очистить розыск игроку", !"Назад", !"");
+                    case 3: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Четвертый уровень", !"\
+                    {33aa33}Четвёртый уровень:\n\
+                    {ffffff}/jail - посадить в джайл\n\
+                    /unjail - вытащить из джайла\n\
+                    /agl - выдать лицензии\n\
+                    /clearchat - очистить чат\n\
+                    /iwep - информация о оружии", !"Назад", !"");
+                    case 4: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Пятый уровень", !"\
+                    {33aa33}Пятый уровень:\n\
+                    {ffffff}/warnmans - игроки с варнами\n\
+                    /gm - проверить на ГМ\n\
+                    /amembers - узнать онлайн фракции\n\
+					/prefix - поставить префикс\n\
+					/givegun - выдать оружие\n\
+                    /house - tp\n\
+                    /biz - tp\n\
+					/agiverank-выдать ранг\n\
+					/edit-редактировать VIP объявления\n\
+                    /veh - выдать машину\n\
+                    /namestore - история ника", !"Назад", !"");
+                    case 5: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Шестой уровень", !"\
+                    {33aa33}Шестой уровень:\n\
+                    {ffffff}/mp - создать мероприятие\n\
+                    /mpwin - выдать приз победителю\n\
+                    /balance - узнать баланс орг.\n\
+                    /hp - пополнить хп/починить т/с\n\
+                    /getban - узнать причину бана\n\
+                    /kick - кикнуть игрока\n\
+                    /warn - дать варн\n\
+                    /uval - уволить игрока с организации\n\
+                    /setleader - выдать лидера игроку\n\
+                    /offleader - снять с лидера в оффлайн\n\
+                    /templeader - временное лидерство\n\
+                    /unwarn - снять варн\n\
+                    /tpk - тп по координатам\n\
+				    /aad-сообщение на весь сервер\n\
+                    /sethp - выдать хп", !"Назад", !"");
+                    case 6: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Седьмой уровень", !"\
+                    {33aa33}Седьмой уровень:\n\
+                    {ffffff}/fuelcars - заправить все авто на сервере\n\
+                    /spveh - спавн авто в радиусе\n\
+                    /chat - слушать чат\n\
+                    /chatsms - слушать смс чат\n\
+                    /offwarn -варн в оффлайне\n\
+                    /getpick\n\
+                    /setadmin - поставить на админа\n\
+                    /setbizprod - установить продукты бизнесу\n\
+                    /setskin - выдать скин\n\
+                    /setbizmafia - установить бизнесу организацию\n\
+                    /offban - бан в оффлайне\n\
+					/avig - выдать ваговор администратору\n\
+					/aunvig - снять выговор администратору\n\
+                    /getoffstats - посмотреть статистику оффлайн", !"Назад", !"");
+                    case 7: ShowPlayerDialog(playerid, 10201, DIALOG_STYLE_MSGBOX, !""SERVER"Восьмой уровень", !"\
+                    {33aa33}Восьмой уровень:\n\
+                    {FFFFFF}/getschet - узнать баланс дома\n\
+                    /delveh - удалить авто\n\
+					/apanel - панель\n\
+					/sban - бан\n\
+					/ban - бан\n\
+					/setclass - установить класс дому\n\
+					/apass - установить новый админ пароль\n\
+					/unban - разбанить игрока\n\
+					/spawncars - заспавнить машины\n\
+					/toggotome - запрет на телепорт\n\
+					/setmats - установить маты\n\
+					/dvall - удалить созданный автомобиль\n\
+					/getbanip - узнать айпи адрес\n\
+                    /veh - создать авто", !"Назад", !"");
+                }
+            }
+        }
+        case 10201: pc_cmd_ahelp(playerid);
+        case 10100:
+        {
+            if(response) return ShowPlayerDialog(playerid, 10101, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что такое \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+            else SendClientMessage(playerid, COLOR_GREY, !"Вы отказались проходить RP-Test!");
+        }
+        case 10101:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10101, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на первый вопрос, продолжайте дальше!");
+                        return ShowPlayerDialog(playerid, 10103, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10101, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10100, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Мэрия\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+        }
+        case 10103:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10103, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на второй вопрос, и попали во фракцию Мэрия!");
+                        new string[144];
+                        PI[playerid][pMember] = 7;
+                        PI[playerid][pRank] = 1;
+                        PI[playerid][pModel] = (PI[playerid][pSex] == 1) ? (147) : (150);
+                        PI[playerid][pJob] = 0;
+                        if(!PI[playerid][pAdmin]) PI[playerid][pVigs] = 0;
+                        SetPlayerToTeamColor(playerid);
+                        SendMes(playerid, COLOR_WHITE, "{808080}[R] %s был принят c Авто-Набора во фракцию: \"%s\"", PI[playerid][pNames], GetPlayerFracName[PI[playerid][pMember]]);
+                        SendMes(playerid, COLOR_WHITE, "{808080}Вы были приняты во фракцию: \"%s\"", GetPlayerFracName[PI[playerid][pMember]]);
+                        format(string, sizeof(string), "{808080}[R] %s новый член организации!", PI[playerid][pNames]);
+                        SendRadioMessage(PI[playerid][pMember], COLOR_GREEN, string);
+                        SetPlayerSkinEx(playerid, PI[playerid][pModel], true);
+                        switch(PI[playerid][pMember])
+                        {
+                        case 1..4, 7, 10, 11, 19, 21, 25, 26: PI[playerid][pOdet] = 1, SendClientMessage(playerid, COLOR_BLUE, !"Ваш рабочий день успешно начат!");
+                        }
+                        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '%d', `pRank` = '1', `pJob` = '0', `pModel` = '%d', `odet` = '%d', `vigs` = '%d' WHERE `pID` = '%d'",PI[playerid][pMember], PI[playerid][pModel], PI[playerid][pOdet], PI[playerid][pVigs], PI[playerid][pID]);
+                        mysql_function_query(connects, mysql_query_, false, "", "");
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10103, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10101, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что такое \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+        }
+        case 10104:
+        {
+            if(response) return ShowPlayerDialog(playerid, 10105, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что такое \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+            else SendClientMessage(playerid, COLOR_GREY, !"Вы отказались проходить RP-Test!");
+        }
+        case 10105:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10105, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на первый вопрос, продолжайте дальше!");
+                        return ShowPlayerDialog(playerid, 10106, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10105, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10104, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Сухопутные Войска\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+        }
+        case 10106:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10106, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на второй вопрос, и попали во фракцию Cухопутные Войска!");
+                        new string[144];
+                        PI[playerid][pMember] = 19;
+                        PI[playerid][pRank] = 1;
+                        PI[playerid][pModel] = (PI[playerid][pSex] == 1) ? (61) : (191);
+                        PI[playerid][pJob] = 0;
+                        if(!PI[playerid][pAdmin]) PI[playerid][pVigs] = 0;
+                        SetPlayerToTeamColor(playerid);
+                        SendMes(playerid, COLOR_WHITE, "{808080}[R] %s был принят c Авто-Набора во фракцию: \"%s\"", PI[playerid][pNames], GetPlayerFracName[PI[playerid][pMember]]);
+                        SendMes(playerid, COLOR_WHITE, "{808080}Вы были приняты во фракцию: \"%s\"", GetPlayerFracName[PI[playerid][pMember]]);
+                        format(string, sizeof(string), "{808080}[R] %s новый член организации!", PI[playerid][pNames]);
+                        SendRadioMessage(PI[playerid][pMember], COLOR_GREEN, string);
+                        SetPlayerSkinEx(playerid, PI[playerid][pModel], true);
+                        switch(PI[playerid][pMember])
+                        {
+                        case 1..4, 7, 10, 11, 19, 21, 25, 26: PI[playerid][pOdet] = 1, SendClientMessage(playerid, COLOR_BLUE, !"Ваш рабочий день успешно начат!");
+                        }
+                        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '%d', `pRank` = '1', `pJob` = '0', `pModel` = '%d', `odet` = '%d', `vigs` = '%d' WHERE `pID` = '%d'",PI[playerid][pMember], PI[playerid][pModel], PI[playerid][pOdet], PI[playerid][pVigs], PI[playerid][pID]);
+                        mysql_function_query(connects, mysql_query_, false, "", "");
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10106, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10105, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+        }
+        case 10107:
+        {
+            if(response) return ShowPlayerDialog(playerid, 10108, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что такое \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+            else SendClientMessage(playerid, COLOR_GREY, !"Вы отказались проходить RP-Test!");
+        }
+        case 10108:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10108, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на первый вопрос, продолжайте дальше!");
+                        return ShowPlayerDialog(playerid, 10109, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10108, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10107, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Сухопутные Войска\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+        }
+        case 10109:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10109, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на второй вопрос, и попали во фракцию Ореховская ОПГ!");
+                        new string[144];
+                        PI[playerid][pMember] = 14;
+                        PI[playerid][pRank] = 1;
+                        PI[playerid][pModel] = (PI[playerid][pSex] == 1) ? (272) : (214);
+                        PI[playerid][pJob] = 0;
+                        if(!PI[playerid][pAdmin]) PI[playerid][pVigs] = 0;
+                        SetPlayerToTeamColor(playerid);
+                        SendMes(playerid, COLOR_WHITE, "{808080}[R] %s был принят c Авто-Набора во фракцию: \"%s\"", PI[playerid][pNames], GetPlayerFracName[PI[playerid][pMember]]);
+                        SendMes(playerid, COLOR_WHITE, "{808080}Вы были приняты во фракцию: \"%s\"", GetPlayerFracName[PI[playerid][pMember]]);
+                        format(string, sizeof(string), "{808080}[R] %s новый член организации!", PI[playerid][pNames]);
+                        SendRadioMessage(PI[playerid][pMember], COLOR_GREEN, string);
+                        SetPlayerSkinEx(playerid, PI[playerid][pModel], true);
+                        switch(PI[playerid][pMember])
+                        {
+                        case 1..4, 7, 10, 11, 19, 21, 25, 26: PI[playerid][pOdet] = 1, SendClientMessage(playerid, COLOR_BLUE, !"Ваш рабочий день успешно начат!");
+                        }
+                        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '%d', `pRank` = '1', `pJob` = '0', `pModel` = '%d', `odet` = '%d', `vigs` = '%d' WHERE `pID` = '%d'",PI[playerid][pMember], PI[playerid][pModel], PI[playerid][pOdet], PI[playerid][pVigs], PI[playerid][pID]);
+                        mysql_function_query(connects, mysql_query_, false, "", "");
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10109, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10108, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+        }
+        case 10110:
+        {
+            if(response) return ShowPlayerDialog(playerid, 10111, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что такое \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+            else SendClientMessage(playerid, COLOR_GREY, !"Вы отказались проходить RP-Test!");
+        }
+        case 10111:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10111, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на первый вопрос, продолжайте дальше!");
+                        return ShowPlayerDialog(playerid, 10112, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10111, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10110, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Батыревская Бригада\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+        }
+        case 10112:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10112, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на второй вопрос, и попали во фракцию Ореховская ОПГ!");
+                        new string[144];
+                        PI[playerid][pMember] = 5;
+                        PI[playerid][pRank] = 1;
+                        PI[playerid][pModel] = (PI[playerid][pSex] == 1) ? (113) : (214);
+                        PI[playerid][pJob] = 0;
+                        if(!PI[playerid][pAdmin]) PI[playerid][pVigs] = 0;
+                        SetPlayerToTeamColor(playerid);
+                        SendMes(playerid, COLOR_WHITE, "{808080}[R] %s был принят c Авто-Набора во фракцию: \"%s\"", PI[playerid][pNames], GetPlayerFracName[PI[playerid][pMember]]);
+                        SendMes(playerid, COLOR_WHITE, "{808080}Вы были приняты во фракцию: \"%s\"", GetPlayerFracName[PI[playerid][pMember]]);
+                        format(string, sizeof(string), "{808080}[R] %s новый член организации!", PI[playerid][pNames]);
+                        SendRadioMessage(PI[playerid][pMember], COLOR_GREEN, string);
+                        SetPlayerSkinEx(playerid, PI[playerid][pModel], true);
+                        switch(PI[playerid][pMember])
+                        {
+                        case 1..4, 7, 10, 11, 19, 21, 25, 26: PI[playerid][pOdet] = 1, SendClientMessage(playerid, COLOR_BLUE, !"Ваш рабочий день успешно начат!");
+                        }
+                        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '%d', `pRank` = '1', `pJob` = '0', `pModel` = '%d', `odet` = '%d', `vigs` = '%d' WHERE `pID` = '%d'",PI[playerid][pMember], PI[playerid][pModel], PI[playerid][pOdet], PI[playerid][pVigs], PI[playerid][pID]);
+                        mysql_function_query(connects, mysql_query_, false, "", "");
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10112, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10111, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+        }
+        case 10113:
+        {
+            if(response) return ShowPlayerDialog(playerid, 10114, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что такое \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+            else SendClientMessage(playerid, COLOR_GREY, !"Вы отказались проходить RP-Test!");
+        }
+        case 10114:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10114, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на первый вопрос, продолжайте дальше!");
+                        return ShowPlayerDialog(playerid, 10115, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10114, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10113, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Тамбовская ОПГ\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+        }
+        case 10115:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                    case 0:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Выберите правильный пункт который находятся ниже!");
+                        return ShowPlayerDialog(playerid, 10115, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                    case 1:
+                    {
+                        SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы успешно ответили верно на второй вопрос, и попали во фракцию Ореховская ОПГ!");
+                        new string[144];
+                        PI[playerid][pMember] = 6;
+                        PI[playerid][pRank] = 1;
+                        PI[playerid][pModel] = (PI[playerid][pSex] == 1) ? (186) : (169);
+                        PI[playerid][pJob] = 0;
+                        if(!PI[playerid][pAdmin]) PI[playerid][pVigs] = 0;
+                        SetPlayerToTeamColor(playerid);
+                        SendMes(playerid, COLOR_WHITE, "{808080}[R] %s был принят c Авто-Набора во фракцию: \"%s\"", PI[playerid][pNames], GetPlayerFracName[PI[playerid][pMember]]);
+                        SendMes(playerid, COLOR_WHITE, "{808080}Вы были приняты во фракцию: \"%s\"", GetPlayerFracName[PI[playerid][pMember]]);
+                        format(string, sizeof(string), "{808080}[R] %s новый член организации!", PI[playerid][pNames]);
+                        SendRadioMessage(PI[playerid][pMember], COLOR_GREEN, string);
+                        SetPlayerSkinEx(playerid, PI[playerid][pModel], true);
+                        switch(PI[playerid][pMember])
+                        {
+                        case 1..4, 7, 10, 11, 19, 21, 25, 26: PI[playerid][pOdet] = 1, SendClientMessage(playerid, COLOR_BLUE, !"Ваш рабочий день успешно начат!");
+                        }
+                        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '%d', `pRank` = '1', `pJob` = '0', `pModel` = '%d', `odet` = '%d', `vigs` = '%d' WHERE `pID` = '%d'",PI[playerid][pMember], PI[playerid][pModel], PI[playerid][pOdet], PI[playerid][pVigs], PI[playerid][pID]);
+                        mysql_function_query(connects, mysql_query_, false, "", "");
+                    }
+                    case 2:
+                    {
+                        SendClientMessage(playerid, COLOR_GREY, !"Вы выбрали не правильный пункт, попробуйте ещё раз!");
+                        return ShowPlayerDialog(playerid, 10115, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"РП\"?\n{01DF01}1. {ffffff}Реальная игра\n{01DF01}2. {ffffff}Роле плей", "Ответить", "Назад");
+                    }
+                }
+            }
+            else ShowPlayerDialog(playerid, 10114, DIALOG_STYLE_LIST, ""SERVER"Автоматический набор", ""SERVER"Вопрос: {ffffff}Что означает аббревиатура: \"МГ\"?\n{01DF01}1. {ffffff}Метагейминг\n{01DF01}2. {ffffff}Мегагейминг", "Ответить", "Назад");
+        }
+        case 10150:
+        {
+            if(response)
+            {
+                new str_nabor[200], str_naborr[200];
+                SendClientMessage(playerid, COLOR_GREY, !"Вы успешно покинули свою организацию, теперь Вы обычный гражданин.");
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                SetPlayerArmour(playerid, 0);
+                ResetWeapons(playerid);
+                PI[playerid][pMember] = 0;
+                PI[playerid][pLeader] = 0;
+                PI[playerid][pRank] = 0;
+                SetPlayerColor(playerid, 0xFFFFFF80);
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);
+                format(str_nabor, sizeof str_nabor, "[A] %s[%d] покинул свою организацию. Причина: Авто-набор", PI[playerid][pNames], playerid);
+                SendAdminMessage(COLOR_GREY, str_nabor);
+                PI[playerid][pOdet] = 0;
+                format(str_naborr, sizeof(str_naborr), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0', `pLeader` = '0', `odet` = '0' WHERE `pID` = '%d'", PI[playerid][pID]);
+                mysql_function_query(connects, str_naborr, false, "", "");
+                ShowPlayerDialog(playerid, 10100, DIALOG_STYLE_MSGBOX, ""SERVER"Автоматический набор", "{ffffff}Здесь ты сможешь вступить во фракцию "SERVER"\"Мэрия\"!\n{ffffff}Если Вы готовы, то пройдите RP-Test чтобы вступить.\n\n{808080}Вы готовы пройти тест?", "Пройти", "Отмена");
+            }
+        }
+        case 10151:
+        {
+            if(response)
+            {
+                new str_nabor[200], str_naborr[200];
+                SendClientMessage(playerid, COLOR_GREY, !"Вы успешно покинули свою организацию, теперь Вы обычный гражданин.");
+                SetPlayerSkinEx(playerid, PI[playerid][pChar]);

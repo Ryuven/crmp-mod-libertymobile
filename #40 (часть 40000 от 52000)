@@ -1,0 +1,1000 @@
+                            PI[playerid][pCheckIp] = 1;
+                            mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `checkip` = '%d', `keyip` = '%s' WHERE `pID` = '%d'", PI[playerid][pCheckIp], PI[playerid][pKeyIp], PI[playerid][pID]);
+                            mysql_function_query(connects, mysql_query_, false, "", "");
+                            DeletePVar(playerid, "SelectTextDraw");
+                            return 1;
+                        }
+                        else
+                        {
+                            if(strcmp(PI[playerid][pKeyIp], sstring) != 0)
+                            {
+                                format(mysql_query_, sizeof(mysql_query_), "INSERT INTO `"TABLE_CAPTCHALOG"` (`account`, `ip`, `date`, `status`) VALUES ('%d', '%s', NOW( ), '0')", PI[playerid][pID], PI[playerid][pIP]);
+                                mysql_function_query(connects, mysql_query_, false, "", "");
+                                for(new l = 0; l < sizeof(Captcha); l++) PlayerTextDrawHide(playerid, Captcha[l]);
+                                DeletePVar(playerid, "CaptchaStep"); DeletePVar(playerid, "CaptchaText");
+                                SendClientMessage(playerid, COLOR_RED, "Код безопасности введен неверно.");
+                                SendClientMessage(playerid, COLOR_RED, "Информация о попытке ввода капчи отправлена владельцу аккаунта.");
+                                return KickEx(playerid);
+                            }
+                            else
+                            {
+                                format(mysql_query_, sizeof(mysql_query_), "INSERT INTO `"TABLE_CAPTCHALOG"` (`account`, `ip`, `date`, `status`) VALUES ('%d', '%s', NOW( ), '1')", PI[playerid][pID], PI[playerid][pIP]);
+                                mysql_function_query(connects, mysql_query_, false, "", "");
+                                for(new l = 0; l < sizeof(Captcha); l++) PlayerTextDrawHide(playerid, Captcha[l]);
+                                DeletePVar(playerid, "CaptchaStep"); DeletePVar(playerid, "CaptchaText");
+                                CancelSelectTextDraw(playerid);
+                                TogglePlayerControllable(playerid, true);
+                                gPlayerLogged[playerid] = 1;
+                                DeletePVar(playerid, "SelectTextDraw");
+                                return GoServer(playerid);
+                            }
+                        }
+                    }
+                }
+                SetPVarInt(playerid, "CaptchaStep", GetPVarInt(playerid, "CaptchaStep") + 1);
+                PlayerTextDrawSetString(playerid, Captcha[1], sstring);
+            }
+        }
+    }
+    return 1;
+}
+stock GetBizz()
+{
+    for(new i = 1; i <= TOTALBIZZ; i++)
+    {
+        if(!strcmp(BizzInfo[i][bOwner],"None",true)) continue;
+        if(BizzInfo[i][bMoney] < 100 || BizzInfo[i][bLock] == 1 && BizzInfo[i][bLockTime] >= 12) ClearBizz(i);
+        else
+        {
+            new playerid;
+            sscanf(BizzInfo[i][bOwner], "u", playerid);
+            BizzPay[i] = 0;
+            if(BizzInfo[i][bProduct] <= 50)
+            {
+                if(IsPlayerConnected(playerid))
+                {
+                    if(BizzInfo[i][bLockTime] == 0) SetPVarInt(playerid, "GetBizz", 2);
+                }
+                BizzInfo[i][bLock] = 1;
+            }
+            if(BizzInfo[i][bLock] == 1) BizzInfo[i][bLockTime]++;
+            if(BizzInfo[i][bLockTime] > 1 && BizzInfo[i][bLockTime] < 12)
+            {
+                if(IsPlayerConnected(playerid)) SetPVarInt(playerid, "GetBizz", 3);
+            }
+            BizzInfo[i][bMoney] -= 100;
+            SaveBizz(i);
+        }
+    }
+    return 1;
+}
+stock ClearBizz(i)
+{
+    new playerid;
+    sscanf(BizzInfo[i][bOwner], "u", playerid);
+    if(IsPlayerConnected(playerid))
+    {
+        PI[playerid][pBank] += BizzInfo[i][bBuyPrice] / 2;
+        SetPVarInt(playerid, "GetBizz", 1);
+    }
+    else
+    {
+        mysql_format(connects, mysql_query_, sizeof(mysql_query_), "SELECT `pBank`, `Texts` FROM `"TABLE_ACCOUNT"` WHERE `Name` = '%e'", BizzInfo[i][bOwner]);
+        mysql_function_query(connects, mysql_query_, true, "ClearBusiness", "d",i);
+        return 1;
+    }
+    BizzPay[i] = 0;
+    BizzInfo[i][bLock] = 0;
+    BizzInfo[i][bMoney] = 0;
+    BizzInfo[i][bEnter] = 100;
+    BizzInfo[i][bTill] = 50;
+    BizzInfo[i][bLockTime] = 0;
+    BizzInfo[i][bProduct] = 0;
+    strmid(BizzInfo[i][bOwner], "None", 0, strlen("None"), MAX_PLAYER_NAME);
+    SaveBizz(i);
+    UpdateBizz(i);
+    return 1;
+}
+publics: ClearBusiness(i)
+{
+    new texts[20], text[3];
+    new r, f;
+    cache_get_data(r, f);
+    if(r)
+    {
+        new moneypizdez = cache_get_field_content_int(0, "pBank",connects);
+        moneypizdez += BizzInfo[i][bBuyPrice] / 2;
+        cache_get_field_content(0, "Texts",texts,connects,16);
+        sscanf(texts, "p<,>a<i>[3]", text);
+        format(texts, sizeof(texts),"1, %i, %i", text[1], text[2]);
+        mysql_format(connects,mysql_query_,sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `Texts` = '%s', `pBank` = '%d' WHERE `Name` = '%s'",texts,moneypizdez,BizzInfo[i][bOwner]);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+    }
+    BizzPay[i] = 0;
+    BizzInfo[i][bLock] = 0;
+    BizzInfo[i][bMoney] = 0;
+    BizzInfo[i][bEnter] = 100;
+    BizzInfo[i][bTill] = 50;
+    BizzInfo[i][bLockTime] = 0;
+    BizzInfo[i][bProduct] = 0;
+    BizzInfo[i][bBuyPrice] = 0;
+    strmid(BizzInfo[i][bOwner], "None", 0, strlen("None"), MAX_PLAYER_NAME);
+    SaveBizz(i);
+    UpdateBizz(i);
+    return 1;
+}
+stock MagazineAmmoList(playerid, idx)
+{
+    new till = BizzInfo[idx][bTill],str[170];
+    if(PI[playerid][pPayDayHad] < 2) return SendClientMessage(playerid,COLOR_GREY,"Вы должны отыграть на сервере как минимум 2 часа (/mm - Статистика персонажа).");
+    if(BizzInfo[idx][bProduct] < 50 || strcmp(BizzInfo[idx][bOwner],"None",true) == 0) return SendClientMessage(playerid, COLOR_GREY, "Склад магазина пуст / У бизнеса нет владельца!");
+    SetPVarInt(playerid,"Bizzid",idx);
+    stringer[0] = EOS;
+    for(new i = 0; i < sizeof(AmmoList); i++)
+    {
+        format(str, 170,"{FFFFFF}%d. %s\t{33aa33}%s {afafaf}[за 100 пт.]\n",i + 1,AmmoList[i][Name], formatInt((AmmoList[i][Cost]*20)*till));
+        strcat(stringer,str);
+    }
+    return SPD(playerid, 9295, DIALOG_STYLE_TABLIST, !""SERVER"Покупка оружия", stringer, !"Купить", !"Закрыть");
+}
+stock EatList(playerid, idx)
+{
+    new till = BizzInfo[idx][bTill];
+    if(BizzInfo[idx][bProduct] < 50 || strcmp(BizzInfo[idx][bOwner],"None",true) == 0) return SendClientMessage(playerid, COLOR_GREY, "В бизнесе нет продуктов / У бизнеса нет владельца!");
+    stringer[0] = EOS;
+    format(stringer, 512, "Кусочки курица\t\t{11e922}%i$\nКусок куринной ножки\t\t{11e922}%i$\nКуринная ножка\t\t{11e922}%i$",till*4, till*7, till*10);
+    return ShowPlayerDialog(playerid, 9294, 2, "{3399FF}Закусочная", stringer, "Принять", "Отмена");
+}
+stock MagazineList(playerid, idx)
+{
+    new till = BizzInfo[idx][bTill];
+    if(BizzInfo[idx][bProduct] < 50 || strcmp(BizzInfo[idx][bOwner],"None",true) == 0) return SendClientMessage(playerid, COLOR_GREY, "В бизнесе недостаточно продуктов / У бизнеса нет владельца!");
+    stringer[0] = 0;
+    format(stringer1, sizeof(stringer1),"Телефонный номер\t\t{11e922}%i$\nТелефонная книга\t\t{11e922}%i$\nСправочник\t\t\t{11e922}%i$", till*14, till*6, till*20);
+    strcat(stringer,stringer1);
+    format(stringer1, sizeof(stringer1),"\nФотоаппарат\t\t\t{11e922}%i$\nАптечки\t\t\t{11e922}%i$\nЦветы\t\t\t\t{11e922}%i$", till*60, till*20, till*8);
+    strcat(stringer,stringer1);
+    format(stringer1, sizeof(stringer1),"\nПрезерватив\t\t\t{11e922}%i$\nПерцовый балончик\t\t{11e922}%i$\nНабор отмычек\t\t{11e922}%i$",till*12, till*3, till*4);
+    strcat(stringer,stringer1);
+    format(stringer1, sizeof(stringer1),"\nВеревка\t\t\t{11e922}%i$\nМаска\t\t\t\t{11e922}%i$\nАптечка\t\t\t{11e922}%i$", till*5, till*7,till*15);
+    strcat(stringer,stringer1);
+    format(stringer1, sizeof(stringer1),"\nЛопата\t\t\t\t{11e922}%i$\nСемена\t\t\t{11e922}%i$\nРемонтный набор\t\t\t{11e922}%i$", till*70,till*30,till*100,till*2000);
+    strcat(stringer,stringer1);
+    ShowPlayerDialog(playerid, 9293, 2, "{3399FF}Магазин 24/7", stringer, "Принять", "Отмена");
+    return 1;
+}
+stock ClubList(playerid)
+{
+    new till = 50;
+    format(stringer, 512, "Вода\t\t\t{11e922}%i$\nСода\t\t\t{11e922}%i$\nКока-кола\t\t{11e922}%i$\nПиво\t\t\t{11e922}%i$\nВодка\t\t\t{11e922}%i$\nКоньяк\t\t\t{11e922}%i$\nАбсент\t\t\t{11e922}%i$",
+    till*4, till*7, till*10, till*15, till*20, till*25, till*30);
+    return ShowPlayerDialog(playerid, 9297, 2, "{3399FF}Клуб", stringer, "Принять", "Отмена");
+}
+
+stock ShowAutosalon(playerid, idx)
+{
+    if(PI[playerid][pVodPrava] == 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы не имеете водительское удостоверение.");
+    if(BizzInfo[idx][bProduct] < 50 || strcmp(BizzInfo[idx][bOwner],"None",true) == 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}На складе нет вещей / У бизнеса нет владельца!");
+    SetPVarInt(playerid,"Bizzid",idx);
+    if(IsPlayerInRangeOfPoint(playerid,5.0, 2329.2073,-1803.9750,22.4540))
+    {
+        SetPVarInt(playerid,"AutoShop",1);
+        SetPVarInt(playerid,"CarShop",0);
+        return ShowBuyCar(playerid);
+    }
+    else if(IsPlayerInRangeOfPoint(playerid,5.0, 449.4808,2204.3970,12.1033))
+    {
+        SetPVarInt(playerid,"AutoShop",2);
+        SetPVarInt(playerid,"CarShop",1);
+        return ShowBuyCar(playerid);
+    }
+    else if(IsPlayerInRangeOfPoint(playerid,5.0,431.5799,1180.1960,12.0006))
+    {
+        SetPVarInt(playerid,"AutoShop",3);
+        SetPVarInt(playerid,"CarShop",2);
+        return ShowBuyCar(playerid);
+    }
+    else SendClientMessage(playerid,COLOR_WHITE,"Вы не в месте продажи автомобилей!");
+    return 1;
+}
+
+stock BuySkin(playerid, idx)
+{
+    if(BizzInfo[idx][bProduct] < 50 || strcmp(BizzInfo[idx][bOwner],"None",true) == 0) return SendClientMessage(playerid,COLOR_GREY,"На складе нет вещей / У бизнеса нет владельца!");
+    SetPVarInt(playerid,"Bizzid",idx);
+    if(!GetPVarInt(playerid,"PlayerInClothes"))
+    {
+        /*
+        for(new i=0; i<4; i++)
+        {
+            TextDrawShowForPlayer(playerid, gSkinShopDraw[i]);
+        }
+        PlayerTextDrawShow(playerid,gSkinShopPriceDraw[playerid]);
+        */
+        SetPVarInt(playerid,"PlayerSkinSlot", 0);
+        SetPlayerInteriorEx(playerid,0);
+
+        SetPVarInt(playerid,"OldSkin", GetPlayerSkin(playerid));
+
+        SetPlayerPos(playerid, -83.2751,959.0853,1597.9788);
+        SetPlayerFacingAngle(playerid, 89.6522);
+
+        InterpolateCameraPos(playerid, -68.127578, 954.744934, 1600.229858, -86.536605, 958.991882, 1599.040649, 2500);
+        InterpolateCameraLookAt(playerid, -68.128669, 959.704162, 1599.592773, -81.696861, 959.030212, 1597.785522, 2500);
+
+        SetPlayerVirtualWorldEx(playerid, playerid + 1);
+        SetPlayerSkinEx(playerid,SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinID], true);
+        //format(stringer,15,"%d RUB",gSkins[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+        //PlayerTextDrawSetString(playerid,gSkinShopPriceDraw[playerid],stringer);
+        SetPVarInt(playerid,"PlayerInClothes", true);
+        TogglePlayerControllable(playerid, false);
+
+        SendClientMessage(playerid, COLOR_WHITE, !"Используйте команду /nextskin - чтобы посмотреть следующий скин!");
+        SendClientMessage(playerid, COLOR_WHITE, !"Используйте команду /backskin - чтобы посмотреть предыдущий скин!");
+        SendClientMessage(playerid, COLOR_WHITE, !"Используйте команду /buyskin - чтобы купить скин!");
+        SendClientMessage(playerid, COLOR_WHITE, !"Используйте команду /exitskin - чтобы покинуть магазин одежды!");
+
+        new scm_string[64];
+        format(scm_string, sizeof(scm_string), "%d rub", SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+        GameTextForPlayer(playerid,scm_string,5000,3);
+
+       /* new dialog_string[156];
+        format(dialog_string, sizeof(dialog_string), "Скин #%d\nСтоимость скина: {33aa33}%d руб.\nСледующий скин\nПредыдущий скин\nКупить скин", GetPlayerSkin(playerid), SkinsMale[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]);
+        ShowPlayerDialog(playerid, 9185, DIALOG_STYLE_LIST, !""SERVER"Покупка одежды", dialog_string, !"Далее", !"Выйти");*/
+    }
+    return 1;
+}
+stock ActsMagazine(playerid, idx)
+{
+    if(BizzInfo[idx][bProduct] < 50 || strcmp(BizzInfo[idx][bOwner],"None",true) == 0) return SendClientMessage(playerid,COLOR_GREY,"На складе нет вещей / У бизнеса нет владельца!");
+    SetPVarInt(playerid,"Bizzid",idx);
+    SPD(playerid,1653,5,"Магазин","Аксессуар\tЯчейка\n{42B02C}-{FFFFFF} Наушники\t5\n{42B02C}-{FFFFFF} Шапки\t1\n{42B02C}-{FFFFFF} Панамки\t1\n{42B02C}-{FFFFFF} Кепки\t1\n{42B02C}-{FFFFFF} Каски\t1\n{42B02C}-{FFFFFF} Береты\t1\n{42B02C}-{FFFFFF} Парики\t1\n{42B02C}-{FFFFFF} Стильные очки\t2\n{42B02C}-{FFFFFF} Банданы\t4\n{42B02C}-{FFFFFF} Шляпы\t1\n{42B02C}-{FFFFFF} Наручные часы\t3\n{42B02C}-{FFFFFF} Сумки\t6\n{42B02C}-{FFFFFF} Шляпы [2]\t1\n{42B02C}-{FFFFFF} Банданы [2]\t1","Принять","Отмена");
+    return 1;
+}
+
+stock UpdatePlayerData(playerid, fields[], data)
+{
+    new str[512];
+    mysql_format(connects,str, sizeof str, "UPDATE `accounts` SET `%s` = '%d' WHERE `pID` = '%d' LIMIT 1",fields, data, PI[playerid][pID]);
+    mysql_function_query(connects, str, false, "", "");
+    return 1;
+}
+
+
+stock ProductList(playerid)
+{
+    new str[90], str2[2048], str3[30];
+    for(new i = 1; i <= TOTALPRODUCT; i++)
+    {
+        if(ProductInfo[i][pType] == 2) str3 = "Топливо";
+        else str3 = "Продукты";
+        format(str, sizeof(str), "%i. %s - Заказал: %s\n",i,str3, ProductInfo[i][pName]);
+        strcat(str2, str);
+    }
+    if(TOTALPRODUCT == 0) return ShowPlayerDialog(playerid, 000, 0, "Заказы", "Новых заказов нет", "Закрыть", "");
+    ShowPlayerDialog(playerid, 1746, 2, "Заказы", str2, "Принять", "Отмена");
+    return 1;
+}
+stock IsAGreenZone(playerid)
+{
+    for(new i = 1; i <= TOTALZONE; i++) if(IsPlayerInRangeOfPoint(playerid, GREENZONE[i][grD], GREENZONE[i][grX],GREENZONE[i][grY],GREENZONE[i][grZ])) return 1;
+    return 0;
+}
+stock ClearString() return format(stringer,sizeof(stringer),"");
+GoAnim(playerid,alib[],aanim[],Float:atime,amove,ax,ay,az,af,ac)
+{
+    FIXES_ApplyAnimation(playerid,alib,aanim,atime,amove,ax,ay,az,af,ac);
+    return 1;
+}
+stock CheckRobPlayer(playerid)
+{
+    if(TheifRobID[playerid] != INVALID_PLAYER_ID)
+    {
+        TheifRobID[playerid] = INVALID_PLAYER_ID;
+        TheifKey[playerid] = 0;
+        TheifTime[playerid] = 0;
+        TheifCount[playerid] = 0;
+        HidePlayerTapeText(playerid);
+        HidePlayerActionBand(playerid);
+    }
+    return 1;
+}
+stock SetPlayerRandomKey(playerid, &key, action = true)
+{
+    new randkey;
+    if(action) randkey = random(4);
+    else randkey = random(2);
+    switch(randkey)
+    {
+    case 0:
+        {
+            key = KEY_SPRINT;
+            ShowPlayerTapeText(playerid, "PRESS ~r~~k~~PED_SPRINT~");
+        }
+    case 1:
+        {
+            key = KEY_WALK;
+            ShowPlayerTapeText(playerid, "PRESS ~r~~k~~SNEAK_ABOUT~");
+        }
+    case 2:
+        {
+            key = KEY_AIM;
+            ShowPlayerTapeText(playerid, "PRESS ~r~~k~~PED_LOCK_TARGET~");
+        }
+    case 3:
+        {
+            key = KEY_JUMP;
+            ShowPlayerTapeText(playerid, "PRESS ~r~~k~~PED_JUMPING~");
+        }
+    }
+    return 1;
+}
+stock ShowPlayerTapeText(playerid, text[])
+{
+    PlayerTextDrawSetString(playerid, TapeText[playerid], text);
+    PlayerTextDrawShow(playerid, TapeText[playerid]);
+    return 1;
+}
+stock HidePlayerTapeText(playerid)
+{
+    PlayerTextDrawHide(playerid, TapeText[playerid]);
+    return 1;
+}
+stock ShowPlayerActionBand(playerid, status, endstatus)
+{
+    new Float:part = 100.0 / float(endstatus) * float(status);
+    new Float:length = 201.0 + part * 2.42;
+    if(length > 443.0) length = 443.0;
+    else if(length < 201.0) length = 201.0;
+    PlayerTextDrawTextSize(playerid, ActionBand[playerid], length, 0.0);
+    PlayerTextDrawShow(playerid, ActionBand[playerid]);
+    TextDrawShowForPlayer(playerid, BandDrawBG[0]);
+    TextDrawShowForPlayer(playerid, BandDrawBG[1]);
+    return 1;
+}
+
+stock HidePlayerActionBand(playerid)
+{
+    PlayerTextDrawHide(playerid, ActionBand[playerid]);
+    TextDrawHideForPlayer(playerid, BandDrawBG[0]);
+    TextDrawHideForPlayer(playerid, BandDrawBG[1]);
+    return 1;
+}
+stock DestroyPlayerTD(playerid, &PlayerText:td)
+{
+    if(td != PlayerText:-1)
+    {
+        PlayerTextDrawDestroy(playerid, td);
+        td = PlayerText:-1;
+    }
+    return 1;
+}
+stock deltarget(playerid)
+{
+    PlayerTextDrawHide(playerid, AimNameDraw[playerid]);
+    PlayerTextDrawHide(playerid, Target1 );
+    PlayerTextDrawHide(playerid, Target2 );
+    PlayerTextDrawHide(playerid, Target3 );
+    PlayerTextDrawHide(playerid, Target5 );
+    PlayerTextDrawHide(playerid, Target6[playerid] );
+    PlayerTextDrawHide(playerid, Target4[playerid] );
+    return 1;
+}
+
+stock NextCar(playerid)
+{
+    if(PI[playerid][SalonTime] > gettime()) return GameTextForPlayer(playerid,"Loading...",1000,3);
+    TogglePlayerControllable(playerid, false);
+    SetPVarInt(playerid, "SelectAvto", GetPVarInt(playerid, "SelectAvto") +1);
+    switch(GetPVarInt(playerid,"CarShop"))
+    {
+        case 0:if(GetPVarInt(playerid, "SelectAvto") > 11) SetPVarInt(playerid, "SelectAvto", 0);//бич класс
+        case 1:if(GetPVarInt(playerid, "SelectAvto") > 25) SetPVarInt(playerid, "SelectAvto", 12);//средний класс
+        case 2:if(GetPVarInt(playerid, "SelectAvto") > 46) SetPVarInt(playerid, "SelectAvto", 25);//топовый класс
+    }
+    return ShowingCar(playerid);
+}
+stock BackCar(playerid)
+{
+    if(PI[playerid][SalonTime] > gettime()) return GameTextForPlayer(playerid,"Loading...",1000,3);
+    TogglePlayerControllable(playerid, false);
+    SetPVarInt(playerid, "SelectAvto", GetPVarInt(playerid, "SelectAvto")-1);
+    switch(GetPVarInt(playerid,"CarShop"))
+    {
+        case 0:if(GetPVarInt(playerid, "SelectAvto") < 0) SetPVarInt(playerid, "SelectAvto", 11);//бич
+        case 1:if(GetPVarInt(playerid, "SelectAvto") < 12) SetPVarInt(playerid, "SelectAvto", 25);//средний
+        case 2:if(GetPVarInt(playerid, "SelectAvto") < 25) SetPVarInt(playerid, "SelectAvto", 46);//топовый
+    }
+    return ShowingCar(playerid);
+}
+stock ShowingCar(playerid) //АВТОСАЛОН
+{
+    if(PI[playerid][SalonCar] != INVALID_VEHICLE_ID) DestroyVehicle(PI[playerid][SalonCar]);
+    PI[playerid][SalonCar] = CreateVehicle(car_autosalon[GetPVarInt(playerid, "SelectAvto")][0],-207.8089, -13.5510, 1201.2120 + 0.5, 270.0,1,1,-1,0);
+    SetPlayerInterior(playerid, 0);
+    LinkVehicleToInterior(PI[playerid][SalonCar], 0);
+    SetPlayerVirtualWorld(playerid, playerid+1);
+    SetVehicleVirtualWorld(PI[playerid][SalonCar], playerid+1);
+    g_vehicle_data[PI[playerid][SalonCar]][V_HEALTH] = 1000.0;
+    g_vehicle_data[PI[playerid][SalonCar]][V_FUEL] = 100.0;
+    PutPlayerInVeh(playerid,PI[playerid][SalonCar],0);
+    SetPlayerPos(playerid, -202.836364, -10.319022, 1203.091552 - 5.0);
+
+    SetPlayerCameraPos(playerid, -202.836364, -10.319022, 1203.091552);
+    SetPlayerCameraLookAt(playerid, -206.774566, -13.084751, 1201.734619);
+    SetPVarInt(playerid,"BuyColor",1);
+    SetPVarInt(playerid,"BuyColor1",1);
+    new string[128];
+    GameTextForPlayer(playerid,string, 5000, 3);
+    format(string,sizeof(string),"Model: %s~n~Cost: %d",g_vehicle_info[car_autosalon[GetPVarInt(playerid, "SelectAvto")][0]-400],car_autosalon[GetPVarInt(playerid, "SelectAvto")][1]);
+    PlayerTextDrawSetString(playerid,ShopText[playerid],string);
+    PI[playerid][SalonTime] = gettime()+1;
+    TogglePlayerControllable(playerid, false);
+    return 1;
+}
+stock ShowBuyCar(playerid)
+{
+    SetPVarInt(playerid, "SelectAvto", 0);
+    switch(GetPVarInt(playerid,"CarShop"))
+    {
+        case 0: SetPVarInt(playerid, "SelectAvto", 1);//бич
+        case 1: SetPVarInt(playerid, "SelectAvto", 20);//средний
+        case 2: SetPVarInt(playerid, "SelectAvto", 30);//топовый
+    }
+    PlayerTextDrawShow(playerid, ShopText[playerid]);
+    for(new x; x < 12; x++) TextDrawShowForPlayer(playerid, AutoShopText[x]);
+    SetPlayerVirtualWorldEx(playerid, 1);
+    SelectTextDraw(playerid, 0x0080FFFF);
+    SetPVarInt(playerid, "SelectTextDraw", 1);
+    return ShowingCar(playerid);
+}
+stock ExitCar(playerid)
+{
+    for(new x; x < 12; x++) TextDrawHideForPlayer(playerid, AutoShopText[x]);
+    PlayerTextDrawHide(playerid, ShopText[playerid]);
+    if(PI[playerid][SalonCar] != INVALID_VEHICLE_ID) DestroyVehicle(PI[playerid][SalonCar]);
+    PI[playerid][SalonCar] = INVALID_VEHICLE_ID;
+    DeletePVar(playerid, "SelectTextDraw");
+    CancelSelectTextDraw(playerid);
+    if(GetPVarInt(playerid,"AutoShop") != -1)
+    {
+        switch(GetPVarInt(playerid,"AutoShop"))
+        {
+            case 1: SetPPos(playerid, 2329.2073,-1803.9750,22.4540);
+            case 2: SetPPos(playerid, 449.4808,2204.3970,12.1033);
+            case 3: SetPPos(playerid, 431.5799,1180.1960,12.0006);
+        }
+        SetPlayerInteriorEx(playerid,0);
+        SetPlayerVirtualWorldEx(playerid,0);
+        SetPlayerFacingAngle(playerid,0);
+        SetCameraBehindPlayer(playerid);
+        TogglePlayerControllable(playerid, true);
+        DeletePVar(playerid,"CarShop");
+        SetPVarInt(playerid,"AutoShop",-1);
+        DeletePVar(playerid,"BuyColor");
+        DeletePVar(playerid,"BuyColor1");
+        SetPVarInt(playerid, "SelectAvto",-1);
+        DeletePVar(playerid, "Bizzid");
+        return 1;
+    }
+    return 1;
+}
+stock GetRouleNumber(playerid)
+{
+    new str[64], pos[2], number[14];
+    strmid(str, RouleValues[RouleHorizont[playerid]], 0, strlen(RouleValues[RouleHorizont[playerid]]), sizeof(str));
+    for(new i = 0; i < sizeof(RouleNumber[]); i++)
+    {
+        if(i == 0)
+        {
+            pos[0] = 0;
+        }
+        else
+        {
+            pos[0] = strfind(str, ";", false, pos[0]+1);
+        }
+        if(i == RouleVertikal[playerid])
+        {
+            if(i == 6)
+            {
+                pos[1] = strlen(str);
+            }
+            else
+            {
+                pos[1] = strfind(str, ";", false, pos[0]+1);
+            }
+            strmid(number, str, (pos[0] == 0) ? (pos[0]) : (pos[0]+1), pos[1], sizeof(number));
+            return number;
+        }
+    }
+    return number;
+}
+stock GetNumberColor(number)
+{
+    new text[4];
+    switch(number)
+    {
+    case 0: text =  "~g~";
+    case 1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36: text = "~r~";
+    default: text = "~b~";
+    }
+    return text;
+}
+
+stock GetNameCard(Number)
+{
+    new text[8];
+    switch(Number)
+    {
+    case 0: text = "2";
+    case 1: text = "3";
+    case 2: text = "4";
+    case 3: text = "5";
+    case 4: text = "6";
+    case 5: text = "7";
+    case 6: text = "8";
+    case 7: text = "9";
+    case 8: text = "10";
+    case 9: text = "Валет";
+    case 10: text = "Дама";
+    case 11: text = "Король";
+    case 12: text = "Туз";
+    }
+    return text;
+}
+
+stock GetBlackJackPoints(card)
+{
+    switch(card)
+    {
+    case 0: return 2;
+    case 1: return 3;
+    case 2: return 4;
+    case 3: return 5;
+    case 4: return 6;
+    case 5: return 7;
+    case 6: return 8;
+    case 7: return 9;
+    case 8: return 10;
+    case 9: return 2;
+    case 10: return 3;
+    case 11: return 4;
+    case 12: return 11;
+    }
+    return 0;
+}
+
+stock ResetPlayerBlackJackGame(playerid)
+{
+    ChooseBet[playerid] = 0;
+    BlackJackCards[playerid] = 0;
+    BlackJackPoints[playerid] = 0;
+    BlackJackTime[playerid] = 0;
+    BlackJackBet[playerid] = 0;
+    BlackJackDoubleUse[playerid] = 0;
+}
+
+stock GetPlayerNearestDiceTable(playerid)
+{
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 4.0, DiceTables[i][0], DiceTables[i][1], DiceTables[i][2])) return i;
+    }
+    return -1;
+}
+
+stock GetPlayerNearestRouleTable(playerid)
+{
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 2.0, RouleTables[i][0], RouleTables[i][1], RouleTables[i][2])) return i;
+    }
+    return -1;
+}
+
+stock GetPlayerNearestBlackJackTable(playerid)
+{
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 1.7, BlackJackTables[i][0], BlackJackTables[i][1], BlackJackTables[i][2])) return i;
+    }
+    return -1;
+}
+
+stock IsPlayerStartCroupier(playerid)
+{
+    if(StartDuty[playerid] == 1)
+    {
+        if(PI[playerid][pMember] == DRAGONS_FRAC || PI[playerid][pMember] == CALIGULAS_FRAC)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+stock OnPlayerEnterDiceTable(playerid, tableid)
+{
+    if(IsPlayerStartCroupier(playerid))
+    {
+        if(DiceTableInfo[tableid][dCroupier] == 1) return SendClientMessage(playerid, COLOR_SILVER, "За столом уже есть крупье");
+        {
+            UsingCursor[playerid] = 1;
+            CroupierGame[playerid] = 1;
+            CroupierTable[playerid] = tableid;
+            SelectTextDraw(playerid, 0xFFFFFFAA);
+            ShowPlayerDiceMenu(playerid, tableid, -1);
+            DiceTableInfo[tableid][dCroupier] = 1;
+            TogglePlayerControllable(playerid, 0);
+            return 1;
+        }
+    }
+    else
+    {
+        for(new i = 0; i < 5; i++)
+        {
+            if(DiceTableInfo[tableid][dGamer][i] == -1)
+            {
+                new str[32];
+                UsingCursor[playerid] = 1;
+                DiceTable[playerid] = tableid;
+                DiceGamer[playerid] = i;
+                SelectTextDraw(playerid, 0xFFFFFFAA);
+                TogglePlayerControllable(playerid, 0);
+                format(str, sizeof(str), "%i. %s", i+1, PI[playerid][pNames]);
+                TextDrawSetString(DiceSlot[tableid][i], str);
+                DiceTableInfo[tableid][dGamer][i] = playerid;
+                format(str, sizeof(str), "%i$", PI[playerid][pCash]);
+                TextDrawSetString(DiceMoneyShow[tableid][i], str);
+                ShowPlayerDiceMenu(playerid, tableid, i);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+stock OnPlayerExitDiceTable(playerid, tableid)
+{
+    if(IsPlayerStartCroupier(playerid))
+    {
+        UsingCursor[playerid] = 0;
+        CroupierGame[playerid] = 0;
+        CroupierTable[playerid] = -1;
+        CancelSelectTextDraw(playerid);
+        HidePlayerDiceMenu(playerid, tableid, -1);
+        DiceTableInfo[tableid][dCroupier] = 0;
+        TogglePlayerControllable(playerid, 1);
+    }
+    else
+    {
+        for(new i = 0; i < 5; i++)
+        {
+            if(DiceTableInfo[tableid][dGamer][i] == playerid)
+            {
+                new str[17];
+                UsingCursor[playerid] = 0;
+                DiceGamer[playerid] = -1;
+                DiceTable[playerid] = -1;
+                ChooseBet[playerid] = 0;
+                Glasses[playerid] = 0;
+                CancelSelectTextDraw(playerid);
+                TogglePlayerControllable(playerid, 1);
+                format(str, sizeof(str), "%i. -----------", i+1);
+                TextDrawSetString(DiceSlot[tableid][i], str);
+                TextDrawSetString(BetGamer[tableid][i], "[...]");
+                DiceTableInfo[tableid][dGamer][i] = -1;
+                HidePlayerDiceMenu(playerid, tableid, i);
+                break;
+            }
+        }
+    }
+    return 0;
+}
+
+stock ShowPlayerDiceMenu(playerid, tableid, place)
+{
+    if(place != -1)
+    {
+        TextDrawShowForPlayer(playerid, DiceSetBet);
+        TextDrawShowForPlayer(playerid, DiceThrow);
+        TextDrawShowForPlayer(playerid, DiceMoney);
+        TextDrawShowForPlayer(playerid, DiceMoneyShow[tableid][place]);
+    }
+    TextDrawShowForPlayer(playerid, DiceBox[0]);
+    TextDrawShowForPlayer(playerid, DiceBox[1]);
+    TextDrawShowForPlayer(playerid, DiceTitle);
+    TextDrawShowForPlayer(playerid, DiceExit);
+    TextDrawShowForPlayer(playerid, DiceBet);
+    TextDrawShowForPlayer(playerid, DiceBank);
+    TextDrawShowForPlayer(playerid, DiceBankShow[tableid]);
+    TextDrawShowForPlayer(playerid, DiceBetShow[tableid]);
+    for(new i = 0; i < 5; i++)
+    {
+        TextDrawShowForPlayer(playerid, DiceSlot[tableid][i]);
+        TextDrawShowForPlayer(playerid, BetGamer[tableid][i]);
+    }
+}
+
+stock HidePlayerDiceMenu(playerid, tableid, place)
+{
+    if(place != -1)
+    {
+        TextDrawHideForPlayer(playerid, DiceSetBet);
+        TextDrawHideForPlayer(playerid, DiceThrow);
+        TextDrawHideForPlayer(playerid, DiceMoney);
+        TextDrawHideForPlayer(playerid, DiceMoneyShow[tableid][place]);
+    }
+    TextDrawHideForPlayer(playerid, DiceBox[0]);
+    TextDrawHideForPlayer(playerid, DiceBox[1]);
+    TextDrawHideForPlayer(playerid, DiceTitle);
+    TextDrawHideForPlayer(playerid, DiceExit);
+    TextDrawHideForPlayer(playerid, DiceBet);
+    TextDrawHideForPlayer(playerid, DiceBank);
+    TextDrawHideForPlayer(playerid, DiceBankShow[tableid]);
+    TextDrawHideForPlayer(playerid, DiceBetShow[tableid]);
+    for(new i = 0; i < 5; i++)
+    {
+        TextDrawHideForPlayer(playerid, DiceSlot[tableid][i]);
+        TextDrawHideForPlayer(playerid, BetGamer[tableid][i]);
+    }
+}
+
+stock OnPlayerEnterRouleTable(playerid, tableid)
+{
+    if(IsPlayerStartCroupier(playerid))
+    {
+        if(RouleTableInfo[tableid][rCroupier] == 1) return SendClientMessage(playerid, COLOR_SILVER, "За столом уже есть крупье");
+        {
+            CroupierGame[playerid] = 2;
+            CroupierTable[playerid] = tableid;
+            RouleTableInfo[tableid][rCroupier] = 1;
+            TogglePlayerControllable(playerid, 0);
+            ShowPlayerRouleMenu(playerid, tableid);
+            return 1;
+        }
+    }
+    else
+    {
+        for(new i = 0; i < 5; i++)
+        {
+            if(RouleTableInfo[tableid][rGamer][i] == -1)
+            {
+                if(tableid >= 0 && tableid <= 3)
+                {
+                    Casino[playerid] = 1;
+                }
+                else
+                {
+                    Casino[playerid] = 2;
+                }
+                new str[34];
+                RouleGamer[playerid] = i;
+                RouleTable[playerid] = tableid;
+                RouleTableInfo[tableid][rGamer][i] = playerid;
+                TogglePlayerControllable(playerid, 0);
+                SetPlayerCameraPos(playerid, RouleCamera[tableid][0], RouleCamera[tableid][1], RouleCamera[tableid][2]);
+                SetPlayerCameraLookAt(playerid, RouleCamera[tableid][3], RouleCamera[tableid][4], RouleCamera[tableid][5]);
+                format(str, sizeof(str), "%d. %s", i+1, PI[playerid][pNames]);
+                TextDrawSetString(RouleGamerShow[tableid][i], str);
+                ShowPlayerRouleMenu(playerid, tableid);
+                switch(Casino[playerid])
+                {
+                case 1:
+                    {
+                    //    RouleChip[playerid] = CreateDynamicObject(1900, RouleTables[tableid][0]+RouleVertikalCoords[4][0], RouleTables[tableid][1]+RouleHorizontCoords[0][0], 992.335, 0.0, 0.0, 0.0);
+                    }
+                case 2:
+                    {
+                    //    RouleChip[playerid] = CreateDynamicObject(1900, RouleTables[tableid][0]-RouleHorizontCoords[0][0], RouleTables[tableid][1]+RouleVertikalCoords[4][0], 1006.06, 0.0, 0.0, 0.0);
+                    }
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+stock OnPlayerExitRouleTable(playerid, tableid)
+{
+    if(IsPlayerStartCroupier(playerid))
+    {
+        CroupierGame[playerid] = 0;
+        CroupierTable[playerid] = -1;
+        RouleTableInfo[tableid][rCroupier] = 0;
+        TogglePlayerControllable(playerid, 1);
+        HidePlayerRouleMenu(playerid, tableid);
+    }
+    else
+    {
+        for(new i = 0; i < 5; i++)
+        {
+            if(RouleTableInfo[tableid][rGamer][i] == playerid)
+            {
+                new str[14];
+                RouleBet[playerid] = 0;
+                Casino[playerid] = 0;
+                RouleGamer[playerid] = -1;
+                RouleTable[playerid] = -1;
+                ChooseBet[playerid] = 0;
+                RouleHorizont[playerid] = 0;
+                RouleVertikal[playerid] = 4;
+                RouleTableInfo[tableid][rGamer][i] = -1;
+                strdel(RouleNumber[playerid], 0, 12);
+                TogglePlayerControllable(playerid, 1);
+                SetCameraBehindPlayer(playerid);
+                DestroyObject(RouleChip[playerid]);
+                RouleChip[playerid] = 0;
+                format(str, sizeof(str), "%d. -------", i+1);
+                TextDrawSetString(RouleGamerShow[tableid][i], str);
+                TextDrawSetString(RouleNumberShow[tableid][i], "-------");
+                TextDrawSetString(RouleBetShow[tableid][i], "-------");
+                HidePlayerRouleMenu(playerid, tableid);
+                break;
+            }
+        }
+    }
+    return 1;
+}
+
+stock ShowPlayerRouleMenu(playerid, tableid)
+{
+    TextDrawShowForPlayer(playerid, RouleBox);
+    TextDrawShowForPlayer(playerid, RouleBorder[0]);
+    TextDrawShowForPlayer(playerid, RouleBorder[1]);
+    TextDrawShowForPlayer(playerid, RouleGamersTitle);
+    TextDrawShowForPlayer(playerid, RouleNumberTitle);
+    TextDrawShowForPlayer(playerid, RouleBetTitle);
+    for(new i = 0; i < 5; i++)
+    {
+        TextDrawShowForPlayer(playerid, RouleGamerShow[tableid][i]);
+        TextDrawShowForPlayer(playerid, RouleNumberShow[tableid][i]);
+        TextDrawShowForPlayer(playerid, RouleBetShow[tableid][i]);
+    }
+}
+
+stock HidePlayerRouleMenu(playerid, tableid)
+{
+    TextDrawHideForPlayer(playerid, RouleBox);
+    TextDrawHideForPlayer(playerid, RouleBorder[0]);
+    TextDrawHideForPlayer(playerid, RouleBorder[1]);
+    TextDrawHideForPlayer(playerid, RouleGamersTitle);
+    TextDrawHideForPlayer(playerid, RouleNumberTitle);
+    TextDrawHideForPlayer(playerid, RouleBetTitle);
+    for(new i = 0; i < 5; i++)
+    {
+        TextDrawHideForPlayer(playerid, RouleGamerShow[tableid][i]);
+        TextDrawHideForPlayer(playerid, RouleNumberShow[tableid][i]);
+        TextDrawHideForPlayer(playerid, RouleBetShow[tableid][i]);
+    }
+}
+
+stock OnPlayerEnterBlackJackTable(playerid, tableid)
+{
+    if(IsPlayerStartCroupier(playerid))
+    {
+        if(BlackJackTableInfo[tableid][jCroupier] == 1) return SendClientMessage(playerid, COLOR_SILVER, "За столом уже есть крупье");
+        {
+            UsingCursor[playerid] = 1;
+            CroupierGame[playerid] = 3;
+            CroupierTable[playerid] = tableid;
+            SelectTextDraw(playerid, 0xFFFFFFAA);
+            TogglePlayerControllable(playerid, 0);
+            BlackJackTableInfo[tableid][jCroupier] = 1;
+            ShowPlayerBlackJackMenu(playerid, tableid, -1);
+            return 1;
+        }
+    }
+    else
+    {
+        for(new i = 0; i < 2; i++)
+        {
+            if(BlackJackTableInfo[tableid][jGamer][i] == -1)
+            {
+                new str[24];
+                UsingCursor[playerid] = 1;
+                BlackJackTable[playerid] = tableid;
+                BlackJackGamer[playerid] = i;
+                BlackJackTableInfo[tableid][jGamer][i] = playerid;
+                SelectTextDraw(playerid, 0xFFFFFFAA);
+                TogglePlayerControllable(playerid, 0);
+                format(str, sizeof(str), "%s", PI[playerid][pNames]);
+                TextDrawSetString(BlackJackGamerShow[tableid][i], str);
+                ShowPlayerBlackJackMenu(playerid, tableid, i);
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+stock OnPlayerExitBlackJackTable(playerid, tableid)
+{
+    if(IsPlayerStartCroupier(playerid))
+    {
+        UsingCursor[playerid] = 0;
+        CroupierGame[playerid] = 0;
+        CroupierTable[playerid] = -1;
+        CancelSelectTextDraw(playerid);
+        TogglePlayerControllable(playerid, 1);
+        BlackJackTableInfo[tableid][jCroupier] = 0;
+        HidePlayerBlackJackMenu(playerid, tableid, -1);
+    }
+    else
+    {
+        for(new i = 0; i < 2; i++)
+        {
+            if(BlackJackTableInfo[tableid][jGamer][i] == playerid)
+            {
+                UsingCursor[playerid] = 0;
+                ResetPlayerBlackJackGame(playerid);
+                BlackJackTable[playerid] = -1;
+                BlackJackGamer[playerid] = -1;
+                BlackJackTableInfo[tableid][jGamer][i] = -1;
+                CancelSelectTextDraw(playerid);
+                TogglePlayerControllable(playerid, 1);
+                HidePlayerBlackJackMenu(playerid, tableid, i);
+                TextDrawSetString(BlackJackGamerShow[tableid][i], "Empty");
+                TextDrawSetString(BlackJackBetShow[tableid][i], "_");
+                break;
+            }
+        }
+    }
+    return 1;
+}
+
+stock ShowPlayerBlackJackMenu(playerid, tableid, place)
+{
+    if(place != -1)
+    {
+        for(new i = 1; i < 7; i++)
+        {
+            TextDrawShowForPlayer(playerid, BlackJackBox[i]);
+        }
+        TextDrawShowForPlayer(playerid, BlackJackSetBet);
+        TextDrawShowForPlayer(playerid, BlackJackHit);
+        TextDrawShowForPlayer(playerid, BlackJackDouble);
+    }
+    TextDrawShowForPlayer(playerid, BlackJackBox[0]);
+    TextDrawShowForPlayer(playerid, BlackJackTitle);
+    TextDrawShowForPlayer(playerid, BlackJackDealerTitle);
+    TextDrawShowForPlayer(playerid, BlackJackChip[0]);
+    TextDrawShowForPlayer(playerid, BlackJackChip[1]);
+    TextDrawShowForPlayer(playerid, BlackJackGamerShow[tableid][0]);
+    TextDrawShowForPlayer(playerid, BlackJackGamerShow[tableid][1]);
+    TextDrawShowForPlayer(playerid, BlackJackBetShow[tableid][0]);
+    TextDrawShowForPlayer(playerid, BlackJackBetShow[tableid][1]);
+    TextDrawShowForPlayer(playerid, BlackJackPointsShow[tableid][0]);
+    TextDrawShowForPlayer(playerid, BlackJackPointsShow[tableid][1]);
+    TextDrawShowForPlayer(playerid, BlackJackPointsShow[tableid][2]);
+    TextDrawShowForPlayer(playerid, BlackJackExit);
+    for(new i = 0; i < 4; i++)
+    {
+        TextDrawShowForPlayer(playerid, BlackJackBorder[i]);
+    }
+    for(new i = 0; i < 15; i++)
+    {
+        TextDrawShowForPlayer(playerid, BlackJackCardShow[tableid][i]);
+    }
+}
+
+stock HidePlayerBlackJackMenu(playerid, tableid, place)
+{
+    if(place != -1)
+    {
+        for(new i = 1; i < 7; i++)
+        {
+            TextDrawHideForPlayer(playerid, BlackJackBox[i]);
+        }
+        TextDrawHideForPlayer(playerid, BlackJackSetBet);
+        TextDrawHideForPlayer(playerid, BlackJackHit);
+        TextDrawHideForPlayer(playerid, BlackJackDouble);
+    }
+    TextDrawHideForPlayer(playerid, BlackJackBox[0]);
+    TextDrawHideForPlayer(playerid, BlackJackTitle);
+    TextDrawHideForPlayer(playerid, BlackJackDealerTitle);
+    TextDrawHideForPlayer(playerid, BlackJackChip[0]);
+    TextDrawHideForPlayer(playerid, BlackJackChip[1]);
+    TextDrawHideForPlayer(playerid, BlackJackGamerShow[tableid][0]);
+    TextDrawHideForPlayer(playerid, BlackJackGamerShow[tableid][1]);

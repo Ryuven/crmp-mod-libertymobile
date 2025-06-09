@@ -1,0 +1,1000 @@
+        SendClientMessage(params[0], 0x6ab1ffaa, stringer1);
+        GameTextForPlayer(params[0], "~g~Uncuffed", 2500, 3);
+        format(stringer1, sizeof(stringer1), "Вы сняли наручники с %s.", PI[params[0]][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        SetPlayerSpecialAction(params[0],SPECIAL_ACTION_NONE); RemovePlayerAttachedObject(params[0],0); TogglePlayerControllable(params[0], true); PlayerCuffed[params[0]] = 0;
+    }
+    else return SendClientMessage(playerid, COLOR_GREY, "Этот игрок не в наручниках !");
+    return 1;
+}
+cmd:refill(playerid, params[])
+{
+    if(PI[playerid][pJob] != 2) return SendClientMessage(playerid, COLOR_GREY, "Вы не механик!");
+    if(gcontract[playerid] != 1) return SendClientMessage(playerid, COLOR_GREY, "У Вас не подписан контракт с заправкой!");
+    if(sscanf(params, "dd",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /refill [id] [цена]");
+    if(params[1] < 1 || params[1] > 5000) return SendClientMessage(playerid, COLOR_GREY, "Нельзя меньше 1, и больше 5000!");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Игрока не существует или это Вы");
+    if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 525) return SendClientMessage(playerid, COLOR_GREY, "Вы не на эвакуаторе!");
+    if(ProxDetectorS(8.0, playerid, params[0]) && IsPlayerInAnyVehicle(params[0]))
+    {
+        format(stringer1, sizeof(stringer1), "Вы предложили %s заправить его машину за %d руб..",PI[params[0]][pNames],params[1]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Механик %s предлагает заправить вашу машину за %d руб..(Введите /accept refill), чтобы потвердить заправку.",PI[playerid][pNames],params[1]);
+        SendClientMessage(params[0], 0x6ab1ffaa, stringer1);
+        RefillOffer[params[0]] = playerid;
+        RefillPrice[params[0]] = params[1];
+    }
+    else return SendClientMessage(playerid, COLOR_GREY, "Он не в машине!");
+    return 1;
+}
+cmd:connect(playerid)
+{
+    if(!PI[playerid][pAdmin]) return 1;
+    if(PlayerBigEarsConnect{playerid} == 1)
+    {
+ //       HideConnectPanelAC(playerid);
+        SendClientMessage(playerid,-1, "{FF6600}Коннекты игроков отключены");
+        PlayerBigEarsConnect{playerid} = 0;
+        return 1;
+    }
+//    ShowConnectPanelAC(playerid);
+    SendClientMessage(playerid,-1, "{00cb00}Коннекты игроков включены");
+    PlayerBigEarsConnect{playerid} = 1;
+    return 1;
+}
+cmd:sellhouse(playerid, params[])
+{
+    if(PI[playerid][pPhousekey] == 255) return SendClientMessage(playerid,COLOR_GREY,"У вас нет дома!");
+    if(sscanf(params, "dd",params[0],params[1]))
+    {
+        SPD(playerid, 5033, DIALOG_STYLE_MSGBOX, "Продажа имущества", "{ffffff}Вы хотите продать свой дом?\n{AFAFAF}(чтобы продать дом другому игроку введите /sellhouse [ID игрока] [Цена])\n\n{FF6347}Внимание! Вам вернут только половину стоимости дома!", "Да", "Нет");
+        return 1;
+    }
+    if(!IsPlayerInRangeOfPoint(playerid, 90.0,HouseInfo[PI[playerid][pPhousekey]][hExitx], HouseInfo[PI[playerid][pPhousekey]][hExity], HouseInfo[PI[playerid][pPhousekey]][hExitz])
+            && !IsPlayerInRangeOfPoint(playerid, 10.0,HouseInfo[PI[playerid][pPhousekey]][hEntrancex], HouseInfo[PI[playerid][pPhousekey]][hEntrancey], HouseInfo[PI[playerid][pPhousekey]][hEntrancez])) return SendClientMessage(playerid,COLOR_GREY,"Что бы продать дом, вы должны находиться возле дома.");
+    if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, COLOR_GREY,"Игрок оффлайн");
+    if(!ProxDetectorS(5.0, playerid, params[0])) return SendClientMessage(playerid,COLOR_GREY,"Игрок не рядом с вами");
+    if(PI[params[0]][pPhousekey] != 255) return SendClientMessage(playerid,COLOR_GREY,"У игрока есть дом.");
+    if(params[1] < 90000 || params[1] > 2000000000) return SendClientMessage(playerid,COLOR_GREY,"Цена не может быть меньше 90000 и больше 2000000000.");
+    if(params[0] == playerid) return SendClientMessage(playerid, COLOR_GREY, "Вы не можете продать дом самому себе.");
+    if(PI[params[0]][pPayDayHad] < 2) return SendClientMessage(playerid, COLOR_GREY, "Игрок не может иметь дом, т.к. еще не отыграл 2 часа!");
+    format(stringer1,144,"Вы предложили %s'у купить свой дом. Цена: %s руб.", PI[params[0]][pNames], formatInt(params[1])), SendClientMessage(playerid,0x6495EDFF, stringer1);
+    format(stringer1, 144, "%s предложил вам купить дом. Цена: %s руб.", PI[playerid][pNames], formatInt(params[1]));
+    SPD(params[0], 1008, 0, "Покупка дома", stringer1, "Да", "Нет");
+    SetPVarInt(params[0], "HHouse", playerid);
+    SetPVarInt(params[0], "HHouseMoney", params[1]);
+    SELL[1][playerid] = params[0];
+    return 1;
+}
+cmd:change(playerid, params[])
+{
+    new change[64];
+    if(sscanf(params, "s[64]dd", change, params[1], params[2])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /change [house / bizz] [id] [доплата]");
+    if(PI[playerid][pLevel] == 10 || PI[params[1]][pLevel] == 10) return SendClientMessage(playerid, -1, "Обмениваться можно только с 11-ого уровня!");
+    if(!IsPlayerConnected(params[1]) || params[1] == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Игрока не существует или это Вы");
+    if(!ProxDetectorS(5.0, playerid, params[1])) return SendClientMessage(playerid,COLOR_GREY,"Игрок не рядом с вами");
+    if(params[2] < 1000 || params[2] > 1000000000) return SendClientMessage(playerid,COLOR_GREY,"Цена не может быть меньше 1000 и больше 1000000000.");
+    if(strcmp(change,"house",true) == 0)
+    {
+        if(PI[playerid][pPhousekey] == 255 || PI[params[1]][pPhousekey] == 255) return SendClientMessage(playerid,COLOR_GREY,"У вас и / или у игрока нет дома.");
+        SendMes(params[1],COLOR_WHITE,"Игрок %s[%d] предлагает вам обменяться домами. С доплатой с ВАШЕЙ стороны: %s руб..", PI[playerid][pNames], playerid, formatInt(params[2]));
+        SendClientMessage(params[1], -1, "Введите /accept house что бы согласиться.");
+        SendMes(playerid,COLOR_WHITE,"Вы предложили %s[%d] обменяться домами. С доплатой с ЕГО стороны: %s руб..", PI[params[1]][pNames], params[1], formatInt(params[2]));
+        ChangeAll[params[1]][cSeller] = playerid;
+        ChangeAll[playerid][cBuyer] = params[1];
+        ChangeAll[params[1]][cPrice] = params[2];
+        ChangeAll[params[1]][cType] = 1;
+    }
+    else if(strcmp(change,"bizz",true) == 0)
+    {
+        if(GetPlayerBizz(playerid) == 0 || GetPlayerBizz(params[1]) == 0) return SendClientMessage(playerid,COLOR_GREY,"У вас и / или у игрока нет бизнеса.");
+        SendMes(params[1],COLOR_WHITE,"Игрок %s[%d] предлагает вам обменяться бизнесами. С доплатой с ВАШЕЙ стороны: %s руб..", PI[playerid][pNames], playerid, formatInt(params[2]));
+        SendClientMessage(params[1], -1, "Введите /accept bizz что бы согласиться.");
+        SendMes(playerid,COLOR_WHITE,"Вы предложили %s[%d] обменяться бизнесами. С доплатой с ЕГО стороны: %s руб..", PI[params[1]][pNames], params[1], formatInt(params[2]));
+        ChangeAll[params[1]][cSeller] = playerid;
+        ChangeAll[playerid][cBuyer] = params[1];
+        ChangeAll[params[1]][cPrice] = params[2];
+        ChangeAll[params[1]][cType] = 2;
+    }
+    return 1;
+}
+cmd:repair(playerid, params[])
+{
+    if(PI[playerid][pJob] != 2) return SendClientMessage(playerid, COLOR_GREY, "Вы не механик!");
+    if(sscanf(params, "dd",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /repair [id] [цена]");
+    if(params[1] < 1 || params[1] > 5000) return SendClientMessage(playerid, COLOR_GREY, "Нельзя меньше 1, и больше 5000!");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Игрока не существует или это Вы");
+    if(GetVehicleModel(GetPlayerVehicleID(playerid)) != 525) return SendClientMessage(playerid, COLOR_GREY, "Вы не на эвакуаторе!");
+    if(ProxDetectorS(8.0, playerid, params[0])&&  IsPlayerInAnyVehicle(params[0]))
+    {
+        format(stringer1, sizeof(stringer1), "Вы предложили %s отремонтировать его машину за %d руб..",PI[params[0]][pNames],params[1]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Механик %s предлагает отремонтировать ваш автомобиль за %d руб..(Введите /accept repair),чтобы совершить починку.",PI[playerid][pNames],params[1]);
+        SendClientMessage(params[0], 0x6ab1ffaa, stringer1);
+        RepairOffer[params[0]] = playerid;
+        RepairPrice[params[0]] = params[1];
+    }
+    else return SendClientMessage(playerid, COLOR_GREY, "Он не в машине!");
+    return 1;
+}
+cmd:eject(playerid, params[])
+{
+    if(!IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid, COLOR_GREY, "Вы должны быть в машине!");
+    if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER) return SendClientMessage(playerid,COLOR_GREY,"Вы не водитель!");
+    if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /eject [id]");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Игрока не существует или это Вы");
+    new test = GetPlayerVehicleID(playerid);
+    if(IsPlayerInVehicle(params[0],test))
+    {
+        if(PlayerCuffed[params[0]] > 0)
+        {
+            RemoveFromVehicle(params[0]);
+            format(stringer1, sizeof(stringer1), "Вы выкинули из машины %s, наручники сломались!", PI[params[0]][pNames]);
+            SendClientMessage(playerid, 0x6495EDFF, stringer1);
+            format(stringer1, sizeof(stringer1), "Вас выкинул из машины %s, наручники сломались!!", PI[playerid][pNames]);
+            SendClientMessage(params[0], 0x6495EDFF, stringer1);
+            TogglePlayerControllable(params[0], 1);
+            SetPlayerSpecialAction(params[0],SPECIAL_ACTION_NONE);
+            RemovePlayerAttachedObject(params[0],0);
+            PlayerCuffed[params[0]] = 0;
+        }
+        else
+        {
+            format(stringer1, sizeof(stringer1), "Вы выкинули из машины %s!", PI[params[0]][pNames]);
+            SendClientMessage(playerid, 0x6495EDFF, stringer1);
+            format(stringer1, sizeof(stringer1), "Вас выкинул из машины %s!", PI[playerid][pNames]);
+            SendClientMessage(params[0], 0x6495EDFF, stringer1);
+            RemoveFromVehicle(params[0]);
+            PlayerTied[params[0]] = 0;
+            TogglePlayerControllable(params[0], 1);
+        }
+    }
+    else return SendClientMessage(playerid, COLOR_GREY, "Не рядом с вами!");
+    return 1;
+}
+stock IsAIP(text[])
+{
+    new numbers;
+    for(new i = 0; i < strlen(text); i++) if('0' <= text[i] <= '9') if(!('0' <= text[i+1] <= '9')) numbers ++;
+    if(numbers >= 4) return 1;
+    return 0;
+}
+
+stock ReplaceText(text[])
+{
+    for(new i; i < strlen(text); i ++)
+    {
+        if('0' <= text[i] <= '9') text[i] = '*';
+    }
+    return 1;
+}
+
+cmd:accept(playerid, params[])
+{
+    new x_job[64];
+    if(sscanf(params, "s[64]",x_job)) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /accept [значение]");
+    if(strcmp(x_job,"witness",true) == 0)
+    {
+        if(!IsPlayerInRangeOfPoint(playerid, 10.0, 1879.8152,1170.2408,30.0091)) return SendClientMessage(playerid, COLOR_GREY, "Вы не в церкви!");
+        if(MarryWitnessOffer[playerid] == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вам не предлагали быть свидетелем!");
+        if(!IsPlayerConnected(MarryWitnessOffer[playerid])) return 1;
+        if(!ProxDetectorS(10.0, playerid, MarryWitnessOffer[playerid])) return SendClientMessage(playerid, COLOR_GREY, "Игрок, который просил, чтобы вы были свидетелем не рядом с вами !");
+        format(stringer1, sizeof(stringer1), "Вы приняли предложение  %s's быть свидетелем на свадьбе", PI[MarryWitnessOffer[playerid]][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "%s согласился быть вашим свидетелем на свадьбе.", PI[playerid][pNames]);
+        SendClientMessage(MarryWitnessOffer[playerid], 0x6ab1ffaa, stringer1);
+        MarryWitness[MarryWitnessOffer[playerid]] = playerid;
+        MarryWitnessOffer[playerid] = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(strcmp(x_job,"house",true) == 0)
+    {
+        if(ChangeAll[playerid][cPrice] == 0 || ChangeAll[playerid][cSeller] == INVALID_PLAYER_ID || ChangeAll[playerid][cType] != 1) return SendClientMessage(playerid, COLOR_GREY, "Обменяться домами Вам никто не предлагал.");
+        if(!ProxDetectorS(8.0, playerid, ChangeAll[playerid][cSeller])) return SendClientMessage(playerid, COLOR_GREY, "Игрок должен быть рядом с Вами.");
+        if(PI[playerid][pCash] < ChangeAll[playerid][cPrice]) return SendClientMessage(playerid, COLOR_GREY, "У вас нет денег для доплаты.");
+        new house = PI[ChangeAll[playerid][cSeller]][pPhousekey], house2 = PI[playerid][pPhousekey], playerd = ChangeAll[playerid][cSeller];
+        PI[playerid][pCash] -= ChangeAll[playerid][cPrice];
+        GiveMoney(playerd, ChangeAll[playerid][cPrice]);
+        PI[playerd][pPhousekey] = house2;
+        PI[playerid][pPhousekey] = house;
+        strmid(HouseInfo[house][hOwner], PI[playerid][pNames], 0, strlen(PI[playerid][pNames]), 255);
+        strmid(HouseInfo[house2][hOwner], PI[playerd][pNames], 0, strlen(PI[playerd][pNames]), 255);
+        SendMes(playerid,COLOR_WHITE,"Вы обменялись домами с %s, с вашей доплатой: %s руб..",PI[playerd][pNames],formatInt(ChangeAll[playerid][cPrice]));
+        SendMes(ChangeAll[playerid][cSeller], COLOR_WHITE,"Вы обменялись домами с %s, с его доплатой: %s руб..",PI[playerid][pNames],formatInt(ChangeAll[playerid][cPrice]));
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_HOUSE"` SET `hOwner` = '%s' WHERE `hID` = '%i'",PI[playerid][pNames],PI[playerid][pPhousekey]);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_HOUSE"` SET `hOwner` = '%s' WHERE `hID` = '%i'",PI[playerd][pNames],PI[playerd][pPhousekey]);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        ChangeAll[playerid][cSeller] = INVALID_PLAYER_ID;
+        ChangeAll[playerd][cBuyer] = INVALID_PLAYER_ID;
+        ChangeAll[playerid][cPrice] = 0;
+        ChangeAll[playerid][cType] = 0;
+        return 1;
+    }
+    else if(strcmp(x_job,"bizz",true) == 0)
+    {
+        if(ChangeAll[playerid][cPrice] == 0 || ChangeAll[playerid][cSeller] == INVALID_PLAYER_ID || ChangeAll[playerid][cType] != 2) return SendClientMessage(playerid, COLOR_GREY, "Обменяться бизнесами Вам никто не предлагал.");
+        if(!ProxDetectorS(8.0, playerid, ChangeAll[playerid][cSeller])) return SendClientMessage(playerid, COLOR_GREY, "Игрок должен быть рядом с Вами.");
+        if(PI[playerid][pCash] < ChangeAll[playerid][cPrice]) return SendClientMessage(playerid, COLOR_GREY, "У вас нет денег для доплаты.");
+        new house = GetPVarInt(ChangeAll[playerid][cSeller], "PlayerBizz"), house2 = GetPVarInt(playerid, "PlayerBizz"), playerd = ChangeAll[playerid][cSeller];
+        PI[playerid][pCash] -= ChangeAll[playerid][cPrice];
+        GiveMoney(playerd, ChangeAll[playerid][cPrice]);
+        strmid(BizzInfo[house][bOwner], PI[playerid][pNames], 0, strlen(PI[playerid][pNames]), MAX_PLAYER_NAME);
+        SetPVarInt(playerid, "PlayerBizz", house);
+        strmid(BizzInfo[house2][bOwner], PI[playerd][pNames], 0, strlen(PI[playerd][pNames]), MAX_PLAYER_NAME);
+        SetPVarInt(playerd, "PlayerBizz", house2);
+        UpdateBizz(GetPVarInt(playerd, "PlayerBizz"));
+        UpdateBizz(GetPVarInt(playerid, "PlayerBizz"));
+        SendMes(playerid,COLOR_WHITE,"Вы обменялись бизнесами с %s, с вашей доплатой: %s руб..",PI[playerd][pNames],formatInt(ChangeAll[playerid][cPrice]));
+        SendMes(ChangeAll[playerid][cSeller], COLOR_WHITE,"Вы обменялись бизнесами с %s, с его доплатой: %s руб..",PI[playerid][pNames],formatInt(ChangeAll[playerid][cPrice]));
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_BIZZ"` SET `bOwner` = '%s' WHERE `bID` = '%i'",PI[playerid][pNames],GetPVarInt(playerid, "PlayerBizz"));
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_BIZZ"` SET `bOwner` = '%s' WHERE `bID` = '%i'",PI[playerd][pNames],GetPVarInt(playerd, "PlayerBizz"));
+        mysql_function_query(connects, mysql_query_, false, "", "");
+        ChangeAll[playerid][cSeller] = INVALID_PLAYER_ID;
+        ChangeAll[playerd][cBuyer] = INVALID_PLAYER_ID;
+        ChangeAll[playerid][cPrice] = 0;
+        ChangeAll[playerid][cType] = 0;
+        return 1;
+    }
+    else if(strcmp(x_job,"fight",true) == 0)
+    {
+        if(fightid[playerid] < 176 && boy[playerid] == 0)
+        {
+            if(ring == 1) return SendClientMessage(playerid, COLOR_LIGHTRED, "Боксёрский ринг занят.");
+            new healthh = 30+ (PI[playerid][pFightSkill]*10);
+            new healthhg = 30+ (PI[fightid[playerid]][pFightSkill]*10);
+            boy[playerid] = 1;
+            boy[fightid[playerid]] = 1;
+            SetPlayerHealth(playerid, healthh);
+            SetPlayerHealth(fightid[playerid], healthhg);
+            TogglePlayerControllable(playerid, 0);
+            TogglePlayerControllable(fightid[playerid], 0);
+            SetPPos(playerid,758.7978,-1.7495,1001.5942);
+            SetPPos(fightid[playerid],762.9683,2.4081,1001.5942);
+            SetPlayerFacingAngle(playerid, 319.6382);
+            SetPlayerFacingAngle(fightid[playerid], 137.3811);
+            format(stringer1, sizeof(stringer1), " ~g~%d HP", healthh);
+            GameTextForPlayer(playerid, stringer1, 3000, 1);
+            format(stringer1, sizeof(stringer1), " ~g~%d HP", healthhg);
+            GameTextForPlayer(fightid[playerid], stringer1, 3000, 1);
+            ring = 1;
+            TimeBox[playerid] = 10;
+            TimeBoxAll[playerid] = 600;
+            TimeBox[fightid[playerid]] = 10;
+            TimeBoxAll[fightid[playerid]] = 600;
+            SendClientMessage(playerid, COLOR_LIGHTRED, "Используйте свои навыки драки, чтобы победить противника.");
+            SendClientMessage(fightid[playerid], COLOR_LIGHTRED, "Используйте свои навыки драки, чтобы победить противника.");
+        }
+    }
+    else if(strcmp(x_job, "marriage",true) == 0)
+    {
+        if(ProposeOffer[playerid] == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вам ни кто не предлагал!");
+        if(!IsPlayerInRangeOfPoint(playerid, 10.0, 1879.8152,1170.2408,30.0091)) return SendClientMessage(playerid, COLOR_GREY, "Вы не в церкви!");
+        if(!IsPlayerConnected(ProposeOffer[playerid])) return 1;
+        if(!ProxDetectorS(10.0, playerid, ProposeOffer[playerid])) return SendClientMessage(playerid, COLOR_GREY, "Жених/Невеста не рядом с Вам!");
+        format(stringer1, sizeof(stringer1), "Вы приняли предложение от %s's", PI[ProposeOffer[playerid]][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "%s приняла Ваш запрос быть Вашей Женой.", PI[playerid][pNames]);
+        SendClientMessage(ProposeOffer[playerid], 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "{FC6DEC}Поздравляем! %s и %s теперь муж и жена!", PI[ProposeOffer[playerid]][pNames],PI[playerid][pNames]);
+        SendClientMessageToAll(COLOR_WHITE,stringer1);
+        PI[ProposeOffer[playerid]][pCash] -= 100000;
+        PI[playerid][pMarried] = 1;
+        PI[ProposeOffer[playerid]][pMarried] = 1;
+        MarryWitness[ProposeOffer[playerid]] = INVALID_PLAYER_ID;
+        ProposeOffer[playerid] = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(strcmp(x_job,"taxi",true) == 0)
+    {
+        if(TransportDuty[playerid] != 1) return SendClientMessage(playerid, COLOR_GREY, "Вы не таксист!");
+        if(TaxiCall == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Нет Вызовов");
+        if(!IsPlayerConnected(TaxiCall)) return 1;
+        format(stringer1, sizeof(stringer1), "Вы приняли вызов от %s.",PI[TaxiCall][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Водитель такси %s принял ваш вызов, оставайтесь на месте.",PI[playerid][pNames]);
+        SendClientMessage(TaxiCall, COLOR_GREEN, stringer1);
+        TaxiCall = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(strcmp(x_job,"ticket",true) == 0)
+    {
+        if(TicketOffer[playerid] == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вам не выписывали штраф!");
+        if(!IsPlayerConnected(TicketOffer[playerid])) return 1;
+        if(!ProxDetectorS(5.0, playerid, TicketOffer[playerid])) return SendClientMessage(playerid, COLOR_GREY, "Полицейскйи не рядом с вами!");
+        format(stringer1, sizeof(stringer1), "Вы оплатили штраф в размере %d руб. офицеру %s.", TicketMoney[playerid], PI[TicketOffer[playerid]][pNames]);
+        SendClientMessage(playerid, COLOR_BLUE, stringer1);
+        format(stringer1, sizeof(stringer1), "%s оплатил штраф в размере %d руб..", PI[playerid][pNames], TicketMoney[playerid]);
+        SendClientMessage(TicketOffer[playerid], COLOR_BLUE, stringer1);
+        PI[playerid][pCash] -=TicketMoney[playerid];
+        GiveMoney(TicketOffer[playerid], TicketMoney[playerid]);
+        TicketOffer[playerid] = INVALID_PLAYER_ID;
+        TicketMoney[playerid] = 0;
+        return 1;
+    }
+    else if(strcmp(x_job,"medic",true) == 0)
+    {
+        if(PI[playerid][pMember] != 4) return SendClientMessage(playerid, COLOR_GREY, "Вы не медик!");
+        if(MedicCall == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вызовов нет!");
+        if(!IsPlayerConnected(MedicCall)) return 1;
+        format(stringer1, sizeof(stringer1), "Вы приняли запрос от %s.",PI[MedicCall][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Медик %s принял ваш вызов!",PI[playerid][pNames]);
+        SendClientMessage(MedicCall, COLOR_GREEN, stringer1);
+        new Float:X,Float:Y,Float:Z;
+        GetPlayerPos(MedicCall, X, Y, Z);
+        SetPlayerCheckpoint(playerid, X, Y, Z, 5);
+        MedicCall = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(strcmp(x_job,"police",true) == 0)
+    {
+        if(!IsACop(playerid)) return SendClientMessage(playerid, COLOR_GREY, "Вы не полицейский!");
+        if(PoliceCall == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вызовов нет!");
+        if(!IsPlayerConnected(PoliceCall)) return 1;
+        format(stringer1, sizeof(stringer1), "Вы приняли вызов от %s",PI[PoliceCall][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Патрульный %s принял Ваш вызов!",PI[playerid][pNames]);
+        SendClientMessage(PoliceCall, COLOR_GREEN, stringer1);
+        new Float:X,Float:Y,Float:Z;
+        GetPlayerPos(PoliceCall, X, Y, Z);
+        SetPlayerCheckpoint(playerid, X, Y, Z, 5);
+        PoliceCall = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(strcmp(x_job,"mechanic",true) == 0)
+    {
+        if(PI[playerid][pJob] != 2) return SendClientMessage(playerid, COLOR_GREY, "Вы не механик!");
+        if(MechanicCall == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вызовов нет!");
+        if(!IsPlayerConnected(MechanicCall)) return 1;
+        format(stringer1, sizeof(stringer1), "Вы приняли вызов от %s",PI[MechanicCall][pNames]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Механик %s принял Ваш вызов!",PI[playerid][pNames]);
+        SendClientMessage(MechanicCall, COLOR_GREEN, stringer1);
+        new Float:X,Float:Y,Float:Z;
+        GetPlayerPos(MechanicCall, X, Y, Z);
+        SetPlayerCheckpoint(playerid, X, Y, Z, 5);
+        MechanicCall = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(strcmp(x_job,"livels",true) == 0)
+    {
+        if(LiveOfferls[playerid] == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вам никто не предлагал дать интервью");
+        if(!IsPlayerConnected(LiveOfferls[playerid])) return 1;
+        if(!ProxDetectorS(5.0, playerid, LiveOfferls[playerid])) return SendClientMessage(playerid, COLOR_GREY, "Вы далеко от репортёра");
+        TalkingLivels[LiveOfferls[playerid]] = 2;
+        SendClientMessage(LiveOfferls[playerid], COLOR_WHITE, "Введите: /live чтобы закончить интервью");
+        LiveOfferls[playerid] = INVALID_PLAYER_ID;
+        TalkingLivels[playerid] = 2;
+        SendClientMessage(playerid, COLOR_YELLOW, "Вы даёте интервью в прямом эфире радио Los Santos");
+        return 1;
+    }
+    else if(strcmp(x_job,"refill",true) == 0)
+    {
+        if(RefillOffer[playerid] == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вам не предлагали заправиться!");
+        if(!IsPlayerConnected(RefillOffer[playerid])) return 1;
+        if(PI[playerid][pCash] < RefillPrice[playerid]) return SendClientMessage(playerid, COLOR_GREY, "Не достаточно денег!");
+        new car = GetPlayerVehicleID(RefillOffer[playerid]);
+        format(stringer1, sizeof(stringer1), "Механик %s заправил вашу машину на 100 литров за %d руб..",PI[RefillOffer[playerid]][pNames],RefillPrice[playerid]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Вы заправили машину  %s за %d руб..",PI[playerid][pNames],RefillPrice[playerid]);
+        SendClientMessage(RefillOffer[playerid], 0x6ab1ffaa, stringer1);
+        PI[playerid][pCash] -=RefillPrice[playerid];
+        GiveMoney(RefillOffer[playerid], RefillPrice[playerid]);
+        if(!IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER || GetVehicleModel(car) == 481 || GetVehicleModel(car) == 509 || GetVehicleModel(car) == 510) return SendClientMessage(playerid,COLOR_YELLOW,".: Вы не в машине, или машина не требует бензина :.");
+        if(GetVehicleData(car, V_FUEL) >= 100)
+        return SendClientMessage(playerid,COLOR_GRAD1,"Ваш бак полон");
+
+        SetVehicleData(car, V_FUEL, 100);
+        PI[playerid][pFuelcar] = 100;
+
+        return 1;
+    }
+    else if(strcmp(x_job,"hotdog",true) == 0)
+    {
+        if(HotdogOffer[playerid] == INVALID_PLAYER_ID) return 1;
+        if(!IsPlayerConnected(HotdogOffer[playerid])) return 1;
+        if(PI[playerid][pCash] < HotdogPrice[playerid]) return SendClientMessage(playerid, COLOR_GREY, "У вас недостаточно денег!");
+        new Float:health;
+        GetPlayerHealth(playerid,health);
+        format(stringer1, sizeof(stringer1), "Вы купили ХотДог у %s за %d руб..",PI[HotdogOffer[playerid]][pNames], HotdogPrice[playerid]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), " Вы продали ХотДог %s за %d руб..",PI[playerid][pNames],HotdogPrice[playerid]);
+        SendClientMessage(HotdogOffer[playerid], 0x6ab1ffaa, stringer1);
+        PI[playerid][pCash] -=HotdogPrice[playerid];
+        SetPlayerHealth(playerid, health + 20.0);
+        SetPlayerChatBubble(playerid,"съела(а) хотдог",COLOR_PURPLE,30.0,10000);
+        PI[HotdogOffer[playerid]][pCash]+= HotdogPrice[playerid];
+        HotdogOffer[playerid] = INVALID_PLAYER_ID;
+        HotdogPrice[playerid] = 0;
+        return 1;
+    }
+    else if(strcmp(x_job, "free",true) == 0 && FreeOffer[playerid] == 999 || strcmp(x_job, "free",true) == 0 && !IsPlayerConnected( FreeOffer[playerid]))
+    {
+        if(PI[playerid][pCash] < FreePrice[playerid]) return SendClientMessage(playerid, COLOR_RED, "У вас недостаточно денег");
+        format(stringer1, 128, "Вы заплатили адвокату %s %s руб..",PI[FreeOffer[playerid]][pNames], formatInt(FreePrice[playerid]));
+        SendClientMessage(playerid, 0x6495EDFF, stringer1);
+        format(stringer1, 128, "Вы выпустили %s из тюрьмы за %s руб..",PI[playerid][pNames],formatInt(FreePrice[playerid]));
+        SendClientMessage(FreeOffer[playerid], 0x6495EDFF, stringer1);
+        if(SposobOffer[playerid] == 0) PI[playerid][pCash] -= FreePrice[playerid];
+        if(SposobOffer[playerid] == 1) PI[playerid][pBank] -= FreePrice[playerid];
+        GiveMoney(FreeOffer[playerid], FreePrice[playerid]);
+        FreeOffer[playerid] = 999;
+        FreePrice[playerid] = 0;
+        SposobOffer[playerid] = 0;
+        SetPlayerInteriorEx(playerid, 0);
+        SetPPos(playerid,2580.6282,-2419.1113,21.9574);//Тюрьма
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPlayerFacingAngle(playerid, 268.3480);
+        PI[playerid][pJailTime] = 0;
+        SpawnPlayer(playerid);
+        PI[playerid][pJailed] = 0;
+        PI[playerid][pWanted] = 0;
+        PI[playerid][pUsedJail] = 0;
+        SendClientMessage(playerid, COLOR_YELLOW, "Вы свободны");
+        SendClientMessage(playerid, COLOR_GREEN, "Вы заплатили свой долг обществу");
+        SetPlayerWantedLevel(playerid, 0);
+        SetPlayerVirtualWorldEx(playerid, 0);
+        SetPlayerSkin(playerid, PI[playerid][pChar]);
+        return 1;
+    }
+    else if(strcmp(x_job,"repair",true) == 0)
+    {
+        if(RepairOffer[playerid] == INVALID_PLAYER_ID) return SendClientMessage(playerid, COLOR_GREY, "Вам не предлагали чинить машину!");
+        if(PI[playerid][pCash] < RepairPrice[playerid]) return SendClientMessage(playerid, COLOR_GREY, "У вас не хватает денег!");
+        if(!IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid, COLOR_GREY, "Вы должны находиться в машине!");
+        if(!IsPlayerConnected(RepairOffer[playerid])) return SendClientMessage(playerid, COLOR_GREY, "Механик, который предлагал вам починить машину, вышел из игры!");
+        RepairCar[playerid] = GetPlayerVehicleID(playerid);
+        SetVehicleHealth(RepairCar[playerid], 1000.0);
+        RepairVehicle(GetPlayerVehicleID(playerid));
+        format(stringer1, sizeof(stringer1), "Механик %s починил вашу машину за %d руб.",PI[RepairOffer[playerid]][pNames], RepairPrice[playerid]);
+        SendClientMessage(playerid, 0x6ab1ffaa, stringer1);
+        format(stringer1, sizeof(stringer1), "Вы починили атомобиль %s за %d руб.",PI[playerid][pNames],RepairPrice[playerid]);
+        SendClientMessage(RepairOffer[playerid], 0x6ab1ffaa, stringer1);
+        PI[playerid][pCash] -=RepairPrice[playerid];
+        GiveMoney(RepairOffer[playerid], RepairPrice[playerid]);
+        RepairOffer[playerid] = INVALID_PLAYER_ID;
+        RepairPrice[playerid] = 0;
+        return 1;
+    }
+    return 1;
+}
+
+alias:car("fixcar");
+cmd:car(playerid, params[])
+{
+    if(GetPVarInt(playerid, "work_eda") != -1) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Вы не можете использовать команду /car во время работы развозчиком!");
+
+    if(GetPlayerOwnableCar(playerid) != INVALID_VEHICLE_ID)
+    {
+        ShowPlayerDialog
+        (
+        playerid, DIALOG_OWNABLE_CAR, DIALOG_STYLE_LIST,
+        ""SERVER"Система управления транспортом",
+        "{FFFFFF}1. {669900}Открыть {FFFFFF}или {FF3300}закрыть {FFFFFF}транспорт\n"\
+        "{FFFFFF}2. Отметить транспорт на GPS {33aa33}(300 руб.)\n"\
+        "{FFFFFF}3. Содержимое багажника\n"\
+        "{FFFFFF}4. Документы на транспорт\n"\
+        "{FFFFFF}5. Припарковать транспорт\n"\
+        "{FFFFFF}6. Выгрузить транспорт с сервера",
+        "Выбрать", "Закрыть"
+        );
+    }
+    else
+    {
+        format(mysql_query_, sizeof(mysql_query_), "SELECT * FROM `ownable_cars` WHERE `owner_id` = '%d'", GetPlayerAccountID(playerid));
+        mysql_tquery(connects, mysql_query_, "check_cars", "i", playerid);
+    }
+
+    return 1;
+}
+
+cmd:getmycar(playerid, params[])
+{
+    new vehicleid = GetPlayerOwnableCar(playerid);
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        new price = 300;
+
+        if(PI[playerid][pCash] >= price)
+        {
+            PI[playerid][pCash] -= price;
+
+            new Float: x, Float: y, Float: z;
+            GetVehiclePos(vehicleid, x, y, z);
+            SetPlayerCheckpoint(playerid, x, y, z, 8.0);
+            SetPVarInt(playerid, "FindAuto", 1);
+            SendClientMessage(playerid, -1, "Транспорт отмечен на карте {ac0000}красной{ffffff} меткой");
+            CP[playerid] = 0;
+            PicCP[playerid] = 5;
+
+            return 1;
+        }
+        else
+        SendClientMessage(playerid, 0xCECECEFF, "Недостаточно денег");
+    }
+    else
+    {
+        if(GetPlayerOwnableCars(playerid) == 0)
+        SendClientMessage(playerid, 0xCECECEFF, "У Вас нет личного транспорта");
+        else
+        SendClientMessage(playerid, 0xCECECEFF, "Ваш личный транспорт не загружен на сервер");
+    }
+
+    return 0;
+}
+/******************************************************************************/
+public OnPlayerClickTextDraw(playerid, Text:clickedid)
+{
+    if(GetPVarInt(playerid, "SelectAvto") != -1)
+    {
+        if(clickedid == AutoShopText[0]) return BackCar(playerid);
+        else if(clickedid == AutoShopText[1]) return NextCar(playerid);
+        else if(clickedid == AutoShopText[6]) return SPD(playerid,2324,0,"{FFD300}Подтверждение покупки автомобиля","{FFFFFF}Вы действительно хотите приобрести этот автомобиль?","Да","Нет");
+        else if(clickedid == AutoShopText[7]) return SPD(playerid,2425,0,"Предупреждение","Вы действительно хотите покинуть магазин?","Да","Нет");
+    }
+    else if(UsingCursor[playerid] == 1)
+    {
+        if(clickedid == DiceSetBet)
+        {
+            new tableid = DiceTable[playerid];
+            if(DiceTableInfo[tableid][dBet] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Крупье еще не установил ставку");
+            if(ChooseBet[playerid] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Вы уже сделали ставку");
+            if(StartDice[tableid] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Дождитесь окончании игры");
+            if(PI[playerid][pCash] < DiceTableInfo[DiceTable[playerid]][dBet]) return SendClientMessage(playerid, COLOR_SILVER, "У вас не достаточно денег на ставку");
+            {
+                new bank[18], money[20];
+                ChooseBet[playerid] = 1;
+                PI[playerid][pCash] -= DiceTableInfo[tableid][dBet];
+                format(bank, sizeof(bank), "%i$", DiceTableInfo[tableid][dBank] += DiceTableInfo[tableid][dBet]);
+                format(money, sizeof(money), "%i$", PI[playerid][pCash]);
+                TextDrawSetString(BetGamer[tableid][DiceGamer[playerid]], "[+]");
+                TextDrawSetString(DiceBankShow[tableid], bank);
+                TextDrawSetString(DiceMoneyShow[tableid][DiceGamer[playerid]], money);
+                SendClientMessage(playerid, 0x74A402AA, "Ваша ставка принята");
+            }
+        }
+        else if(clickedid == DiceThrow)
+        {
+            new tableid = DiceTable[playerid];
+            if(StartDice[tableid] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Крупье еще не начал игру");
+            if(ChooseBet[playerid] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Нужно сделать ставку");
+            if(Glasses[playerid] != 0) return SendClientMessage(playerid, COLOR_SILVER, "Вы уже сделали бросок");
+            {
+                new str[16];
+                Glasses[playerid] = 2 + random(11);
+                format(str, sizeof(str), "Вы кинули на %i", Glasses[playerid]);
+                SendClientMessage(playerid, COLOR_ORANGE, str);
+                format(str, sizeof(str), "[%i]", Glasses[playerid]);
+                TextDrawSetString(BetGamer[tableid][DiceGamer[playerid]], str);
+            }
+        }
+        else if(clickedid == BlackJackSetBet)
+        {
+            if(BlackJackTable[playerid] != -1)
+            {
+                new tableid = BlackJackTable[playerid];
+                if(StartBlackJack[tableid] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Дождитесь окончания игры");
+                if(ChooseBet[playerid] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Вы уже сделали ставку");
+                {
+                    new message[128], limit[2];
+                    switch(BlackJackTable[playerid])
+                    {
+                    case 0,4,8: limit[0] = 1000000, limit[1] = 3000000;
+                    case 1,6,10: limit[0] = 1000000, limit[1] = 3000000;
+                    case 2,5,9: limit[0] = 500000, limit[1] = 1000000;
+                    case 3,7,11: limit[0] = 50000, limit[1] = 500000;
+                    }
+                    format(message, sizeof(message), "{FFFFFF}Введите вашу ставку:\n{04B404}Примечание: минимальная сума %d руб., максимальная - %d руб.", limit[0], limit[1]);
+                    ShowPlayerDialog(playerid, D_BLACKJACK+2, DIALOG_STYLE_INPUT, "Ставка", message, "Далее", "Отмена");
+                }
+            }
+        }
+        else if(clickedid == BlackJackHit)
+        {
+            if(BlackJackTable[playerid] != -1)
+            {
+                new tableid = BlackJackTable[playerid];
+                if(StartBlackJack[tableid] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Крупье еще не начал игру");
+                if(ChooseBet[playerid] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Нужно сделать ставку");
+                if(BlackJackDoubleUse[playerid] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Вы не можете взять карту, поскольку использовали функцию Double");
+                if(BlackJackCards[playerid] == 3) return SendClientMessage(playerid, COLOR_SILVER, "Вы не можете брать больше 3 карт");
+                {
+                    new rand = random(13), str[64], points[5];
+                    BlackJackCards[playerid]++;
+                    BlackJackPoints[playerid] += GetBlackJackPoints(rand);
+                    BlackJackTime[playerid] = 15;
+                    valstr(points, BlackJackPoints[playerid]);
+                    TextDrawSetString(BlackJackPointsShow[tableid][BlackJackGamer[playerid]], points);
+                    format(str, sizeof(str), "Вам досталась карта '%s'", GetNameCard(rand));
+                    SendClientMessage(playerid, COLOR_ORANGE, str);
+                    if(BlackJackGamer[playerid] == 0)
+                    {
+                        TextDrawSetString(BlackJackCardShow[tableid][BlackJackCards[playerid]+1], Cards[rand]);
+                    }
+                    else if(BlackJackGamer[playerid] == 1)
+                    {
+                        TextDrawSetString(BlackJackCardShow[tableid][BlackJackCards[playerid]+6], Cards[rand]);
+                    }
+                    if(BlackJackPoints[playerid] > 21)
+                    {
+                        ResetPlayerBlackJackGame(playerid);
+                        SendClientMessage(playerid, COLOR_RED, "Вы набрали больше 21. Ваша ставка проиграна");
+                    }
+                    else if(BlackJackPoints[playerid] == 21)
+                    {
+                        new message[128];
+                        GiveMoney(playerid, BlackJackBet[playerid]*2);
+                        format(message, sizeof(message), "Поздравляем, у вас Блекджек! Вы обыграли дилера и получаете выиграш %d$", BlackJackBet[playerid]*2);
+                        SendClientMessage(playerid, COLOR_ORANGE, message);
+                        ResetPlayerBlackJackGame(playerid);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, COLOR_LIGHTBLUE, "У вас есть 15 секунд, чтобы взять еще одну карту");
+                    }
+                }
+            }
+        }
+        else if(clickedid == BlackJackDouble)
+        {
+            if(BlackJackTable[playerid] != -1)
+            {
+                new tableid = BlackJackTable[playerid];
+                if(StartBlackJack[tableid] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Крупье еще не начал игру");
+                if(ChooseBet[playerid] == 0) return SendClientMessage(playerid, COLOR_SILVER, "Нужно сделать ставку");
+                if(BlackJackDoubleUse[playerid] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Эту возможность можно использовать только 1 раз за игру");
+                if(BlackJackCards[playerid] == 3) return SendClientMessage(playerid, COLOR_SILVER, "Вы не можете брать больше 3 карт");
+                {
+                    new rand = random(13), str[64], bet[12], points[5];
+                    BlackJackDoubleUse[playerid] = 1;
+                    BlackJackBet[playerid] = BlackJackBet[playerid]*2;
+                    BlackJackCards[playerid]++;
+                    BlackJackPoints[playerid] += GetBlackJackPoints(rand);
+                    valstr(points, BlackJackPoints[playerid]);
+                    TextDrawSetString(BlackJackPointsShow[tableid][BlackJackGamer[playerid]], points);
+                    format(bet, sizeof(bet), "%d$", BlackJackBet[playerid]);
+                    TextDrawSetString(BlackJackBetShow[tableid][BlackJackGamer[playerid]], bet);
+                    format(str, sizeof(str), "Вам досталась карта '%s'", GetNameCard(rand));
+                    SendClientMessage(playerid, COLOR_ORANGE, str);
+                    if(BlackJackGamer[playerid] == 0)
+                    {
+                        TextDrawSetString(BlackJackCardShow[tableid][BlackJackCards[playerid]+1], Cards[rand]);
+                    }
+                    else if(BlackJackGamer[playerid] == 1)
+                    {
+                        TextDrawSetString(BlackJackCardShow[tableid][BlackJackCards[playerid]+6], Cards[rand]);
+                    }
+                    if(BlackJackPoints[playerid] > 21)
+                    {
+                        ResetPlayerBlackJackGame(playerid);
+                        SendClientMessage(playerid, COLOR_RED, "Вы набрали больше 21. Ваша ставка проиграна");
+                    }
+                    else if(BlackJackPoints[playerid] == 21)
+                    {
+                        new message[128];
+                        GiveMoney(playerid, BlackJackBet[playerid]*2);
+                        format(message, sizeof(message), "Поздравляем, у вас Блекджек! Вы обыграли дилера и получаете выиграш %d$", BlackJackBet[playerid]*2);
+                        SendClientMessage(playerid, COLOR_ORANGE, message);
+                        ResetPlayerBlackJackGame(playerid);
+                    }
+                }
+            }
+        }
+        else if(clickedid == BlackJackExit)
+        {
+            if(BlackJackTable[playerid] != -1)
+            {
+                if(ChooseBet[playerid] == 1)
+                {
+                    ShowPlayerDialog(playerid, D_BLACKJACK, DIALOG_STYLE_MSGBOX, "Подтвердите выход", "На кону стоит ваша ставка\nВы действительно хотите выйти?", "Да", "Нет");
+                }
+                else
+                {
+                    ShowPlayerDialog(playerid, D_BLACKJACK+1, DIALOG_STYLE_MSGBOX, "Подтвердите выход", "Вы дейстивельно хотите закончить игру?", "Да", "Нет");
+                }
+            }
+            else if(CroupierTable[playerid] != -1)
+            {
+                OnPlayerExitBlackJackTable(playerid, CroupierTable[playerid]);
+                return 1;
+            }
+        }
+        else if(clickedid == DiceExit || clickedid == Text:INVALID_TEXT_DRAW)
+        {
+            if(DiceTable[playerid] != -1)
+            {
+                if(ChooseBet[playerid] == 1)
+                {
+                    ShowPlayerDialog(playerid, D_DICE, DIALOG_STYLE_MSGBOX, "Подтвердите выход", "На кону стоит ваша ставка\nВы действительно хотите выйти?", "Да", "Нет");
+                }
+                else
+                {
+                    ShowPlayerDialog(playerid, D_DICE+1, DIALOG_STYLE_MSGBOX, "Подтвердите выход", "Вы дейстивельно хотите закончить игру?", "Да", "Нет");
+                }
+            }
+            else if(CroupierTable[playerid] != -1)
+            {
+                switch(CroupierGame[playerid])
+                {
+                case 1: OnPlayerExitDiceTable(playerid, CroupierTable[playerid]);
+                case 2: OnPlayerExitRouleTable(playerid, CroupierTable[playerid]);
+                case 3: OnPlayerExitBlackJackTable(playerid, CroupierTable[playerid]);
+                }
+                return 1;
+            }
+            SelectTextDraw(playerid, 0xFFFFFFAA);
+        }
+    }
+
+    else if(clickedid == Text:INVALID_TEXT_DRAW)
+    {
+        if(GetPVarInt(playerid,"SelectTextDraw") == 2) SelectTextDraw(playerid,0xFDE39DFF);
+        else if(!gPlayerLogged[playerid]) SelectTextDraw(playerid, 0x01A9DBFF);
+        else if(Buyitem[playerid]!=-1) SelectTextDraw(playerid, -16776961);
+    }
+    if(Buyitem[playerid]!=-1)
+    {
+        if(_:clickedid == 65535) SelectTextDraw(playerid, 0xFFFFFFAA);
+        else if(clickedid == ButtonLeft)
+        {
+            new race = PI[playerid][pType];
+            if(Buyitem[playerid]==1) TextDrawHideForPlayer(playerid, ButtonLeft);
+            if(Buyitem[playerid]==0) return 0;
+            TextDrawShowForPlayer(playerid, ButtonRight);
+            Buyitem[playerid] --;
+            DestroyPlayerObject(playerid, TempBGObject[playerid]);
+            new price = ItemsCost[race][Buyitem[playerid]];
+            switch(ItemsId[race][Buyitem[playerid]])
+            {
+            case 19421,19422,19423,19424: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1407,0.0000, 0.0000, 198.9623);
+            case 19069,19068,19067: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1606,360.0000, 30.0000, 93.3478);
+            case 19554: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.2006,331.0000, -94.0000, 89.0000);
+            case 18953,18954: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1606,342.0000, -94.0000, 89.0000);
+            case 18968,18967,18969: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1606,360.0000, 11.0000, 215.0000);
+            case 18955,18956,18957,18959: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1406,360.0000, -328.0000, 153.0000);
+            case 18926,18927,18928,18929,18930,18931,18932,18933: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1406,360.0000, -90.0000,42.2641);
+            case 19104,19105,19106,19107,19108,19109: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.2004,349.0000, 271.0000, 153.0000);
+            case 18925,18922,18923,18924,18921: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.2004,349.0000, 271.0000, 342.2888);
+            case 19519,19274: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.8487, 2231.0430, 1801.5002,180.0000, 86.0000, 18.0000);
+            case 19011,19012,19013,19014,19015,19016,19017,19018,19019,19024,19027,19028,19029,19022,19035,19031,19032,19033: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.1604,360.0000, -2.0000, 213.3229);
+            case 18911,18912,18913,18914,18915,18916,18917,18918,18919,18920: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.2166,61.0000, 10.0000, 226.0000);
+                //шляпы
+            case 18947,18948,18949,18950,18951: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.1564,350.0000, 270.0000, 107.3994);
+                //часы
+            case 19042,19041,19040,19039,19043,19044,19045,19046,19048,19049,19050,19051,19053: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.1364,158.0000, 360.0000, 278.0000);
+                //портфели
+            case 3026: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.2441, 2230.6956, 1801.1604,270.0000, -76.0000, 105.0000);
+            case 371: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.4285, 2230.7007, 1801.1604,270.0000, -76.0000, 13.8877);
+            case 19559: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.4285, 2230.7007, 1801.0804,270.0000, -76.0000, 16.9056);
+            case 18910, 18909, 18908, 18907, 18906: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]], -397.5894, 2230.7183, 1801.1122, 106.1400, -2.6400, -110.5800 );
+            case 18970, 18973, 18972, 18971: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]], -397.5000, 2230.7065, 1801.1350, -0.3000, 11.7600, -24.9600 );
+            }
+            format(stringer1, sizeof(stringer1), "~g~Cost: ~r~$%d", price);
+            PlayerTextDrawSetString(playerid, InfoText[playerid], stringer1);
+        }
+        else if(clickedid == ButtonRight)
+        {
+            new race = PI[playerid][pType];
+            if(ItemsId[race][Buyitem[playerid]+2]==1) TextDrawHideForPlayer(playerid, ButtonRight);
+            if(ItemsId[race][Buyitem[playerid]+1]==1) return 0;
+            TextDrawShowForPlayer(playerid, ButtonLeft);
+            Buyitem[playerid] ++;
+            DestroyPlayerObject(playerid, TempBGObject[playerid]);
+            new price = ItemsCost[race][Buyitem[playerid]];
+            switch(ItemsId[race][Buyitem[playerid]])
+            {
+            case 19421,19422,19423,19424: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1407,0.0000, 0.0000, 198.9623);
+            case 19069,19068,19067: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1606,360.0000, 30.0000, 93.3478);
+            case 19554: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.2006,331.0000, -94.0000, 89.0000);
+            case 18953,18954: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1606,342.0000, -94.0000, 89.0000);
+            case 18968,18967,18969: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1606,360.0000, 11.0000, 215.0000);
+            case 18955,18956,18957,18959: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1406,360.0000, -328.0000, 153.0000);
+            case 18926,18927,18928,18929,18930,18931,18932,18933: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.1406,360.0000, -90.0000,42.2641);
+            case 19104,19105,19106,19107,19108,19109: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.2004,349.0000, 271.0000, 153.0000);
+            case 18925,18922,18923,18924,18921: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3705, 2230.6846, 1801.2004,349.0000, 271.0000, 342.2888);
+            case 19519,19274: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.8487, 2231.0430, 1801.5002,180.0000, 86.0000, 18.0000);
+            case 19011,19012,19013,19014,19015,19016,19017,19018,19019,19024,19027,19028,19029,19022,19035,19031,19032,19033: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.1604,360.0000, -2.0000, 213.3229);
+            case 18911,18912,18913,18914,18915,18916,18917,18918,18919,18920: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.2166,61.0000, 10.0000, 226.0000);
+                //шляпы
+            case 18947,18948,18949,18950,18951: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.1564,350.0000, 270.0000, 107.3994);
+                //часы
+            case 19042,19041,19040,19039,19043,19044,19045,19046,19048,19049,19050,19051,19053: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.3884, 2230.6755, 1801.1364,158.0000, 360.0000, 278.0000);
+                //портфели
+            case 3026: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.2441, 2230.6956, 1801.1604,270.0000, -76.0000, 105.0000);
+            case 371: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.4285, 2230.7007, 1801.1604,270.0000, -76.0000, 13.8877);
+            case 19559: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]],-397.4285, 2230.7007, 1801.0804,270.0000, -76.0000, 16.9056);
+            case 18910, 18909, 18908, 18907, 18906: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]], -397.5894, 2230.7183, 1801.1122, 106.1400, -2.6400, -110.5800 );
+            case 18970, 18973, 18972, 18971: TempBGObject[playerid] = CreatePlayerObject(playerid,ItemsId[race][Buyitem[playerid]], -397.5000, 2230.7065, 1801.1350, -0.3000, 11.7600, -24.9600 );
+            }
+            format(stringer1, sizeof(stringer1), "~g~Cost: ~r~$%d", price);
+            PlayerTextDrawSetString(playerid, InfoText[playerid], stringer1);
+        }
+        else if(clickedid == boxaccept)
+        {
+            TogglePlayerControllable(playerid, true);
+            SetCameraBehindPlayer(playerid);
+            PlayerPlaySound(playerid, 30802, 0.0, 0.0, 0.0);
+            Buyitem[playerid] = -1;
+            DestroyPlayerObject(playerid, TempBGObject[playerid]);
+            PI[playerid][pType]=-1;
+            SetPVarInt(playerid,"timetobuy2",0);
+            PlayerTextDrawHide(playerid,InfoText[playerid]);
+            TextDrawHideForPlayer(playerid,Boxmenu0);
+            TextDrawHideForPlayer(playerid,Boxmenu1);
+            TextDrawHideForPlayer(playerid,Boxmenu2);
+            TextDrawHideForPlayer(playerid,ButtonLeft);
+            TextDrawHideForPlayer(playerid,ButtonRight);
+            TextDrawHideForPlayer(playerid,ButtonUp);
+            TextDrawHideForPlayer(playerid,ButtonDown);
+            TextDrawHideForPlayer(playerid,ButtonCancel);
+            TextDrawHideForPlayer(playerid,ButtonSelect);
+            TextDrawHideForPlayer(playerid,boxaccept);
+            TextDrawHideForPlayer(playerid,boxcancel);
+            TextDrawHideForPlayer(playerid,Boxmenu3);
+            CancelSelectTextDraw(playerid);
+        }
+        else if(clickedid == boxcancel)
+        {
+            new race = PI[playerid][pType],slot = PI[playerid][pType2],price = ItemsCost[race][Buyitem[playerid]];
+            new item = ItemsId[race][Buyitem[playerid]];
+            new i = GetPVarInt(playerid, "Bizzid");
+            if(PI[playerid][pCash]<price) return SendClientMessage(playerid,-1,"Извините, но у вас не достаточто денег для покупки!");
+            if(PI[playerid][pSlotItem][slot]!=0 && GetPVarInt(playerid,"timetobuy2")==0)
+            {
+                SetPVarInt(playerid,"timetobuy2",1);
+                SendClientMessage(playerid,-1,"• "SERVER"[Подсказка] {FFFFFF}У вас в инвентаре уже есть предмет из этого списка аксессуаров.");
+                SendClientMessage(playerid,-1,"• "SERVER"[Подсказка] {FFFFFF}Нажмите 'ACCEPT' еще раз если хотите заменить старый на новый.");
+                return 0;
+            }
+            GiveItem(playerid,item);
+            SendClientMessage(playerid,-1,"Спасибо за покупку, приходите еще!");
+            FIXES_ApplyAnimation(playerid,"goggles","goggles_put_on",4.1,0,0,0,0,0,1);
+            PI[playerid][pCash] -= price;
+            BizzInfo[i][bMoney] += price;
+            BizzInfo[i][bProduct] -= 50;
+            BizzPay[i] += price;
+            SaveBizz(i);
+            PI[playerid][pSlotItem][slot]=item;
+            format(PI[playerid][pSlotItems],64,"%d,%d,%d,%d,%d,%d",PI[playerid][pSlotItem][0],PI[playerid][pSlotItem][1],PI[playerid][pSlotItem][2],PI[playerid][pSlotItem][3],PI[playerid][pSlotItem][4],PI[playerid][pSlotItem][5]);
+            format(mysql_query_, sizeof(mysql_query_),"UPDATE `"TABLE_ACCOUNT"` SET `acessories` = '%s' WHERE `pID` = '%d'", PI[playerid][pSlotItems], PI[playerid][pID]);
+            mysql_tquery(connects, mysql_query_, "", "");
+            DestroyPlayerObject(playerid, TempBGObject[playerid]);
+            TogglePlayerControllable(playerid, true);
+            PlayerPlaySound(playerid, 30802, 0.0, 0.0, 0.0);
+            SetCameraBehindPlayer(playerid);
+            Buyitem[playerid] = -1;
+            PI[playerid][pType]=-1;
+            SetPVarInt(playerid,"timetobuy2",0);
+            PlayerTextDrawHide(playerid,InfoText[playerid]);
+            TextDrawHideForPlayer(playerid,Boxmenu0);
+            TextDrawHideForPlayer(playerid,Boxmenu1);
+            TextDrawHideForPlayer(playerid,Boxmenu2);
+            TextDrawHideForPlayer(playerid,ButtonLeft);
+            TextDrawHideForPlayer(playerid,ButtonRight);
+            TextDrawHideForPlayer(playerid,ButtonUp);
+            TextDrawHideForPlayer(playerid,ButtonDown);
+            TextDrawHideForPlayer(playerid,ButtonCancel);
+            TextDrawHideForPlayer(playerid,ButtonSelect);
+            TextDrawHideForPlayer(playerid,boxaccept);
+            TextDrawHideForPlayer(playerid,boxcancel);
+            TextDrawHideForPlayer(playerid,Boxmenu3);
+            CancelSelectTextDraw(playerid);
+            DeletePVar(playerid,"Bizzid");
+        }
+    }
+    if(GetPVarInt(playerid,"PlayerInClothes"))
+    {
+        /*
+        if(clickedid == gSkinShopDraw[0])
+        {
+            new MAX_SKIN = (PI[playerid][pSex] == 1) ? (113) : (37);
+            new MIN_SKIN = (PI[playerid][pSex] == 1) ? (38) : (0);
+            if(GetPVarInt(playerid,"PlayerSkinSlot")>=MAX_SKIN)
+            SetPVarInt(playerid,"PlayerSkinSlot",MIN_SKIN);
+            else SetPVarInt(playerid,"PlayerSkinSlot", GetPVarInt(playerid,"PlayerSkinSlot")+1);
+            for(new slot = MIN_SKIN; slot <= MAX_SKIN; slot++)
+            {
+                if(GetPVarInt(playerid,"PlayerSkinSlot") == slot)
+                {
+                    SetPlayerSkinEx(playerid,gSkins[slot][skinID]);
+                   // format(stringer1,15,"%i$",gSkins[slot][skinPrice]);
+                   // PlayerTextDrawSetString(playerid,gSkinShopPriceDraw[playerid],stringer1);
+                    break;
+                }
+            }
+            return 1;
+        }
+        else if(clickedid == gSkinShopDraw[1])
+        {
+            new MAX_SKIN = PI[playerid][pSex] == 1 ? 113 : 37;
+            new MIN_SKIN = PI[playerid][pSex] == 1 ? 38 : 0;
+            if(GetPVarInt(playerid,"PlayerSkinSlot")<=MIN_SKIN)
+            SetPVarInt(playerid,"PlayerSkinSlot",MAX_SKIN);
+            else SetPVarInt(playerid,"PlayerSkinSlot", GetPVarInt(playerid,"PlayerSkinSlot")-1);
+            for(new slot = MIN_SKIN; slot <= MAX_SKIN; slot++)
+            {
+                if(GetPVarInt(playerid,"PlayerSkinSlot") == slot)
+                {
+                    SetPlayerSkinEx(playerid,gSkins[slot][skinID]);
+                 //   format(stringer1,15,"%i$",gSkins[slot][skinPrice]);
+                   // PlayerTextDrawSetString(playerid,gSkinShopPriceDraw[playerid],stringer1);
+                    break;
+                }
+            }
+            return 1;
+        }
+        else if(clickedid == gSkinShopDraw[3])
+        {
+            if(PI[playerid][pCash] < gSkins[GetPVarInt(playerid,"PlayerSkinSlot")][skinPrice]) {
+                return SendClientMessage(playerid, -1,"У вас недостаточно денег для покупки этого скина");
+            }
+            new slot = GetPVarInt(playerid,"PlayerSkinSlot");
+            if(PI[playerid][pPhousekey] != 255) {
+                return SPD(playerid, 3939, DIALOG_STYLE_LIST, ""SERVER"Покупка скина","1. Одежда\n2. Одежда\n3. Одежда", "Выбрать", "Отмена");
+            }
+            else
+            {
+                SetPVarInt(playerid,"CloserInClothes", true);
+                PI[playerid][pChar] = gSkins[slot][skinID];
+                SetPlayerSkinEx(playerid,gSkins[slot][skinID]);
+                DeletePVar(playerid,"PlayerSkinSlot");
+                DeletePVar(playerid,"PlayerInClothes");
+                SetCameraBehindPlayer(playerid);
+                CancelSelectTextDraw(playerid);
+                for(new i=0; i<4; i++)
+                {
+                    TextDrawHideForPlayer(playerid, gSkinShopDraw[i]);
+                }
+                PlayerTextDrawHide(playerid,gSkinShopPriceDraw[playerid]);
+                new bizid = GetPVarInt(playerid, "Bizzid");
+                SetPlayerVirtualWorldEx(playerid, 0);
+                SetPPos(playerid,BizzInfo[bizid][bEntrx],BizzInfo[bizid][bEntry],BizzInfo[bizid][bEntrz]);
+                SetPlayerInteriorEx(playerid, 0);
+                PI[playerid][pCash] -= gSkins[slot][skinPrice];
+                BizzInfo[bizid][bMoney] += gSkins[slot][skinPrice];
+                BizzPay[bizid] += gSkins[slot][skinPrice];
+                BizzInfo[bizid][bProduct] -= 50;
+                SaveBizz(bizid);
+                DeletePVar(playerid,"OldSkin");
+                DeletePVar(playerid,"Bizzid");
+            }
+            return 1;
+        }
+        */
+    }
+    if(GetPVarInt(playerid,"SelectTextDraw") == 1) SelectTextDraw(playerid,0x0080FFFF);
+    return 1;
+}
+public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
+{
+    if(GetPVarInt(playerid,"SelectTextDraw") == 2)
+    {
+        for(new i = 2; i < sizeof(Captcha); i++)
+        {
+            if(playertextid == Captcha[i])
+            {
+                new sstring[96];
+                GetPVarString(playerid, "CaptchaText", sstring, sizeof(sstring));
+                switch(GetPVarInt(playerid, "CaptchaStep"))
+                {
+                case 0: format(sstring, sizeof(sstring), "%c", TextArray[i - 2]), strcat(sstring, "----"), SetPVarString(playerid, "CaptchaText", sstring);
+                case 1: format(sstring, sizeof(sstring), "%s%c", sstring, TextArray[i - 2]), strdel(sstring, 1, 5), strcat(sstring, "---"), SetPVarString(playerid, "CaptchaText", sstring);
+                case 2: format(sstring, sizeof(sstring), "%s%c", sstring, TextArray[i - 2]), strdel(sstring, 2, 5), strcat(sstring, "--"), SetPVarString(playerid, "CaptchaText", sstring);
+                case 3: format(sstring, sizeof(sstring), "%s%c", sstring, TextArray[i - 2]), strdel(sstring, 3, 5), strcat(sstring, "-"), SetPVarString(playerid, "CaptchaText", sstring);
+                case 4:
+                    {
+                        strdel(sstring, 4, 5);
+                        format(sstring, sizeof(sstring), "%s%c", sstring, TextArray[i - 2]);
+                        PlayerTextDrawSetString(playerid, Captcha[1], sstring);
+                        if(strlen(PI[playerid][pKeyIp]) <= 0)
+                        {
+                            for(new l = 0; l < sizeof(Captcha); l++) PlayerTextDrawHide(playerid, Captcha[l]);
+                            DeletePVar(playerid, "CaptchaStep");
+                            DeletePVar(playerid, "CaptchaText");
+                            strmid(PI[playerid][pKeyIp], sstring, 0, strlen(sstring), 96);
+                            SendMes(playerid, COLOR_WHITE, "Код безопасности: {14E5F8}%s{FFFFFF} - успешно установлен.", PI[playerid][pKeyIp]);
+                            SendClientMessage(playerid, COLOR_WHITE, "Чтобы не забыть код безопасности, сделайте скриншот. (Клавиша: F8)");
+                            CancelSelectTextDraw(playerid);
+                            TogglePlayerControllable(playerid, 1);

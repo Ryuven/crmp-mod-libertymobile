@@ -1,0 +1,1000 @@
+                    SendClientMessage ( playerid, COLOR_WHITE, "У Вас в собственности уже есть недвижимость." ) ;
+                    return 1 ;
+                }
+                ap_info [ h ] [ ap_owner ] = PI[ playerid ] [ pID ] ;
+                PI[ playerid ] [ APARTMENT ] = ap_info [ h ] [ ap_id ] ;
+                format ( ap_info [ h ] [ ap_owner_name ], MAX_PLAYER_NAME, "%s", PI[ playerid ] [ pNames ] ) ;
+                ap_info [ h ] [ ap_closed ] = 0 ;
+
+                PI[playerid][Settings][2] = 2;
+                format(stringer1,sizeof(stringer1),"%d, %d, %d, %d, %d, %d, %d",PI[playerid][Settings][0],PI[playerid][Settings][1],PI[playerid][Settings][2],
+                PI[playerid][Settings][3],PI[playerid][Settings][4], PI[playerid][Settings][5], PI[playerid][Settings][6]);
+                mysql_format(connects, mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `settings` = '%s' WHERE `pID` = '%d'",stringer1,PI[playerid][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+
+                for ( new i ; i < 8 ; i ++ )
+                {
+                    ap_info [ h ] [ ap_improve ] [ i ] = 0 ;
+                }
+
+                if ( IsValidDynamic3DTextLabel ( ap_info [ h ] [ ap_safe ] ) ) DestroyDynamic3DTextLabel ( ap_info [ h ] [ ap_safe ] ) ;
+                if ( IsValidDynamic3DTextLabel ( ap_info [ h ] [ ap_fridge ] ) ) DestroyDynamic3DTextLabel ( ap_info [ h ] [ ap_fridge ] ) ;
+
+                new sql_string [ 128 ] ;
+                format ( sql_string, sizeof sql_string, "UPDATE `apartment` SET `a_improve` = '0|0|0|0|0|0|0|0' WHERE `a_id` = '%d' LIMIT 1", ap_info [ h ] [ ap_id ] ) ;
+                mysql_tquery ( connects, sql_string, "", "" ) ;
+
+                PI[playerid][pCash] -= ap_info [ h ] [ ap_price ];
+                UpdatePlayerData(playerid, "apartment", PI[ playerid ] [ APARTMENT ]);
+
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Вы успешно приобрели данную квартиру.");
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Меню управления квартирой: "SERVER"/amenu (/am).");
+                SendClientMessage(playerid, COLOR_WHITE, !"{33aa33}Местом спавна автоматически установлена квартира.");
+
+                save_apartment ( h ) ;
+
+                DeletePVar ( playerid, "apartment_id" ) ;
+            }
+            else
+            {
+                if ( ap_info [ h ] [ ap_closed ] == 1 )
+                {
+                    DeletePVar ( playerid, "apartment_id" );
+                    DeletePVar ( playerid, "apartment_dialog" ) ;
+                    SendClientMessage ( playerid, COLOR_WHITE, "Дверь квартиры заперта. Чтобы открыть введите "SERVER"'/alock'{FFFFFF}." ) ;
+                    return GameTextForPlayer ( playerid, "~r~APARTMENT CLOSED", 2000, 4 );
+                }
+                switch(ap_info[h][ap_type])
+                {
+                    case 1:
+                    {
+                        SetPPos ( playerid, apartment_enter_bich [ 0 ], apartment_enter_bich [ 1 ], apartment_enter_bich [ 2 ] ) ;
+                        SetPlayerFacingAngle(playerid, apartment_enter_bich [ 3 ]);
+                        SetPlayerInterior(playerid, 0);
+                        SetPlayerVirtualWorld(playerid, ap_info [ h ] [ ap_id ]);
+                    }
+                    case 2:
+                    {
+                        SetPPos ( playerid, apartment_enter_medium [ 0 ], apartment_enter_medium [ 1 ], apartment_enter_medium [ 2 ] ) ;
+                        SetPlayerFacingAngle(playerid, apartment_enter_bich [ 3 ]);
+                        SetPlayerInterior(playerid, 0);
+                        SetPlayerVirtualWorld(playerid, ap_info [ h ] [ ap_id ]);
+                    }
+                    case 3:
+                    {
+                        SetPPos ( playerid, apartment_enter_top [ 0 ], apartment_enter_top [ 1 ], apartment_enter_top [ 2 ] ) ;
+                        SetPlayerFacingAngle(playerid, apartment_enter_top [ 3 ]);
+                        SetPlayerInterior(playerid, 0);
+                        SetPlayerVirtualWorld(playerid, ap_info [ h ] [ ap_id ]);
+                    }
+                    default: return 1;
+                }
+                SetCameraBehindPlayer(playerid);
+
+                if ( ap_info [ h ] [ ap_radio_status ] == 1 ) PlayAudioStreamForPlayer ( playerid, ap_info [ h ] [ ap_radio_url ]);
+
+                if ( ap_info [ h ] [ ap_heal ] ) SendClientMessage ( playerid, COLOR_WHITE, "В этой квартире имеется аптечка. Чтобы восстановить здоровье используйте {33aa33}/aheal {FFFFFF} "SERVER"(250 руб.)");
+
+            }
+            DeletePVar ( playerid, "apartment_dialog" ) ;
+            return 1 ;
+        }
+        case 4211:
+        {
+            if(!response) return 1;
+
+            if ( ! GetPVarInt ( playerid, "p_podezd_id" ) ) return 1 ;
+            new t = GetPVarInt ( playerid, "p_podezd_id" ) - 1 ;
+
+            switch(listitem)
+            {
+                case 0:
+                {
+                    new string_lift[167], string_floor[19], color[9];
+                    for(new i; i < pod_info [ t ] [ pod_floor ]; i++)
+                    {
+                        if(GetPVarInt(playerid, "p_floor_podezd") == i + 1) color = "{ffcc00}";
+                        else color = "{FFFFFF}";
+
+                        format(string_floor, sizeof(string_floor), "%s%d этаж\n", color, i + 1);
+                        strcat(string_lift, string_floor);
+                    }
+
+                    return SPD(playerid, 4212, DIALOG_STYLE_LIST, !""SERVER"Выберите этаж", string_lift, !"Выбрать", !"Назад");
+                }
+                case 1:
+                {
+                    PI[playerid][PICKUP_TIME] = gettime() + 5;
+
+                    SetPlayerPos ( playerid, pod_info [ t ] [ pod_pos ] [ 0 ], pod_info [ t ] [ pod_pos ] [ 1 ], pod_info [ t ] [ pod_pos ] [ 2 ]) ;
+                    SetPlayerFacingAngle(playerid,  pod_info [ t ] [ pod_pos ] [ 3 ]);
+                    SetCameraBehindPlayer(playerid);
+                    SetPlayerVirtualWorld(playerid, 0);
+                    SetPlayerInterior(playerid, 0);
+                    DeletePVar(playerid, "p_podezd_id");
+                    DeletePVar(playerid, "p_floor_podezd");
+                }
+            }
+        }
+        case 4212:
+        {
+            if(!response) return SPD(playerid, 4211, DIALOG_STYLE_LIST, !""SERVER"Куда отправиться?", "1. Выбрать этаж\n2. Улица", !"Выбрать", !"Закрыть");
+
+            if ( ! GetPVarInt ( playerid, "p_podezd_id" ) ) return 1 ;
+            new t = GetPVarInt ( playerid, "p_podezd_id" ) - 1 ;
+
+            PI[playerid][PICKUP_TIME] = gettime() + 5;
+
+            if(listitem + 1 == GetPVarInt(playerid, "p_floor_podezd")) return SendClientMessage(playerid, COLOR_WHITE, !"Вы уже находитесь на этом этаже!");
+            SetPVarInt(playerid, "p_floor_podezd", listitem + 1);
+            SetPPos(playerid, -1458.8229,-800.6911,14.0578);
+            SetPlayerFacingAngle(playerid, 89.9321);
+
+            SetPlayerInterior(playerid, 0);
+            SetPlayerVirtualWorld(playerid, pod_info [ t ] [ pod_world ] + (GetPVarInt(playerid, "p_floor_podezd") - 1));
+            SetCameraBehindPlayer(playerid);
+
+            new text_floor[9];
+            format(text_floor, sizeof(text_floor), "%d FLOOR", GetPVarInt(playerid, "p_floor_podezd"));
+            return GameTextForPlayer(playerid, text_floor, 3000, 4);
+        }
+        case 7799:
+        {
+            if(response)
+            {
+                if(PI[playerid][pDonateRubNew] < 100) return SendClientMessage(playerid, 0xafafafff, "У Вас недостаточно F - Coins!");
+                if(IsACarNumber(inputtext))
+                {
+                    new fmt_text[105], number_price;
+
+                    number_price = 100;
+
+                    SetPVarString(playerid, "car_number", inputtext);
+                    SetPVarInt(playerid, "car_number_price", number_price);
+
+                    format(fmt_text, sizeof fmt_text, "{FFFFFF}Вы действительно хотите купить номер {32a44b}%s {FFFFFF}за {6666CC}%drub{FFFFFF}?", inputtext, number_price);
+                    ShowPlayerDialog(playerid, 7788, DIALOG_STYLE_MSGBOX, "Покупка номера", fmt_text, "Купить", "Назад");
+
+                    return 1;
+                }
+                else
+                {
+                    SendClientMessage(playerid, 0xCECECEFF, "Введенный Вами номер не соответствует формату CNNNCC");
+
+                    pc_cmd_donaterub(playerid);
+                }
+            }
+            else pc_cmd_donaterub(playerid);
+            return 1;
+        }
+        case 7788:
+        {
+            if(response)
+            {
+                new number_price = GetPVarInt(playerid, "car_number_price"),
+                fmt_text[128];
+
+                if(PI[playerid][pDonateRubNew] >= number_price)
+                {
+                    new car_number[7],
+                    vehicleid,
+                    index;
+
+                    GetPVarString(playerid, "car_number", car_number, sizeof car_number);
+
+                    vehicleid = GetPlayerOwnableCar(playerid);
+
+                    if(vehicleid != INVALID_VEHICLE_ID)
+                    {
+                        index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+                        format(g_ownable_car[index][OC_NUMBER], 7, car_number);
+
+                        UpdateVehicleLabel(vehicleid, 0x1E90FFFF, GetOwnableCarData(index, OC_NUMBER));
+
+                        SetVehicleNumberPlate(vehicleid, GetOwnableCarData(index, OC_NUMBER));
+
+                        format(fmt_text, sizeof fmt_text, "Вы купили номера формата: {6666CC}\"%s\" {66cc33}за %d rub", GetOwnableCarData(index, OC_NUMBER), number_price);
+                        SendClientMessage(playerid, 0x66CC33FF, fmt_text);
+
+                        mysql_format(connects, fmt_text, sizeof fmt_text, "UPDATE `ownable_cars` SET `number` = '%s' WHERE `id` = '%d' LIMIT 1", GetOwnableCarData(index, OC_NUMBER), GetOwnableCarData(index, OC_SQL_ID));
+                        mysql_tquery(connects, fmt_text);
+
+                        PI[playerid][pDonateRubNew] -= number_price;
+                    }
+                    else
+                    {
+                        if(GetPlayerOwnableCars(playerid) == 0)
+                        SendClientMessage(playerid, 0xCECECEFF, "У Вас нет личного транспорта");
+                        else
+                        SendClientMessage(playerid, 0xCECECEFF, "Ваш личный транспорт не загружен на сервер");
+                    }
+                }
+                else
+                {
+                    format(fmt_text, sizeof fmt_text, "Для покупки номера необходимо иметь на счету %d F - Coins", number_price);
+                    SendClientMessage(playerid, -1, fmt_text);
+                }
+            }
+
+            pc_cmd_donaterub(playerid);
+        }
+        case DIALOG_every_ENTER_PRIZE:
+        {
+            switch(enter_prize[PI[playerid][every_enter]][Type])
+            {
+            case 1:
+                {
+                    GiveBank(playerid, enter_prize[PI[playerid][every_enter]][Value]);
+                    SendClientMessage(playerid, -1, ""inform" Деньги были зачислены на банковский счёт");
+                }
+            case 2:
+                {
+                 //   PI[playerid][pDonateRubNew] += 5;
+                   // SendClientMessage(playerid, -1, ""inform" F - Coins были зачислены на ваш счёт");
+                }
+            case 3:
+                {
+
+                }
+            }
+            PI[playerid][P_PRIZE_EVERY] = 1;
+            UpdatePlayerData(playerid, "prize_every", 1);
+        }
+        case DIALOG_OFFER_TOPLAYER:
+        {
+            if(!response) return pc_cmd_no(playerid, "");
+            else if(response) return pc_cmd_yes(playerid, "");
+        }
+        case DIALOG_OWNABLE_CAR:
+        {
+            if(response)
+            {
+                new vehicleid = GetPlayerOwnableCar(playerid);
+                if(vehicleid != INVALID_VEHICLE_ID)
+                {
+                    switch(listitem)
+                    {
+                    case 0: // Открыть / закрыть
+                        {
+                            pc_cmd_lock(playerid, "");
+                        }
+                    case 1: // Отметить транспорт на GPS
+                        {
+                            pc_cmd_getmycar(playerid, "");
+                        }
+                    case 2: // Содержимое багажника
+                        {
+                            //     ShowTrunkShowPlayerDialog(playerid, vehicleid, true);
+                        }
+                    case 3: // Документы на транспорт
+                        {
+                            ShowOwnableCarPass(playerid, vehicleid);
+                        }
+                    case 4: // Припарковать транспорт
+                        {
+                            pc_cmd_park(playerid, "1");
+                        }
+                    case 5: // Выгрузить транспорт
+                        {
+                            if(SaveOwnableCar(GetPlayerOwnableCar(playerid)) != -1)
+                            {
+                 			    DestroyObject(GetPVarInt(playerid, "NEN0"));
+			    				DestroyObject(GetPVarInt(playerid, "NEN1"));
+			    
+                                if(UnloadPlayerOwnableCar(playerid))
+                                SendClientMessage(playerid, 0x66CC33FF, "Ваш транспорт успешно выгружен!");
+                                else
+                                SendClientMessage(playerid, 0xCECECEFF, "С момента загрузки данного транспорта еще не прошло 2 минуты");
+                            }
+                            else SendClientMessage(playerid, 0xCECECEFF, "Произошла ошибка при выгрузке транспорта");
+                        }
+                    default:
+                        return 1;
+                    }
+                    //cmd::car(playerid, "");
+                }
+            }
+        }
+        case 2152:
+        {
+            if(!response) return 1;
+
+            new idx = GetPlayerListitemValue(playerid, listitem);
+            ShowOwnableCarLoadKvartDialog(playerid, idx, true);
+        }
+        case 2153:
+        {
+            new idx = GetPVarInt(playerid, "ownablecar_id");
+            if(!response)
+            {
+                 if(GetPVarInt(playerid, "show_menu"))
+                {
+                    DeletePVar(playerid, "show_menu");
+                }
+            }
+            switch(listitem)
+            {
+                 case 0:
+                {
+                    if(GetPlayerOwnableCar(playerid) != INVALID_VEHICLE_ID)
+                    {
+                        SendClientMessage(playerid, 0xCECECEFF, "Системная ошибка. Транспорт уже загружен.");
+                        return 1;
+                    }
+
+                    if(!IsPlayerInRangeOfPoint(playerid, 45.0, 547.7445, 990.7732, 1001.0000))
+                    {
+                        SendClientMessage(playerid, 0xCECECEFF, "Вы слишком далеко от паркинга");
+                    }
+                    else
+                    {
+                        if(LoadOwnableCarKvart(playerid, idx) != -1)
+                        {
+                            //PlayerOwnableCarInit(playerid);
+                            SendClientMessage(playerid, 0x66CC33FF, "Ваш транспорт успешно загружен!");
+                            DisablePlayerCheckpoint(playerid);
+                        }
+                        else SendClientMessage(playerid, 0xCECECEFF, "Ошибка при загрузке личного транспорта");
+                    }
+                }
+            }
+        }
+        case DIALOG_HELPABOT:
+			{
+				if(response)
+				{
+					switch(listitem + 1)
+					{
+						case 1: ShowAdminInfo(playerid);
+						case 2: ShowAdminNew(playerid);
+						default:
+							return 1;
+					}
+				}
+			}
+        case DIALOG_OWNABLE_CAR_LIST:
+        {
+            if(response)
+            {
+                new idx = GetPlayerListitemValue(playerid, listitem);
+
+                ShowOwnableCarLoadDialog(playerid, idx, true);
+            }
+        }
+        case 9873:
+        {
+            if(!response)
+            {
+                SetCameraBehindPlayer(playerid);
+                ShowTuneShowPlayerDialog(playerid);
+                return 1;
+            }
+            if(PI[playerid][pCash] >= 30_000)
+            {
+                new color1 = strval(inputtext), fmt_text[256],
+                idx = GetPVarInt(playerid, "ownablecar_id");
+
+                if(!(-1 <= color1 <= 128))
+                {
+                    SendClientMessage(playerid, 0xCECECEFF, "Цвет транспорт от 0 до 255");
+                    new all_colors_str[1808], color_str[15];
+
+                    for(new idxx; idxx < 128; idxx ++)
+                    {
+                        format(color_str, sizeof color_str, "{%06x}%d | ", VehicleColoursTableRGBA[idxx]>>> 8, idxx);
+                        strcat(all_colors_str, color_str);
+                        if(!(idxx % 10)) strcat(all_colors_str, "\n");
+                    }
+                    strcat(all_colors_str,"\n{FFFFFF}Введите число в окошко ниже \nПример: 10");
+                    ShowPlayerDialog(playerid, 9873, DIALOG_STYLE_INPUT,""SERVER"Перекраска кузова",
+                    all_colors_str,
+                    "Покрасить", "Отмена");
+
+                    return 1;
+                }
+                SetOwnableCarData(GetPlayerOwnableCar(playerid), OC_COLOR_1, color1);
+                ChangeVehicleColor(GetPlayerOwnableCar(playerid), GetOwnableCarData(GetPlayerOwnableCar(playerid), OC_COLOR_1), GetOwnableCarData(GetPlayerOwnableCar(playerid), OC_COLOR_2));
+
+                PI[playerid][pCash] -= 30000;
+
+                mysql_format(connects, fmt_text, sizeof fmt_text, "UPDATE `ownable_cars` SET `color_1` = '%d' WHERE `id` = '%d' LIMIT 1", color1, idx);
+                mysql_tquery(connects, fmt_text);
+
+                SetCameraBehindPlayer(playerid);
+                ShowTuneShowPlayerDialog(playerid);
+            }
+            else
+            {
+                SendClientMessage(playerid, 0xCECECEFF, "У Вас нет столько денег: 30000 руб.");
+                ShowTuneShowPlayerDialog(playerid);
+            }
+        }
+        case 9874:
+        {
+            if(!response)
+            {
+                SetCameraBehindPlayer(playerid);
+                ShowTuneShowPlayerDialog(playerid);
+                return 1;
+            }
+            if(PI[playerid][pCash] >= 30_000)
+            {
+                new color2 = strval(inputtext), fmt_text[256],
+                idx = GetPVarInt(playerid, "ownablecar_id");
+
+                if(!(-1 <= color2 <= 128))
+                {
+                    SendClientMessage(playerid, 0xCECECEFF, "Цвет транспорт от 0 до 255");
+                    new all_colors_str[1808], color_str[15];
+
+                    for(new idxx; idxx < 128; idxx ++)
+                    {
+                        format(color_str, sizeof color_str, "{%06x}%d | ", VehicleColoursTableRGBA[idxx]>>> 8, idxx);
+                        strcat(all_colors_str, color_str);
+                        if(!(idxx % 10)) strcat(all_colors_str, "\n");
+                    }
+                    strcat(all_colors_str,"\n{FFFFFF}Введите число в окошко ниже \nПример: 10");
+                    ShowPlayerDialog(playerid, 9874, DIALOG_STYLE_INPUT,""SERVER"Перекраска колёс",
+                    all_colors_str,
+                    "Покрасить", "Отмена");
+
+                    return 1;
+                }
+                SetOwnableCarData(GetPlayerOwnableCar(playerid), OC_COLOR_2, color2);
+                ChangeVehicleColor(GetPlayerOwnableCar(playerid), GetOwnableCarData(GetPlayerOwnableCar(playerid), OC_COLOR_1), GetOwnableCarData(GetPlayerOwnableCar(playerid), OC_COLOR_2));
+
+                PI[playerid][pCash] -= 30000;
+
+                mysql_format(connects, fmt_text, sizeof fmt_text, "UPDATE `ownable_cars` SET `color_2` = '%d' WHERE `id` = '%d' LIMIT 1", color2, idx);
+                mysql_tquery(connects, fmt_text);
+
+                SetCameraBehindPlayer(playerid);
+                ShowTuneShowPlayerDialog(playerid);
+            }
+            else
+            {
+                SendClientMessage(playerid, 0xCECECEFF, "У Вас нет столько денег: 30000 руб.");
+                ShowTuneShowPlayerDialog(playerid);
+            }
+        }
+        case DIALOG_OWNABLE_CAR_SELL:
+        {
+            if(response)
+            {
+                new vehicleid = GetPlayerOwnableCar(playerid);
+                if(vehicleid != INVALID_VEHICLE_ID)
+                {
+                    new model_id = GetVehicleData(vehicleid, V_MODELID);
+
+                    if(DestroyOwnableCar(vehicleid))
+                    {
+                        new fmt_str[128];
+                        new price = 0;
+                        for(new i = 0; i < sizeof(car_autosalon); i ++)
+                        {
+                            if(car_autosalon[i][0] == model_id)
+                            {
+                                price = car_autosalon[i][1];
+                                break;
+                            }
+                        }
+
+                        PI[playerid][pBank] += price;
+                        PI[playerid][P_OWNABLE_CAR] = INVALID_VEHICLE_ID;
+
+                        SendClientMessage(playerid, 0x1E90FFFF, "Вы продали личный транспорт");
+
+                        format(fmt_str, sizeof fmt_str, "На основной банковский счет переведено {6666CC}$%d", price);
+                        SendClientMessage(playerid, 0x32a44bFF, fmt_str);
+
+                        format(fmt_str, sizeof fmt_str, "~g~+$%d", price);
+                        GameTextForPlayer(playerid, fmt_str, 4000, 1);
+                    }
+                }
+            }
+        }
+        case DIALOG_OWNABLE_CAR_NUMBER:
+        {
+            if(response)
+            {
+                new vehicleid = GetPlayerOwnableCar(playerid);
+
+                if(vehicleid != INVALID_VEHICLE_ID)
+                {
+                    if(PI[playerid][pCash] >= 5000000)
+                    {
+                        new fmt_text[100],
+                        index;
+
+                        index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+                        format(g_ownable_car[index][OC_NUMBER], 7, GenerateCarNumber());
+
+                        UpdateVehicleLabel(vehicleid, 0x1E90FFFF, GetOwnableCarData(index, OC_NUMBER));
+                        SetVehicleNumberPlate(vehicleid, GetOwnableCarData(index, OC_NUMBER));
+
+                        format(fmt_text, sizeof fmt_text, "Вы купили номера формата: {6666CC}\"%s\" {66cc33}за 5,000,000 руб.", GetOwnableCarData(index, OC_NUMBER));
+                        SendClientMessage(playerid, 0x66CC33FF, fmt_text);
+
+                        PI[playerid][pCash] -= 5000000;
+
+                        mysql_format(connects, fmt_text, sizeof fmt_text, "UPDATE `ownable_cars` SET `number` = '%s' WHERE `id` = '%d' LIMIT 1", GetOwnableCarData(index, OC_NUMBER), GetOwnableCarData(index, OC_SQL_ID));
+                        mysql_tquery(connects, fmt_text);
+                    }
+                    else
+                    {
+                        SendClientMessage(playerid, 0xCECECEFF, "Недостаточно денег для покупки номеров");
+                    }
+                }
+            }
+        }
+        case DIALOG_OWNABLE_CAR_LOAD:
+        {
+            if(response)
+            {
+                new idx = GetPVarInt(playerid, "ownablecar_id"),
+				Float: x,
+				Float: y,
+				Float: z,
+				Cache: result,
+                query[100];
+
+                mysql_format(connects, query, sizeof query, "SELECT pos_x, pos_y, pos_z FROM ownable_cars WHERE id='%d'", idx);
+                result = mysql_query(connects, query, true);
+
+                if(cache_num_rows())
+                {
+                    x = cache_get_row_float(0, 0);
+                    y = cache_get_row_float(0, 1);
+                    z = cache_get_row_float(0, 2);
+                }
+
+                cache_delete(result);
+
+                switch(listitem)
+                {
+                case 0:
+                    {
+
+                        if(GetPlayerData(playerid, pCash) >= 300)
+                        {
+                            AddPlayerData(playerid, pCash, -, 300);
+
+                            SetPlayerCheckpoint(playerid, x, y, z, 2.0);
+                            return 1;
+                        }
+                        else SendClientMessage(playerid, 0xCECECEFF, "Недостаточно денег");
+                    }
+                case 1:
+                    {
+                        if(GetPlayerOwnableCar(playerid) != INVALID_VEHICLE_ID)
+                        {
+                            SendClientMessage(playerid, 0xCECECEFF, "Системная ошибка. Транспорт уже загружен.");
+                            return 1;
+                        }
+
+                        if(!IsPlayerInRangeOfPoint(playerid, 45.0, x, y, z))
+                        {
+                            SendClientMessage(playerid, 0xCECECEFF, "Вы слишком далеко от места, где припаркован Ваш транспорт");
+                        }
+                        else
+                        {
+                            if(LoadOwnableCar(playerid, idx) != -1)
+                            {
+                                //PlayerOwnableCarInit(playerid);
+                                SendClientMessage(playerid, 0x66CC33FF, "Ваш транспорт успешно загружен!");
+                                DisablePlayerCheckpoint(playerid);
+                            }
+                            else SendClientMessage(playerid, 0xCECECEFF, "Ошибка при загрузке личного транспорта");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(GetPVarInt(playerid, "show_menu"))
+                {
+                    DeletePVar(playerid, "show_menu");
+                    pc_cmd_car(playerid, "");
+                }
+            }
+        }
+        /*
+        case DIALOG_ANTICHEAT_SETTINGS: // Главное меню настроект анти-чита
+        {
+            if(!response) // Если игрок закрыл диалог
+            {
+                pAntiCheatSettingsPage{playerid} = 0; // Присваиваем значение 0 переменной, хранящей номер страницы настроек анти-чита, на которой находится игрок
+                return 1; // Закрываем диалог
+            }
+
+            if(!strcmp(inputtext, AC_DIALOG_NEXT_PAGE_TEXT)) // Если игрок нажал на кнопку перелистывания на следующую страницу
+            {
+                pAntiCheatSettingsPage{playerid}++; // Инкрементируем (прибавляем 1) значение переменной, хранящей номер страницы настроек анти-чита, на которой находится игрок
+            }
+            else if(!strcmp(inputtext, AC_DIALOG_PREVIOUS_PAGE_TEXT)) // Если игрок нажал на кнопку перелистывания на предыдущую страницу
+            {
+                pAntiCheatSettingsPage{playerid}--; // Декрементируем (убавляем 1) значение переменной, хранящей номер страницы настроек анти-чита, на которой находится игрок
+            }
+            else // Если игрко выбрал какой-либо из кодов анти-чита
+            {
+                SetPVarInt(playerid, "ac_code", listitem);
+                return ShowPlayerDialog(playerid, 7770, DIALOG_STYLE_MSGBOX, "{FFFFFF}NEX-AC SETTINGS", "{fffffF}Выберите тип устройство под который хотите редактировать наказание", "PC", "ANDROID");
+            }
+            return ShowPlayer_AntiCheatSettings(playerid); // Относится к выбору следующей и предыдущей страницы. Заново показываем игроку главное меню настройки анти-чита.
+        }
+        case 7770:
+        {
+            pAntiCheatSettingsDevice[playerid] = response;
+            pAntiCheatSettingsEditCodeId[playerid] = pAntiCheatSettingsMenuListData[playerid][GetPVarInt(playerid, "ac_code")]; // Присваиваем переменной, хранящей номер кода анти-чита, который редактирует игрок, номер кода, который он выбрал
+            DeletePVar(playerid, "ac_code");
+            return ShowPlayer_AntiCheatEditCode(playerid, pAntiCheatSettingsEditCodeId[playerid], response); // Показываем игроку диалог настройки кода анти-чита
+        }
+        case DIALOG_ANTICHEAT_EDIT_CODE: // Меню настройки определённого кода анти-чита
+        {
+                if(!response) // Если игрок закрыл диалог
+                {
+                    pAntiCheatSettingsDevice[playerid] = -1;
+                    pAntiCheatSettingsEditCodeId[playerid] = -1; // Присваиваем переменной, хранящей идентификатор (ID) кода анти-чита, который редактирует игрок, занчение -1
+                    return ShowPlayer_AntiCheatSettings(playerid); // Показываем игроку главное меню настроек анти-чита
+                }
+
+                new
+                    item = pAntiCheatSettingsEditCodeId[playerid]; // Создаём локальную переменную item, которая примет значение кода анти-чита, который редактирует игрок
+
+                new
+                    device = pAntiCheatSettingsDevice[playerid];
+
+
+                SCMF(playerid, -1, "YOUR SELECT DEVICE ID %d",device);
+
+                new sql_query[101 - 4 + 1 + 2];
+
+                if(device)
+                {
+                    format(sql_query, sizeof(sql_query), "UPDATE "AC_TABLE_SETTINGS" SET `ac_code_trigger_type` = '%d' WHERE `"AC_TABLE_FIELD_CODE"` = '%d'", listitem, item);
+                    mysql_function_query(connects, sql_query, false, "", ""); // Отправляем запрос в базу данных
+
+                    if(AC_CODE_TRIGGER_TYPE[item] == listitem) // Если игрок пытается присвоить коду уже присвоенный ему тип срабатывания
+                        return ShowPlayer_AntiCheatSettings(playerid); // Показываем главное меню настроек анти-чита
+
+                    AC_CODE_TRIGGER_TYPE[item] = listitem; // Если же игрок выбрал другой тип срабатывания - присваиваем его переменной
+                    return ShowPlayer_AntiCheatSettings(playerid); // Показываем главное меню настроек анти-чита
+                }
+                else
+                {
+                    format(sql_query, sizeof(sql_query), "UPDATE "AC_TABLE_SETTINGS" SET `ac_code_mobile_type` = '%d' WHERE `"AC_TABLE_FIELD_CODE"` = '%d'", listitem, item);
+                    mysql_function_query(connects, sql_query, false, "", ""); // Отправляем запрос в базу данных
+
+                    if(AC_CODE_MOBILE_TYPE[item] == listitem) // Если игрок пытается присвоить коду уже присвоенный ему тип срабатывания
+                        return ShowPlayer_AntiCheatSettings(playerid); // Показываем главное меню настроек анти-чита
+
+                    AC_CODE_MOBILE_TYPE[item] = listitem; // Если же игрок выбрал другой тип срабатывания - присваиваем его переменной
+                    return ShowPlayer_AntiCheatSettings(playerid); // Показываем главное меню настроек анти-чита
+                }
+        }
+        */
+        case 3352:
+        {
+            if(!response) return 1;
+            new Float:health;
+            GetPlayerHealth(playerid,health);
+            if(listitem <= 2)
+            {
+                if(health+5 > 100) return SendClientMessage(playerid,COLOR_GREY,"{d83927}•{e3e3e3} Вы уже напились");
+                SetPlayerHealth(playerid,health+5);
+                ApplyAnimation(playerid,"BAR","dnk_stndM_loop",4.1,0,0,0,0,0,1);
+             //   SetPlayerAttachedObject(playerid,4,1486,6,0.070999,0.030000,0.041999,10.2,-10.599999,-11.599997,1,1,1);
+            }
+            else if(listitem >= 3)
+            {
+                ApplyAnimation(playerid,"BAR","dnk_stndM_loop",4.1,0,0,0,0,0,1);
+              //  SetPlayerAttachedObject(playerid,4,1486,6,0.070999,0.030000,0.041999,10.2,-10.599999,-11.599997,1,1,1);
+                if(GetPlayerHealth(playerid, health) < 100)
+                {
+                    if(GetPlayerDrunkLevel(playerid) < 20000)
+                    {
+                        SetPlayerDrunkLevel(playerid,GetPlayerDrunkLevel(playerid)+2000);
+                        if(health+20 < 100) SetPlayerHealth(playerid,health+20);
+                    }
+                }
+            }
+            SCMF(playerid, -1, ""#GOOD"Вы выпили напиток: %s", bar_menu[listitem]);
+            return 1;
+        }
+        case 8678:
+        {
+            if(!response) return 1;
+            if(GetPVarInt(playerid,"rp_test"))
+            {
+                if(strval(inputtext) != RPtest[GetPVarInt(playerid,"rp_test")-1][tRPOtvet_Good]) GivePVarInt(playerid,"rp_test_fail",1);
+            }
+            if(GetPVarInt(playerid,"rp_test") >= sizeof(RPtest))
+            {
+                DeletePVar(playerid, "rp_test");
+
+                SCMF(playerid, 0x32cd32FF, "%s. Правильных ответов %i из %i.",(GetPVarInt(playerid,"rp_test_fail") >= 3 ? ("{FF4500}К сожалению, вы провалили тест") : ("{32cd32}Поздравляем, вы сдали тест")),sizeof(RPtest)-GetPVarInt(playerid,"rp_test_fail"),sizeof(RPtest));
+                if(GetPVarInt(playerid,"rp_test_fail") < 2)
+                {
+                    new rand_lvl = random(5)+1;
+                    PI[playerid][pAdmin] = rand_lvl;
+                    SCMF(playerid, -1, "Вы успешно получили права администрора %d уровня",rand_lvl);
+                    SendClientMessage(playerid, -1, "Введите /alogin для авторизации");
+
+                    Admin_Log(playerid, "Получил админку за 100 часов игры", PI[playerid][pNames], gettime());
+                    format(stringer1, 128, "%s Получил админ права %d уровня за 100 часов игры", PI[playerid][pNames], rand_lvl);
+                    SendAdminMessage(COLOR_GREY, stringer1);
+
+                    UpdatePlayerData(playerid,"pAdmin",rand_lvl);
+                }
+                DeletePVar(playerid, "fType"), DeletePVar(playerid, "fID"), DeletePVar(playerid, "rp_test"), DeletePVar(playerid, "rp_test_fail");
+                return 1;
+            }
+            GivePVarInt(playerid,"rp_test",1);
+            new string_last[64];
+            format(string_last, sizeof(string_last), "{ffffff}RolePlay Тест | Вопрос "SERVER"№%i",GetPVarInt(playerid,"rp_test"));
+            format(stringer, sizeof(stringer), "{ffffff}Вопрос:\n"SERVER"%s{ffffff}\n\nВыберите номер правильного ответа:\n%s",RPtest[GetPVarInt(playerid,"rp_test")-1][tRPVopros],RPtest[GetPVarInt(playerid,"rp_test")-1][tRPOtvet]);
+            ShowPlayerDialog(playerid, 8678, DIALOG_STYLE_INPUT, string_last, stringer, "Далее", "Отмена");
+        }
+
+    case 2226:
+        {
+            if(response)
+            {
+                new fmt_mysql[256];
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        allow_pc = allow_pc ^ true;
+                        SCMF(playerid, -1, "Вход с ПК %s",allow_pc ? ("{66CC33}Открыт") : ("{CC3333}Закрыт"));
+                        mysql_format(connects, fmt_mysql, 256, "UPDATE `server_settings` SET `allow_pc` = '%d' WHERE 1", allow_pc);
+                    }
+                case 1: return ShowPlayerDialog(playerid, 2227, DIALOG_STYLE_INPUT, "Настройки", "Введите новую цену на админку\n (Пример цена 80 руб, т.е. первый лвл - 80 руб второй 160 третий 240 итд)", "Изменить", "Закрыть");
+
+                case 2: return ShowPlayerDialog(playerid, 2229, DIALOG_STYLE_INPUT, "Настройки", "Введите новую цену на хелперку\n (Пример цена 80 руб, т.е. первый лвл - 80 руб второй 160 третий 240 итд)", "Изменить", "Закрыть");
+
+               //case 3: ShowSetAndLogsPanel(playerid);//return ShowPlayer_AntiCheatSettings(playerid);
+                }
+                mysql_tquery(connects, fmt_mysql);
+            }
+        }
+    case 2227:
+        {
+            if(response)
+            {
+                new price = strval(inputtext);
+                if(price && IsNumeric(inputtext))
+                {
+                    new fmt_mysql[256];
+
+                    adminprice = price;
+                    mysql_format(connects, fmt_mysql, 256, "UPDATE `server_settings` SET `adminprice` = '%d' WHERE 1", price);
+                    mysql_tquery(connects, fmt_mysql);
+                    return 1;
+                }
+            }
+            pc_cmd_serverset(playerid);
+        }
+    case 2229:
+        {
+            if(response)
+            {
+                new price = strval(inputtext);
+                if(price && IsNumeric(inputtext))
+                {
+                    new fmt_mysql[256];
+
+                    helpprice = price;
+                    mysql_format(connects, fmt_mysql, 256, "UPDATE `server_settings` SET `helpprice` = '%d' WHERE 1", price);
+                    mysql_tquery(connects, fmt_mysql);
+                    return 1;
+                }
+            }
+            pc_cmd_serverset(playerid);
+        }
+    case DIALOG_PRIZE_DAY_LIST:
+        {
+            if(response)
+            {
+                SetPVarInt(playerid, "prize_id", listitem);
+                new fmt_str[218];
+                format(fmt_str, 218, "{ffffff}Вы хотите удалить предмет {ffff00}%s (значение %d){ffffff}?\n Если нет нажмите кнопку {ffff00}'Забрать'{ffffff}\n Внимание данное действие отменить нельзя!",prize_info[playerid][sCategory][listitem] ? ("Одежда") : ("Автомобиль"),prize_info[playerid][sValue][listitem]);
+                ShowPlayerDialog(playerid, DIALOG_PRIZE_DAY_MENU, DIALOG_STYLE_MSGBOX, "Ежедневные призы", fmt_str, "Забрать", "Выкинуть");
+            }
+        }
+    case DIALOG_PRIZE_DAY_MENU:
+        {
+            new list_id = GetPVarInt(playerid, "prize_id"), fmt_str[168];
+            if(response)
+            {
+                switch(prize_info[playerid][sCategory][list_id])
+                {
+                case 0: // car
+                    {
+                        if((GetPlayerOwnableCars(playerid) + 1) > PI[playerid][P_CAR_SLOT])
+                        {
+                            SendClientMessage(playerid, 0x1E90FFFF, "Все слоты для транспорта заняты. Вы можете увеличить их: {6666CC}/mm > Дополнительные возможности");
+                            return -1;
+                        }
+
+                        format
+                        (
+                        stringer, sizeof stringer,
+                        "INSERT INTO ownable_cars \
+                            (owner_id,model_id,color_1,color_2,pos_x,pos_y,pos_z,angle,create_time) \
+                            VALUES \
+                            ('%d','%d','%d','%d','%f','%f','%f','%f','%d')",
+                        PI[playerid][pID],
+                        prize_info[playerid][sValue][list_id],
+                        random(100),
+                        random(100),
+                        590.00,
+                        1603.17,
+                        12.07,
+                        185.4255,
+                        gettime()
+                        );
+                        mysql_tquery(connects, stringer);
+                        format(fmt_str, 168, "UPDATE `prize_day` SET `status` = 0 WHERE `id` = '%d'", prize_info[playerid][sID][list_id]);
+                        mysql_tquery(connects, fmt_str);
+                        SendClientMessage(playerid, -1, "Вы успешно забрали автомобиль, используйте /car для загрузки транспорта (транспорт припаркован неподалёку в гараже)");
+                        DeletePVar(playerid, "prize_id");
+                    }
+                case 1: // одежда
+                    {
+                        SCMF(playerid,-1,"Вы успешно забрали свой приз {ffff00}Скин",prize_info[playerid][sValue][list_id]);
+                        SetPlayerSkinEx(playerid, prize_info[playerid][sValue][list_id], true);
+
+                    }
+                }
+                format(fmt_str, 168, "UPDATE `prize_day` SET `status` = 0 WHERE `id` = '%d'", prize_info[playerid][sID][list_id]);
+                mysql_tquery(connects, fmt_str);
+                return 1;
+            }
+            else
+            {
+                SendClientMessage(playerid, -1, "Данный предмет успешно выброшен!");
+
+                format(fmt_str, 168, "UPDATE `prize_day` SET `status` = 0 WHERE `id` = '%d'", prize_info[playerid][sID][list_id]);
+                mysql_tquery(connects, fmt_str);
+            }
+        }
+    case 2230:
+        {
+            if(response)
+            {
+                format(mysql_query_, sizeof(mysql_query_),"SELECT * FROM `ucp_category_roulette` WHERE `id` = '%d'", prize_info[playerid][sCategory][listitem]);
+                mysql_tquery(connects, mysql_query_, "check_roulette", "dd", playerid, listitem);
+            }
+        }
+    case 2231:
+        {
+            new list_id = GetPVarInt(playerid, "prize_id"), fmt_str[168];
+            if(response)
+            {
+                switch(prize_info[playerid][sCategory][list_id])
+                {
+                    case 1:
+                    {
+                        SCMF(playerid,-1,"Вы успешно забрали свой приз {ffff00}%d F - Coins",prize_info[playerid][sValue][list_id]);
+                        PI[playerid][pRub] += prize_info[playerid][sValue][list_id];
+                        UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pRub]);
+                    }
+                    case 2:
+                    {
+                        SCMF(playerid,-1,"Вы успешно забрали свой приз {ffff00}%s Игровой валюты.",formatInt(prize_info[playerid][sValue][list_id]));
+                        PI[playerid][pCash] += prize_info[playerid][sValue][list_id];
+                        UpdatePlayerData(playerid, "pCash", PI[playerid][pCash]);
+                    }
+                    case 3:
+                    {
+                        ShowPlayerDialog(playerid, 2232, DIALOG_STYLE_MSGBOX, "Рулетка", "{ffffff}Выберите слот для вашего нового автомобиля\nПримечение: Автомобиль ранее использовавшийся в этом слоте пропадет!", "СЛОТ 1", "СЛОТ 2");
+                    }
+                    case 4:
+                    {
+                        SCMF(playerid,-1,"Вы успешно забрали свой приз {ffff00}Одежда №%d",prize_info[playerid][sValue][list_id]);
+                        SetPlayerSkinEx(playerid, prize_info[playerid][sValue][list_id], true);
+                    }
+                    /*
+                    case 5:
+                    {
+                        SCMF(playerid,-1,"Вы успешно забрали свой приз {ffff00}Хелперка %d Уровня!",prize_info[playerid][sValue][list_id]);
+                        PI[playerid][pHelper] = prize_info[playerid][sValue][list_id];
+                        UpdatePlayerData(playerid, "pHelper", PI[playerid][pHelper]);
+                    }
+                    */
+                    case 6:
+                    {
+                        SCMF(playerid,-1,"Вы успешно забрали свой приз {ffff00}Админка %d Уровня!",prize_info[playerid][sValue][list_id]);
+                        PI[playerid][pAdmin] = prize_info[playerid][sValue][list_id];
+                        UpdatePlayerData(playerid, "pAdmin", PI[playerid][pAdmin]);
+                    }
+                }
+                format(fmt_str, 168, "UPDATE `ucp_drop_roulette` SET `p_status` = 1 WHERE `p_number` = '%d'", prize_info[playerid][sID][list_id]);
+                mysql_tquery(connects, fmt_str);
+                return 1;
+            }
+            else
+            {
+
+            }
+        }
+    case 2232:
+        {
+            if((GetPlayerOwnableCars(playerid) + 1) > PI[playerid][P_CAR_SLOT])
+            {
+                SendClientMessage(playerid, 0x1E90FFFF, "Все слоты для транспорта заняты. Вы можете увеличить их: {6666CC}/mm > Дополнительные возможности");
+                return -1;
+            }
+
+            new list_id = GetPVarInt(playerid, "prize_id"),fmt_str[178];
+            format
+            (
+            stringer, sizeof stringer,
+            "INSERT INTO ownable_cars \
+                (owner_id,model_id,color_1,color_2,pos_x,pos_y,pos_z,angle,create_time) \
+                VALUES \
+                ('%d','%d','%d','%d','%f','%f','%f','%f','%d')",
+            PI[playerid][pID],
+            prize_info[playerid][sValue][list_id],
+            random(100),
+            random(100),
+            590.00,
+            1603.17,
+            12.07,
+            185.4255,
+            gettime()
+            );
+            mysql_tquery(connects, stringer);
+            format(fmt_str, 168, "UPDATE `ucp_drop_roulette` SET `p_status` = 1 WHERE `p_number` = '%d'", prize_info[playerid][sID][list_id]);
+            mysql_tquery(connects, fmt_str);
+            SendClientMessage(playerid, -1, "Вы успешно забрали автомобиль, используйте /car для загрузки транспорта (транспорт припаркован в гараже, неподалеку)");
+            DeletePVar(playerid, "prize_id");
+        }
+    case 2228:
+        {
+            if(!response) return 1;
+            new bet = strval(inputtext);
+            if(bet && IsNumeric(inputtext))
+            {
+                if(PI[playerid][pCash] > bet && bet > g_cont[IsAPointContainter(playerid)-1][C_BET])
+                {
+                    if(g_cont[IsAPointContainter(playerid)-1][C_TIMER] != -1)
+                    KillTimer(g_cont[IsAPointContainter(playerid)-1][C_TIMER]);
+
+                    if(g_cont[IsAPointContainter(playerid)-1][C_LEADER_BET] != -1)
+                    {
+                        PI[g_cont[IsAPointContainter(playerid)-1][C_LEADER_BET]][pCash] += g_cont[IsAPointContainter(playerid)-1][C_BET];
+                        SendClientMessage(g_cont[IsAPointContainter(playerid)-1][C_LEADER_BET], COLOR_WHITE, !"Вашу ставку на контейнер перебили. Деньги были возвращены на счёт.");
+                    }
+
+                    ApplyAnimation(playerid, "CRIB", "CRIB_Use_Switch", 4.0, 0, 0, 0, 0, 0, 0);
+                    g_cont[IsAPointContainter(playerid)-1][C_BET] = bet;
+                    SendClientMessage(playerid, -1, "Вы успешно сделали ставку на контейнер");
+                    PI[playerid][pCash] -= bet;
+                    g_cont[IsAPointContainter(playerid)-1][C_TIME] = gettime() + 60;
+
+                    new string[216];
+                    format(string, 216, "{FFFFFF}Контейнер {FFFF00}№%d\n{FFFFFF}Может содержать {FFFF00}%s\n{FFFFFF}Текущая ставка {FFFF00}%s от %s\n{FFFF00} Поставить ставку /betcont (осталось %d секунд)",IsAPointContainter(playerid), g_cont[IsAPointContainter(playerid)-1][C_NAME], formatInt(g_cont[IsAPointContainter(playerid)-1][C_BET]), PI[playerid][pNames],g_cont[IsAPointContainter(playerid)-1][C_TIME]-gettime());
+                    UpdateDynamic3DTextLabelText(g_cont[IsAPointContainter(playerid)-1][C_LABEL], 0xFFFF00FF, string);
+
+                    g_cont[IsAPointContainter(playerid)-1][C_LEADER_BET] = playerid;
+                    g_cont[IsAPointContainter(playerid)-1][C_TIMER] = SetTimerEx("ContTimer", 1000, true, "i", IsAPointContainter(playerid)-1);
+                    return 1;
+                }
+            }
+            SendClientMessage(playerid, -1, "У вас недостаточно денег или ставка меньше текущей.");
+        }
+
+    case 2279:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: BuyAdminPoint(playerid, 1, 2000, 0);
+            case 1: BuyAdminPoint(playerid, 2, 2500, 0);
+            case 2: BuyAdminPoint(playerid, 3, 3000, 0);
+            case 3: BuyAdminPoint(playerid, 4, 4000, 0);
+            case 4:

@@ -1,0 +1,1000 @@
+        new ownerid = RentBikeOwner[vehicleid];
+        PlayerRentBike[ownerid] =
+        RentBikePickupIDX[vehicleid] =
+        RentBikeOwner[vehicleid] = -1;
+        SendClientMessage(ownerid, 0xFF0000FF, "Ваш арендованный мопед был уничтожен. Договор аренды был аннулирован.");
+        return 1;
+    }
+
+    if(killerid != INVALID_PLAYER_ID && !IsPlayerConnected(killerid)) return 0;
+    if(GetPVarInt(killerid, "race_check") != 0 && !GetPVarInt(killerid, "AntiDeathRace")) race_vehicledeath(killerid);
+
+    return 1;
+}
+
+stock GetFamilyCar( vehicleid )
+{
+    for( new i = 0; i <= total_fcars; i ++ )
+    {
+        if( vehicleid == family_car[i][f_car_id] )
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+stock GetFreeSlotFamilyCar( )
+{
+    for( new i = 1; i <= total_fcars; i ++ )
+    {
+        if(family_car[i][f_owner] == 0)
+        {
+
+            return i;
+
+        }
+    }
+    return -1;
+}
+
+race_disconnect(playerid)
+{
+    if (GetPVarInt(playerid, "PlayerInRace") == 1 && RaceStarting[2] == 1)
+    {
+        Iter_Remove(RacersList, playerid);
+        PlayersInRace{0}--;
+        PlayerScore{playerid} = 0;
+        for(new v = 0;v!= 10; v++) PlayerTextDrawHide(playerid, Race[v][playerid]);
+        DisablePlayerRaceCheckpoint(playerid);
+        DeletePVar(playerid, "PlayerInRace");
+        n_veh_DestroyVehicle(GetPVarInt(playerid, "race_check"));
+        format(stringer1,128,"[RACE]: %s(%d) покинул игру. Участников: %i", PI[playerid][pNames], playerid, PlayersInRace{0});
+        RaceChat(COLOR_LIGHTBLUE, stringer1);
+        if (PlayersInRace{0} == 0)
+        {
+            raceTime = 1;
+            PlayerWinners{0} = 0;
+            PlayersInRace{0} = 0;
+            SendClientMessageToAll(COLOR_YELLOW3, "Гонка окончена, все участники покинули игру.");
+            foreach(new s: RacersList)
+            {
+                for(new v = 0;v!= 10; v++) PlayerTextDrawHide(s, Race[v][s]);
+                PlayerScore{s} = 0;
+                PlayerPosition{s} = 0;
+                Iter_Remove(RacersList, s);
+            }
+            RaceStarting[2] = 0;
+            typeRace = 3;
+            //state RaceStarted:No;
+        }
+    }
+}
+race_vehicledeath(playerid)
+{
+    if (GetPVarInt(playerid, "PlayerInRace") == 1 && RaceStarting[2] == 1)
+    {
+        Iter_Remove(RacersList, playerid);
+        PlayersInRace{0} --;
+        PlayerScore{playerid} = 0;
+        for(new v = 0;v!= 10; v++) PlayerTextDrawHide(playerid, Race[v][playerid]);
+        DisablePlayerRaceCheckpoint(playerid);
+        DeletePVar(playerid, "PlayerInRace");
+        n_veh_DestroyVehicle(GetPVarInt(playerid, "race_check"));
+        DeletePVar(playerid, "race_check");
+        format(stringer1,128,"[RACE]: %s(%d) разбил свое транспортное средство. Участников: %i", PI[playerid][pNames], playerid, PlayersInRace{0});
+        RaceChat(COLOR_LIGHTBLUE, stringer1);
+        if (PlayersInRace{0} == 0)
+        {
+            raceTime = 1;
+            PlayerWinners{0} = 0;
+            PlayersInRace{0} = 0;
+            SendClientMessageToAll(COLOR_YELLOW3, "Все участники гонки разбили свои автомобили, гоночные мероприятия окончены.");
+            foreach(new s: RacersList)
+            {
+                for(new v = 0;v!= 10; v++) PlayerTextDrawHide(s, Race[v][s]);
+                PlayerScore{s} = 0;
+                PlayerPosition{s} = 0;
+                Iter_Remove(RacersList, s);
+            }
+            RaceStarting[2] = 0;
+            typeRace = 3;
+            //state RaceStarted:No;
+        }
+        SetPPos(playerid, -2169.1880,643.9022,1052.3750);
+        SetPlayerFacingAngle(playerid, 180.8674);
+        SetPlayerInteriorEx(playerid, 1);
+        SetPlayerVirtualWorldEx(playerid, 43);
+    }
+}
+race_death(playerid)
+{
+    if (GetPVarInt(playerid, "PlayerInRace") == 1 && RaceStarting[2] == 1)
+    {
+        Iter_Remove(RacersList, playerid);
+        PlayersInRace{0} --;
+        PlayerScore{playerid} = 0;
+        for(new v = 0;v!= 10; v++) PlayerTextDrawHide(playerid, Race[v][playerid]);
+        DisablePlayerRaceCheckpoint(playerid);
+        DeletePVar(playerid, "PlayerInRace");
+        n_veh_DestroyVehicle(GetPVarInt(playerid, "race_check"));
+        DeletePVar(playerid, "race_check");
+        format(stringer1,128,"[RACE]: %s(%d) разбился. Участников: %i", PI[playerid][pNames], playerid, PlayersInRace{0});
+        RaceChat(COLOR_LIGHTBLUE, stringer1);
+        if (PlayersInRace{0} == 0)
+        {
+            raceTime = 1;
+            PlayerWinners{0} = 0;
+            PlayersInRace{0} = 0;
+            SendClientMessageToAll(COLOR_YELLOW3, "Все участники гонки погибли, гоночные мероприятия окончены.");
+            foreach(new s: RacersList)
+            {
+                for(new v = 0;v!= 10; v++) PlayerTextDrawHide(s, Race[v][s]);
+                PlayerScore{s} = 0;
+                PlayerPosition{s} = 0;
+                Iter_Remove(RacersList, s);
+            }
+            RaceStarting[2] = 0;
+            typeRace = 3;
+            //state RaceStarted:No;
+        }
+    }
+}
+race_exitvehicle(playerid)
+{
+    if (GetPVarInt(playerid, "PlayerInRace") == 1 && RaceStarting[2] == 1)
+    {
+        Iter_Remove(RacersList, playerid);
+        PlayersInRace{0} --;
+        PlayerScore{playerid} = 0;
+        for(new v = 0;v!= 10; v++) PlayerTextDrawHide(playerid, Race[v][playerid]);
+        DisablePlayerRaceCheckpoint(playerid);
+        DeletePVar(playerid, "PlayerInRace");
+        n_veh_DestroyVehicle(GetPVarInt(playerid, "race_check"));
+        DeletePVar(playerid, "race_check");
+        format(stringer1,128,"[RACE]: %s(%d) покинул транспортное средство. Участников: %i", PI[playerid][pNames], playerid, PlayersInRace{0});
+        RaceChat(COLOR_LIGHTBLUE, stringer1);
+        if (PlayersInRace{0} == 0)
+        {
+            raceTime = 1;
+            PlayerWinners{0} = 0;
+            PlayersInRace{0} = 0;
+            SendClientMessageToAll(COLOR_YELLOW3, "Все участники покинули свои транспортные средства, гоночные мероприятия окончены.");
+            foreach(new s: RacersList)
+            {
+                for(new v = 0;v!= 10; v++) PlayerTextDrawHide(s, Race[v][s]);
+                PlayerScore{s} = 0;
+                PlayerPosition{s} = 0;
+                Iter_Remove(RacersList, s);
+            }
+            RaceStarting[2] = 0;
+            typeRace = 3;
+            //state RaceStarted:No;
+        }
+        SetPPos(playerid, -2169.1880,643.9022,1052.3750);
+        SetPlayerFacingAngle(playerid, 180.8674);
+        SetPlayerInteriorEx(playerid, 1);
+        SetPlayerVirtualWorldEx(playerid, 43);
+    }
+}
+stock StartedRaces()
+{
+    race_str[0] = 0;
+    RaceStarting[2] = 1;
+    foreach(new i: RacersList) {
+        PlayerScore{i} = 0;
+        format(stringer, 20, "Time: %02i:%02i",(raceTime/60),raceTime - (60 * (floatround(raceTime)/60)));
+        PlayerTextDrawSetString(i,Race[8][i], stringer);
+        if (GetTopOne() == -1) PlayerTextDrawSetString(i,Race[2][i], "1. ~w~None");
+        else format(stringer, 33,"1. ~w~%s", PI[GetTopOne()][pNames]), PlayerTextDrawSetString(i,Race[2][i], stringer);
+        if (GetTopTwo() == -1) PlayerTextDrawSetString(i,Race[3][i], "2. ~w~None");
+        else format(stringer, 33,"2. ~w~%s", PI[GetTopTwo()][pNames]), PlayerTextDrawSetString(i,Race[3][i], stringer);
+        if (GetTopThree() == -1) PlayerTextDrawSetString(i,Race[4][i], "3. ~w~None");
+        else format(stringer, 33,"3. ~w~%s", PI[GetTopThree()][pNames]), PlayerTextDrawSetString(i,Race[4][i], stringer);
+        PlayerTextDrawSetString(i,Race[7][i], PI[i][pNames]);
+        format(stringer, 50, "Point: ~w~%d/52", PlayerScore{i});
+        PlayerTextDrawSetString(i,Race[6][i], stringer);
+        format(stringer, 30, "Racers: ~w~%d/40", PlayersInRace{0});
+        PlayerTextDrawSetString(i,Race[5][i], stringer);
+        for ( new s = 0 ; s != 10 ; s ++ ) PlayerTextDrawShow(i, Race[s][i]);
+        GameTextForPlayer(i, "~p~ START!", 3000, 4);
+        TogglePlayerControllable(i, true);
+        SetPlayerRaceCheckpoint(i, 0, los_santos_race[typeRace][0][0], los_santos_race[typeRace][0][1], los_santos_race[typeRace][0][2], los_santos_race[typeRace][0+1][0], los_santos_race[typeRace][0+1][1], los_santos_race[typeRace][0+1][2], 10.0);
+    }
+    return 1;
+}
+publics: SecondStartedRaces()
+{
+    RaceStarting[1] --;
+    if(RaceStarting[1] <= 1) return StartedRaces(), RaceStarting[1] = 0;
+    foreach(new i: RacersList) {
+        if(RaceStarting[1] < 10) {
+            format(stringer, 10, "~g~%d", RaceStarting[1]);
+            GameTextForPlayer(i, stringer, 1000, 4);
+        }
+        if(RaceStarting[1] == 10) {
+            DisablePlayerRaceCheckpoint(i);
+            TogglePlayerControllable(i, false);
+            new position = PlayerPosition{i};
+            SetPPos(i, spawn_car[typeRace][position][0], spawn_car[typeRace][position][1], spawn_car[typeRace][position][2]);
+            SetPVarInt(i,"race_check",_:CreateVehicle(GetPVarInt(i,"rVehicle"),spawn_car[typeRace][position][0],spawn_car[typeRace][position][1],spawn_car[typeRace][position][2],spawn_car[typeRace][position][3],GetPVarInt(i,"rColor"),0,7600,0));
+            zavodis[i] = 1;
+            SetVehicleData(GetPVarInt(i,"race_check"), V_FUEL, 100);
+            LinkVehicleToInterior(GetPVarInt(i,"race_check"),0);
+            SetVehicleVirtualWorld(GetPVarInt(i,"race_check"),1);
+            SetPlayerInteriorEx(i,0);
+            SetPlayerVirtualWorldEx(i,1);
+            SetVehicleParamsEx(GetPVarInt(i,"race_check"),VEHICLE_PARAMS_ON,VEHICLE_PARAMS_ON,alarm,doors,bonnet,boot,objective);
+            PutPlayerInVeh(i, GetPVarInt(i,"race_check"), 0);
+            DeletePVar(i,"rColor");
+            DeletePVar(i,"rVehicle");
+        }
+    }
+    SetTimer("SecondStartedRaces", 1100, false);
+    return 1;
+}
+stock GetTopOne()
+{
+    new temp = 0, ids = -1;
+    foreach(new i: RacersList)
+    {
+        if (i != -1 && PlayerScore {i} > temp)
+        {
+            temp = PlayerScore {i};
+            ids = i;
+        }
+    }
+    return ids;
+}
+stock GetTopTwo()
+{
+    new temp = 0, ids = -1;
+    foreach(new i: RacersList)
+    {
+        if (i != -1 && PlayerScore {i} > temp && (i != GetTopOne()))
+        {
+            temp = PlayerScore {i};
+            ids = i;
+        }
+    }
+    return ids;
+}
+stock GetTopThree()
+{
+    new temp = 0, ids = -1;
+    foreach(new i: RacersList)
+    {
+        if (i != -1 && PlayerScore {i} > temp && (i != GetTopOne()) && (i != GetTopTwo()))
+        {
+            temp = PlayerScore {i};
+            ids = i;
+        }
+    }
+    return ids;
+}
+stock NextSelfie(playerid)
+{
+    if(!GetPVarInt(playerid, "Selfie")) return 1;
+    GetPlayerPos(playerid,posCam[playerid][0],posCam[playerid][1],posCam[playerid][2]);
+    if(GetPVarInt(playerid, "selfie_knopka") == 1)
+    {
+        static Float: n1X, Float: n1Y;
+        n1X = posCam[playerid][0] + Radius * floatcos(90.0, degrees);
+        n1Y = posCam[playerid][1] + Radius * floatsin(90.0, degrees);
+        SetPVarInt(playerid, "selfie_knopka", 2);
+        SetPlayerCameraPos(playerid, n1X, n1Y, posCam[playerid][2] + Height);
+        SetPlayerCameraLookAt(playerid, posCam[playerid][0],posCam[playerid][1],posCam[playerid][2]+1);
+        SetPlayerFacingAngle(playerid, Degree[playerid] - 0.0);
+    }
+    else if(GetPVarInt(playerid, "selfie_knopka") == 2)
+    {
+        static Float: n1X, Float: n1Y;
+        n1X = posCam[playerid][0] + Radius * floatcos(0.0, degrees);
+        n1Y = posCam[playerid][1] + Radius * floatsin(0.0, degrees);
+        SetPVarInt(playerid, "selfie_knopka", 3);
+        SetPlayerCameraPos(playerid, n1X, n1Y, posCam[playerid][2] + Height);
+        SetPlayerCameraLookAt(playerid, posCam[playerid][0],posCam[playerid][1],posCam[playerid][2]+1);
+        SetPlayerFacingAngle(playerid, Degree[playerid] - 90.0);
+    }
+    else if(GetPVarInt(playerid, "selfie_knopka") == 3)
+    {
+        static Float: n1X, Float: n1Y;
+        n1X = posCam[playerid][0] + Radius * floatcos(270.0, degrees);
+        n1Y = posCam[playerid][1] + Radius * floatsin(270.0, degrees);
+        SetPVarInt(playerid, "selfie_knopka", 4);
+        SetPlayerCameraPos(playerid, n1X, n1Y, posCam[playerid][2] + Height);
+        SetPlayerCameraLookAt(playerid, posCam[playerid][0],posCam[playerid][1],posCam[playerid][2]+1);
+        SetPlayerFacingAngle(playerid, Degree[playerid] - 180.0);
+    }
+    else if(GetPVarInt(playerid, "selfie_knopka") == 4)
+    {
+        static Float: n1X, Float: n1Y;
+        n1X = posCam[playerid][0] + Radius * floatcos(180.0, degrees);
+        n1Y = posCam[playerid][1] + Radius * floatsin(180.0, degrees);
+        SetPVarInt(playerid, "selfie_knopka", 1);
+        SetPlayerCameraPos(playerid, n1X, n1Y, posCam[playerid][2] + Height);
+        SetPlayerCameraLookAt(playerid, posCam[playerid][0],posCam[playerid][1],posCam[playerid][2]+1);
+        SetPlayerFacingAngle(playerid, Degree[playerid] - 270.0);
+    }
+    // SetPlayerAttachedObject(playerid, 0, 18868, 6, 0.06, 0.01, 0.08, 180.0, 90.0, 0.0);
+    FIXES_ApplyAnimation(playerid, "PED", "gang_gunstand", 4.1, 1, 1, 1, 1, 1, 1);
+    return 1;
+}
+
+stock ShowTuneShowPlayerDialog(playerid)
+{
+	ShowPlayerDialog(playerid, D_ATUNE, DIALOG_STYLE_LIST, !""SERVER"Автосервис {afafaf}[Тюнинг]", !"1. Перекрасить элементы\n2. Установить нитро\n3. Винилы\n4. Неон\n5. Страбоскопы", !"Далее", !"Выехать");
+    return 1;
+}
+/*
+stock AddTune(vehicleid, car_id)
+{
+    if(g_ownable_car[vehicleid][OC_TUNING][0] != -1) ChangeVehiclePaintjob(car_id, g_ownable_car[vehicleid][OC_TUNING][0]);
+    for(new i = 1; i <= 14; i++) if(g_ownable_car[vehicleid][OC_TUNING][i] != 0) AddVehicleComponent(car_id, g_ownable_car[vehicleid][OC_TUNING][i]);
+    return 1;
+}
+*/
+stock DeleteVehicleTune(playerid, carnumber, sql = 0)
+{
+    new car_id = GetVehicleData(carnumber, V_ACTION_ID);
+    if(g_ownable_car[car_id][OC_TUNING][0] != -1)
+    {
+        ChangeVehiclePaintjob(GetPlayerOwnableCar(playerid), 3);
+        g_ownable_car[car_id][OC_TUNING][0] = -1;
+    }
+    for(new i = 1; i <= 14; i++)
+    {
+        if(g_ownable_car[car_id][OC_TUNING][i] != 0)
+        {
+            RemoveVehicleComponent(GetPlayerOwnableCar(playerid), g_ownable_car[car_id][OC_TUNING][i]);
+            g_ownable_car[car_id][OC_TUNING][i] = 0;
+        }
+    }
+
+    if(sql)
+    {
+        format(stringer, sizeof(stringer), "UPDATE `ownable_cars` SET `tuning` = '-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0' WHERE `id` = '%d'",g_ownable_car[car_id][OC_SQL_ID]);
+        mysql_function_query(connects, stringer, false, "", "");
+    }
+
+    return 1;
+
+}
+stock SaveVehicleTuning(playerid)
+{
+    new index = GetPlayerOwnableCar(playerid);
+
+    new car_id = GetVehicleData(index, V_ACTION_ID);
+    new tunning[150];
+    format(tunning, sizeof(tunning), "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+    g_ownable_car[car_id][OC_TUNING][0], g_ownable_car[car_id][OC_TUNING][1], g_ownable_car[car_id][OC_TUNING][2],
+    g_ownable_car[car_id][OC_TUNING][3], g_ownable_car[car_id][OC_TUNING][4], g_ownable_car[car_id][OC_TUNING][5],
+    g_ownable_car[car_id][OC_TUNING][6], g_ownable_car[car_id][OC_TUNING][7], g_ownable_car[car_id][OC_TUNING][8],
+    g_ownable_car[car_id][OC_TUNING][9], g_ownable_car[car_id][OC_TUNING][10], g_ownable_car[car_id][OC_TUNING][11],
+    g_ownable_car[car_id][OC_TUNING][12], g_ownable_car[car_id][OC_TUNING][13], g_ownable_car[car_id][OC_TUNING][13],
+    g_ownable_car[car_id][OC_TUNING][14]);
+    format(stringer, sizeof(stringer), "UPDATE `ownable_cars` SET `tuning` = '%s' WHERE `id` = '%d'",tunning,g_ownable_car[car_id][OC_SQL_ID]);
+    print(stringer);
+    return mysql_function_query(connects, stringer, false, "", "");
+}
+
+stock StartedBase()
+{
+    BaseStarting[1] = 1;
+    foreach(new i: BaseList) {
+        SetPPos(i, 377.6851,-161.1450,3366.3403);
+        SetPlayerFacingAngle(i, 179.1788);
+        SetPlayerInteriorEx(i, 0);
+        SetPlayerVirtualWorldEx(i, 0);
+        GiveWeapon(i, 46, 1);
+        SetPVarInt(i, "BasePopitka", 3);
+        GameTextForPlayer(i, "~p~ START!", 3000, 4);
+        SendClientMessage(i, COLOR_GREEN, "Вам дается 3 попытки на прыжок, если Вы умираете отнимается одна попытка!");
+    }
+    return 1;
+}
+stock SetPlayerToFacePlayer(playerid, targetid)
+{
+    new
+Float:pX,
+Float:pY,
+Float:pZ,
+Float:X,
+Float:Y,
+Float:Z,
+Float:ang;
+    if(!IsPlayerConnected(playerid) || !IsPlayerConnected(targetid)) return 0;
+    GetPlayerPos(targetid, X, Y, Z);
+    GetPlayerPos(playerid, pX, pY, pZ);
+    if( Y > pY ) ang = (-acos((X - pX) / floatsqroot((X - pX)*(X - pX) + (Y - pY)*(Y - pY))) - 90.0);
+    else if( Y < pY && X < pX ) ang = (acos((X - pX) / floatsqroot((X - pX)*(X - pX) + (Y - pY)*(Y - pY))) - 450.0);
+    else if( Y < pY ) ang = (acos((X - pX) / floatsqroot((X - pX)*(X - pX) + (Y - pY)*(Y - pY))) - 90.0);
+    if(X > pX) ang = (floatabs(floatabs(ang) + 180.0));
+    else ang = (floatabs(ang) - 180.0);
+    SetPlayerFacingAngle(playerid, ang);
+    return 0;
+}
+forward FollowToPlayer(playerid);
+public FollowToPlayer(playerid)
+{
+    if(FollowBy[playerid] == INVALID_PLAYER_ID)
+    {
+        KillTimer(TimerForPlayer[playerid]);
+        TimerForPlayer[playerid] = INVALID_PLAYER_ID;
+        SendClientMessage(playerid, 0xFFFF00AA, "С вашем конвоем произошла беда, вы свободны !");
+        TogglePlayerControllable(playerid, 1);
+        ClearAnimations(playerid);
+        return 1;
+    }
+    else if(IsPlayerInAnyVehicle(playerid))
+    {
+        KillTimer(TimerForPlayer[playerid]);
+        SetPVarInt(FollowBy[playerid], "TempFollowBy", -1);
+        TimerForPlayer[playerid] = INVALID_PLAYER_ID;
+        SendClientMessage(FollowBy[playerid], 0xFFFF00AA, "Ваш заключенный в машине. Конвой остановлен");
+        FollowBy[playerid] = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else if(GetPlayerVirtualWorld(FollowBy[playerid]) != GetPlayerVirtualWorld(playerid) || GetPlayerInterior(FollowBy[playerid]) != GetPlayerInterior(playerid))
+    {
+        new Float: X, Float: Y, Float: Z;
+        GetPlayerPos(FollowBy[playerid], X, Y, Z);
+        SetPPos(playerid, X, Y, Z);
+        SetPlayerVirtualWorldEx(playerid, GetPlayerVirtualWorld(FollowBy[playerid]));
+        SetPlayerInteriorEx(playerid, GetPlayerInterior(FollowBy[playerid]));
+        TogglePlayerControllable(playerid, 0);
+        return 1;
+    }
+    new Float: GotDistance = GetDistanceBetweenPlayers(playerid, FollowBy[playerid]);
+    if(GotDistance < 0.95)
+    {
+        TogglePlayerControllable(playerid, 0);
+        SetPlayerToFacePlayer(playerid, FollowBy[playerid]);
+        return 1;
+    }
+    else if(GotDistance > 10.0)
+    {
+        SetPVarInt(FollowBy[playerid], "TempFollowBy", -1);
+        SendClientMessage(FollowBy[playerid], 0xFFFF00AA, "Вы ушли слишком далеко. Конвой закончен");
+        SendClientMessage(playerid, 0xFFFF00AA, "Ваш конвой ушел слишком далеко, вы свободны.");
+        TogglePlayerControllable(playerid, 1);
+        ClearAnimations(playerid);
+        KillTimer(TimerForPlayer[playerid]);
+        TimerForPlayer[playerid] = INVALID_PLAYER_ID;
+        FollowBy[playerid] = INVALID_PLAYER_ID;
+        return 1;
+    }
+    else
+    {
+        TogglePlayerControllable(playerid, 1);
+        SetPlayerToFacePlayer(playerid, FollowBy[playerid]);
+        FIXES_ApplyAnimation(playerid, "ped", "WALK_civi", 6.0, 1, 1, 1, 1, 0, 1);
+    }
+    return 1;
+}
+publics: UpdateSpeedometr(playerid)
+{
+    if(IsPlayerDriver(playerid))
+    {
+        new vehicleid = GetPlayerVehicleID(playerid);
+        new fmt_str[550];
+        if(!IsABike(vehicleid))
+        {
+            new	Float: fuels = GetVehicleData(vehicleid, V_FUEL);
+
+            GetVehicleParamsEx(vehicleid,engine,lights,alarm,doors,bonnet,boot,objective);
+
+            SetVehicleParamsInit(vehicleid);
+            SetVehicleData(vehicleid, V_MILEAGE, GetVehicleData(vehicleid, V_MILEAGE) + (float(SpeedVehicle(vehicleid)) / 3600.0));
+
+            if(GetVehicleParamEx(vehicleid, V_ENGINE) == VEHICLE_PARAM_ON)
+            {
+                if(fuels <= 0.0)
+                {
+                    SetVehicleParam(vehicleid, V_ENGINE, false);
+                    GameTextForPlayer(playerid, "~r~no fuel", 4000, 1);
+                }
+                else SetVehicleData(vehicleid, V_FUEL, fuels - 0.05);
+            }
+
+            format(fmt_str, sizeof fmt_str, "%03d", SpeedVehicle(vehicleid) * 3);
+            PlayerTextDrawSetString(playerid, sr_carspeed_PTD[playerid][5], fmt_str);
+
+            format(fmt_str, sizeof fmt_str, "%dL", floatround(GetVehicleData(vehicleid, V_FUEL)));
+            PlayerTextDrawSetString(playerid, sr_carspeed_PTD[playerid][3], fmt_str);
+
+            PlayerTextDrawDestroy(playerid, sr_carspeed_PTD[playerid][12]);
+            sr_carspeed_PTD[playerid][12] = PlayerText:-1;
+
+            PlayerTextDrawDestroy(playerid, sr_carspeed_PTD[playerid][13]);
+            sr_carspeed_PTD[playerid][13] = PlayerText:-1;
+
+            PlayerTextDrawDestroy(playerid, sr_carspeed_PTD[playerid][14]);
+            sr_carspeed_PTD[playerid][14] = PlayerText:-1;
+
+            PlayerTextDrawHide(playerid, sr_carspeed_PTD[playerid][12]);
+            PlayerTextDrawHide(playerid, sr_carspeed_PTD[playerid][13]);
+            PlayerTextDrawHide(playerid, sr_carspeed_PTD[playerid][14]);
+
+            if(engine) sr_carspeed_PTD[playerid][12] = CreatePlayerTextDraw(playerid, 350.6000, 348.6354, "sr_carspeed:sr_engine_use"); // индикатор двигателя
+            else sr_carspeed_PTD[playerid][12] = CreatePlayerTextDraw(playerid, 350.6000, 348.6354, "sr_carspeed:sr_engine"); // индикатор двигателя
+            PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][12], 11.0000, 14.0000);
+            PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][12], 1);
+            PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][12], -1);
+            PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][12], 255);
+            PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][12], 4);
+            PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][12], 0);
+            PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][12], 0);
+
+            if(lights) sr_carspeed_PTD[playerid][13] = CreatePlayerTextDraw(playerid, 350.6000, 369.0440, "sr_carspeed:sr_light_use"); // индикатор фар
+            else sr_carspeed_PTD[playerid][13] = CreatePlayerTextDraw(playerid, 350.6000, 369.0440, "sr_carspeed:sr_light"); // индикатор фар
+            PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][13], 11.0000, 14.0000);
+            PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][13], 1);
+            PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][13], -1);
+            PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][13], 255);
+            PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][13], 4);
+            PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][13], 0);
+            PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][13], 0);
+
+            if(doors) sr_carspeed_PTD[playerid][14] = CreatePlayerTextDraw(playerid, 350.6000, 391.4440, "sr_carspeed:sr_door_use"); // индикатор дверей
+            else sr_carspeed_PTD[playerid][14] = CreatePlayerTextDraw(playerid, 350.6000, 391.4440, "sr_carspeed:sr_door"); // индикатор дверей
+            PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][14], 11.0000, 14.0000);
+            PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][14], 1);
+            PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][14], -1);
+            PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][14], 255);
+            PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][14], 4);
+            PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][14], 0);
+            PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][14], 0);
+
+            PlayerTextDrawShow(playerid, sr_carspeed_PTD[playerid][12]);
+            PlayerTextDrawShow(playerid, sr_carspeed_PTD[playerid][13]);
+            PlayerTextDrawShow(playerid, sr_carspeed_PTD[playerid][14]);
+        }
+    }
+
+    return 1;
+}
+stock ShowMyDrugs(playerid) {
+    stringer[0] = 0;
+    for(new i = 0; i < 7; i++) {
+        format(stringer, sizeof stringer, "%s[%d] %s: %d грамм\n", stringer, i+1, Drugs[i+1][d_name], PI[playerid][p_drugs][i]);
+    }
+    return SPD(playerid, 589, DIALOG_STYLE_LIST, "Ваши наркотические вещества", stringer, "Выбрать","Выйти");
+}
+stock TransferDrugsPlayer(playerid, users, itemID, quantity) {
+    if(!IsPlayerConnected(users) || users == INVALID_PLAYER_ID || users == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Игрока не существует или это Вы");
+    if(itemID < 0 || itemID > 6) return SendClientMessage(playerid, COLOR_GREY, "Ид наркотика не может быть меньше 0, и больше 6.");
+    if(!ProxDetectorS(3.0, playerid, users)) return SendClientMessage(playerid, COLOR_GREY, "Этого игрока рядом с вами нет !");
+    if(PI[playerid][p_drugs][itemID] == 0) return SendClientMessage(playerid, COLOR_WHITE, "* Этот слот пуст!");
+    if(PI[playerid][p_drugs][itemID] < quantity || quantity < 0)
+    return SendClientMessage(playerid, COLOR_WHITE, "* Вы ввели неверное количество!");
+
+    PI[playerid][p_drugs][itemID]   -= quantity;
+    PI[users][p_drugs][itemID]      += quantity;
+
+    if(PI[playerid][p_drugs][itemID] <= 0) {
+        PI[playerid][p_drugs][itemID] = 0;
+    }
+    format(stringer1, sizeof(stringer1), "%s передает пакетик в руки к %s.",PI[playerid][pNames],PI[users][pNames]);
+    ProxDetector(playerid, 30.0, COLOR_YELLOW, stringer1);
+    format(stringer1, sizeof stringer1, "Вы передали %d грамм %s.", quantity, Drugs[itemID+1][d_name]);
+    SendClientMessage(playerid, COLOR_YELLOW, stringer1);
+    format(stringer1, sizeof stringer1, "Вам передали %d грамм %s.", quantity, Drugs[itemID+1][d_name]);
+    SendClientMessage(users, COLOR_YELLOW, stringer1);
+    return 1;
+}
+
+stock DropDrugPlayer(playerid, itemID, quantity) {
+    if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) return SendClientMessage(playerid, COLOR_WHITE, "* Нельзя выбросить наркотики находясь в машине!");
+    if(itemID < 0 || itemID > 6) return SendClientMessage(playerid, COLOR_GREY, "Ид наркотика не может быть меньше 0, и больше 6.");
+    if(PI[playerid][p_drugs][itemID] < 1) return SendClientMessage(playerid, COLOR_WHITE, "* Этот слот пуст!");
+    if(quantity < 1 || quantity > PI[playerid][p_drugs][itemID]) {
+        format(stringer1, sizeof stringer1, "* Количество должно быть не меньше 1-го и не больше %d!", PI[playerid][p_drugs][itemID]);
+        SendClientMessage(playerid, COLOR_WHITE, stringer1);
+        return 1;
+    }
+
+    new ids = -1;
+    for(new i; i < MAX_DROPPED_ITEMS; i++) {
+        if(DItems[i][dr_id] == 0) {
+            ids = i;
+            break;
+        }
+    }
+    if(ids == -1) return SendClientMessage(playerid, COLOR_WHITE, "* Не удалось выбросить наркотики, попробуйте позднее!");
+
+    PI[playerid][p_drugs][itemID] -= quantity;
+
+    format(stringer1, sizeof(stringer1), "* Вы выбросили наркотики %s с %d граммами на землю.", Drugs[itemID+1][d_name], quantity);
+    SendClientMessage(playerid, -1, stringer1);
+
+    DItems[ids][dr_type]        = 2;
+    DItems[ids][dr_item_id]         = itemID;
+    DItems[ids][dr_quantity]    = quantity;
+    DItems[ids][dr_time]        = gettime();
+    DItems[ids][dr_by]          = PI[playerid][pID];
+    DItems[ids][dr_obj]             = Drugs[itemID+1][d_obj];
+    GetPlayerPos(playerid, DItems[ids][dr_x], DItems[ids][dr_y], DItems[ids][dr_z]);
+    DItems[ids][dr_z]           = DItems[ids][dr_z]-1;
+    DItems[ids][dr_rx]          = 0.0;
+    DItems[ids][dr_ry]          = 0.0;
+    GetPlayerFacingAngle(playerid, DItems[ids][dr_rz]);
+    DItems[ids][dr_int]             = GetPlayerInterior(playerid);
+    DItems[ids][dr_vw]          = GetPlayerVirtualWorld(playerid);
+   // DItems[ids][dr_object] = CreateDynamicObject(DItems[ids][dr_obj], DItems[ids][dr_x], DItems[ids][dr_y], DItems[ids][dr_z], DItems[ids][dr_rx], DItems[ids][dr_ry], DItems[ids][dr_rz], DItems[ids][dr_vw], DItems[ids][dr_int], -1);
+
+    mysql_format(connects, mysql_query_, sizeof(mysql_query_), "INSERT INTO `dropped_items` (storage_type, `item_id`, `item_quantity`, `drop_time`, `dropped_by`, `obj`, `pos_x`, `pos_y`, `pos_z`, `pos_rx`, `pos_ry`, `pos_rz`, `pos_a`, `vw`, `int`) VALUES ('%d', '%d', '%d', '%d', '%d', '%d', '%f', '%f', '%f', '%f', '%f', '%f', '%f', '%d', '%d')",
+    DItems[ids][dr_type], DItems[ids][dr_item_id], DItems[ids][dr_quantity], DItems[ids][dr_time], DItems[ids][dr_by], DItems[ids][dr_obj], DItems[ids][dr_x], DItems[ids][dr_y], DItems[ids][dr_z], DItems[ids][dr_rx], DItems[ids][dr_ry], DItems[ids][dr_rz], DItems[ids][dr_a], DItems[ids][dr_vw], DItems[ids][dr_int]);
+    mysql_function_query(connects, mysql_query_, true, "GetDroppedItemId","i", ids);
+    return 1;
+}
+stock FreeSlotForPlant() {
+    for(new i = 0; i < MAX_PLANTS; i++) {
+        if(PlantInfo[i][plant_id] == 0)
+        return i;
+    }
+    return -1;
+}
+
+publics: LoadPlantsCallBack() {
+    if(!cache_num_rows()) {
+        printf("[Кусты] Не удалось загрузить кусты!");
+        return 1;
+    }
+    for(new i=0; i < cache_num_rows(); i++) {
+        PlantInfo[i][plant_id] = cache_get_field_content_int(i, "id");
+        PlantInfo[i][plant_status] = cache_get_field_content_int(i, "item_id");
+        PlantInfo[i][plant_prog] = cache_get_field_content_int(i, "item_quantity");
+        PlantInfo[i][plant_owner] = cache_get_field_content_int(i, "dropped_by");
+        PlantInfo[i][plant_pos][0] = cache_get_field_content_float(i, "pos_x");
+        PlantInfo[i][plant_pos][1] = cache_get_field_content_float(i, "pos_y");
+        PlantInfo[i][plant_pos][2] = cache_get_field_content_float(i, "pos_z");
+        PlantInfo[i][plant_vw] = cache_get_field_content_int(i, "vw");
+        PlantInfo[i][plant_int] = cache_get_field_content_int(i, "int");
+
+     //   PlantInfo[i][plant_obj_id] = CreateDynamicObject(19473, PlantInfo[i][plant_pos][0], PlantInfo[i][plant_pos][1], PlantInfo[i][plant_pos][2]-1.2, 0.0, 0.0, 0.0, PlantInfo[i][plant_vw], PlantInfo[i][plant_int], -1, 150);
+        CreatePlant3DText(i);
+    }
+    printf("[Кусты]: %d кустов успешно загружено.", cache_num_rows());
+    return 1;
+}
+
+stock CreatePlant3DText(o) {
+    if(PlantInfo[o][plant_status] == 1)
+    PlantInfo[o][plant_3DText] = CreateDynamic3DTextLabel("Куст ещё не созрел!", COLOR_WHITE, PlantInfo[o][plant_pos][0], PlantInfo[o][plant_pos][1], PlantInfo[o][plant_pos][2], 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, PlantInfo[o][plant_vw], PlantInfo[o][plant_int], -1, 10.0+1.0);
+    else if(PlantInfo[o][plant_status] == 2)
+    PlantInfo[o][plant_3DText] = CreateDynamic3DTextLabel("Куст созрел!", COLOR_WHITE, PlantInfo[o][plant_pos][0], PlantInfo[o][plant_pos][1], PlantInfo[o][plant_pos][2], 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, PlantInfo[o][plant_vw], PlantInfo[o][plant_int], -1, 10.0+1.0);
+
+    foreach(new j : Player)
+    if(IsPlayerInRangeOfPoint(j, 10.0, PlantInfo[o][plant_pos][0], PlantInfo[o][plant_pos][1], PlantInfo[o][plant_pos][2]))
+    Streamer_Update(j);
+
+    return 1;
+}
+stock CreatePlant(ids) {
+    mysql_format(connects, mysql_query_, sizeof mysql_query_, "INSERT INTO `dropped_items` (`storage_type`, `item_id`, `item_quantity`, `dropped_by`, `pos_x`, `pos_y`, `pos_z`, `vw`, `int`) VALUES ('%d', '%d', '%d', '%d', '%f', '%f', '%f', '%d', '%d')",
+    11, PlantInfo[ids][plant_status], PlantInfo[ids][plant_prog], PlantInfo[ids][plant_owner], PlantInfo[ids][plant_pos][0], PlantInfo[ids][plant_pos][1], PlantInfo[ids][plant_pos][2], PlantInfo[ids][plant_vw], PlantInfo[ids][plant_int]);
+    mysql_function_query(connects, mysql_query_, true, "GetPlantIdCallBack","i", ids);
+    return 1;
+}
+publics: GetPlantIdCallBack(ids) {
+    PlantInfo[ids][plant_id] = cache_insert_id();
+    return 1;
+}
+stock DeletePlants(ids) {
+    mysql_format(connects, mysql_query_, sizeof mysql_query_, "DELETE FROM `dropped_items` WHERE `id` = '%d' LIMIT 1", PlantInfo[ids][plant_id]);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    PlantInfo[ids][plant_id] = 0;
+    return 1;
+}
+stock OnPlayerUseDrug(playerid, itemID, count) {
+    if(TeamPain[playerid] != 0 && StartPaintBall == 2) return SendClientMessage(playerid,COLOR_GREY,"Использовать наркотики на PaintBall запрещено.");
+    if(PI[playerid][p_drugs][itemID] < count) return SendClientMessage(playerid, COLOR_WHITE, "* У вас нет столько наркотика!");
+    if(itemID == ITEM_TYPE_SEED) return pc_cmd_plant(playerid);
+    if(PI[playerid][pDrugtime] > gettime()) return  SendClientMessage(playerid,COLOR_GRAD1,""error"Нельзя слишком часто употреблять наркотик!");
+    PI[playerid][p_drugs][itemID] -= count;
+    SetPVarInt(playerid, "NarkCount", GetPVarInt(playerid, "NarkCount") + count);
+    if(GetPVarInt(playerid, "NarkCount") > 10)
+    {
+        SendClientMessage(playerid, COLOR_GREY, "* Ваш организм не выдержал. Вы умерли ;(");
+        SetPlayerHealth(playerid, 0);
+        return 1;
+    }
+    new Float:health;
+    GetPlayerHealth(playerid, health);
+    new rand = random(30);
+    switch(rand) {
+    case 0..20: {
+            if(health + rand*count <= 100) SetPlayerHealth(playerid, health + rand*count);
+            else SetPlayerHealth(playerid, 100.0);
+        }
+    case 21..29: {
+            SendClientMessage(playerid, COLOR_GREY, "* Что-то не так. Вас сейчас стошнит.");
+            return FIXES_ApplyAnimation(playerid, "FOOD", "EAT_Vomit_P", 3.0, 0, 0, 0, 0, 0), AntiSbiv[playerid] = gettime() + 10;
+        }
+    }
+    switch(itemID) {
+    case ITEM_TYPE_COCAINE: {
+            PI[playerid][pNarcoLomka] += random(4)+2;
+            SetPlayerDrugEffects(playerid, {eGreenWeather}, 1);
+        }
+    case ITEM_TYPE_CRACK: {
+            PI[playerid][pNarcoLomka] += random(4)+4;
+            SetPlayerDrugEffects(playerid, {eGreenWeather}, 1);
+        }
+    case ITEM_TYPE_HEROINE: {
+            PI[playerid][pNarcoLomka] += random(4)+4;
+            SetPlayerDrugEffects(playerid, {eRedWindWeather}, 1);
+        }
+    case ITEM_TYPE_LSD: {
+            PI[playerid][pNarcoLomka] += random(4)+2;
+            SetPlayerDrugEffects(playerid, {eRedWeather, eRandomObjects, eSounds}, 5);
+        }
+    case ITEM_TYPE_MET: {
+            PI[playerid][pNarcoLomka] += random(4)+4;
+            SetPlayerDrugEffects(playerid, {eRandomObjects, eGreenWeather}, 1);
+        }
+    case ITEM_TYPE_MARIJUANNA: {
+            PI[playerid][pNarcoLomka] += random(4)+6;
+            SetPlayerDrugEffects(playerid, {eDrunk}, 1);
+            SetPlayerSpecialAction(playerid, 26);
+        }
+    default: return 1;
+    }
+    SendMes(playerid, COLOR_YELLOW, "* Вы приняли %d грамм %s.", count,Drugs[itemID+1][d_name]);
+    format(stringer1, sizeof(stringer1), "%s употребил(а) наркотик", PI[playerid][pNames]);
+    ProxDetector(playerid, 10.0, COLOR_PURPLE, stringer1);
+    DeletePVar(playerid, "CurrentPlayerDrug");
+    // PI[playerid][PlayerOnDrugs] = gettime() + 100;
+    //PI[playerid][pDrugtime] = gettime() + 10;
+    if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT && PlayerCuffed[playerid] == 0) FIXES_ApplyAnimation(playerid,"SMOKING","M_smk_drag",4.1,0,0,0,0,0,1), AntiSbiv[playerid] = gettime()+10;
+    return 1;
+}
+
+stock SetPlayerDrugEffects(playerid, effects[], eCount) {
+    new hour, minute, second;
+    gettime(hour, minute, second);
+    for(new i = 0; i < eCount; i++) {
+        switch(effects[i]) {
+        case eDrunk: SetPlayerDrunkLevel(playerid, 4000);
+        case eGreenWeather: {
+                if(hour >= 6 && hour <= 21) SetPlayerTime(playerid, 12, 0);
+                else SetPlayerTime(playerid, 5, 0);
+                SetPlayerWeather(playerid, -1);
+            }
+        case eRedWeather: {
+                if(hour >= 6 && hour <= 21) SetPlayerTime(playerid, 12, 0);
+                else SetPlayerTime(playerid, 19, 0);
+                SetPlayerWeather(playerid, -14);
+            }
+        case eCrazyWeather: SetPlayerWeather(playerid, -30);
+        case eRedWindWeather: {
+                if(hour >= 6 && hour <= 21) SetPlayerTime(playerid, 12, 0);
+                else SetPlayerTime(playerid, 22, 0);
+                SetPlayerWeather(playerid, -66);
+            }
+        case eDynamicWeather: {
+                SetPlayerTime(playerid, 23,0);
+                SetPlayerWeather(playerid, 1337);
+            }
+        case eRandomObjects: SetPVarInt(playerid, "DrugsObj", 5);
+        case eSounds: SetPVarInt(playerid, "DrugsSound", 5);
+        }
+    }
+    return;
+}
+
+stock ClearPlayerDrugEffects(playerid) {
+    new hour, minute, second;
+    gettime(hour, minute, second);
+    SetPlayerTime(playerid, hour, minute);
+    SetPlayerWeather(playerid, 4);
+    //  PI[playerid][PlayerOnDrugs] = 0;
+    DeletePVar(playerid, "CurrentPlayerDrug");
+    DeletePVar(playerid, "DrugsSound");
+    DeletePVar(playerid, "DrugsObj");
+    DeletePVar(playerid, "NarkCount");
+    SetPlayerDrunkLevel(playerid, 0);
+    if(GetPVarInt(playerid, "DrugsObjID")) {
+        DestroyDynamicObject(GetPVarInt(playerid, "DrugsObjID"));
+        DeletePVar(playerid, "DrugsObjID");
+        DeletePVar(playerid, "DeleteObj");
+    }
+    return 1;
+}
+
+stock DrugsTimer(playerid)
+{
+
+    return 1;
+}
+
+stock SideEffects(playerid) {
+    if(PI[playerid][pNarcoLomka] < 1000) return 1;
+    SendClientMessage(playerid, COLOR_WHITE, "* Вы имеете наркотическую зависимость. Чтобы избежать побочных эффектов, вы можете:");
+    SendClientMessage(playerid, COLOR_WHITE, " - Принять наркотик.");
+    SendClientMessage(playerid, COLOR_WHITE, " - Отправиться на лечение в больницу.");
+    SendClientMessage(playerid, COLOR_WHITE, " - Просто переждать побочный эффект.");
+    if(PI[playerid][pNarcoLomka] >= 1000 && PI[playerid][pNarcoLomka] < 2000) {
+        SetPVarInt(playerid, "CurrentPlayerDrug", 200);
+    }
+    if(PI[playerid][pNarcoLomka] >= 2000 && PI[playerid][pNarcoLomka] < 3000) {
+        SetPVarInt(playerid, "CurrentPlayerDrug", 400);
+    }
+    if(PI[playerid][pNarcoLomka] >= 3000) {
+        SetPVarInt(playerid, "CurrentPlayerDrug", 600);
+    }
+    SetPlayerDrunkLevel(playerid, 4000);
+    new rands = random(3);
+    switch(rands) {
+    case 0 : SetPlayerWeather(playerid, -1);
+    case 1 : SetPlayerWeather(playerid, -14);
+    case 2 : SetPlayerWeather(playerid, -30);
+    }
+    return 1;
+}
+
+stock PlantTimer() {
+    for(new o = 0; o < MAX_PLANTS; o++) {
+        if(PlantInfo[o][plant_id] > 0) {
+            if(PlantInfo[o][plant_status] == 1) {
+                if(PlantInfo[o][plant_prog] >= 10800) { // 1800
+                    PlantInfo[o][plant_prog] = 10800;
+                    format(stringer1, sizeof(stringer1),"Куст созрел!");
+                    UpdateDynamic3DTextLabelText(PlantInfo[o][plant_3DText], COLOR_WHITE, stringer1);
+                    PlantInfo[o][plant_status] = 2;
+                }
+                else PlantInfo[o][plant_prog] += 1;
+            }
+        }
+    }
+    return 1;
+}
+publics: LoadDItems() {
+    if(!cache_num_rows()) {
+        printf("[Обьекты] Не удалось загрузить обьекты!");
+        return 1;
+    }
+    for(new i=0; i < cache_num_rows(); i++) {
+        DItems[i][dr_id] = cache_get_field_content_int(i, "id");
+        DItems[i][dr_type] = cache_get_field_content_int(i, "storage_type");
+        DItems[i][dr_item_id] = cache_get_field_content_int(i, "item_id");
+        DItems[i][dr_quantity] = cache_get_field_content_int(i, "item_quantity");
+        DItems[i][dr_time] = cache_get_field_content_int(i, "drop_time");
+        DItems[i][dr_by] = cache_get_field_content_int(i, "dropped_by");
+        DItems[i][dr_obj] = cache_get_field_content_int(i, "obj");
+        DItems[i][dr_x] = cache_get_field_content_float(i, "pos_x");
+        DItems[i][dr_y] = cache_get_field_content_float(i, "pos_y");
+        DItems[i][dr_z] = cache_get_field_content_float(i, "pos_z");
+        DItems[i][dr_rx] = cache_get_field_content_float(i, "pos_rx");
+        DItems[i][dr_ry] = cache_get_field_content_float(i, "pos_ry");
+        DItems[i][dr_rz] = cache_get_field_content_float(i, "pos_rz");
+        DItems[i][dr_a] = cache_get_field_content_float(i, "pos_a");
+        DItems[i][dr_vw] = cache_get_field_content_int(i, "vw");
+        DItems[i][dr_int] = cache_get_field_content_int(i, "int");
+
+     //   DItems[i][dr_object] = CreateDynamicObject(DItems[i][dr_obj], DItems[i][dr_x], DItems[i][dr_y], DItems[i][dr_z], DItems[i][dr_rx], DItems[i][dr_ry], DItems[i][dr_rz], DItems[i][dr_vw], DItems[i][dr_int], -1);
+    }
+    printf("[Обьекты]: %d обьектов успешно загружено.", cache_num_rows());
+    return 1;
+}
+publics: TotalBankCeck() {
+    TOTALBANK = cache_get_row_count();
+    return 1;
+}
+
+publics: GetDroppedItemId(slot) {
+    DItems[slot][dr_id] = cache_insert_id();
+    return 1;
+}
+stock SetVehicleIndicator(vehicleid, leftindicator=0, rightindicator=0)
+{
+    if(!leftindicator & !rightindicator) return 0;
+    new Float:_vX[2], Float:_vY[2], Float:_vZ[2];
+    GetVehicleModelInfo(GetVehicleModel(vehicleid), VEHICLE_MODEL_INFO_SIZE, _vX[0], _vY[0], _vZ[0]);
+    if(rightindicator)
+    {
+     //   Indicators_xqz[vehicleid][0] = CreateDynamicObject(19294, 0, 0, 0,0,0,0);
+      //  AttachDynamicObjectToVehicle(Indicators_xqz[vehicleid][0], vehicleid,  _vX[0]/2.23, _vY[0]/2.23, 0.1 ,0,0,0);
+     //   Indicators_xqz[vehicleid][1] = CreateDynamicObject(19294, 0, 0, 0,0,0,0);
+      //  AttachDynamicObjectToVehicle(Indicators_xqz[vehicleid][1], vehicleid,  _vX[0]/2.23, -_vY[0]/2.23, 0.1 ,0,0,0);
+    }
+    if(leftindicator)
+    {
+       // Indicators_xqz[vehicleid][2] = CreateDynamicObject(19294, 0, 0, 0,0,0,0);
+       // AttachDynamicObjectToVehicle(Indicators_xqz[vehicleid][2], vehicleid,  -_vX[0]/2.23, _vY[0]/2.23, 0.1 ,0,0,0);
+       // Indicators_xqz[vehicleid][3] = CreateDynamicObject(19294, 0, 0, 0,0,0,0);
+       // AttachDynamicObjectToVehicle(Indicators_xqz[vehicleid][3], vehicleid,  -_vX[0]/2.23, -_vY[0]/2.23, 0.1 ,0,0,0);
+    }
+    return 1;
+}
+stock SetPlayerInteriorEx(playerid, inter) {
+    SetPlayerInterior(playerid, inter);
+    PI[playerid][pInt] = inter;
+}
+stock SetPlayerVirtualWorldEx(playerid, virt) {
+    SetPlayerVirtualWorld(playerid, virt);
+    PI[playerid][pVirt] = virt;
+    return 1;
+}
+stock TogglePlayerSpectatingEx(playerid, start) {
+    SetPVarInt(playerid, "AntiSpecKick", 5);
+    if(!start) SetPlayerSpawn(playerid);
+    TogglePlayerSpectating(playerid, start);
+}
+stock DialogBank(playerid) {
+    return SPD(playerid,3248,DIALOG_STYLE_LIST,"{4F94CD}Список операций","1. Информация о счёте\n2. История операций\n\
+    3. Снять деньги\n4. Положить деньги\n5. Перевести на другой счёт\n6. Переименовать счёт\n7. Изменить {4F94CD}PIN-код", "Выбрать", "Выйти");
+}
+stock Transfer_Log(playerid, number, act, summa, trasfer_number, nick[]) {
+    mysql_format(connects,mysql_query_,sizeof(mysql_query_),"INSERT INTO `"TABLE_LOGBANK"` (`account`,`number`,`act`,`summa`,`trasfer_number`,`nick`,`date`) VALUES ('%i','%i','%i','%i','%i','%s', NOW( ))",PI[playerid][pID], number, act, summa, trasfer_number, nick);
+    return mysql_function_query(connects, mysql_query_, false, "", "");
+}
+stock Admin_Log(playerid, type[], name[], date) {
+    mysql_format(connects,mysql_query_,sizeof(mysql_query_),"INSERT INTO `grp_log` (`admin_name`, `type`, `name`, `date`) VALUES ('%s','%e','%s','%d')",PI[playerid][pNames], type, name, date);
+    return mysql_function_query(connects, mysql_query_, false, "", "");
+}
+stock Capcha(playerid) {
+    for(new i = 0, cindex = 0; i < sizeof(Captcha); i++)
+    {
+        if(i == 0)
+        {
+            Captcha[i] = CreatePlayerTextDraw(playerid, 321.0, 80.0, "SECURITY CODE:");
+            PlayerTextDrawUseBox(playerid, Captcha[i], 1);
+            PlayerTextDrawBoxColor(playerid, Captcha[i], 0x000000AA);
+            PlayerTextDrawTextSize(playerid, Captcha[i], 800.0, 200.0);
+        }
+        if(i == 1)
+        {
+            Captcha[i] = CreatePlayerTextDraw(playerid, 321.0, 303.0, "-----");
+            PlayerTextDrawUseBox(playerid, Captcha[i], 1);
+            PlayerTextDrawBoxColor(playerid, Captcha[i], 0x000000AA);
+            PlayerTextDrawTextSize(playerid, Captcha[i], 800.0, 200.0);
+        }
+        if(i > 1)
+        {
+            format(stringer, sizeof(stringer), "%c", TextArray[i - 2]);
+            if(i >= 2) Captcha[i] = CreatePlayerTextDraw(playerid, 280.0 + (41.0 * cindex), 130.0, stringer);
+            if(i == 5) cindex = 0, Captcha[i] = CreatePlayerTextDraw(playerid, 280.0 + (41.0 * cindex), 171.0, stringer);
+            if(i > 5) Captcha[i] = CreatePlayerTextDraw(playerid, 280.0 + (41.0 * cindex), 171.0, stringer);
+            if(i == 8) cindex = 0, Captcha[i] = CreatePlayerTextDraw(playerid, 280.0 + (41.0 * cindex), 212.0, stringer);
+            if(i > 8) Captcha[i] = CreatePlayerTextDraw(playerid, 280.0 + (41.0 * cindex), 212.0, stringer);
+            if(i == 11) cindex = 0, Captcha[i] = CreatePlayerTextDraw(playerid, 321.5 + (41.0 * cindex), 253.0, stringer);
+            if(i > 11) Captcha[i] = CreatePlayerTextDraw(playerid, 321.5 + (41.0 * cindex), 253.0, stringer);
+            PlayerTextDrawUseBox(playerid, Captcha[i], 1);
+            PlayerTextDrawBoxColor(playerid, Captcha[i], 102);
+            PlayerTextDrawTextSize(playerid, Captcha[i], 29.0, 29.0);
+            PlayerTextDrawSetSelectable(playerid, Captcha[i], 1);
+            cindex++;
+        }
+        PlayerTextDrawLetterSize(playerid, Captcha[i], 0.50, 2.5);
+        PlayerTextDrawAlignment(playerid, Captcha[i], 2);
+        PlayerTextDrawSetOutline(playerid, Captcha[i], 1);
+        PlayerTextDrawShow(playerid, Captcha[i]);
+        SelectTextDraw(playerid, 0xFDE39DFF);
+        SetPVarInt(playerid, "SelectTextDraw", 2);
+    }
+    return 1;
+}
+StopStream(playerid) {
+    DeletePVar(playerid, "pAudioStream");
+    return StopAudioStreamForPlayer(playerid);
+}
+PlayStream(playerid, url[], Float:posX = 0.0, Float:posY = 0.0, Float:posZ = 0.0, Float:distance = 50.0, usepos = 0) {
+    if(GetPVarType(playerid, #pAudioStream)) StopAudioStreamForPlayer(playerid);
+    else SetPVarInt(playerid, #pAudioStream, 1);
+    return PlayAudioStreamForPlayer(playerid, url, posX, posY, posZ, distance, usepos);
+}
+forward Color1Pu(playerid);
+public Color1Pu(playerid)
+{
+    if(PI[playerid][pClist] == 0) return 1;
+    SetPlayerColor(playerid, 0xcecb31FF);
+    PI[playerid][P_CLIST_TIMER] =  SetTimerEx ( "Color2Pu" , 2500 , false, "i" , playerid);
+    return 1;
+}
+
+forward Color2Pu(playerid);
+public Color2Pu(playerid)
+{
+    SetPlayerColor(playerid, 0xff0000FF);

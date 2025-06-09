@@ -1,0 +1,1000 @@
+                                HouseInfo[h][hRobhouse] = false;
+                                i++;
+                            }
+                        }
+                        mysql_function_query(connects, "UPDATE `"TABLE_ACCOUNT"` SET `pPhousekey` = 255 WHERE `pPhousekey` != 255", true, "", "d", playerid);
+                        SendMes(playerid, COLOR_GRAD1, "Все занятые дома были проданы. Всего их было %d штук",i), i=0;
+                    }
+                    return 1;
+                }
+                else if(listitem == 1)
+                {
+                    if(PI[playerid][pAdmin] < 13) return 1;
+                    SPD(playerid, 2725, DIALOG_STYLE_LIST, "Интеръер", "Деревянный\nМрамор\nДворец\nОбычный стиль\nОбычное дерево\nОбычный инт\nКрасное деверо\nОбычный3\nБомж стиль", "Ок", "закрыть");
+                    return 1;
+                }
+                else if(listitem == 2)
+                {
+                    if(PI[playerid][pAdmin] < 13) return 1;
+                    for(new h = 0; h < sizeof(HouseInfo); h++)
+                    {
+                        if(HouseInfo[h][hValue] <= 3000000 && HouseInfo[h][hValue] > 0) { HouseInfo[h][hKlass] = 0; }
+                        else if(HouseInfo[h][hValue] <= 5000000 && HouseInfo[h][hValue] > 3000000) { HouseInfo[h][hKlass] = 1; }
+                        else if(HouseInfo[h][hValue] <= 20000000 && HouseInfo[h][hValue] > 5000000) { HouseInfo[h][hKlass] = 2; }
+                        else if(HouseInfo[h][hValue] <= 50000000 && HouseInfo[h][hValue] > 20000000) { HouseInfo[h][hKlass] = 3; }
+                        else if(HouseInfo[h][hValue] < 100000000 && HouseInfo[h][hValue] > 50000000) { HouseInfo[h][hKlass] = 4; }
+                    }
+                    SendClientMessage(playerid, COLOR_GRAD1, "По классам дома распределены");
+                }
+                else if(listitem == 3)
+                 {
+                     if(PI[playerid][pAdmin] < 13) return 1;
+                     for(new h = 0; h < sizeof(HouseInfo); h++)
+                     {
+                         new cens = HouseInfo[h][hKlass];
+                         if(cens == 0 )//Бомж стиль
+                         {
+                             HouseInfo[h][hInt] = 10;
+                             HouseInfo[h][hExitx] = 2261.3103;
+                             HouseInfo[h][hExity]= -1136.4467;
+                             HouseInfo[h][hExitz] =1050.6328;
+                         }
+                         if(cens == 1 ) // +
+                         {
+                             HouseInfo[h][hInt] = 2;
+                             HouseInfo[h][hExitx] = 1053.6908;
+                             HouseInfo[h][hExity]= 318.3946;
+                             HouseInfo[h][hExitz] = 3122.1328;
+                         }
+                         if(cens == 2 ) // +
+                         {
+                             HouseInfo[h][hInt] = 10;
+                             HouseInfo[h][hExitx] = 1234.6211;
+                             HouseInfo[h][hExity]= 1544.6343;
+                             HouseInfo[h][hExitz] =1007.4466;
+                         }
+                         if(cens == 3 ) // +
+                         {
+                             HouseInfo[h][hInt] = 4;
+                             HouseInfo[h][hExitx] = 2833.7058;
+                             HouseInfo[h][hExity]= -2176.6875;
+                             HouseInfo[h][hExitz] = 1013.1213;
+                         }
+                         if(cens == 4 ) // +
+                         {
+                             HouseInfo[h][hInt] = 2;
+                             HouseInfo[h][hExitx] = 1382.183472;
+                             HouseInfo[h][hExity]= -12.855491;
+                             HouseInfo[h][hExitz] =1000.921875;
+                         }
+                         SendClientMessage(playerid, COLOR_GRAD1, "По интеръерам дома распределены");
+                     }
+                 }
+
+                else if(listitem == 4)
+                {
+                    if(PI[playerid][pAdmin] < 13) return 1;
+                    for(new h = 0; h < sizeof(HouseInfo); h++)
+                    {
+                        if(HouseInfo[h][hValue] <=90000)
+                        {
+                            HouseInfo[h][hValue] = 300000;
+                            SendClientMessage(playerid, COLOR_GRAD1, "Выполнено!");
+                        }
+                    }
+                }
+                else if(listitem == 5)
+                {
+                    if(PI[playerid][pAdmin] < 13) return 1;
+                    for(new h = 0; h < sizeof(HouseInfo); h++)
+                    {
+                        if(HouseInfo[h][hKlass] == 0) HouseInfo[h][hValue] = 250000, HouseInfo[h][hInt] = 1, HouseInfo[h][hExitx] = 223.1219, HouseInfo[h][hExity] = 1287.841, HouseInfo[h][hExitz] = 1082.141;
+                        else if(HouseInfo[h][hKlass] == 1) HouseInfo[h][hValue] = 450000, HouseInfo[h][hInt] = 6, HouseInfo[h][hExitx] = 2196.4541, HouseInfo[h][hExity] = -1204.37097, HouseInfo[h][hExitz] = 1049.0229;
+                        else if(HouseInfo[h][hKlass] == 2) HouseInfo[h][hValue] = 1500000, HouseInfo[h][hInt] = 10, HouseInfo[h][hExitx] = 2270.0449, HouseInfo[h][hExity] = -1210.494, HouseInfo[h][hExitz] = 1047.563;
+                        else if(HouseInfo[h][hKlass] == 3) HouseInfo[h][hValue] = 2500000, HouseInfo[h][hInt] = 9, HouseInfo[h][hExitx] = 2317.8068, HouseInfo[h][hExity] = -1026.3859, HouseInfo[h][hExitz] = 1050.2180;
+                        else if(HouseInfo[h][hKlass] == 4) HouseInfo[h][hValue] = 4500000, HouseInfo[h][hInt] = 5, HouseInfo[h][hExitx] = 140.2610, HouseInfo[h][hExity] = 1366.435, HouseInfo[h][hExitz] = 1083.859;
+                        else HouseInfo[h][hValue] = 4500000, HouseInfo[h][hInt] = 5, HouseInfo[h][hExitx] = 140.2610, HouseInfo[h][hExity] = 1366.435, HouseInfo[h][hExitz] = 1083.859;
+                    }
+                    SendClientMessage(playerid, COLOR_GRAD1, "По ценам распределены");
+                }
+            }
+            else { pc_cmd_apanel(playerid, ""); return 1; }
+        }
+    case 2725:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: SPD(playerid, 2726, DIALOG_STYLE_INPUT, "Деревянный стиль","Введите номер Вашего дома", "Ок", "Отмена");
+                case 1: SPD(playerid, 2727, DIALOG_STYLE_INPUT, "Мрамор","Введите номер Вашего дома", "Ок", "Отмена");
+                case 2: SPD(playerid, 2728, DIALOG_STYLE_INPUT, "Дворец","Введите номер Вашего дома", "Ок", "Отмена");
+                case 3: SPD(playerid, 2729, DIALOG_STYLE_INPUT, "Обычный стиль","Введите номер Вашего дома", "Ок", "Отмена");
+                case 4: SPD(playerid, 2730, DIALOG_STYLE_INPUT, "Обычное дерево","Введите номер Вашего дома", "Ок", "Отмена");
+                case 5: SPD(playerid, 2731, DIALOG_STYLE_INPUT, "Обычный стиль - 2","Введите номер Вашего дома", "Ок", "Отмена");
+                case 6: SPD(playerid, 2732, DIALOG_STYLE_INPUT, "Красное дерево","Введите номер Вашего дома", "Ок", "Отмена");
+                case 7: SPD(playerid, 2733, DIALOG_STYLE_INPUT, "Обычный стиль - 3","Введите номер Вашего дома", "Ок", "Отмена");
+                case 8: SPD(playerid, 2734, DIALOG_STYLE_INPUT, "Дешевый стиль стиль","Введите номер Вашего дома", "Ок", "Отмена");
+                }
+
+            }
+            else { return 1; }
+        }
+        //--------------
+    case 2726:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 4;
+                HouseInfo[house][hExitx] = 665.142;
+                HouseInfo[house][hExity]= 29.297;
+                HouseInfo[house][hExitz] = 1024.19;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+                return 1;
+            }
+            else { return 1; }
+        }
+    case 2727:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 6;
+                HouseInfo[house][hExitx] = 234.1571;
+                HouseInfo[house][hExity]= 1064.9569;
+                HouseInfo[house][hExitz] = 1084.2104;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+                return 1;
+            }
+            else { return 1; }
+        }
+    case 2728:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 5;
+                HouseInfo[house][hExitx] = 140.9131;
+                HouseInfo[house][hExity]= 1367.9713;
+                HouseInfo[house][hExitz] = 1083.8621;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            else { return 1; }
+        }
+    case 2729:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 5;
+                HouseInfo[house][hExitx] = 22.7783;
+                HouseInfo[house][hExity]= 1404.9600;
+                HouseInfo[house][hExitz] = 1084.4297;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            else { return 1; }
+        }
+    case 2730:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 10;
+                HouseInfo[house][hExitx] = 665.142;
+                HouseInfo[house][hExity]= 29.297;
+                HouseInfo[house][hExitz] =1024.19;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            else { return 1; }
+        }
+    case 2731:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 4;
+                HouseInfo[house][hExitx] = 261.0654;
+                HouseInfo[house][hExity]= 1284.2991;
+                HouseInfo[house][hExitz] =1381.0;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            else { return 1; }
+        }
+    case 2732:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 2;
+                HouseInfo[house][hExitx] = -0.057;
+                HouseInfo[house][hExity]= 1496.16;
+                HouseInfo[house][hExitz] =1381.0;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            return 1;
+        }
+    case 2733:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 2;
+                HouseInfo[house][hExitx] = 2903.32;
+                HouseInfo[house][hExity]= 1498.09;
+                HouseInfo[house][hExitz] =2001.0;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            else { return 1; }
+        }
+    case 2734:
+        {
+            if(response)
+            {
+                new house = strval(inputtext);
+                HouseInfo[house][hInt] = 10;
+                HouseInfo[house][hExitx] = 2903.32;
+                HouseInfo[house][hExity]= 1498.09;
+                HouseInfo[house][hExitz] =2001.0;
+                SendClientMessage(playerid, COLOR_GREEN, "Интеръер дома изменен");
+            }
+            return 1;
+        }
+    case 1994:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: SetPlayerSpecialAction (playerid, SPECIAL_ACTION_DANCE1);
+            case 1: SetPlayerSpecialAction (playerid, SPECIAL_ACTION_DANCE2);
+            case 2: SetPlayerSpecialAction (playerid, SPECIAL_ACTION_DANCE3);
+            case 3: SetPlayerSpecialAction (playerid, SPECIAL_ACTION_DANCE4);
+            case 4: GoAnim(playerid,"DEALER","Dealer_idle",4.1,1,0,0,0,0,0);
+            case 5: FIXES_ApplyAnimation(playerid,"DEALER","Dealer_Deal",4.1,0,0,0,0,0,1);
+            case 6: FIXES_ApplyAnimation(playerid,"FOOD","Eat_Burger",4.1,0,0,0,0,0,1);
+            case 7: FIXES_ApplyAnimation(playerid,"PAULNMAC","Piss_in",4.1,0,0,0,0,0,1);
+            case 8: GoAnim(playerid,"PARK","Tai_Chi_Loop",4.1,1,0,0,0,0,0);
+            case 9: GoAnim(playerid,"CRACK","Crckidle1",4.1,1,0,0,0,0,0);
+            case 10: GoAnim(playerid,"CRACK","Crckidle2",4.1,1,0,0,0,0,0);
+            case 11: GoAnim(playerid,"CRACK","Crckidle4",4.1,1,0,0,0,0,0);
+            case 12: FIXES_ApplyAnimation(playerid,"SWEET","sweet_ass_slap",4.1,0,0,0,0,0,1);
+            case 13: GoAnim(playerid,"SPRAYCAN","spraycan_full",4.1,1,0,0,0,0,0);
+            case 14: GoAnim(playerid,"GRAFFITI","spraycan_fire",4.1,1,0,0,0,0,0);
+            case 15: GoAnim(playerid,"SMOKING","M_smkstnd_loop",4.1,1,0,0,0,0,0);
+            case 16: GoAnim(playerid,"SHOP","ROB_Loop_Threat",4.1,1,0,0,0,0,0);
+            case 17: FIXES_ApplyAnimation(playerid,"SHOP","ROB_shifty",4.1,0,0,0,0,0,1);
+            case 18: GoAnim(playerid,"SHOP","SHP_Rob_HandsUP",4.1,1,0,0,0,0,0);
+            case 19: GoAnim(playerid,"RYDER","Ryd_Beckon_02",4.1,1,0,0,0,0,0);
+            case 20: FIXES_ApplyAnimation(playerid,"RIOT","Riot_Angry",4.1,0,0,0,0,0,0);
+            case 21: GoAnim(playerid,"RIOT","Riot_Angry_B",4.1,1,0,0,0,0,0);
+            case 22: GoAnim(playerid,"RIOT","Riot_Chant",4.1,1,1,0,0,0,0);
+            case 23: GoAnim(playerid,"RIOT","Riot_Punches",4.1,1,0,0,0,0,0);
+            case 24: FIXES_ApplyAnimation(playerid,"PED","fucku",4.1,0,0,0,0,0,1);
+            case 25: FIXES_ApplyAnimation(playerid,"BAR","dnK_StndM_loop",4.1,0,0,0,0,0,1);
+            case 26: GoAnim(playerid,"BD_FIRE","BD_Panic_03",4.1,1,0,0,0,0,0);
+            case 27: GoAnim(playerid,"BD_FIRE","M_smklean_loop",4.1,1,0,0,0,0,0);
+            case 28: GoAnim(playerid,"BEACH","bather",4.1,1,0,0,0,0,0);
+            case 29: GoAnim(playerid,"BEACH","Lay_Bac_loop",4.1,1,0,0,0,0,0);
+            case 30: GoAnim(playerid,"BEACH","Parksit_w_loop",4.1,1,0,0,0,0,0);
+            case 31: GoAnim(playerid,"BEACH","Sitnwait_Loop_W",4.1,1,0,0,0,0,0);
+            case 32: GoAnim(playerid,"BEACH","Parksit_M_loop",4.1,1,0,0,0,0,0);
+            case 33: GoAnim(playerid,"benchpress","gym_bp_celebrate",4.1,1,0,0,0,0,0);
+            case 34: GoAnim(playerid,"LOWRIDER","Rap_C_loop",4.1,1,0,0,0,0,0);
+            case 35: GoAnim(playerid,"LOWRIDER","Rap_B_loop",4.1,1,0,0,0,0,0);
+            case 36: GoAnim(playerid,"LOWRIDER","Rap_A_loop",4.1,1,0,0,0,0,0);
+            case 37: GoAnim(playerid,"BSKTBALL","BBALL_idleloop",4.1,1,0,0,0,0,0);
+            case 38: FIXES_ApplyAnimation(playerid,"BSKTBALL","BBALL_Jump_Shot",4.1,0,0,0,0,0,1);
+            case 39: FIXES_ApplyAnimation(playerid,"BSKTBALL","BBALL_pickup",4.1,0,0,0,0,0,1);
+            case 40: FIXES_ApplyAnimation(playerid,"CAMERA","camstnd_cmon",4.1,0,0,0,0,0,1);
+            case 41: GoAnim(playerid,"CAR","fixn_car_loop",4.1,1,0,0,0,0,0);
+            case 42: GoAnim(playerid,"CAR_CHAT","car_talkm_loop",4.1,1,0,0,0,0,0);
+            case 43: GoAnim(playerid,"COP_AMBIENT","coplook_loop",4.1,1,0,0,0,0,0);
+            case 44: GoAnim(playerid,"CRACK","Bbalbat_Idle_01",4.1,1,0,0,0,0,0);
+            case 45: GoAnim(playerid,"CRACK","Bbalbat_Idle_02",4.1,1,0,0,0,0,0);
+            case 46: FIXES_ApplyAnimation(playerid,"GHANDS","gsign1",4.1,0,0,0,0,0,1);
+            case 47: FIXES_ApplyAnimation(playerid,"GHANDS","gsign2",4.1,0,0,0,0,0,1);
+            case 48: FIXES_ApplyAnimation(playerid,"GHANDS","gsign3",4.1,0,0,0,0,0,1);
+            case 49: FIXES_ApplyAnimation(playerid,"GHANDS","gsign4",4.1,0,0,0,0,0,1);
+            case 50: FIXES_ApplyAnimation(playerid,"GHANDS","gsign5",4.1,0,0,0,0,0,1);
+            case 51: FIXES_ApplyAnimation(playerid,"GHANDS","gsign1LH",4.1,0,0,0,0,0,1);
+            case 52: FIXES_ApplyAnimation(playerid,"GHANDS","gsign2LH",4.1,0,0,0,0,0,1);
+            case 53: FIXES_ApplyAnimation(playerid,"GHANDS","gsign4LH",4.1,0,0,0,0,0,1);
+            case 54: GoAnim(playerid,"GRAVEYARD","mrnF_loop",4.1,1,0,0,0,0,0);
+            case 55: GoAnim(playerid,"MISC","seat_LR",4.1,1,0,0,0,0,0);
+            case 56: GoAnim(playerid,"INT_HOUSE","Lou_in",4.1,0,1,1,1,1,0);
+            case 57: GoAnim(playerid,"INT_OFFICE","OFF_sit_Bored_loop",4.1,1,0,0,0,0,0);
+            case 58: GoAnim(playerid,"LOWRIDER","F_smklean_loop",4.1,1,0,0,0,0,0);
+            case 59: FIXES_ApplyAnimation(playerid,"MEDIC","CPR",4.1,0,0,0,0,0,1);
+            case 60: GoAnim(playerid,"GANGS","LeanIn",4.1,0,1,1,1,1,0);
+            case 61: GoAnim(playerid,"MISC","plyrlean_loop",4.1,1,0,0,0,0,0);
+            case 62: FIXES_ApplyAnimation(playerid,"MISC","plyr_shkhead",4.1,0,0,0,0,0,1);
+            case 63: GoAnim(playerid,"MISC","scratchballs_01",4.1,1,0,0,0,0,0);
+            }
+            SetPVarInt(playerid,"Animation", 1);
+            return 1;
+        }
+    case 28:
+        {
+            if(!response) return 1;
+            if(IsACop(playerid)) return 1;
+            if(PI[playerid][pJob] == 1) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Вы уже трудоустроены на работу воришки.");
+            PI[playerid][pJob] = 1;
+            SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Поздравляю! Вы приняты на работу воришки.");
+            return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Для того, чтобы ограбить игрока, используйте команду: /rob.");
+        }
+    case 432:
+        {
+            if(!response) return PI[playerid][pLocal] = 255;
+            switch(random(2))
+            {
+            case 0:
+                {
+                    switch(random(2))
+                    {
+                    case 0: SendClientMessage(playerid, -1,"Мудренный замок! Тебе не взломать дом!");
+                    case 1:
+                        {
+                            SetPlayerExtra(playerid, INVALID_PLAYER_ID, 2, "Ограбление дома");
+                            SendClientMessage(playerid, -1,"В доме сработала сигнализация! Вали отсюда подальше!");
+                        }
+                    }
+                    PI[playerid][pLocal] = 255;
+                    return 1;
+                }
+            case 1:
+                {
+                    new i = PI[playerid][pLocal];
+                    SendClientMessage(playerid, -1,"Вы вскрыли дом! Потарапливайся!");
+                    SendClientMessage(playerid, -1,"Обчистить дом - /robhouse");
+                    SetPlayerInteriorEx(playerid,HouseInfo[i][hInt]);
+                    SetPlayerVirtualWorldEx(playerid,i+50);
+                    SetPPos(playerid,HouseInfo[i][hExitx],HouseInfo[i][hExity],HouseInfo[i][hExitz]);
+                    return 1;
+                }
+            }
+        }
+    case 10075:
+        {
+            if(response)
+            {
+                for(new i = 0; i < sizeof(HouseInfo); i++)
+                {
+                    if(IsPlayerInRangeOfPoint(playerid, 3.0,HouseInfo[i][hEntrancex], HouseInfo[i][hEntrancey], HouseInfo[i][hEntrancez]))
+                    {
+                        if(strcmp(PI[playerid][pNames], HouseInfo[i][hOwner], true) == 0 && PI[playerid][pPhousekey] == 255) PI[playerid][pPhousekey] = i;
+                        if(PI[playerid][pPhousekey] == i || HouseInfo[i][hLock] == 0 || PI[playerid][pHomez] == i || IsACop(playerid) || IsAArm(playerid) || PI[playerid][pAdmin] >= 3)
+                        {
+                            SetPlayerInteriorEx(playerid,HouseInfo[i][hInt]);
+                            SetPlayerVirtualWorldEx(playerid,i+50);
+                            SetPPos(playerid,HouseInfo[i][hExitx],HouseInfo[i][hExity],HouseInfo[i][hExitz]);
+                            TogglePlayerControllable(playerid, false);
+                            SetTimerEx("UnFreez", 2900, 0, "d", playerid);
+
+
+                            PI[playerid][pLocal] = i;
+                            return 1;
+                        }
+                        else if(ISAMAFIA(playerid))
+                        {
+                            PI[playerid][pLocal] = i;
+                            if(PI[playerid][Texts][1] == 0) SPD(playerid, 432, DIALOG_STYLE_MSGBOX,"Предложение","Эй, хочешь вскрыть этот дом?","Дерзнуть","Свалить");
+                            else return SendClientMessage(playerid, COLOR_GREY, "Вы уже засветились в ограблении дома, подождите еще чуть-чуть.");
+                            return 1;
+                        }
+                        else GameTextForPlayer(playerid, "~r~Locked", 5000, 1);
+                    }
+                }
+            }
+            else return 1;
+        }
+    case 10026:
+        {
+            if(!response) return 1;
+            for(new h = 0; h < sizeof(HouseInfo); h++)
+            {
+                if(IsPlayerInRangeOfPoint(playerid, 2.0, HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez]) && HouseInfo[h][hOwned] == 0)
+                {
+                    if(PI[playerid][pPhousekey] != 255 && strcmp(PI[playerid][pNames], HouseInfo[PI[playerid][pPhousekey]][hOwner], true) == 0)
+                    {
+                        SendClientMessage(playerid, COLOR_RED, "У вас уже есть дом (/hmenu > 2. Продать дом государству)");
+                        return 1;
+                    }
+                    if(PI[playerid][pCash] < HouseInfo[h][hValue]) return SendClientMessage(playerid, COLOR_WHITE, "У вас нет столько денег на руках!");
+                    PI[playerid][pPhousekey] = h;
+                    HouseInfo[h][hOwned] = 1;
+                    HouseInfo[h][hHel] = 0;
+                    HouseInfo[h][hTakings] = 1500;
+                    strmid(HouseInfo[h][hOwner], PI[playerid][pNames], 0, strlen(PI[playerid][pNames]), 255);
+                    PI[playerid][pCash] -= HouseInfo[h][hValue];
+                    SetPlayerInteriorEx(playerid,HouseInfo[h][hInt]);
+                    SetPPos(playerid,HouseInfo[h][hExitx],HouseInfo[h][hExity],HouseInfo[h][hExitz]);
+                    PI[playerid][pLocal] = h;
+                    SetPlayerVirtualWorldEx(playerid,h+50);
+                    PlayerPlaySound(playerid, 31204, 0.0, 0.0, 0.0);
+                    SendClientMessage(playerid, COLOR_WHITE, "Поздравляем! Вы купили дом");
+                    SendClientMessage(playerid, 0x66cc00ff, "Используйте {2c9cce}/hmenu{66cc00}, чтобы узнать о возможностях");
+                    GameTextForPlayer(playerid, "~b~~h~Welcome ~g~to~n~~y~new ~w~home", 5000, 1);
+                    ShowPlayerDialog(playerid, 228, DIALOG_STYLE_MSGBOX, ""SERVER"Новый дом", "{FFFFFF}Вам нужно заплатить за дом в ближайшем отделении банка {dba002}(/gps)", "ОК", "");
+                    SaveHouse(h);
+                    new house = PI[playerid][pPhousekey];
+
+                    SetTimerEx("freezeplayer", 3000, false, "i", playerid);
+                    TogglePlayerControllable(playerid,0);
+                    BuyHouse(house);
+                    UpdatePlayerData(playerid, "pPhousekey", PI[playerid][pPhousekey]);
+                    return 1;
+                }
+            }
+        }
+    case 3326:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: SPD(playerid, 3327, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "Мммм, я тебя долго ждала, выбирай", "Далее", "Пока"), SetPVarInt(playerid, "Narko", 1);
+            case 1: SPD(playerid, 3327, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "Хммм... и что-же у тебя?", "Ответить", "Пока"), SetPVarInt(playerid, "Narko", 2);
+            case 2: SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "Еще раз ошибешься, тот бугай у входа тебя трахнет.", "Уйти", "");
+            }
+            return 1;
+        }
+    case 3327: {
+            if(response) return SPD(playerid, 3328, DIALOG_STYLE_LIST, "Диалог c наркобароном", "Семена\nКокаин\nКрэк\nГероин\nLSP\nМетанфентамин", "Выбрать", "Пока");
+            else if(GetPVarInt(playerid,"Narko")) DeletePVar(playerid,"Narko");
+        }
+    case 3328: {
+            if(!response) return 1;
+            SetPVarInt(playerid, "Vrach", listitem);
+            if(GetPVarInt(playerid,"Narko") == 1) SPD(playerid, 3329, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "Назови колличество в граммах, малыш", "Сказать", "Пока");
+            else if(GetPVarInt(playerid,"Narko") == 2) SPD(playerid, 3330, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "То, что нужно! Сколько ты готов продать!? За сколько?\n{00FFFF}(Введите колличество наркотика, и цену за один грамм через запятую. Например: 10,5)", "Сказать", "Пока");
+            return 1;
+        }
+    case 3329: {
+            if(!response) return 1;
+            new price, narkoid = GetPVarInt(playerid,"Vrach");
+            if(sscanf(inputtext, "i",price)) return SPD(playerid, 3329, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "Нононо... Мне нужна лишь цифра", "Сказать", "Пока");
+            if(price < 1 || price > 150) return SPD(playerid, 3329, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "Ты ложками его жрать собрался?", "Сказать", "Пока");
+            if(PI[playerid][pCash] < (pricelist*price)) return SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "По тебе видно, что ты нищий, пошел отсюда", "Уйти", "");
+            if(PI[playerid][p_drugs][narkoid] >= 100) return SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "Малыш, ходят слухи, что у тебя полно этого наркотика. Зачем тебе еще?", "Уйти", "");
+            PI[playerid][pCash] -=price*pricelist;
+            PI[playerid][p_drugs][narkoid] += price;
+            SendMes(playerid,0x6ab1ffaa,"Вы купили %d грамм наркотиков за %d руб.", price,price*pricelist);
+            DeletePVar(playerid,"Vrach");
+            return SPD(playerid, 3327, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "Ты мне нравишься... Что нибудь еще?", "Да", "Нет");
+        }
+    case 3330: {
+            if(!response) return 1;
+            new narko,price, narkoid = GetPVarInt(playerid,"Vrach");
+            if(sscanf(inputtext, "p<,>ii",narko,price)) return SPD(playerid, 3330, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "Назови колличество и цену за грамм, баран ты тупой!!!!\n{00FFFF}(Введите колличество наркотика, и цену за один грамм через запятую. Например: 10,5)", "Сказать", "Пока");
+            if(price < 1 || price > 50) return SPD(playerid, 3330, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "Чуваааак.. За такие деньги у тебя никто, никогда ничего не купит!\n{00FFFF}(Введите колличество наркотика, и цену за один грамм через запятую. Например: 10,5)", "Сказать", "Пока");
+            if(narko > PI[playerid][p_drugs][narkoid] || narko == 0) return SPD(playerid, 3330, DIALOG_STYLE_INPUT, "Диалог c наркобароном", "Видно же, что обманываешь.\n{00FFFF}(Введите колличество наркотика, и цену за один грамм через запятую. Например: 10,5)", "Сказать", "Пока");
+            PI[playerid][pCash] +=price*narko;
+            PI[playerid][p_drugs][narkoid] -= narko;
+            SendMes(playerid,0x6ab1ffaa,"Вы продали %d грамм наркотиков за %d руб.", narko,price*narko);
+            DeletePVar(playerid,"Vrach");
+            return SPD(playerid, 3327, DIALOG_STYLE_MSGBOX, "Диалог c наркобароном", "Что нибудь еще продать хочешь?", "Да", "Нет");
+        }
+    case 3321:
+        {
+            if(!response) return 1;
+            if(PI[playerid][pMedCard] == 1) return SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Я вас уже видел здесь. Зачем вам еще одна мед. карта?", "Пока", "");
+            switch(listitem)
+            {
+            case 0:
+                {
+                    new medic;
+                    foreach(Player,i)
+                    {
+                        if(PI[i][pMember] == 4 && PI[i][pRank] >= 6)
+                        {
+                            medic++;
+                            break;
+                        }
+                    }
+                    if(medic) return SPD(playerid, 3323, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Привет. Я тут не один, обратитесь к другому врачу.", "Ответить", "Пока"), SetPVarInt(playerid, "Vrach", 1);
+                    else return SPD(playerid, 3323, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Здарова, зачем тебе мед. книжка, малый?", "Ответить", "Пока"), SetPVarInt(playerid, "Vrach", 2);
+                }
+            case 1: SPD(playerid, 3323, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Успокойтесь, пожалуйста.", "Ответить", "Пока"), SetPVarInt(playerid, "Vrach", 3);
+            case 2: SPD(playerid, 3323, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Я таких как ты на зоне ломал, иди-ка лучше отсюда, а то охрану вызову.", "Ответить", "Пока"), SetPVarInt(playerid, "Vrach", 3);
+            case 3: SPD(playerid, 3323, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Это зависит от того, что ты можешь мне предложить.", "Ответить", "Пока"), SetPVarInt(playerid, "Vrach", 4);
+            case 4: SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Ну и ступайте отсюда.", "Закрыть", "");
+            }
+            return 1;
+        }
+    case 3323:
+        {
+            if(!response) return DeletePVar(playerid,"Vrach");
+            if(GetPVarInt(playerid,"Vrach") == 1) SPD(playerid,3322,DIALOG_STYLE_LIST, "Диалог с врачем Петей","Но, вы кажется, свободны\nТы хоть знаешь, кто я такой? Завтра вашу больницу снесут\nМожет, все же, можно договорится?\nЛадно, спасибо, всего доброго\nЭх, очень жаль...", "Сказать", "Отмена");
+            else if(GetPVarInt(playerid,"Vrach") == 2) SPD(playerid,3322,DIALOG_STYLE_LIST, "Диалог с врачем Петей","Не ваше дело\nПризывают в армию ;(\nМля, я откуда знаю, братки сказали, я сделал\nНе зли меня, падла\nБез мед. карты в наше время никак", "Сказать", "Отмена");
+            else if(GetPVarInt(playerid,"Vrach") == 3) SPD(playerid,3322,DIALOG_STYLE_LIST, "Диалог с врачем Петей","Извините меня. Я лучше пойду\nМожет, начнем наш разговор по новой?\nДа пошел ты\nТипа тебя кто-то слушатся будет?\nНу сука... Я вернусь с братками", "Сказать", "Отмена");
+            else if(GetPVarInt(playerid,"Vrach") == 4) SPD(playerid,3322,DIALOG_STYLE_LIST, "Диалог с врачем Петей","А чё тебе надо?\nГде это видано, что бы за это платиили?\n15000 руб., вас устроит?\nМне не жалко бабок, я в них ванну принимаю\nУ меня нет денег ;(", "Сказать", "Отмена");
+            return 1;
+        }
+    case 3322:
+        {
+            if(!response) return DeletePVar(playerid,"Vrach");
+            switch(listitem)
+            {
+            case 0:
+                {
+                    if(GetPVarInt(playerid,"Vrach") == 1) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "И что с этого? Не мешайте мне работать. Всего доброго", "Закрыть", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 2) SPD(playerid, 3324, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Ну... Дело и правда не моё. Только, это не бесплатно.", "Ответить", "Пока"), SetPVarInt(playerid, "WinVrach", 1);
+                    else if(GetPVarInt(playerid,"Vrach") == 3) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Ладно, иди-ка, и не возращайся лучше", "Ага(", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 4) SPD(playerid, 3324, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Деньги мне нужны. Чего ты такой тугодум?", "Ответить", "Пока");
+                }
+            case 1:
+                {
+                    if(GetPVarInt(playerid,"Vrach") == 1) SPD(playerid,3321,DIALOG_STYLE_LIST, "Джон: Притворюсь, что я этого не слышал.","Добрый день, где у вас можно получить мед. карту?\nТебе чего фраер, жить надоело?\nМне чего? Это тебе чего, падла\nУ тебя 5 секунд, что бы выписать мне мед. карту\nНет - нет, ничего", "Сказать", "Отмена");
+                    else if(GetPVarInt(playerid,"Vrach") == 2) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Армию? Нет, тогда не дам. Потом мне спасибо скажешь.", "Спасибо", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 3) SPD(playerid,3321,DIALOG_STYLE_LIST, "Джон: Может, начнем наш разговор по новой?","Добрый день, где у вас можно получить мед. карту?\nТебе чего фраер, жить надоело?\nМне чего? Это тебе чего, падла\nУ тебя 5 секунд, что бы выписать мне мед. карту\nНет - нет, ничего", "Сказать", "Отмена");
+                    else if(GetPVarInt(playerid,"Vrach") == 4) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Раз ты такой нудный, то и проваливай отсюда без мед. карты.", "Грустить", "");
+                }
+            case 2:
+                {
+                    if(GetPVarInt(playerid,"Vrach") == 1) SPD(playerid, 3324, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Если есть деньги, можно договорится даже со мной.", "Ответить", "Пока");
+                    else if(GetPVarInt(playerid,"Vrach") == 2) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Братки? Ты сука, бандит?", "Уйти", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 3) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Ты и иди, хамло", "Уйти", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 4) SPD(playerid, 3324, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Вполне устроит, если добавишь к ним 5000 руб..", "Ответить", "Закрыть");
+                }
+            case 3:
+                {
+                    if(GetPVarInt(playerid,"Vrach") == 1) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Добра вам. Никогда не видел в больнице таких вежливых людей.", "Пока", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 2) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Хамить будешь в другом месте, проваливай отсюда", "Грустить", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 3) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Ты сейчас не на своей территории, будь акуратен.", "(((", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 4) SPD(playerid, 3324, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Значит готовь '50.000' вечно зеленых.", "Ответить", "Закрыть");
+                }
+            case 4:
+                {
+                    if(GetPVarInt(playerid,"Vrach") == 1) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Мне тоже, иногда хочется надрать задницу многим кто со мной работает", "Ага", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 2) SPD(playerid, 3324, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Да, понимаю тебя. Сейчас выдам, только придется заплатить гос.пошлину", "Ответить", "Закрыть"), SetPVarInt(playerid, "WinVrach", 1);
+                    else if(GetPVarInt(playerid,"Vrach") == 3) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Будь аккуратнее, не знаешь что тебя ждет за углом.", "Ок", "");
+                    else if(GetPVarInt(playerid,"Vrach") == 4) SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Тогда жди других врачей, добрых, в халатиках.", "Пока", "");
+                }
+            }
+            DeletePVar(playerid,"Vrach");
+            return 1;
+        }
+    case 3324:
+        {
+            if(!response) return 1;
+            return SPD(playerid,3325,DIALOG_STYLE_LIST, "Диалог с врачем Петей","Отдать Пети 20000 руб.\nОтдать Пети 50000 руб.\nПотребовать мед. карту бесплатно\nУйти", "Сказать", "Отмена");
+        }
+    case 3325:
+        {
+            if(!response) return 1;
+            switch(listitem)
+            {
+            case 0: PI[playerid][pCash] -= 20000;
+            case 1: PI[playerid][pCash] -= 50000;
+            case 3: return 1;
+            }
+            if(GetPVarInt(playerid,"WinVrach"))
+            {
+                PI[playerid][pMedCard] = 1;
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `medcard` = '1' WHERE `pID` = '%d'",PI[playerid][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+                SendClientMessage(playerid,0xFFFFFFF,"Поздравляем! Вы получили мед. карту.");
+                DeletePVar(playerid,"WinVrach");
+            }
+            else SPD(playerid, 12034, DIALOG_STYLE_MSGBOX, "Диалог с врачем", "Спасибо. Но мед. карту не дам. Вежлевее надо было быть.", "Грустить", "");
+            return 1;
+        }
+    case 20011:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0: AdminAprav(playerid, "");
+                case 1: AdminAnak(playerid, "");
+                case 2: pc_cmd_licsog(playerid, "");
+                case 3: pc_cmd_sldinfo(playerid, "");
+                case 4: SendClientMessage(playerid, 0x00cc00ff,"< ДОНАТ > {ff9b2c}Чтобы пополнить свой счет перейдите на сайт{FF4500} - "SERVER_WEBSITE"");
+                case 5: pc_cmd_adonate(playerid);
+                }
+            }
+            else { pc_cmd_apanel(playerid, ""); }
+        }
+    case 10025:
+        {
+            if(response)
+            {
+                switch(listitem)
+                {
+                case 0:
+                    {
+                        ShowPlayerDialog(playerid, 8402, DIALOG_STYLE_INPUT, "{63CB00}Описание команды", "{FFFFFF}Введите интерисующую Вас команду\nдля получения её описания(пример: /mainmenu):\n", "Далее", "Отмена");
+                        return 1;
+                    }
+                case 1:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        {FFFFFF}/time /id /gps /viphelp /myskill /rep(ort) /change [house / bizz]\n\
+                        /witness /drink /buybiz /mask /limit /present /showmedcard\n\
+                        /atm /dice /showpass /mystyle /satiety /healme\n\
+                        /licenses /box /kongfu /kickbox /getbizstats /window\n\
+                        /eject /pay /directory /mydebts /repaydebt /offalend\n\
+                        Наркотики: /drugs /givedrug /ddrug /pdrug /plant\n\
+                        Оружие: /dgun - выбросить, /pgun - поднять\n\
+                        Селфи: /selfie\n\
+                        Акцент: /voice", "ОК", "");
+                        return 1;
+                    }
+                case 2:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        {FFFFFF}(/o)oc - Глобальный чат\n\
+                        (/ad)vertise - Объявление\n\
+                        (/gov)erment - Государственные новости\n\
+                        (/f)amily - Чат организации\n\
+                        (/s)out - Крик\n\
+                        (/m)egaphone - Мегафон на служебном транспорте\n\
+                        (/r)adio - Чат государственных организаций (Полиция/ФБР и т.д)\n\
+                        (/d)epartaments - Общий чат государственных организаций\n\
+                        (/me) - Действие (Пример: Имя_Фамилия пожал руку)\n\
+                        (/todo) - Фраза*Действие (Пример: Пора закончить!*медленно нажимая указательным на курок пистолет)", "ОК", "");
+                        return 1;
+                    }
+                case 3:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        {FFFFFF}(/c)all - Позвонить (Номер телефона можно узнать через /number)\n\
+                        /sms - Отправить СМС сообщение\n\
+                        (/p)ickup - Ответить на звонок\n\
+                        (/h)angup - Завершить телефонный разговор\n\
+                        /number - Узнать номер", "ОК", "");
+                        return 1;
+                    }
+                case 4:
+                    {
+                        switch(PI[playerid][pJob])
+                        {
+                        case 1: { SendClientMessage(playerid,COLOR_YELLOW,"[Вор] /rob - ограбить человека"); }
+                        case 2:
+                            {
+                                SendClientMessage(playerid,COLOR_YELLOW,"[Механик] /refill - Заправить.");
+                                SendClientMessage(playerid,COLOR_YELLOW,"[Механик] /trailer - прицепить транспорт");
+                            }
+                        case 3: { SendClientMessage(playerid,COLOR_YELLOW,"[Продавец ХотДогов] /hotdog - Продать хотдог"); }
+                        case 4: { SendClientMessage(playerid,COLOR_YELLOW,"[Таксис] /fare - Начать работу"); }
+                        case 5: { SendClientMessage(playerid,COLOR_YELLOW,"Развозчик продуктов и топлива: /plist, /load"); }
+                        case 6: { SendClientMessage(playerid,COLOR_YELLOW,"[Тренер] /fgstyle - Начать сеанс работы"); }
+                        case 8: { SendClientMessage(playerid,COLOR_YELLOW,"[Инкассатор] /bankup"); }
+                        case 13: { SendClientMessage(playerid,COLOR_YELLOW,"[Автоугонщик] /jackcar - Взломать замок, /dropcar - Продать машину"); }
+                        case 14: SendClientMessage(playerid,COLOR_YELLOW,"[Боксёр] /fight [id] - Вызвать на ринг.");
+                        default:
+                            {
+                                ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                                {FFFFFF}Команды не найдены.", "ОК", "");
+                                return 1;
+                            }
+                        }
+                        new stringers[512];
+
+                        if (IsACop(playerid))
+                        {
+                            if(PI[playerid][pMember] == 26 || PI[playerid][pLeader] == 26)
+                            {
+                                stringers = "(/r)adio (/d)epartments (/m)egaphone (/su)spect /arrest /wanted /cuff /shield /members\n/frisk /take (/gov)ernment /warehouse /ticket /givecopkeys /cput /ceject /uncuff /drag\n\
+                                /bizlock /undemote /nalog /takekazna";
+                            }
+                            stringers = "(/r)adio (/d)epartments (/m)egaphone (/su)spect /arrest /wanted /cuff /shield /members\n/frisk /take (/gov)ernment /warehouse /ticket /givecopkeys /cput /ceject /uncuff /drag\n\
+                            /frisk /take (/gov)ernment /warehouse /ticket /givecopkeys /cput /ceject /uncuff /block\n\
+                            /demote /ftazer /bizlock /spy";
+                        }
+                        else if (IsAArm(playerid))
+                        {
+                            stringers = "(/r)adio (/d)epartments (/m)egaphone /shield\n\
+                            (/gov)ernment  /warehouse /showudost /members /getgun\n\
+                            Маты: /carmat /carm";
+                            return 1;
+                        }
+                        else if (PI[playerid][pMember] == 23)
+                        {
+                            stringers = "Команды хитманов:\n(/f)amily /menu /members /hmask /tie /untie /klyap /klyapoff /cput | Кнопка 'F' чтобы открыть подвал";
+                        }
+                        else if (PI[playerid][pMember] == 24)
+                        {
+                            stringers = "(/f)amily - Чат фракции";
+                        }
+                        else if (PI[playerid][pMember] == 4 || PI[playerid][pLeader] == 4)
+                        {
+                            stringers = "МЧС: /sethpprice /heal /lomka /healaddict /members (/gov)ernment (/r)adio (/d)epartments /mdpell /narkoz /givemedcard";
+                        }
+                        else if (ISAMAFIA(playerid))
+                        {
+                            stringers = "(/f)amily  /tie /untie /takephone /getweapon /bizlist /bizwar /mafiabalance /materials buy\n\
+                            <> /mafiawithdraw /mafiabankput /warehouse /setdebt /debtors /klyap /klyapoff /cput";
+                        }
+                        else if (PI[playerid][pMember] == 7 || PI[playerid][pLeader] == 7)
+                        {
+                            stringers = "Мэрия: /r,  /free, (/d)epartments, (/gov)ernment, /nalog и /takekazna (для лидера), /mxpell";
+                        }
+                        else if (PI[playerid][pMember] == 16 || PI[playerid][pLeader] == 16)
+                        {
+                            stringers = "Россия 24: /news /live (/f)amily /newsbank /newswithdraw /okey [id] /off /mxpell";
+                        }
+                        else if (PI[playerid][pMember] == 27 || PI[playerid][pLeader] == 27)
+                        {
+                            SendClientMessage(playerid, COLOR_YELLOW, "Casino Four Dragons: /(f)amily, /startblackjack, /roule, /startdice, /setbet");
+                        }
+                        else if (PI[playerid][pMember] == 28 || PI[playerid][pLeader] == 28)
+                        {
+                            SendClientMessage(playerid, COLOR_YELLOW, "Casino Caligulas: /(f)amily, /startblackjack, /roule, /startdice, /setbet");
+                        }
+                        else if (PI[playerid][pMember] == 11 || PI[playerid][pLeader] == 11)
+                        {
+                            SendClientMessage(playerid, COLOR_YELLOW, "Инструкторы: /(f)amily (/d)epartments (/gov)ernment /axpell");
+                            SendClientMessage(playerid, 0x20A8A8AA, "Инструкторы: /take /duty ([?]Двойной клик по нику через TAB)");
+                        }
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", stringers, "ОК", "");
+                    }
+                case 5:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        /lpanel - Меню лидера, /invite - Принять игрока, /rang - Повысить/Понизить игрока\n\
+                        /uninvite - Уволить игрока, /changeskin - сменить скин игрока, /drive - вернуть весь транспорт на респу (для банд)\n\
+                        /fvig - выдать выговор игроку, /funvig - снять выговор игроку\n\
+                        /givebilet - Выдать военный билет", "ОК", "");
+                        return 1;
+                    }
+                case 6:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        {FFFFFF}/hmenu - Главное меню(Настройки дома)\n\
+                        /home - Поставить метку у дома (GPS)\n\
+                        /healhouse - Использовать домашняю аптечку\n\
+                        /exit - выйти из дома", "ОК", "");
+                    }
+                case 7:
+                    {
+                        if(GetPlayerBizz(playerid) > 0) SendClientMessage(playerid,COLOR_YELLOW,"{009BFF}/business {FEFEFE}- Меню управление бизнесом");
+                        else return SendClientMessage(playerid, COLOR_GREY, "У вас нет бизнеса!");
+                    }
+                case 8:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        {009BFF}/carpass {FEFEFE}- посмотреть, /carpass [id] - показать документы на машину\n\
+                        {009BFF}/sellcar {FEFEFE}- продать машину\n\
+                        {009BFF}/car {FEFEFE}- машину к дому\n\
+                        {009BFF}/fill {FEFEFE}- заправить машину\n\
+                        {009BFF}/sellcar id сумма {FEFEFE}- продать машину игроку\n\
+                        {009BFF}/fillcar {FEFEFE}- заправить машину с канистры\n\
+                        {009BFF}/get 'fuel' {FEFEFE}- купить канистру", "ОК", "");
+                    }
+                case 9:
+                    {
+                        ShowPlayerDialog(playerid, 0000, DIALOG_STYLE_MSGBOX, ""SERVER"Команды сервера", "\
+                        {009BFF}/divorce{FEFEFE} - развестись, {009BFF}/propose{FEFEFE} - предложить руку и сердце.\n\
+                        {009BFF}/witness{FEFEFE} - назначить свидетеля.\n\
+                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+                        /fam [text] - чат семьи, /faminvite [id] - принять игрока в семью\n\
+                        /famuninvite [id] - выгнать игрока из семьи, /family - меню семьи", "ОК", "");
+                    }
+                }
+            }
+            else return MainMenuPl(playerid);
+        }
+    case 8402: {
+            if(!response) return 1;
+            for(new i = 0; i < sizeof(FindCommand); i++)
+            {
+                if(!strcmp(inputtext, FindCommand[i][0], false))
+                {
+                    new string[144];
+                    format(string, sizeof(string), "Описание: %s", FindCommand[i][1]);
+                    return SendClientMessage(playerid, -1, string);
+                }
+            }
+            SendClientMessage(playerid, -1, "Введённой команды не существует!");
+            return 1;
+        }
+    case 5346:
+        {
+            if(response)
+            {
+                if(!strlen(inputtext)) return SPD(playerid, 5346, DIALOG_STYLE_INPUT,"Выдача оружия", "Введите id оружия и патроны\nПример: {FFFFFF}31,500\nГде 31 m4 а 500 патроны", "Выдать", "Закрыть");
+                new razdel[2];
+                if(sscanf(inputtext,"p<,>ii",razdel[0],razdel[1])) return SPD(playerid, 5346, DIALOG_STYLE_INPUT,"Выдача оружия", "Введите id оружия и патроны\nПример: {FFFFFF}31,500\nГде 31 m4 а 500 патроны", "Выдать", "Закрыть");
+                if(razdel[0] > 46 || razdel[0] < 0 || razdel[0] >= 19 && razdel[0] <= 21) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: ID оружия не может быть меньше 0 и больше 46!");
+                if(razdel[1] > 1000 || razdel[1] < 0) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: Патроны не могут быть ниже 0, и больше 1000!");
+                switch(razdel[0])
+                {
+                case 35..40,4,9,16,18,26,45,44,22,32,28,27: return SendClientMessage(playerid, COLOR_GRAD1, "Запрещенное оружие!");
+                }
+                GiveWeapon(playerid, razdel[0], razdel[1]);
+                foreach(Player, i)
+                {
+                    if(GetDistanceBetweenPlayers(playerid,i) < 50 && playerid != i)
+                    {
+                        GivePlayerWeapon(i, razdel[0], razdel[1]);
+                        SendClientMessage(i, COLOR_YELLOW, "Администратор выдал вам оружие");
+                    }
+                }
+                format(stringer1, sizeof(stringer1), "[A] %s раздал всем оружие, в радиусе 50 метров. (Оружие: %s, патроны: %d)", PI[playerid][pNames], WeaponNames[razdel[0]], razdel[1]);
+                SendAdminMessage(COLOR_GREY,stringer1);
+            }
+        }
+    case 5463:
+    {
+        if(!response) return 1;
+        GetPlayerPos(playerid, TeleportFloat[0], TeleportFloat[1], TeleportFloat[2]); // Записываем координаты
+        TeleportInfo[0] = GetPlayerInterior(playerid); // Записываем интерьер
+        TeleportInfo[1] = GetPlayerVirtualWorld(playerid); // Записываем руб.уальный мир
+
+        TeleportInfo_players = strval(inputtext);
+
+        Teleport = 1;
+        format(stringer, sizeof(stringer), "%s %s[%d]: запустил мероприятие (Для телепорта: /gomp) [Количество мест: %d]", (FD(playerid)) ? "Основатель" : "Администратор", PI[playerid][pNames],playerid,TeleportInfo_players);
+        SendClientMessageToAll(0xFFCD00ff,stringer);
+        return 1;
+    }
+    case 5343:
+        {
+            if(response)
+            {
+                if(listitem == 0) {
+                    if(Teleport == 0)
+                    {
+                        SPD(playerid, 5463, DIALOG_STYLE_INPUT, !"{33aa33}Введите количество игроков", !"{FFFFFF}Укажите количество игроков которые смогут телепортироваться:", !"Ввести", !"Отмена");
+                      /*  GetPlayerPos(playerid, TeleportFloat[0], TeleportFloat[1], TeleportFloat[2]); // Записываем координаты
+                        TeleportInfo[0] = GetPlayerInterior(playerid); // Записываем интерьер
+                        TeleportInfo[1] = GetPlayerVirtualWorld(playerid); // Записываем руб.уальный мир
+                        Teleport = 1;
+                        format(stringer, sizeof(stringer), "%s %s[%d]: открыл телепорт на мероприятие используйте (/gomp)", (FD(playerid)) ? "Основатель" : "Администратор", PI[playerid][pNames],playerid);
+                        SendClientMessageToAll(0xFFCD00ff,stringer);*/
+                    }
+                    else
+                    {
+                        format(stringer, sizeof(stringer), "%s %s[%d]: закрыл телепорт на мероприятие.", (FD(playerid)) ? "Основатель" : "Администратор", PI[playerid][pNames],playerid);
+                        SendClientMessageToAll(0xFFCD00ff,stringer);
+                        Teleport = 0;
+                        return 1;
+                    }
+                }
+                if(listitem == 1)
+                {
+                    SPD(playerid, 5346, DIALOG_STYLE_INPUT,"Выдача оружия", "{FFFFFF}Введите id оружия и патроны\n{FFFFFF}Пример: {FF4500}31,500\n{FFFFFF}Где {FF4500}31 m4 {FFFFFF}а {FF4500}500 патроны", "Выдать", "Закрыть");
+                }
+                if(listitem == 2)
+                {
+                    foreach(Player, i)
+                    {
+                        if(GetDistanceBetweenPlayers(playerid,i) < 50 && playerid != i) { SetPlayerHealth(i, 100); SetPlayerArmour(i, 0); SendClientMessage(i, COLOR_YELLOW, "Администратор выдал вам жизни");}
+                    }
+                }
+                if(listitem == 3)
+                {
+                    foreach(Player, i)
+                    {
+                        if(GetDistanceBetweenPlayers(playerid,i) < 50 && playerid != i)
+                        {
+                            ResetWeapons(i);
+                            SendClientMessage(i, COLOR_YELLOW, "Администратор забрал у вас оружие");
+                        }
+                    }
+                }
+                if(listitem == 4) {
+                    if(IsPlayerInRangeOfPoint(playerid, 60.0, TeleportFloat[0], TeleportFloat[1], TeleportFloat[2]) && Teleport == 1) {
+                        ShowPlayerDialog(playerid, 5355, DIALOG_STYLE_INPUT, "Выдача временного скина", "Введите в поле ниже, ID скина", "Далее", "Отмена");
+                    } else return SendClientMessage(playerid, COLOR_WHITE, "Вы не в зоне мероприятия или мероприятие не активно!");
+                }
+                if(listitem == 5)
+                {
+                    if(IsPlayerInRangeOfPoint(playerid, 60.0, TeleportFloat[0], TeleportFloat[1], TeleportFloat[2]) && Teleport == 1) {
+                        new dialog[512];
+                        strcat(dialog, "[0] Выключить цвет\n[1] Зелёный\n[2]    Светло зелёный\n[3] Ярко зелёный\n[4]   Бирюзовый\n[5]  Жёлто-зелёный\n[6]  Тёмно-зелёный\n[7]  Серо-зелёный\n[8]   Красный\n[9]    Ярко-красный\n[10]  Оранжевый\n[11] Коричневый\n[12]    Тёмно-красный\n[13] Cеро-красный\n[14]  Жёлто-оранжевый\n[15]   Малиновый\n[16] Розовый\n[17]   Синий\n[18] Голубой\n[19]   Синяя сталь\n[20]   Сине-зелёный\n[21]  Тёмно-синий\n[22]   Фиолетовый\n");
+                        strcat(dialog, "[23]    Индиго\n[24]    Серо-синий\n[25]    Жёлтый\n[26]    Кукурузный\n[27]    Золотой\n[28]   Старое золото\n[29] Оливковый\n[30] Серый\n[31] Серебро\n[32]   Чёрный\n[33]    Белый");
+                        SPD(playerid,5656,DIALOG_STYLE_LIST, "Цвет",dialog, "Выбрать", "Отмена");
+                    } else return SendClientMessage(playerid, COLOR_WHITE, "Вы не в зоне мероприятия или мероприятие не активно!");
+                }
+            }
+        }
+    case 5656:
+    {
+        if(response)
+        {
+            new string[144];
+            foreach(Player, i) {
+                if(GetDistanceBetweenPlayers(playerid,i) < 50.0 && playerid != i) {
+                    switch(listitem)
+                    {
+                        case 0: SetPlayerColor(i,Cvet_0);
+                        case 1: SetPlayerColor(i,0x089401FF);
+                        case 2: SetPlayerColor(i,0x56FB4EFF);
+                        case 3: SetPlayerColor(i,0x49E789FF);
+                        case 4: SetPlayerColor(i,0x2A9170FF);
+                        case 5: SetPlayerColor(i,0x9ED201FF);
+                        case 6: SetPlayerColor(i,0x279B1EFF);
+                        case 7: SetPlayerColor(i,0x51964DFF);
+                        case 8: SetPlayerColor(i,0xFF0606FF);
+                        case 9: SetPlayerColor(i,0xF68F67FF);
+                        case 10: SetPlayerColor(i,0xF45000FF);
+                        case 11: SetPlayerColor(i,0xBE8A01FF);
+                        case 12: SetPlayerColor(i,0xB30000FF);
+                        case 13: SetPlayerColor(i,0x954F4FFF);
+                        case 14: SetPlayerColor(i,0xE7961DFF);
+                        case 15: SetPlayerColor(i,0xE6284EFF);
+                        case 16: SetPlayerColor(i,0xFF9DB6FF);
+                        case 17: SetPlayerColor(i,0x110CE7FF);
+                        case 18: SetPlayerColor(i,0x0CD7E7FF);
+                        case 19: SetPlayerColor(i,0x139BECFF);
+                        case 20: SetPlayerColor(i,0x2C9197FF);
+                        case 21: SetPlayerColor(i,0x114D71FF);
+                        case 22: SetPlayerColor(i,0x8813E7FF);
+                        case 23: SetPlayerColor(i,0xB313E7FF);
+                        case 24: SetPlayerColor(i,0x758C9DFF);
+                        case 25: SetPlayerColor(i,COLOR_YELLOW);
+                        case 26: SetPlayerColor(i,0xFFEE8AFF);
+                        case 27: SetPlayerColor(i,0xDDB201FF);
+                        case 28: SetPlayerColor(i,0xDDA701FF);
+                        case 29: SetPlayerColor(i,0xB0B000FF);
+                        case 30: SetPlayerColor(i,0x868484FF);
+                        case 31: SetPlayerColor(i,0xB8B6B6FF);
+                        case 32: SetPlayerColor(i,0x333333FF);
+                        case 33: SetPlayerColor(i,0xFAFAFAFF);
+                    }
+                    SendClientMessage(i, COLOR_WHITE, "Администратор выдал вам временный клист!");
+                }
+            }
+            format(string, sizeof(string), "[A] %s раздал всем клист на мероприятии в радиусе 50 метров.", PI[playerid][pNames]);
+            SendAdminMessage(COLOR_GREY, string);
+            return 1;
+        }
+    }
+    case 5355: {
+            if(!response) return 1;
+            new idskn;
+            if(sscanf(inputtext, "d", idskn)) return ShowPlayerDialog(playerid, 5355, DIALOG_STYLE_INPUT, "Выдача временного скина", "Введите в поле ниже, ID скина", "Далее", "Отмена");
+            if(idskn < 1 || idskn == 74 || idskn > 311) return SendClientMessage(playerid, COLOR_GREY, "Неверный ID скина!");
+            new string[144];
+            foreach(Player, i) {
+                if(GetDistanceBetweenPlayers(playerid,i) < 50.0 && playerid != i) {
+                    SetPlayerSkin(i, idskn);
+                    SendClientMessage(i, COLOR_WHITE, "Администратор выдал вам временный скин!");
+                }
+            }
+            format(string, sizeof(string), "[A] %s раздал всем скин на мероприятии [skin: %d]", PI[playerid][pNames], idskn);
+            SendAdminMessage(COLOR_GREY, string);
+            return 1;
+        }
+    case 9653:
+        {
+            if(!response || PI[playerid][pMember] != 19 && proverkaforma[playerid] != 1) return 1;
+            new tmpcar = GetPlayerVehicleID(playerid);
+            if(!IsAMatsCar(tmpcar)) return SendClientMessage(playerid, COLOR_GRAD1, "Вы должны находиться в матовозе.");
+            switch(listitem)
+            {
+            case 0:
+                {
+                    SendClientMessage(playerid,COLOR_GREEN, "Встаньте на красный маркер, чтобы заполнить грузовик материалами!");
+                    SetPlayerCheckpoint(playerid,335.9255,1994.7932,17.6406,8.0);
+                    MatsArmyCar[playerid] = 20;
+                }
+            case 1:
+                {
+                    if(!IsPlayerInRangeOfPoint(playerid, 10.0,334.9307,1962.9658,17.6406)) return SendClientMessage(playerid,COLOR_GREY, "Вы не у разгрузочной зоны!");
+                    if(MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad] <= 0) return SendClientMessage(playerid, COLOR_GREY, "В матовозе нет оружия!");
+                    armmatbi += MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad];
+                    MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad] = 0;
+                    format(stringer, sizeof(stringer), "Материалы выгруженны! В грузовике: %d/5000", MatHaul[GetVehicleData(tmpcar, V_ACTION_ID)][mLoad]);
+                    SendClientMessage(playerid, TEAM_GROVE_COLOR, stringer);
+                    SetOtherInt("FracBank[0][fGrove]", FracBank[0][fGrove]);
+                }
+            case 2:
+                {
+                    SetPlayerCheckpoint(playerid,-1601.8774,309.4032,7.1875,6.0);
+                    SendClientMessage(playerid, COLOR_WHITE, "Метка на карте указана в виде красного маркера");
+                    MatsArmyCar[playerid] = 21;
+                }
+            case 3:
+                {
+                    SetPlayerCheckpoint(playerid,1529.6000,-1691.2000,13.3828,6.0);
+                    MatsArmyCar[playerid] = 31;
+                }
+            case 4:
+                {
+                    SetPlayerCheckpoint(playerid,-2497.7634,-679.8572,139.3203,6.0);
+                    MatsArmyCar[playerid] = 24;
+                }
+            case 5:
+                {

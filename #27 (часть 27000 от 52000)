@@ -1,0 +1,1000 @@
+{
+    foreach(Player,i)
+    {
+        if(IsPlayerConnected(i)) { if(PI[i][pJob] == job) SendClientMessage(i, color, string); }
+    }
+}
+
+public OnRconCommand(cmd[])
+{
+    return 1 ;
+}
+
+stock GetWeaponSpriteSlotID(weaponid)
+{
+    switch(weaponid)
+    {
+    case 22:return 0;
+    case 23:return 1;
+    case 24:return 2;
+    case 25:return 3;
+    case 27:return 4;
+    case 28:return 5;
+    case 29:return 6;
+    case 30:return 7;
+    case 31:return 8;
+    case 32:return 9;
+    case 33:return 10;
+    case 35:return 11;
+    case 36:return 12;
+    }
+    return -1;
+}
+stock ChangePlayerWeaponPrint(playerid, weaponid, chooseid)
+{
+    /*
+    RemovePlayerAttachedObject(playerid,7);
+    switch(weaponid)
+    {
+        case 22: SetPlayerAttachedObject(playerid, 7, 346, 6, -0.004999, -0.003999, -0.006000, 0.000000, 0.000000, -1.800000, 1.007000, 1.337999, 1.069000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 23: SetPlayerAttachedObject(playerid, 7, 347, 6, -0.003999, -0.001999, -0.003999, 0.000000, 0.299999, -0.999999, 1.000000, 1.188000, 1.063000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 24: SetPlayerAttachedObject(playerid, 7, 348, 6, -0.006999, -0.004000, 0.002000, -1.600000, -0.200000, 0.400000, 1.019999, 1.146999, 1.027000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 25: SetPlayerAttachedObject(playerid, 7, 349, 6, 0.000000, -0.008999, -0.004000, 0.000000, 1.099999, 1.499999, 1.000000, 1.222000, 1.088000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 27: SetPlayerAttachedObject(playerid, 7, 351, 6, 0.003000, -0.014000, -0.003000, 0.000000, 0.000000, 2.199999, 1.000000, 1.371000, 1.023000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 28: SetPlayerAttachedObject(playerid, 7, 352, 6, -0.002000, -0.008000, -0.001999, -0.300000, 0.000000, 1.199999, 1.019999, 1.245000, 1.043000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 29: SetPlayerAttachedObject(playerid, 7, 353, 6, 0.000000, -0.009000, -0.009000, 0.000000, 0.099999, 2.100000, 1.000000, 1.290001, 1.053000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 30: SetPlayerAttachedObject(playerid, 7, 355, 6, 0.000000, -0.011000, 0.000000, 0.000000, 0.000000, 2.100000, 1.009000, 1.424000, 1.013000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 31: SetPlayerAttachedObject(playerid, 7, 356, 6, -0.002000, -0.005999, 0.001000, 0.000000, 0.899999, 1.699999, 0.997999, 1.318999, 1.088001, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 32: SetPlayerAttachedObject(playerid, 7, 372, 6, -0.003000, -0.009000, -0.001999, 0.000000, 0.400000, 0.800000, 1.015000, 1.232000, 1.055000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 33: SetPlayerAttachedObject(playerid, 7, 357, 6, 0.000000, -0.015000, -0.001999, 0.000000, 1.200000, 2.199999, 1.000000, 1.286001, 1.096001, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 35: SetPlayerAttachedObject(playerid, 7, 359, 6, 0.001999, -0.007000, -0.009000, 0.000000, -0.100000, 0.000000, 0.989999, 1.213001, 1.084001, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        case 36: SetPlayerAttachedObject(playerid, 7, 360, 6, 0.001000, -0.004999, -0.008000, 0.000000, 0.000000, 0.000000, 1.000000, 1.140000, 1.055000, _weapon_colors[chooseid], _weapon_colors[chooseid]);
+        default:
+        {
+            DeletePVar(playerid,"_weapon_sprite_use");
+            return 1;
+        }
+    }
+    */
+
+    SendClientMessage(playerid,_weapon_colors[chooseid],"ChangePlayerWeaponPrint");
+    SetPVarInt(playerid,"_weapon_sprite_use",true);
+    return 1;
+}
+stock ProxDetector(playerid, Float:max_range, color, string[], Float:max_ratio = 1.6)
+{
+    new
+Float:pos_x,
+Float:pos_y,
+Float:pos_z,
+Float:range,
+Float:range_ratio,
+Float:range_with_ratio,
+    clr_r, clr_g, clr_b,
+Float:color_r, Float:color_g, Float:color_b;
+
+    if (!GetPlayerPos(playerid, pos_x, pos_y, pos_z)) {
+        return 0;
+    }
+
+    color_r = float(color >> 24 & 0xFF);
+    color_g = float(color >> 16 & 0xFF);
+    color_b = float(color >> 8 & 0xFF);
+    range_with_ratio = max_range * max_ratio;
+
+    foreach (new i : Player) {
+        if(!BigEar[i]) {
+            if (!IsPlayerStreamedIn(playerid, i)) {
+                continue;
+            }
+
+            range = GetPlayerDistanceFromPoint(i, pos_x, pos_y, pos_z);
+            if (range > max_range) {
+                continue;
+            }
+
+            range_ratio = (range_with_ratio - range) / range_with_ratio;
+            clr_r = floatround(range_ratio * color_r);
+            clr_g = floatround(range_ratio * color_g);
+            clr_b = floatround(range_ratio * color_b);
+
+            SendClientMessage(i, (clr_b << 8) | (clr_g << 16) | (clr_r << 24), string);
+        }
+        else SendClientMessage(i, color, string);
+    }
+
+    if(!BigEar[playerid]) SendClientMessage(playerid, color, string);
+    return 1;
+}
+stock ProxDetectorS(Float:radi, playerid, targetid)
+{
+    if(!IsPlayerConnected(playerid) || !IsPlayerConnected(targetid)) return 0;
+ //   if(GetPlayerState(targetid) == PLAYER_STATE_SPECTATING && gSpecID[targetid] != INVALID_PLAYER_ID) return 0;
+    new Float:p[3];
+    GetPlayerPos(targetid, p[0], p[1], p[2]);
+    if(!IsPlayerInRangeOfPoint(playerid, radi, p[0], p[1], p[2])) return 0;
+    return 1;
+}
+public OnPlayerText(playerid, text[])
+{
+    if(!gPlayerLogged[playerid]) return 0;
+    //RemoveBadWords(text);
+    if(PI[playerid][pMuteTime] > gettime())
+    {
+        format(stringer1, sizeof(stringer1), "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+        SendClientMessage(playerid, COLOR_LIGHTRED, stringer1);
+        SetPlayerChatBubble(playerid,"пытается что-то сказать...",0xDD90FFFF,30.0,10000);
+        return 0;
+    }
+    if(gag[playerid] == 1) { SendClientMessage(playerid, COLOR_LIGHTRED, "У Вас кляп, вы не можете говорить!"); return 0; }
+    if(EmptyMessage(text)) return 0;
+    if(IsAIP(text))
+    {
+        new string[144]; // Вывод текста админам о подозрении в рекламе
+        format(string, sizeof(string), "{FF4500}[ВНИМАНИЕ] %s[%i]: {FFFFFF}%s {FF4500}| ПОДОЗРЕНИЕ В РЕКЛАМЕ", PI[playerid][pNames], playerid, text);
+        SendAdminMessage(COLOR_ORANGE, string);
+        ReplaceText(text);
+        return 0;
+    }
+    if(gPlayerLogged[playerid] == 1 || PI[playerid][pAdmin] == 0)
+    {
+        if(GetPVarInt(playerid,"AntiFlood") > gettime()){ SendClientMessage(playerid, 0xFFD5BBAA, "Не флуди!"); return 0; }
+        SetPVarInt(playerid,"AntiFlood",gettime() + ANTI_FLOODS);
+    }
+    if(TalkingLivels[playerid] == 1)
+    {
+        format(stringer1, sizeof(stringer1), "< Россия 24 > [Тел.] %s[%d]: %s", PI[playerid][pNames], playerid, text);
+        SendClientMessageToAll(0x0073b7AA, stringer1);
+        return 0;
+    }
+    if(TalkingLivels[playerid] == 2)
+    {
+        if(PI[playerid][pMember] == 16) format(stringer1, sizeof(stringer1), "< Россия 24 > Ведущий %s[%d]: %s", PI[playerid][pNames], playerid, text);
+        else format(stringer1, sizeof(stringer1), "< Россия 24 > Гость %s[%d]: %s", PI[playerid][pNames], playerid, text);
+        SendClientMessageToAll(0x0073b7AA, stringer1);
+        return 0;
+    }
+    if(Mobile[playerid] != -1)
+    {
+        format(stringer1, 144, "[Телефон] %s[%d]: %s", PI[playerid][pNames], playerid, text);
+        ProxDetector(playerid, 20.0, COLOR_FADE1, stringer1);
+        if(Mobile[Mobile[playerid]] == playerid) SendClientMessage(Mobile[playerid], COLOR_YELLOW,stringer1);
+        return 0;
+    }
+    if(PEfir[playerid] != 255 && (PI[playerid][pMember] == 16 || PI[playerid][pLeader] == 16 || Pefir[playerid] == 2))
+    {
+        format(stringer1, sizeof(stringer1), "< Россия 24 > %s[%d]: %s", PI[playerid][pNames], playerid, text);
+        SendClientMessageToAll(0x0073b7AA, stringer1);
+        return 0;
+    }
+    if(strcmp(text, "q", true) == 0 && (ISAMAFIA(playerid) || PI[playerid][pAdmin]))
+    {
+        if(!PI[playerid][pAdmin]) format(stringer1,sizeof(stringer1), "показал(a) %s %s", "татуировку", GetPlayerFracName[PI[playerid][pMember]]);
+        else format(stringer1,sizeof(stringer1), "показал(a) распальцовку Admins Team");
+        SetPlayerChatBubble(playerid,stringer1,COLOR_PURPLE,30.0,10000);
+        if(!PI[playerid][pAdmin]) format(stringer1, sizeof(stringer1), "%s показал(a) %s %s",PI[playerid][pNames], "татуировку", GetPlayerFracName[PI[playerid][pMember]]);
+        else format(stringer1, sizeof(stringer1), "%s показал(a) распальцовку Admins Team", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        if(PlayerCuffed[playerid] == 0 && AntiSbiv[playerid] < gettime())
+        {
+            if(ISAMAFIA(playerid)) FIXES_ApplyAnimation(playerid,"GANGS","prtial_hndshk_01",4.0,0,0,0,0,0,1);
+        }
+        return 0;
+    }
+    if(strcmp(text, "эй", true) == 0 || strcmp(text, "э", true) == 0 || strcmp(text, "эй бля", true) == 0|| strcmp(text, "блять", true) == 0 || strcmp(text, "Блядь", true) == 0 || strcmp(text, "мля", true) == 0)
+    {
+        SetPlayerChatBubble(playerid,"возмущается",COLOR_PURPLE,30.0,10000);
+        if(PlayerCuffed[playerid] == 0 && AntiSbiv[playerid] < gettime()) {     FIXES_ApplyAnimation(playerid,"PED","fucku",4.0,0,0,0,0,0,1); }
+        return 0;
+    }
+    else if(strcmp(text, "мда", true) == 0 || strcmp(text, "идиот", true) == 0 || strcmp(text, "сука", true) == 0 || strcmp(text, "пидр", true) == 0 )
+    {
+        SetPlayerChatBubble(playerid, "Facepalm", COLOR_PURPLE, 30.0, 10000);
+        if(PlayerCuffed[playerid] == 0 && AntiSbiv[playerid] < gettime()) {     FIXES_ApplyAnimation(playerid,"MISC","plyr_shkhead",4.0,0,0,0,0,0,1); }
+        return 0;
+    }
+    else if(strcmp(text, "*102#", true) == 0)
+    {
+        SendClientMessage(playerid, COLOR_LIGHTGREEN, "==[ Мобильный баланс ] ==");
+        format(stringer1, sizeof(stringer1), "- Баланс %d руб.",PI[playerid][pMobile]);
+        SendClientMessage(playerid, COLOR_WHITE, stringer1);
+        SendClientMessage(playerid, COLOR_WHITE, "- Пополнить баланс можно в любом банкомате");
+        SendClientMessage(playerid, COLOR_LIGHTGREEN, "==[ Мобильный баланс ] ==");
+        format(stringer1, sizeof(stringer1), "%s достаёт мобильник", PI[playerid][pNames]);
+        ProxDetector(playerid, 5.0, COLOR_PURPLE, stringer1);
+        return 0;
+    }
+    else if(strcmp(text, "xD", true) == 0 || strcmp(text, "xd", true) == 0 || strcmp(text, ":В", true) == 0 || strcmp(text, ":в", true) == 0 )
+    {
+        format(stringer1, sizeof(stringer1), "%s смеётся", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        SetPlayerChatBubble(playerid, "смеётся", COLOR_PURPLE, 30.0, 10000);
+        return 0;
+    }
+    else if(strcmp(text, "здравия", true) == 0)
+    {
+        format(stringer1, sizeof(stringer1), "%s отдал честь", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        SetPlayerChatBubble(playerid,"отдал честь",COLOR_PURPLE,30.0,10000);
+        return 0;
+    }
+    else if(strcmp(text, "чВ", true) == 0 || strcmp(text, "хД", true) == 0 || strcmp(text, "хд", true) == 0 || strcmp(text, "xDD", true) == 0)
+    {
+        format(stringer1, sizeof(stringer1), "%s валяется от смеха", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        SetPlayerChatBubble(playerid,"валяется от смеха",COLOR_PURPLE,30.0,10000);
+        return 0;
+    }
+    else if(strcmp(text, ")", true) == 0 || strcmp(text, "))", true) == 0)
+    {
+        format(stringer1, sizeof(stringer1), "%s улыбается", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        SetPlayerChatBubble(playerid,"улыбается",COLOR_PURPLE,30.0,10000);
+        return 0;
+    }
+    else if(strcmp(text, ":D", true) == 0)
+    {
+        format(stringer1, sizeof(stringer1), "%s хохочет во весь голос", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        SetPlayerChatBubble(playerid,"хохочет во весь голос",COLOR_PURPLE,30.0,10000);
+        return 0;
+    }
+    else if(strcmp(text, "(", true) == 0 || strcmp(text, "((", true) == 0)
+    {
+        format(stringer1, sizeof(stringer1), "%s грустит", PI[playerid][pNames]);
+        ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+        SetPlayerChatBubble(playerid,"грустит",COLOR_PURPLE,30.0,10000);
+        return 0;
+    }
+    if(realchat)
+    {
+        if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT && robbankstime[playerid] == 0 && PlayerTied[playerid] == 0 && PlayerCuffedTime[playerid] == 0 && GetPVarInt(playerid,"Animation") == 0 && AntiSbiv[playerid] < gettime())
+        {
+            if(PI[playerid][Settings][4] == 0) FIXES_ApplyAnimation(playerid,"ped",Talk[PI[playerid][Settings][4]],4.1,1,1,1,1,1,1);
+            else if(PI[playerid][Settings][4] != 0) FIXES_ApplyAnimation(playerid,"GANGS",Talk[PI[playerid][Settings][4]],4.1,1,1,1,1,1,1);
+            SetTimerEx("ClearPlayerChatAnim", strlen(text) * 400, false, "i", playerid);
+        }
+        if(strlen(PI[playerid][pAccent]) < 2) format(stringer1, sizeof(stringer1), "- %s {%s}(%s)[%d]", text, colorchat(playerid, 1), PI[playerid][pNames], playerid);
+        else format(stringer1, sizeof(stringer1), "- %s {%s}| %s | (%s)[%d]", text, colorchat(playerid, 1), PI[playerid][pAccent], PI[playerid][pNames], playerid);
+        SetPlayerChatBubble(playerid, text, 0x6ab1ffaa, 20.0, 10000);
+        ProxDetector(playerid, 20.0, COLOR_FADE1, stringer1);
+        return 0;
+    }
+    return 0;
+}
+
+forward CheckYtPromocode(playerid, code[]);
+public CheckYtPromocode(playerid, code[]) {
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows) {
+        new string[144], query[144], idcode, rub, use, had;
+        idcode = cache_get_field_content_int(0, "ID");
+        rub = cache_get_field_content_int(0, "Value");
+        use = cache_get_field_content_int(0, "Use");
+        had = cache_get_field_content_int(0, "pHad");
+        if(PI[playerid][pPayDayHad] < had) return SendClientMessage(playerid, -1, "Для активации этого промокода, отыграйте на сервере больше часов!");
+
+        PI[playerid][pDonateRubNew] += rub, use++;
+        UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+
+        format(query, sizeof(query), "UPDATE `yt_promocodes` SET `Use` = '%d' WHERE `ID` = '%d' LIMIT 1", use, idcode);
+
+        format(string, sizeof(string), "Вы успешно использовали ютуберский промокод получили %d F - Coins!", rub);
+        mysql_tquery(connects, query, "", "");
+        SendClientMessage(playerid, -1, string);
+
+        PI[playerid][pUsePromo] = 1;
+        UpdatePlayerData(playerid, "pUsePromo", PI[playerid][pUsePromo]);
+    } else SendClientMessage(playerid, -1, "К сожалению, промокод не существует!");
+    return 1;
+}
+
+forward CheckPromocode(playerid, code[]);
+public CheckPromocode(playerid, code[]) {
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows) {
+        new string[144], query[144], idcode, rub, use, had;
+        idcode = cache_get_field_content_int(0, "ID");
+        rub = cache_get_field_content_int(0, "Value");
+        use = cache_get_field_content_int(0, "Use");
+        had = cache_get_field_content_int(0, "pHad");
+        if(PI[playerid][pPayDayHad] < had) return SendClientMessage(playerid, -1, "Для активации этого промокода, отыграйте на сервере больше часов!");
+        PI[playerid][pDonateRubNew] += rub, use--;
+        UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+        format(query, sizeof(query), "INSERT INTO `used_promocodes` (`Name`, `Promocode`) VALUES ('%s', '%s')", PI[playerid][pNames], code);
+        mysql_function_query(connects, query, false, "", "");
+        if(use <= 0) format(query, sizeof(query), "DELETE FROM `promocodes` WHERE `ID` = '%d' LIMIT 1", idcode);
+        else format(query, sizeof(query), "UPDATE `promocodes` SET `Use` = '%d' WHERE `ID` = '%d' LIMIT 1", use, idcode);
+        format(string, sizeof(string), "Вы успешно использовали промокод получили %d F - Coins!", rub);
+        mysql_function_query(connects, query, false, "", "");
+        SendClientMessage(playerid, -1, string);
+    } else SendClientMessage(playerid, -1, "К сожалению, промокод не существует или уже был использован!");
+    return 1;
+}
+public OnPlayerUpdate(playerid) // Не юзать этот паблик
+{
+    if(PI[playerid][pDonateRubNew] > 100000)
+    {
+        PI[playerid][pDonateRubNew] = 0;
+        UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pDonateRubNew]);
+    }
+
+    if(PI[playerid][AFK_Time] >= 3) PI[playerid][AFK_Time] = 0;
+    PI[playerid][AFK_Tick] += 1;
+    return 1;
+}
+public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+{
+	if(newkeys == KEY_WALK)
+	{
+		for(new i; i < TOTALDOWNS; i ++)
+		{
+			if(IsPlayerInRangeOfPoint(playerid, 0.5, SeatDownX[i], SeatDownY[i], SeatDownZ[i]))
+            {
+                if(GetPVarInt(playerid, "seat") == 0)
+                {
+                    SetPVarInt(playerid, "seat", 1);
+
+                    SetPlayerPos(playerid, SeatDownX[i], SeatDownY[i], SeatDownZ[i]);
+                    SetPlayerFacingAngle(playerid, SeatDownA[i]);
+
+                    ApplyAnimation(playerid, "PED", "SEAT_down", 4.1, 0, 0, 0, 1, 0, 1);
+                    break;
+                }
+                else
+                {
+                    SetPVarInt(playerid, "seat", 0);
+                    ApplyAnimation(playerid, "PED", "IDLE_STANCE", 4.1, 0, 0, 0, 0, 0);
+                    TogglePlayerControllable(playerid, 1);
+                    ClearAnimations(playerid);
+                    break;
+                }
+            }
+		}
+	}
+
+    if( (newkeys & KEY_FIRE) || ( (newkeys & KEY_AIM) && (oldkeys & KEY_AIM) && (newkeys & KEY_SECONDARY_ATTACK) ) )
+    {
+        if(IsAGreenZone(playerid) && !IsPlayerInAnyVehicle(playerid))
+        {
+            FIXES_ApplyAnimation(playerid, "ped", "HANDSCOWER",4.1,0,1,1,0,0);
+            GameTextForPlayer(playerid, "~r~NO-DM ~w~ZONE", 3000, 3);
+            SPD(playerid, 8364, DIALOG_STYLE_MSGBOX, "{FF4500}Анти ДМ зона", "\t\t\t{FFFFFF}Здесь запрещено драться!\n\nВнимание! ДМ(Death Match) - Убийство или нанесение физического вреда игрокам\nбез причины, запрещается на нашем сервере. Наказуемо администрацией.", "ОК", "");
+        }
+        return 1;
+    }
+
+    if(newkeys == 128 || newkeys == 16)
+    {
+        if(GetPlayerCameraMode(playerid) == 184) return KickEx(playerid);
+    }
+    if(newkeys & KEY_YES)
+    {
+        if(IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == 2)
+        {
+            if(!IsAPlane(GetPlayerVehicleID(playerid)) && !IsABoat(GetPlayerVehicleID(playerid)) && IsRotators(GetVehicleModel(GetPlayerVehicleID(playerid))))
+            {
+                new vid = GetPlayerVehicleID(playerid);
+
+                if(Indicators_xqz[vid][2]) DestroyDynamicObject(Indicators_xqz[vid][2]), DestroyDynamicObject(Indicators_xqz[vid][3]),Indicators_xqz[vid][2]=0;
+                else if(Indicators_xqz[vid][0]) DestroyDynamicObject(Indicators_xqz[vid][0]), DestroyDynamicObject(Indicators_xqz[vid][1]),Indicators_xqz[vid][0]=0;
+                else SetVehicleIndicator(vid,1,0);
+            }
+        }
+        if(PI[playerid][pTargetAction] > 0) {
+            new idpl = PI[playerid][pTargetPlayer];
+            switch(PI[playerid][pTargetAction]) {
+            case 1: {
+                    if(IsPlayerInAnyVehicle(playerid)) return SendClientMessage(playerid, COLOR_GREY, "Нельзя использовать в машине");
+                    if(!ProxDetectorS(2.0, playerid, idpl)) return 1;
+                    new Float:angle;
+                    GetPlayerFacingAngle(playerid, angle);
+                    SetPlayerFacingAngle(idpl, angle + 180);
+                    format(stringer1, sizeof(stringer1), "%s пожал(а) руку %s'у",PI[playerid][pNames],PI[idpl][pNames]);
+                    ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+                    if(PlayerCuffed[playerid] == 0) { FIXES_ApplyAnimation(playerid, "GANGS", "hndshkfa",4.0,0,0,0,0,0,1); }
+                    if(PlayerCuffed[idpl] == 0) { FIXES_ApplyAnimation(idpl, "GANGS", "hndshkfa",4.0,0,0,0,0,0,1); }
+                }
+            case 2: {
+                    if(!ProxDetectorS(8.0, playerid, idpl)) return SendClientMessage(playerid, COLOR_RED, "Человек слишком далеко!");
+                    new shltext[16];
+                    if(PI[idpl][pGunLic]) { shltext = "Есть"; } else { shltext = "Нет"; }
+                    SendClientMessage(playerid,COLOR_GREY, "-----------===[ PASSPORT ]===----------");
+                    SendMes(playerid, COLOR_YELLOW2, "Имя: %s ",PI[idpl][pNames]);
+                    SendMes(playerid, COLOR_YELLOW2, "Возраст: %d  Телефон: %d",PI[idpl][pLevel],PI[idpl][pPnumber]);
+                    if(PI[playerid][pFacePass] == 0)//Настояший паспорт
+                    {
+                        SendMes(playerid, COLOR_YELLOW2, "Фракция: %s",GetPlayerFracName[PI[idpl][pMember]]);
+                        SendMes(playerid, COLOR_YELLOW2, "Работа: %s",GetPlayerJobName(PI[idpl][pJob]));
+                        SendMes(playerid, COLOR_YELLOW2, "Разрешение на оружие: %s",shltext);
+                        SendMes(playerid, COLOR_YELLOW2, "Преступлений: %d",PI[idpl][pKills]);
+                        SendMes(playerid, COLOR_YELLOW2, "Законопослушность: %d",PI[idpl][pZakonp]);
+                        SendMes(playerid, COLOR_YELLOW2, "Военный билет: %s", PI[idpl][pVoenBill] ? ("{33AA33}Служил") : ("{AA3333}Не служил"));
+                        if(PI[idpl][pWanted] > 0) SendClientMessage(playerid, COLOR_REDD, "Внимание! Это человек в розыске!");
+                    }
+                    else
+                    {
+                        if(PI[idpl][pFacePass] == 1) SendClientMessage(playerid, COLOR_YELLOW2, "Фракция: Гражданин");
+                        else if(PI[idpl][pFacePass] == 2) SendClientMessage(playerid, COLOR_YELLOW2, "Фракция: ФСБ");
+                        else if(PI[idpl][pFacePass] == 3) SendClientMessage(playerid, COLOR_YELLOW2, "Фракция: S.W.A.T");
+                        else if(PI[idpl][pFacePass] == 4) SendClientMessage(playerid, COLOR_YELLOW2, "Фракция: Администрация Президента");
+                        SendClientMessage(playerid, COLOR_YELLOW2, "Работа: Безработный");
+                        SendClientMessage(playerid, COLOR_YELLOW2, "Разрешение на оружие: Есть");
+                        SendMes(playerid, COLOR_YELLOW2, "Преступлений: %d",PI[idpl][pKills]);
+                        SendMes(playerid, COLOR_YELLOW2, "Законопослушность: %d",PI[idpl][pZakonp]);
+                        SendClientMessage(playerid, COLOR_YELLOW2, "Военный билет: {33AA33}Служил");
+                    }
+                    SendClientMessage(playerid,COLOR_GREY, "=============================");
+                    format(stringer1,sizeof(stringer1), "%s показал(а) свой паспорт %s'у", PI[idpl][pNames], PI[playerid][pNames]);
+                    SetPlayerChatBubble(idpl,stringer1,COLOR_PURPLE,30.0,10000);
+                    format(stringer1, sizeof(stringer1), "%s показал(a) свой паспорт", PI[idpl][pNames]);
+                    ProxDetector(idpl, 10.0, COLOR_PURPLE, stringer1);
+                }
+            case 3: {
+                    if(!ProxDetectorS(8.0, playerid, idpl)) return SendClientMessage(playerid,COLOR_GREY,"Игрок не рядом с вами");
+                    new text1[20],text4[20],text5[20],text6[20],text7[20];
+                    if(PI[idpl][pVodPrava]) { text1 = "Есть"; } else { text1 = "Отсутствует"; }
+                    if(PI[idpl][pFlyLic]) { text4 = "Есть"; } else { text4 = "Отсутствует"; }
+                    if(PI[idpl][pBoatLic]) { text5 = "Есть"; } else { text5 = "Отсутствует"; }
+                    if(PI[idpl][pFishLic]) { text6 = "Есть"; } else { text6 = "Отсутствует"; }
+                    if(PI[idpl][pGunLic]) { text7 = "Есть"; } else { text7 = "Отсутствует"; }
+                    SendMes(playerid, 0xC0E1EEFF, "-------======[ LICENSES %s ]======-------",PI[idpl][pNames]);
+                    SendMes(playerid, 0xC0E1EEFF, "Водительские права: %s",text1);
+                    SendMes(playerid, 0xC0E1EEFF, "Лицензия на воздушный транспорт: %s",text4);
+                    SendMes(playerid, 0xC0E1EEFF, "Лицензия на водный транспорт: %s",text5);
+                    SendMes(playerid, 0xC0E1EEFF, "Лицензия рыболова: %s",text6);
+                    SendMes(playerid, 0xC0E1EEFF, "Лицензия на оружие: %s",text7);
+                    SendClientMessage(playerid,0x0AA8DAFF,"===============================");
+                    format(stringer1,sizeof(stringer1), "%s достал свои лицензии и показал %s'у",PI[idpl][pNames],PI[playerid][pNames]);
+                    ProxDetector(idpl, 30.0, COLOR_PURPLE, stringer1);
+                    format(stringer1,sizeof(stringer1), "показал свои лицензии %s'у",PI[playerid][pNames]);
+                    SetPlayerChatBubble(idpl,stringer1,COLOR_PURPLE,30.0,10000);
+
+                }
+            case 4: {
+                    if(!ProxDetectorS(8.0, playerid, idpl)) return SendClientMessage(playerid,COLOR_GREY,"Игрок не рядом с вами");
+                    format(stringer, sizeof(stringer), "{FFFFFF}SDPistol:{32CD32}.................{FFFFFF}%d процентов.\nDesertEagle:{32CD32}..............{FFFFFF}%d процентов.\nShotGun:{32CD32}..................{FFFFFF}%d процентов.\nMP5:{32CD32}......................{FFFFFF}%d процентов.\nAK47:{32CD32}.....................{FFFFFF}%d процентов.\nM4:{32CD32}.......................{FFFFFF}%d процентов.",
+                    PI[idpl][pSDPistol],PI[idpl][pDesertEagle],PI[idpl][pShotGun],PI[idpl][pMP5],PI[idpl][pAK47],PI[idpl][pM4]);
+                    format(stringer1, 90, "Skills %s",PI[idpl][pNames]);
+                    SPD(playerid,000,DIALOG_STYLE_MSGBOX,stringer1,stringer,"Выход","");
+                    format(stringer1, 90, "%s показывает свои навыки владения оружием %s",PI[idpl][pNames],PI[playerid][pNames]);
+                    ProxDetector(idpl, 25.0, COLOR_PURPLE, stringer1);
+                }
+            }
+            PI[playerid][pTargetAction] = 0;
+            PI[playerid][pTargetPlayer] = -1;
+            PI[idpl][pSelectPlayer] = -1;
+            return 1;
+        }
+        if(GetPVarInt(playerid, "ProverkaDice"))
+        {
+            if(GetPVarInt(playerid, "KostiName") < 999)
+            {
+                if(!IsPlayerInRangeOfPoint(playerid,240.0,5.2185,1013.3213,1301.1404)) return SendClientMessage(playerid, COLOR_WHITE, "Вы должны находиться в казино!");
+                new dice = random(12)+1;
+                new dice1 = random(12)+1;
+                new string[144];
+                format(string, 144, "%s и %s бросили кости. Результат: {CC9900}%i:%i",PI[GetPVarInt(playerid, "KostiName")][pNames],PI[playerid][pNames],dice,dice1);
+                ProxDetector(playerid, 30.0, 0xDD90FFFF, string);
+                if(dice > dice1)
+                {
+                    Hook_GivePlayerMoney(playerid, -GetPVarInt(playerid, "KostiMoney"));
+                    Hook_GivePlayerMoney(GetPVarInt(playerid, "KostiName"), GetPVarInt(playerid, "KostiMoney"));
+                    SendClientMessage(GetPVarInt(playerid, "KostiName"), COLOR_GREEN, "Поздравляем, Вы выиграли!");
+                    SendClientMessage(playerid, 0xFF6600AA, "К сожалению, Вы проиграли!");
+                    format(string, SMALL_SIZE, "~g~+%d$", GetPVarInt(playerid, "KostiMoney"));
+                    GameTextForPlayer(GetPVarInt(playerid, "KostiName"), string, 3000, 1);
+                    format(string, SMALL_SIZE, "~r~-%d$", GetPVarInt(playerid, "KostiMoney"));
+                    GameTextForPlayer(playerid, string, 3000, 1);
+                    format(string,SMALL_SIZE, "Выпало: %i",dice1);
+                    SetPlayerChatBubble(playerid,string,COLOR_ORANGE,30.0,10000);
+                    format(string,SMALL_SIZE, "Выпало: %i",dice);
+                    SetPlayerChatBubble(GetPVarInt(playerid, "KostiName"),string,TEAM_GROVE_COLOR,30.0,10000);
+                    ApplyAnimation(playerid,"CARRY","crry_prtial",4.1,1,0,0,1,1);
+                 //   SetPlayerAttachedObject(playerid, 1, 1851, 1, 0.062400, 0.453750, 0.000000, 0.000000, 94.689310, 0.000000);
+                    ApplyAnimation(GetPVarInt(playerid, "KostiName"),"CARRY","crry_prtial",4.1,1,0,0,1,1);
+                   // SetPlayerAttachedObject(GetPVarInt(playerid, "KostiName"), 1, 1851, 1, 0.062400, 0.453750, 0.000000, 0.000000, 94.689310, 0.000000);
+                    SetTimerEx("DiceOff",3000,0,"i",playerid);
+                    SetPVarInt(playerid, "OpustitRuki", 1);
+                    SetPVarInt(GetPVarInt(playerid, "KostiName"), "OpustitRuki",1);
+                    dicetime = gettime() + 10;
+                    DeletePVar(playerid, "ZapretDice");
+                    DeletePVar(GetPVarInt(playerid, "KostiName"), "ZapretDice");
+                    SetPVarInt(playerid, "KostiMoney",0);
+                    DeletePVar(playerid, "ProverkaDice");
+                    SetPVarInt(playerid, "KostiName",999);
+                }
+                if(dice < dice1)
+                {
+                    Hook_GivePlayerMoney(GetPVarInt(playerid, "KostiName"), -GetPVarInt(playerid, "KostiMoney"));
+                    Hook_GivePlayerMoney(playerid, GetPVarInt(playerid, "KostiMoney"));
+
+                    SendClientMessage(playerid, COLOR_GREEN, "Поздравляем, Вы выиграли!");
+                    SendClientMessage(GetPVarInt(playerid, "KostiName"), 0xFF6600AA, "К сожалению, Вы проиграли!");
+                    format(string, SMALL_SIZE, "~g~+%d$", GetPVarInt(playerid, "KostiMoney"));
+                    GameTextForPlayer(playerid, string, 3000, 1);
+                    format(string, SMALL_SIZE, "~r~-%d$", GetPVarInt(playerid, "KostiMoney"));
+                    GameTextForPlayer(GetPVarInt(playerid, "KostiName"), string, 3000, 1);
+                    format(string,SMALL_SIZE, "Выпало: %i",dice1);
+                    SetPlayerChatBubble(playerid,string,TEAM_GROVE_COLOR,30.0,10000);
+                    format(string,SMALL_SIZE, "Выпало: %i",dice);
+                    SetPlayerChatBubble(GetPVarInt(playerid, "KostiName"),string,COLOR_ORANGE,30.0,10000);
+                    ApplyAnimation(playerid,"CARRY","crry_prtial",4.1,1,0,0,1,1);
+                //    SetPlayerAttachedObject(playerid, 1 , 1851, 1, 0.062397, 0.453746, 0.000000, 0.000000, 94.689308, 0.000000);
+                    ApplyAnimation(GetPVarInt(playerid, "KostiName"),"CARRY","crry_prtial",4.1,1,0,0,1,1);
+                 //   SetPlayerAttachedObject(GetPVarInt(playerid, "KostiName"), 1, 1851, 1, 0.062400, 0.453750, 0.000000, 0.000000, 94.689310, 0.000000);
+                    SetTimerEx("DiceOff",3000,0,"i",playerid);
+                    SetPVarInt(playerid, "OpustitRuki", 1);
+                    SetPVarInt(GetPVarInt(playerid, "KostiName"), "OpustitRuki",1);
+                    dicetime = gettime() + 10;
+                    DeletePVar(playerid, "ZapretDice");
+                    DeletePVar(GetPVarInt(playerid, "KostiName"), "ZapretDice");
+                    DeletePVar(playerid, "KostiMoney");
+                    DeletePVar(playerid, "ProverkaDice");
+                    SetPVarInt(playerid, "KostiName",999);
+                    if(dicetime)
+                    return 1;
+                }
+                if(dice == dice1)
+                {
+                    SendClientMessage(playerid, COLOR_ORANGE, "Игра закончилась в ничью!");
+                    SendClientMessage(GetPVarInt(playerid, "KostiName"), COLOR_ORANGE, "Игра закончилась в ничью!");
+                    format(string,SMALL_SIZE, "Выпало: %i",dice1);
+                    SetPlayerChatBubble(playerid,string,COLOR_LIGHTBLUE,30.0,10000);
+                    format(string,SMALL_SIZE, "Выпало: %i",dice);
+                    SetPlayerChatBubble(GetPVarInt(playerid, "KostiName"),string,COLOR_LIGHTBLUE,30.0,10000);
+                    ApplyAnimation(playerid,"CARRY","crry_prtial",4.1,1,0,0,1,1);
+                  //  SetPlayerAttachedObject(playerid, 1 , 1851, 1, 0.062397, 0.453746, 0.000000, 0.000000, 94.689308, 0.000000);
+                    ApplyAnimation(GetPVarInt(playerid, "KostiName"),"CARRY","crry_prtial",4.1,1,0,0,1,1);
+                   // SetPlayerAttachedObject(GetPVarInt(playerid, "KostiName"), 1, 1851, 1, 0.062400, 0.453750, 0.000000, 0.000000, 94.689310, 0.000000);
+                    SetTimerEx("DiceOff",3000,0,"i",playerid);
+                    SetPVarInt(playerid, "OpustitRuki", 1);
+                    SetPVarInt(GetPVarInt(playerid, "KostiName"), "OpustitRuki",1);
+                    dicetime = gettime() + 5;
+                    DeletePVar(playerid, "ZapretDice");
+                    DeletePVar(GetPVarInt(playerid, "KostiName"), "ZapretDice");
+                    DeletePVar(playerid, "KostiMoney");
+                    DeletePVar(playerid, "ProverkaDice");
+                    SetPVarInt(playerid, "KostiName",999);
+                }
+            }
+        }
+    }
+    if(newkeys & KEY_WALK)
+    {
+        // Сухопутные
+
+        if(IsPlayerInRangeOfPoint(playerid, 2.0, -42.7930,921.9846,12.0020))
+        {
+            if(PI[playerid][pAdmin]) return SendClientMessage(playerid, COLOR_WHITE, !""SERVER"~ {FFFFFF}Администратор не может работать развозчиком.");
+
+            if(GetPVarInt(playerid, "work_eda") != -1)
+            {
+                DisablePlayerCheckpoint(playerid);
+                PicCP[playerid] = 0;
+
+                if(moped_online[playerid] != INVALID_VEHICLE_ID)
+                {
+                    DestroyVehicle(moped_online[playerid]);
+                    moped_online[playerid] = INVALID_VEHICLE_ID;
+                }
+                if(GetPlayerSkin(playerid) != PI[playerid][pChar]) SetPlayerSkin(playerid, PI[playerid][pChar]);
+                SetPVarInt(playerid, "work_eda", -1);
+                SPD(playerid, 0000, DIALOG_STYLE_MSGBOX, !"{FFD700}Яндекс Еда", !"{FFFFFF}Вы успешно уволились.", !"ОК", !"");
+                return 1;
+            }
+            SPD(playerid, 1987, DIALOG_STYLE_MSGBOX, !"{FFD700}Яндекс Еда", "{FFD700}Хотите у нас работать?\n\n{ffffff}За каждый заказ вы будете получать:\n{32CD32}100.000$\n500 доната\n\n{ffffff}Начнем работу?", !"Да", !"Нет");
+        }
+        if(IsPlayerInRangeOfPoint(playerid, 2.0, 2566.1426, -2007.0017, 21.9609))
+        {
+            if(GetPVarInt(playerid, "UgonInvite") == 1 || PI[playerid][pUgonTimer] > 0) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы уже начали угон, пожалуйста ожидайте сообщение от Володи.");
+
+            return SPD(playerid, 6125, DIALOG_STYLE_MSGBOX,
+            !""SERVER"NPC: {afafaf}Володя",
+            !"{FFFFFF}Здарова, бродяга!\n\nОбъясняю всё в кратце.\nТебе нужно угнать автомобиль, у тебя будет 15 минут\nСкину координаты через пару секунд тебе на мобилу\nЗа угон ты получишь вознаграждение ниже:\n\n\
+            {33aa33}- От 100 до 500 донат-очков\n\
+            - От 10 до 20 милллионов\n\n\
+            {FFFFFF}Готов ли ты приступить к этому делу?", !"Погнали", !"Отказаться");
+        }
+        if(IsPlayerInRangeOfPoint(playerid, 1.5, -1458.8229,-800.6911,14.0578))
+        {
+            return SPD(playerid, 4211, DIALOG_STYLE_LIST, !""SERVER"Куда отправиться?", "1. Выбрать этаж\n2. Улица", !"Выбрать", !"Закрыть");
+        }
+        if(GetPlayerVirtualWorld(playerid) > 40)
+        {
+            for(new h = 0; h < sizeof(HouseInfo); h++)
+            {
+                if(IsPlayerInRangeOfPoint(playerid,  3.0, -1026.7469,-2611.7305,18.6245) && GetPlayerVirtualWorld(playerid) == h+50)
+                {
+                    SetPlayerInteriorEx(playerid,0);
+                    SetPlayerVirtualWorldEx(playerid,0);
+                    SetPPos(playerid,HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez]);
+                    SetPVarInt(playerid, "ExitHouse",1);
+                    return 1;
+                }
+                else if(IsPlayerInRangeOfPoint(playerid, 2.0, HouseInfo[h][hExitx], HouseInfo[h][hExity], HouseInfo[h][hExitz]) && GetPlayerVirtualWorld(playerid) == h+50)
+                {
+                    switch(HouseInfo[h][hKlass])
+                    {
+                        case 3: format(stringer1, sizeof(stringer1), ""SERVER"[1]{FFFFFF} Улица\n"SERVER"[2]{FFFFFF} Гараж\n"SERVER"[3]{FFFFFF} Подвал");
+                        case 4..5: format(stringer1, sizeof(stringer1), ""SERVER"[1]{FFFFFF} Улица\n"SERVER"[2]{FFFFFF} Гараж\n"SERVER"[3]{FFFFFF} Подвал");
+                        default: format(stringer1, sizeof(stringer1), ""SERVER"[1]{FFFFFF} Улица\n"SERVER"[2]{FFFFFF} Гараж");
+                    }
+                    return SPD(playerid,70,DIALOG_STYLE_LIST, "{FFD300}Выберите место, куда вы хотите выйти:",stringer1, "Далее", "Отмена");
+                }
+                else if(PI[playerid][pLocal] != -1 && (IsPlayerInRangeOfPoint(playerid, 3.0, -1050.9579,453.4256,2.0479) || IsPlayerInRangeOfPoint(playerid, 3.0, -1579.0845,467.1120,43.3883)) && GetPlayerVirtualWorld(playerid) == h+50)
+                {
+                    SetPlayerInterior(playerid,HouseInfo[PI[playerid][pLocal]][hInt]);
+                    SetPlayerVirtualWorld(playerid,PI[playerid][pLocal]+50);
+                    SetPPos(playerid,HouseInfo[h][hExitx], HouseInfo[h][hExity], HouseInfo[h][hExitz]);
+                }
+            }
+        }
+        if(IsABankomat(playerid) && GetPlayerState(playerid) == PLAYER_STATE_ONFOOT)
+        {
+            FIXES_ApplyAnimation(playerid,"CRIB","CRIB_Use_Switch",4.0,0,0,0,0,0);
+            SPD(playerid, 8900, DIALOG_STYLE_LIST, ""SERVER"Банкомат", "1.{ffffff} Снять наличные\n2.{ffffff} Баланс\n3.{ffffff} Домашний счёт\n4.{ffffff} Пополнить счет телефона\n5. {ffffff}Пополнить счёт бизнеса", "Выбрать", "Закрыть");
+        }
+        return 1;
+    }
+    if((newkeys & KEY_AIM) && (newkeys & KEY_WALK)) {
+        if(PI[playerid][pSelectPlayer] > -1) return SendClientMessage(playerid, COLOR_GREY, "Вы уже взаимодействуете с игроком!");
+        foreach(Player, i) {
+            if(GetDistanceBetweenPlayers(playerid,i) < 3.0 && playerid != i && PI[i][pTargetPlayer] < 0) {
+                new string[144];
+                format(string, sizeof(string), ""SERVER"Действие с игроком: %s", PI[i][pNames]);
+                SetPVarInt(playerid, "IdMn", i);
+                PI[playerid][pSelectPlayer] = i;
+                PI[i][pTargetPlayer] = playerid;
+                ShowPlayerDialog(playerid, 7983, DIALOG_STYLE_LIST, string, "1. Поздороваться\n2. Показать паспорт\n3. Показать лицензии\n4. Показать выписку из тира", "Выбрать", "Отмена");
+                return 1;
+            }
+        }
+    }
+    if(newkeys == 8 && GetPVarInt(playerid, "Selfie") > 0) return NextSelfie(playerid);
+    if (((newkeys & KEY_WALK && newkeys & KEY_UP) || (newkeys & KEY_WALK && newkeys & KEY_DOWN) || (newkeys & KEY_WALK && newkeys & KEY_LEFT) || (newkeys & KEY_WALK && newkeys & KEY_RIGHT))
+            || ((oldkeys & KEY_WALK && newkeys & KEY_UP) || (oldkeys & KEY_WALK && newkeys & KEY_DOWN) || (oldkeys & KEY_WALK && newkeys & KEY_LEFT) || (oldkeys & KEY_WALK && newkeys & KEY_RIGHT))
+            || ((newkeys & KEY_WALK && oldkeys & KEY_UP) || (newkeys & KEY_WALK && oldkeys & KEY_DOWN) || (newkeys & KEY_WALK && oldkeys & KEY_LEFT) || (newkeys & KEY_WALK && oldkeys & KEY_RIGHT))
+            && GetPlayerState(playerid) == PLAYER_STATE_ONFOOT && AntiSbiv[playerid] < gettime()) {
+        if(PI[playerid][Settings][3] != 0) SetPVarInt(playerid,"playerWalkTimer",_:SetTimerEx("AnimationWalk",200,0,"d",playerid));
+    }
+    if(newkeys == 16)
+    {
+        if(GetPVarInt(playerid, "rentrc") == 1)
+        {
+            ShowPlayerDialog(playerid, 1939, DIALOG_STYLE_MSGBOX, "{ffffb3}Подтверждение действия", "{ffffff}Вы действительно хотите покинуть транспортное средство?", "Да", "Отмена");
+        }
+        if(GetPVarInt(playerid,"Animation") == 1)
+        {
+            ClearAnimations(playerid);
+            SetPVarInt(playerid,"Animation",0);
+        }
+        if(IsAFoods(playerid)) return ClearAnimations(playerid, true);
+
+    }
+    if(newkeys == KEY_NO)
+    {
+        if(IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == 2)
+        {
+            if(!IsAPlane(GetPlayerVehicleID(playerid)) && !IsABoat(GetPlayerVehicleID(playerid)) && IsRotators(GetVehicleModel(GetPlayerVehicleID(playerid))))
+            {
+                new vid = GetPlayerVehicleID(playerid);
+
+                if(Indicators_xqz[vid][0]) DestroyDynamicObject(Indicators_xqz[vid][0]), DestroyDynamicObject(Indicators_xqz[vid][1]),Indicators_xqz[vid][0]=0;
+                else if(Indicators_xqz[vid][2]) DestroyDynamicObject(Indicators_xqz[vid][2]), DestroyDynamicObject(Indicators_xqz[vid][3]),Indicators_xqz[vid][2]=0;
+                else SetVehicleIndicator(vid,0,1);
+            }
+        }
+        if(!IsPlayerInAnyVehicle(playerid))
+        {
+            if(IsABankomat(playerid))
+            {
+                if(GetPlayerState(playerid) != PLAYER_STATE_ONFOOT) return 1;
+                FIXES_ApplyAnimation(playerid,"CRIB","CRIB_Use_Switch",4.0,0,0,0,0,0);
+                SPD(playerid, 8900, DIALOG_STYLE_LIST, ""SERVER"Банкомат", "1.{ffffff} Снять наличные\n2.{ffffff} Баланс\n3.{ffffff} Домашний счёт\n4.{ffffff} Пополнить счет телефона\n5. {ffffff}Пополнить счёт бизнеса", "Выбрать", "Закрыть");
+                return 1;
+            }
+        }
+        if(IsPlayerInRangeOfPoint(playerid,2,2130.2817,1626.2802,993.6882))
+        {
+            SetPPos(playerid,1488.7897,-1722.0220,8.1985);
+            SetPlayerVirtualWorldEx(playerid,0);
+            SetPlayerInteriorEx(playerid,0);
+            SetPlayerFacingAngle(playerid, 180.0);
+            return 1;
+        }
+        else if(IsPlayerInRangeOfPoint(playerid,1.0,1172.1096,1357.7673,10.9219))
+        {
+            if(PI[playerid][pNarcoLomka] > 2000) return SendClientMessage(playerid,0xFF0000AA,"Вы наркозависимы!\nПроконсультируйтесь с доктором!");
+            else if(PI[playerid][pNarcoLomka] <= 2000) return SendClientMessage(playerid,COLOR_WHITE,"Поздравляю! Наркотической зависимости не обнаружено!");
+        }
+        else if(GetPlayerVirtualWorld(playerid) > 40)
+        {
+            for(new h = 0; h < sizeof(HouseInfo); h++)
+            {
+                if(IsPlayerInRangeOfPoint(playerid,  3.0, -1026.7469,-2611.7305,18.6245) && GetPlayerVirtualWorld(playerid) == h+50)
+                {
+                    SetPlayerInteriorEx(playerid,0);
+                    SetPlayerVirtualWorldEx(playerid,0);
+                    SetPPos(playerid,HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez]);
+                    SetPVarInt(playerid, "ExitHouse",1);
+                    return 1;
+                }
+                else if(IsPlayerInRangeOfPoint(playerid, 2.0, HouseInfo[h][hExitx], HouseInfo[h][hExity], HouseInfo[h][hExitz]) && GetPlayerVirtualWorld(playerid) == h+50)
+                {
+                    switch(HouseInfo[h][hKlass])
+                    {
+                        case 3..5: format(stringer1, sizeof(stringer1), ""SERVER"[1]{FFFFFF} Улица\n"SERVER"[2]{FFFFFF} Гараж\n"SERVER"[3]{FFFFFF} Подвал");
+                        default: format(stringer1, sizeof(stringer1), ""SERVER"[1]{FFFFFF} Улица\n"SERVER"[2]{FFFFFF} Гараж");
+                    }
+                }
+            }
+        }
+    }
+    if(newkeys & KEY_SECONDARY_ATTACK  || (newkeys & KEY_SUBMISSION  && newkeys & KEY_SECONDARY_ATTACK ))
+    {
+        if(udar[playerid] >= 500)
+        {
+            SendClientMessage(playerid, COLOR_GRAD1, "Урок закончен, чтобы продолжить начните новый урок у тренера");
+            FIXES_ApplyAnimation(playerid,"FAT","IDLE_tired",4.0,0,0,0,0,0,1);
+            format(stringer1,sizeof(stringer1), "Устал");
+            SetPlayerChatBubble(playerid,stringer1,COLOR_PURPLE,30.0,10000);
+        }
+    }
+    /************************************************************************************/
+    if(newkeys == KEY_CROUCH)
+    {
+        if((IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 0 ] [ 0 ], pos_tuning [ 0 ] [ 1 ], pos_tuning [ 0 ] [ 2 ])
+        || IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 1 ] [ 0 ], pos_tuning [ 1 ] [ 1 ], pos_tuning [ 1 ] [ 2 ])
+        || IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 2 ] [ 0 ], pos_tuning [ 2 ] [ 1 ], pos_tuning [ 2 ] [ 2 ])
+        || IsPlayerInRangeOfPoint(playerid, 2.5, pos_tuning [ 3 ] [ 0 ], pos_tuning [ 3 ] [ 1 ], pos_tuning [ 3 ] [ 2 ])) && GetPlayerState(playerid) == 2) // Заехать в тюнинг
+        {
+            if(!IsPlayerInVehicle(playerid, GetPlayerOwnableCar(playerid))) return SendClientMessage(playerid, COLOR_SILVER, "Вы должны быть за рулем своего автомобиля");
+            if(GetVehicleFreeSeat(GetPlayerVehicleID(playerid)) == -1) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Для начала высадите всех пассажиров.");
+
+            SetPVarInt(playerid, "playerTune", 1);
+            SetVehiclePos(GetPlayerOwnableCar(playerid), -33.8039,-704.3562,1201.780);
+            SetVehicleZAngle(GetPlayerOwnableCar(playerid), 269.3929);
+
+            SetCameraBehindPlayer(playerid);
+            SetVehicleVirtualWorld(GetPlayerOwnableCar(playerid), playerid + 1);
+            SetPlayerVirtualWorldEx(playerid, playerid + 1);
+
+            ShowTuneShowPlayerDialog(playerid);
+
+            TogglePlayerControllable(playerid, false);
+            return 1;
+        }
+        if((IsPlayerInRangeOfPoint(playerid, 5.0, 559.1658,1018.5139,1000.5707) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 553.8409,1079.1116,1000.5656) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 482.3608,1078.1479,1000.5598) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 476.8492,1018.9084,1000.5606) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 439.7101,999.9655,1000.5635) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 440.4811,963.4012,1000.5619) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 481.9053,957.4407,1000.5704) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 499.9991,919.9636,1000.5712) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 553.3356,920.3265,1000.5743) ||
+        IsPlayerInRangeOfPoint(playerid, 5.0, 558.3207,962.4587,1000.5584)) && GetPlayerState(playerid) == 2) // Выезд из квартирного паркинга
+        {
+            if(GetVehicleFreeSeat(GetPlayerVehicleID(playerid)) == -1) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Для начала высадите всех пассажиров.");
+
+            if ( ! GetPVarInt ( playerid, "p_podezd_id" ) ) return 1 ;
+            new t = GetPVarInt ( playerid, "p_podezd_id" ) - 1 ;
+
+            SetVehiclePos(GetPlayerVehicleID(playerid), pod_info [ t ] [ pod_park_pos ] [ 0 ], pod_info [ t ] [ pod_park_pos ] [ 1 ], pod_info [ t ] [ pod_park_pos ] [ 2 ]);
+            SetVehicleZAngle(GetPlayerVehicleID(playerid), pod_info [ t ] [ pod_park_pos ] [ 3 ]);
+            SetCameraBehindPlayer(playerid);
+            LinkVehicleToInterior(GetPlayerVehicleID(playerid),0);
+            SetPlayerInteriorEx(playerid,0);
+            SetPlayerVirtualWorldEx(playerid,0);
+            SetVehicleVirtualWorld(GetPlayerVehicleID(playerid), 0);
+            DeletePVar(playerid, "p_podezd_id");
+            DeletePVar(playerid, "p_floor_podezd");
+            return 1;
+        }
+        if(IsPlayerInRangeOfPoint(playerid,  10.0, 995.9982,999.8981,1501.0314) && GetPlayerVirtualWorld(playerid) == PI[playerid][pPhousekey]+50 && GetPlayerState(playerid) == 2)
+        {
+            SetVehiclePos(GetPlayerOwnableCar(playerid),HouseInfo[PI[playerid][pPhousekey]][hCarx], HouseInfo[PI[playerid][pPhousekey]][hCary], HouseInfo[PI[playerid][pPhousekey]][hCarz]);
+            SetVehicleZAngle(GetPlayerOwnableCar(playerid), HouseInfo[PI[playerid][pPhousekey]][hCarc]);
+            SetCameraBehindPlayer(playerid);
+            LinkVehicleToInterior(GetPlayerOwnableCar(playerid),0);
+            SetPlayerInteriorEx(playerid,0);
+            SetPlayerVirtualWorldEx(playerid,0);
+            SetVehicleVirtualWorld(GetPlayerOwnableCar(playerid), 0);
+            return 1;
+        }
+        else if(IsPlayerInRangeOfPoint(playerid, 5.0, -2528.4910, 507.5064, -11.1088) && PI[playerid][pMember] == 2 && GetPlayerState(playerid) == 2)
+        {
+            SetVehiclePos(GetPlayerVehicleID(playerid), -2443.2319, 522.4879, 29.6709);
+            SetVehicleZAngle(GetPlayerVehicleID(playerid), 179.7420);
+            SetCameraBehindPlayer(playerid);
+            return 1;
+        }
+        else if(IsPlayerInRangeOfPoint(playerid, 5.0, -2438.5713, 521.9441, 29.6710) && PI[playerid][pMember] == 2 && GetPlayerState(playerid) == 2)
+        {
+            SetVehiclePos(GetPlayerVehicleID(playerid), -2529.2104, 501.5463, -11.1091);
+            SetVehicleZAngle(GetPlayerVehicleID(playerid), 270.1569);
+            SetCameraBehindPlayer(playerid);
+            return 1;
+        }
+
+    }
+    switch(oldkeys)
+    {
+    case 8:
+        {
+            if(RouleTable[playerid] != -1 && ChooseBet[playerid] == 0)
+            {
+                if(StartRoule[RouleTable[playerid]] == 1) return SendClientMessage(playerid, COLOR_SILVER, "Дождитесь окончанию текущей игры");
+                {
+                    new message[128], limit[2];
+                    switch(RouleTable[playerid])
+                    {
+                    case 0,4,9: limit[0] = 5000000, limit[1] = 10000000;
+                    case 1,5,8: limit[0] = 5000000, limit[1] = 10000000;
+                    case 2,6,11: limit[0] = 1000000, limit[1] = 5000000;
+                    case 3,7,10: limit[0] = 500000, limit[1] = 1000000;
+                    }
+                    format(message, sizeof(message), "{FFFFFF}Введите вашу ставку:\n{04B404}Примечание: минимальная сума %d руб., максимальная - %d руб.", limit[0], limit[1]);
+                    ShowPlayerDialog(playerid, D_ROULE, DIALOG_STYLE_INPUT, "Ставка", message, "Далее", "Отмена");
+                }
+            }
+        }
+    case 16:
+        {
+            if(GetPlayerNearestDiceTable(playerid) != -1 && DiceTable[playerid] == -1 && CroupierTable[playerid] == -1)
+            {
+                if(GetPlayerVirtualWorld(playerid) == VW_DRAGONS || GetPlayerVirtualWorld(playerid) == VW_CALIGULAS)
+                {
+                    if(!OnPlayerEnterDiceTable(playerid, GetPlayerNearestDiceTable(playerid))) return SendClientMessage(playerid, COLOR_SILVER, "За столом нету свободного места");
+                }
+            }
+            else if(RouleTable[playerid] != -1)
+            {
+                if(GetPlayerVirtualWorld(playerid) == VW_DRAGONS || GetPlayerVirtualWorld(playerid) == VW_CALIGULAS)
+                {
+                    if(ChooseBet[playerid] == 1)
+                    {
+                        ShowPlayerDialog(playerid, D_ROULE+1, DIALOG_STYLE_MSGBOX, "Подтвердите выход", "На кону стоит ваша ставка\nВы действительно хотите выйти?", "Да", "Нет");
+                    }
+                    else
+                    {
+                        ShowPlayerDialog(playerid, D_ROULE+2, DIALOG_STYLE_MSGBOX, "Подтвердите выход", "Вы дейстивельно хотите закончить игру?", "Да", "Нет");
+                    }
+                }
+            }
+            else if(GetPlayerNearestRouleTable(playerid) != -1 && RouleTable[playerid] == -1 && CroupierTable[playerid] == -1)
+            {
+                if(GetPlayerVirtualWorld(playerid) == VW_DRAGONS || GetPlayerVirtualWorld(playerid) == VW_CALIGULAS)
+                {
+                    if(!OnPlayerEnterRouleTable(playerid, GetPlayerNearestRouleTable(playerid))) return SendClientMessage(playerid, COLOR_SILVER, "За столом нету свободного места");
+                }
+            }
+            else if(GetPlayerNearestBlackJackTable(playerid) != -1 && BlackJackTable[playerid] == -1 && CroupierTable[playerid] == -1)
+            {
+                if(GetPlayerVirtualWorld(playerid) == VW_DRAGONS || GetPlayerVirtualWorld(playerid) == VW_CALIGULAS)
+                {
+                    if(!OnPlayerEnterBlackJackTable(playerid, GetPlayerNearestBlackJackTable(playerid))) return SendClientMessage(playerid, COLOR_SILVER, "За столом нету свободного места");
+                }
+            }
+            else if(CroupierTable[playerid] != -1)
+            {
+                if(GetPlayerVirtualWorld(playerid) == VW_DRAGONS || GetPlayerVirtualWorld(playerid) == VW_CALIGULAS)
+                {
+                    if(CroupierGame[playerid] == 2)
+                    {
+                        OnPlayerExitRouleTable(playerid, CroupierTable[playerid]);
+                    }
+                }
+            }
+        }
+    }
+    //----------------------------------- [ Тренер ]----------------------------------------
+    if(newkeys & KEY_HANDBRAKE  && newkeys & KEY_SECONDARY_ATTACK )
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 3.0,768.5205,-2.8860,1000.7214))
+        {
+            if(PI[playerid][pBoxSkill] >= 5000) return   SendClientMessage(playerid, COLOR_GRAD1, "Вы уже владеете данным стилем искусства");
+            if(PI[playerid][pBoxstyle] == 1)
+            {
+                if(PI[playerid][pBoxSkill] >= 2500)
+                {
+                    if(PI[playerid][pBoxSkill] == 2500) SendClientMessage(playerid, COLOR_GREEN, "Ваш навык владения техникой стиля повысился");
+                    SetPlayerFightingStyle (playerid, FIGHT_STYLE_BOXING);
+                    PI[playerid][pBoxSkill] += 1;
+                    udar[playerid] +=2;
+                    format(stringer1, sizeof(stringer1), "+ %d / 5000 BOX", PI[playerid][pBoxSkill]);
+                    GameTextForPlayer(playerid, stringer1, 20, 1);
+                    return 1;
+                }
+                PI[playerid][pBoxSkill] += 1;
+                udar[playerid] +=2;
+                format(stringer1, sizeof(stringer1), "~w~+ %d / 5000 BOX", PI[playerid][pBoxSkill]);
+                GameTextForPlayer(playerid, stringer1, 20, 1);
+                SetPlayerFightingStyle (playerid, FIGHT_STYLE_NORMAL);
+                return 1;
+            }
+            else
+            {
+                SendClientMessage(playerid, COLOR_GRAD1, "Тренер не проводил с Вами занятий по Боксу");
+                FIXES_ApplyAnimation(playerid,"FAT","IDLE_tired",4.0,0,0,0,0,0,1);
+                return 1;
+            }
+        }
+        else if(IsPlayerInRangeOfPoint(playerid, 3.0,761.1723,11.3122,1001.1639))
+        {
+            if(PI[playerid][pKickboxSkill] >= 5000) return SendClientMessage(playerid, COLOR_GRAD1, "Вы уже владеете данным стилем искусства");
+            if(PI[playerid][pKickstyle] == 1)
+            {
+                if(PI[playerid][pKickboxSkill] >= 2500)
+                {
+                    if(PI[playerid][pKickboxSkill] == 2500) SendClientMessage(playerid, COLOR_GREEN, "Ваш навык владения техникой стиля повысился");
+                    SetPlayerFightingStyle (playerid, FIGHT_STYLE_KNEEHEAD);
+                    PI[playerid][pKickboxSkill] += 1;
+                    udar[playerid] +=2;
+                    format(stringer1, sizeof(stringer1), "+ %d / 5000 KICKBOX", PI[playerid][pKickboxSkill]);
+                    GameTextForPlayer(playerid, stringer1, 20, 1);
+                    return 1;
+                }
+                PI[playerid][pKickboxSkill] += 1;
+                udar[playerid] +=2;
+                format(stringer1, sizeof(stringer1), "~w~+ %d / 5000 KICKBOX", PI[playerid][pKickboxSkill]);
+                GameTextForPlayer(playerid, stringer1, 20, 1);
+                SetPlayerFightingStyle (playerid, FIGHT_STYLE_NORMAL);
+                return 1;
+            }
+            else
+            {
+                SendClientMessage(playerid, COLOR_GRAD1, "Тренер не проводил с Вами занятий по Кик - Боксу");
+                FIXES_ApplyAnimation(playerid,"FAT","IDLE_tired",4.0,0,0,0,0,0,1);
+                return 1;
+            }
+        }
+        else if(IsPlayerInRangeOfPoint(playerid, 3.0,769.8723,14.4393,1000.6978))
+        {
+            if(PI[playerid][pKongfuSkill] >= 5000) return SendClientMessage(playerid, COLOR_GRAD1, "Вы уже владеете данным стилем искусства");
+            if(PI[playerid][pKstyle] == 1 )
+            {
+                if(PI[playerid][pKongfuSkill] >= 2500)
+                {
+                    if(PI[playerid][pKongfuSkill] == 2500) SendClientMessage(playerid, COLOR_GREEN, "Ваш навык владения техникой стиля повысился");
+                    PI[playerid][pKongfuSkill] += 1;
+                    udar[playerid] +=2;
+                    format(stringer1, sizeof(stringer1), "+ %d / 5000 KONG FU", PI[playerid][pKongfuSkill]);
+                    GameTextForPlayer(playerid, stringer1, 20, 1);
+                    SetPlayerFightingStyle (playerid, FIGHT_STYLE_KUNGFU);
+                    return 1;
+                }
+                PI[playerid][pKongfuSkill] += 1;
+                udar[playerid] +=2;
+                format(stringer1, sizeof(stringer1), "~w~+ %d / 5000 KONG FU", PI[playerid][pKongfuSkill]);
+                GameTextForPlayer(playerid, stringer1, 20, 1);
+                SetPlayerFightingStyle (playerid, FIGHT_STYLE_NORMAL);
+            }
+            else
+            {
+                SendClientMessage(playerid, COLOR_GRAD1, "Тренер не проводил с Вами занятий по Конг - Фу");
+                FIXES_ApplyAnimation(playerid,"FAT","IDLE_tired",4.0,0,0,0,0,0,1);
+                return 1;
+            }
+        }
+    }
+    else if (newkeys == KEY_ACTION) pc_cmd_en(playerid, "");
+    else if(newkeys == KEY_NO)
+    {
+        if(PI[playerid][pTargetAction] > 0) {
+            new string[144], ms[40];
+            switch(PI[playerid][pTargetAction]) {
+            case 1: ms = "поздороваться с вами";
+            case 2: ms = "просмотеть ваш паспорт";
+            case 3: ms = "просмотреть ваши лицензии";
+            case 4: ms = "просмотреть вашу выписку из тира";
+            }
+            format(string, sizeof(string), "%s отказался %s!", PI[playerid][pNames], ms);
+            SendClientMessage(PI[playerid][pTargetPlayer], COLOR_RED, string);
+            PI[playerid][pTargetAction] = 0;
+            PI[PI[playerid][pTargetPlayer]][pSelectPlayer] = -1;
+            PI[playerid][pTargetPlayer] = -1;
+            SendClientMessage(playerid, COLOR_WHITE, "Вы отказались от предложения!");

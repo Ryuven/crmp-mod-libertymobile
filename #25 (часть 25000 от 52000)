@@ -1,0 +1,1000 @@
+	Pricep3dtext[2] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Одежда{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[2], Pricep[2], 0.0, 0.0, 0.0);
+	Pricep3dtext[3] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Бензин{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[3], Pricep[3], 0.0, 0.0, 0.0);
+	Pricep3dtext[4] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Замороженные продукты{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[4], Pricep[4], 0.0, 0.0, 0.0);
+	Pricep3dtext[5] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Щебень{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[5], Pricep[5], 0.0, 0.0, 0.0);
+	Pricep3dtext[6] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Песок{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[6], Pricep[6], 0.0, 0.0, 0.0);
+	Pricep3dtext[7] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Известняк{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[7], Pricep[7], 0.0, 0.0, 0.0);
+	Pricep3dtext[8] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Замороженные продукты{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[8], Pricep[8], 0.0, 0.0, 0.0);
+	Pricep3dtext[9] = Create3DTextLabel("{ffa500}[Груз: {FFFFFF}Бензин{ffa500}]", COLOR_ORANGE, 0.0, 0.0, -100.0, 50.0, 0, 1);
+	Attach3DTextLabelToVehicle(Pricep3dtext[9], Pricep[9], 0.0, 0.0, 0.0);
+	
+    SetGameModeText(SERVER_TELEGRAM);
+
+    for(new cont_id; cont_id < 3; cont_id++) g_cont[cont_id][C_LEADER_BET] = -1;
+
+    online_server =
+    ronline_server = 0;
+
+    LoadRentBikePickups();
+
+    Menu();
+    ShowPlayerMarkers(PLAYER_MARKERS_MODE_GLOBAL);
+    ShowNameTags(1);
+    SetNameTagDrawDistance(21.0);
+    EnableStuntBonusForAll(0);
+    DisableInteriorEnterExits();
+    SetWeather(10);
+    CreateTextDraws();
+    LoadCont();
+    gettime(ghour,gminute,gsecond);
+    SetWorldTime(ghour);
+
+    addd = 100;
+
+    Iter_Init(family_vehicles);
+    load_tuning();
+
+    CreateDynamic3DTextLabel("Выход\nВведите {FFFF00}/exit{FFFFFF} для выхода из квартиры", 0xFFFFFFFF,
+                                                                                            apartment_enter_medium [ 0 ], apartment_enter_medium [ 1 ], apartment_enter_medium [ 2 ] + 0.5,
+                                                                                            9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+
+    CreateDynamic3DTextLabel("Выход\nВведите {FFFF00}/exit{FFFFFF} для выхода из квартиры", 0xFFFFFFFF,
+                                                                                            apartment_exit_bich [ 0 ], apartment_exit_bich [ 1 ], apartment_exit_bich [ 2 ] + 0.5,
+                                                                                            9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+
+
+    //
+
+    CreateDynamicMapIcon ( -73.7082,855.6496,12.5978, 19, 0, 0, 0, -1, 200.0 ) ;	// МЭРИЯ
+    CreateDynamicMapIcon ( 2376.3416,-2140.9927,21.9603, 12, 0, 0, 0, -1, 200.0 ) ;	// банк 1
+    CreateDynamicMapIcon ( 409.1250,742.1978,12.0000, 12, 0, 0, 0, -1, 200.0 ) ;	// банк 2
+    CreateDynamicMapIcon ( 1852.1744,2039.6898,15.8850, 12, 0, 0, 0, -1, 200.0 ) ;	// банк 3
+    CreateDynamicMapIcon ( -111.6671,983.6417,12.6053, 25, 0, 0, 0, -1, 200.0 ) ;	// казино
+    CreateDynamicMapIcon ( -1043.8945,2205.2869,38.1196, 61, 0, 0, 0, -1, 200.0 ) ;	// хитманы
+    CreateDynamicMapIcon (  1816.3583,1780.4973,15.5142, 59, 0, 0, 0, -1, 200.0 ) ;	// армия
+    CreateDynamicMapIcon (  2126.7722,-1959.7263,20.2422, 23, 0, 0, 0, -1, 200.0 ) ;	// Россия 24
+    CreateDynamicMapIcon (  522.6404,300.6389,13.6113, 30, 0, 0, 0, -1, 200.0 ) ;	// ФСБ
+    CreateDynamicMapIcon (  148.4081,1263.8477,13.2951, 30, 0, 0, 0, -1, 200.0 ) ;	// МВД
+
+    //
+
+    CreateDynamicMapIcon ( 449.4808,2204.3970,12.1033, 55, 0, 0, 0, -1, 200.0 ) ;	// автосалон
+    CreateDynamicMapIcon ( 431.5799,1180.1960,12.0006, 55, 0, 0, 0, -1, 200.0 ) ;	// автосалон
+    CreateDynamicMapIcon ( 2329.2073,-1803.9750,22.4540, 55, 0, 0, 0, -1, 200.0 ) ;	// автосалон
+
+    CreateDynamicPickup ( 1276, 23,-1458.8229,-800.6911,14.0578, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Лифт\n{FFFFFF}Нажмите 'ALT'", -1, -1458.8229,-800.6911,14.0578, 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 547.7445,990.7732,1001.0000, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Загрузить личное т.с.\n{FFFFFF}Нажмите 'ALT'", -1, 547.7445,990.7732,1001.0000, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 559.1658,1018.5139,1000.5707, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №1\n{FFFFFF}Посигнальте (/pexit)", -1, 559.1658,1018.5139,1000.5707, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 553.8409,1079.1116,1000.5656, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №2\n{FFFFFF}Посигнальте (/pexit)", -1, 553.8409,1079.1116,1000.5656, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 482.3608,1078.1479,1000.5598, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №3\n{FFFFFF}Посигнальте (/pexit)", -1, 482.3608,1078.1479,1000.5598, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 476.8492,1018.9084,1000.5606, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №4\n{FFFFFF}Посигнальте (/pexit)", -1, 476.8492,1018.9084,1000.5606, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 439.7101,999.9655,1000.5635, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №5\n{FFFFFF}Посигнальте (/pexit)", -1, 439.7101,999.9655,1000.5635, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 440.4811,963.4012,1000.5619, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №6\n{FFFFFF}Посигнальте (/pexit)", -1, 440.4811,963.4012,1000.5619, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 481.9053,957.4407,1000.5704, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №7\n{FFFFFF}Посигнальте (/pexit)", -1, 481.9053,957.4407,1000.5704, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 499.9991,919.9636,1000.5712, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №8\n{FFFFFF}Посигнальте (/pexit)", -1, 499.9991,919.9636,1000.5712, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 553.3356,920.3265,1000.5743, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №9\n{FFFFFF}Посигнальте (/pexit)", -1, 553.3356,920.3265,1000.5743, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamicPickup ( 1276, 23, 558.3207,962.4587,1000.5584, -1, -1 ) ;
+    CreateDynamic3DTextLabel(""SERVER"Выезд №10\n{FFFFFF}Посигнальте (/pexit)", -1, 558.3207,962.4587,1000.5584, 15.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamic3DTextLabel(""SERVER"ЦЕРКОВЬ\n\n{009BFF}/divorce{FEFEFE} - развестись\n{009BFF}/propose{FEFEFE} - предложить руку и сердце.\n{009BFF}/witness{FEFEFE} - назначить свидетеля.", -1, 1879.8152,1170.2408,30.0091, 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+    CreateDynamic3DTextLabel(""SERVER"СКЛАД\n{009BFF}/getweapon{FEFEFE} - взять оружие", -1, 790.6520,-969.1252,1205.9318, 10.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, -1, -1);
+
+
+    /*
+                    ap_info [ house_id ] [ ap_safe ] = CreateDynamic3DTextLabel ( "— Сейф —\n{afafaf}Нажмите {FFFFFF}Y{afafaf} для взаимодействия", col_blue, pos_safe [ 0 ], pos_safe [ 1 ], pos_safe [ 2 ] + 0.8, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, ap_info [ house_id ] [ ap_id ] ) ;
+                }
+                case improve_freeze:
+                {
+                    ap_info [ house_id ] [ ap_fridge ] = CreateDynamic3DTextLabel ( "— Холодильник —\n{afafaf}Нажмите {FFFFFF}Y{afafaf} для взаимодействия", col_blue, pos_fridge [ 0 ], pos_fridge [ 1 ], pos_fridge [ 2 ] + 0.8, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, ap_info [ house_id ] [ ap_id ] ) ;
+    */
+
+    //
+    for(new i = 0; i < MAX_DICETABLES; i++)
+    {
+        for(new s = 0; s < 5; s++)
+        {
+            DiceTableInfo[i][dGamer][s] = -1;
+        }
+    }
+    for(new i = 0; i < MAX_ROULETABLES; i++)
+    {
+        for(new s = 0; s < 5; s++)
+        {
+            RouleTableInfo[i][rGamer][s] = -1;
+        }
+    }
+    for(new i = 0; i < MAX_BLACKJACKTABLES; i++)
+    {
+        for(new s = 0; s < 2; s++)
+        {
+            BlackJackTableInfo[i][jGamer][s] = -1;
+        }
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        CreateDynamic3DTextLabel("{009900}Играть в кости:\n{FF8800}/dice", -1, DiceTables[i][0], DiceTables[i][1], DiceTables[i][2], 5.0);
+        // CreateDynamicObject(1824, DiceTables[i][0], DiceTables[i][1], DiceTables[i][2], 0.0000000, 0.0000000, DiceTables[i][3]); //object(craps_table) (1)
+    }
+    /*
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        if(i >= 0 && i <= 3)
+        {
+            RouleWheel[i] = CreateDynamicObject(1979, RouleTables[i][0]-0.2, RouleTables[i][1]+1.35, RouleTables[i][2]-0.1, 0.0000000, 0.0000000, 0.0000000);
+        }
+        else
+        {
+            RouleWheel[i] = CreateDynamicObject(1979, RouleTables[i][0]-1.35, RouleTables[i][1]-0.2, RouleTables[i][2]-0.1, 0.0000000, 0.0000000, 0.0000000);
+        }
+        CreateDynamicObject(1978, RouleTables[i][0], RouleTables[i][1], RouleTables[i][2], 0.0000000, 0.0000000, RouleTables[i][3]);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        CreateDynamicObject(2188, BlackJackTables[i][0], BlackJackTables[i][1], BlackJackTables[i][2], 0.0000000, 0.0000000, BlackJackTables[i][3]);
+    }
+    */
+
+
+    for(new i = 0; i < sizeof(Atms); i++)
+    {
+        CreateDynamic3DTextLabel(""SERVER"Банкомат\n{afafaf}Для взаимодействия нажмите {FFFFFF}[ N ]",0xFFFFFFFF,Atms[i][0], Atms[i][1], Atms[i][2], 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, -1, -1) ;
+    }
+
+    DiceBox[0] = TextDrawCreate(622.000000, 135.000000, "_");
+    TextDrawBackgroundColor(DiceBox[0], 255);
+    TextDrawFont(DiceBox[0], 1);
+    TextDrawLetterSize(DiceBox[0], 0.300000, 22.400001);
+    TextDrawColor(DiceBox[0], -1);
+    TextDrawSetOutline(DiceBox[0], 0);
+    TextDrawSetProportional(DiceBox[0], 1);
+    TextDrawSetShadow(DiceBox[0], 1);
+    TextDrawUseBox(DiceBox[0], 1);
+    TextDrawBoxColor(DiceBox[0], 144);
+    TextDrawTextSize(DiceBox[0], 480.000000, 0.000000);
+
+    DiceTitle = TextDrawCreate(518.000000, 140.000000, "Dice");
+    TextDrawBackgroundColor(DiceTitle, 255);
+    TextDrawFont(DiceTitle, 2);
+    TextDrawLetterSize(DiceTitle, 0.779999, 1.900000);
+    TextDrawColor(DiceTitle, 16711935);
+    TextDrawSetOutline(DiceTitle, 0);
+    TextDrawSetProportional(DiceTitle, 1);
+    TextDrawSetShadow(DiceTitle, 1);
+
+    DiceSetBet = TextDrawCreate(512.000000, 280.000000, "Set bet");
+    TextDrawSetSelectable(DiceSetBet, true);
+    TextDrawBackgroundColor(DiceSetBet, 255);
+    TextDrawFont(DiceSetBet, 2);
+    TextDrawLetterSize(DiceSetBet, 0.480000, 1.400000);
+    TextDrawTextSize(DiceSetBet, 594.0, 10.0);
+    TextDrawColor(DiceSetBet, -16776961);
+    TextDrawSetOutline(DiceSetBet, 0);
+    TextDrawSetProportional(DiceSetBet, 1);
+    TextDrawSetShadow(DiceSetBet, 1);
+
+    DiceThrow = TextDrawCreate(516.000000, 296.000000, "Throw");
+    TextDrawSetSelectable(DiceThrow, true);
+    TextDrawBackgroundColor(DiceThrow, 255);
+    TextDrawFont(DiceThrow, 2);
+    TextDrawLetterSize(DiceThrow, 0.480000, 1.400000);
+    TextDrawTextSize(DiceThrow, 584.0, 10.0);
+    TextDrawColor(DiceThrow, -16776961);
+    TextDrawSetOutline(DiceThrow, 0);
+    TextDrawSetProportional(DiceThrow, 1);
+    TextDrawSetShadow(DiceThrow, 1);
+
+    DiceExit = TextDrawCreate(528.000000, 312.000000, "Exit");
+    TextDrawSetSelectable(DiceExit, true);
+    TextDrawBackgroundColor(DiceExit, 255);
+    TextDrawFont(DiceExit, 2);
+    TextDrawLetterSize(DiceExit, 0.480000, 1.400000);
+    TextDrawTextSize(DiceExit, 572.0, 10.0);
+    TextDrawColor(DiceExit, -16776961);
+    TextDrawSetOutline(DiceExit, 0);
+    TextDrawSetProportional(DiceExit, 1);
+    TextDrawSetShadow(DiceExit, 1);
+
+    DiceBox[1] = TextDrawCreate(618.000000, 160.000000, "_");
+    TextDrawBackgroundColor(DiceBox[1], 255);
+    TextDrawFont(DiceBox[1], 1);
+    TextDrawLetterSize(DiceBox[1], 0.500000, 11.899999);
+    TextDrawColor(DiceBox[1], -1);
+    TextDrawSetOutline(DiceBox[1], 0);
+    TextDrawSetProportional(DiceBox[1], 1);
+    TextDrawSetShadow(DiceBox[1], 1);
+    TextDrawUseBox(DiceBox[1], 1);
+    TextDrawBoxColor(DiceBox[1], 80);
+    TextDrawTextSize(DiceBox[1], 484.000000, 14.000000);
+
+    DiceBet = TextDrawCreate(500.000000, 230.000000, "Bet:");
+    TextDrawBackgroundColor(DiceBet, 255);
+    TextDrawFont(DiceBet, 3);
+    TextDrawLetterSize(DiceBet, 0.340000, 1.000000);
+    TextDrawColor(DiceBet, 0x013ADFAA);
+    TextDrawSetOutline(DiceBet, 0);
+    TextDrawSetProportional(DiceBet, 1);
+    TextDrawSetShadow(DiceBet, 1);
+
+    DiceBank = TextDrawCreate(500.000000, 245.000000, "Bank:");
+    TextDrawBackgroundColor(DiceBank, 255);
+    TextDrawFont(DiceBank, 3);
+    TextDrawLetterSize(DiceBank, 0.340000, 1.000000);
+    TextDrawColor(DiceBank, 0x013ADFAA);
+    TextDrawSetOutline(DiceBank, 0);
+    TextDrawSetProportional(DiceBank, 1);
+    TextDrawSetShadow(DiceBank, 1);
+
+    DiceMoney = TextDrawCreate(500.000000, 260.000000, "Money:");
+    TextDrawBackgroundColor(DiceMoney, 255);
+    TextDrawFont(DiceMoney, 3);
+    TextDrawLetterSize(DiceMoney, 0.340000, 1.000000);
+    TextDrawColor(DiceMoney, 0x013ADFAA);
+    TextDrawSetOutline(DiceMoney, 0);
+    TextDrawSetProportional(DiceMoney, 1);
+    TextDrawSetShadow(DiceMoney, 1);
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceSlot[i][0] = TextDrawCreate(488.000000, 167.000000, "1. -----------");
+        TextDrawBackgroundColor(DiceSlot[i][0], 255);
+        TextDrawFont(DiceSlot[i][0], 1);
+        TextDrawLetterSize(DiceSlot[i][0], 0.240000, 1.000000);
+        TextDrawColor(DiceSlot[i][0], -1);
+        TextDrawSetOutline(DiceSlot[i][0], 0);
+        TextDrawSetProportional(DiceSlot[i][0], 1);
+        TextDrawSetShadow(DiceSlot[i][0], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceSlot[i][1] = TextDrawCreate(488.000000, 178.000000, "2. -----------");
+        TextDrawBackgroundColor(DiceSlot[i][1], 255);
+        TextDrawFont(DiceSlot[i][1], 1);
+        TextDrawLetterSize(DiceSlot[i][1], 0.240000, 1.000000);
+        TextDrawColor(DiceSlot[i][1], -1);
+        TextDrawSetOutline(DiceSlot[i][1], 0);
+        TextDrawSetProportional(DiceSlot[i][1], 1);
+        TextDrawSetShadow(DiceSlot[i][1], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceSlot[i][2] = TextDrawCreate(488.000000, 189.000000, "3. -----------");
+        TextDrawBackgroundColor(DiceSlot[i][2], 255);
+        TextDrawFont(DiceSlot[i][2], 1);
+        TextDrawLetterSize(DiceSlot[i][2], 0.240000, 1.000000);
+        TextDrawColor(DiceSlot[i][2], -1);
+        TextDrawSetOutline(DiceSlot[i][2], 0);
+        TextDrawSetProportional(DiceSlot[i][2], 1);
+        TextDrawSetShadow(DiceSlot[i][2], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceSlot[i][3] = TextDrawCreate(488.000000, 200.000000, "4. -----------");
+        TextDrawBackgroundColor(DiceSlot[i][3], 255);
+        TextDrawFont(DiceSlot[i][3], 1);
+        TextDrawLetterSize(DiceSlot[i][3], 0.240000, 1.000000);
+        TextDrawColor(DiceSlot[i][3], -1);
+        TextDrawSetOutline(DiceSlot[i][3], 0);
+        TextDrawSetProportional(DiceSlot[i][3], 1);
+        TextDrawSetShadow(DiceSlot[i][3], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceSlot[i][4] = TextDrawCreate(488.000000, 211.000000, "5. -----------");
+        TextDrawBackgroundColor(DiceSlot[i][4], 255);
+        TextDrawFont(DiceSlot[i][4], 1);
+        TextDrawLetterSize(DiceSlot[i][4], 0.240000, 1.000000);
+        TextDrawColor(DiceSlot[i][4], -1);
+        TextDrawSetOutline(DiceSlot[i][4], 0);
+        TextDrawSetProportional(DiceSlot[i][4], 1);
+        TextDrawSetShadow(DiceSlot[i][4], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        BetGamer[i][0] = TextDrawCreate(597.000000, 166.000000, "[...]");
+        TextDrawBackgroundColor(BetGamer[i][0], 255);
+        TextDrawFont(BetGamer[i][0], 1);
+        TextDrawLetterSize(BetGamer[i][0], 0.240000, 1.000000);
+        TextDrawColor(BetGamer[i][0], -1);
+        TextDrawSetOutline(BetGamer[i][0], 0);
+        TextDrawSetProportional(BetGamer[i][0], 1);
+        TextDrawSetShadow(BetGamer[i][0], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        BetGamer[i][1] = TextDrawCreate(597.000000, 177.000000, "[...]");
+        TextDrawBackgroundColor(BetGamer[i][1], 255);
+        TextDrawFont(BetGamer[i][1], 1);
+        TextDrawLetterSize(BetGamer[i][1], 0.240000, 1.000000);
+        TextDrawColor(BetGamer[i][1], -1);
+        TextDrawSetOutline(BetGamer[i][1], 0);
+        TextDrawSetProportional(BetGamer[i][1], 1);
+        TextDrawSetShadow(BetGamer[i][1], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        BetGamer[i][2] = TextDrawCreate(597.000000, 188.000000, "[...]");
+        TextDrawBackgroundColor(BetGamer[i][2], 255);
+        TextDrawFont(BetGamer[i][2], 1);
+        TextDrawLetterSize(BetGamer[i][2], 0.240000, 1.000000);
+        TextDrawColor(BetGamer[i][2], -1);
+        TextDrawSetOutline(BetGamer[i][2], 0);
+        TextDrawSetProportional(BetGamer[i][2], 1);
+        TextDrawSetShadow(BetGamer[i][2], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        BetGamer[i][3] = TextDrawCreate(597.000000, 198.000000, "[...]");
+        TextDrawBackgroundColor(BetGamer[i][3], 255);
+        TextDrawFont(BetGamer[i][3], 1);
+        TextDrawLetterSize(BetGamer[i][3], 0.240000, 1.000000);
+        TextDrawColor(BetGamer[i][3], -1);
+        TextDrawSetOutline(BetGamer[i][3], 0);
+        TextDrawSetProportional(BetGamer[i][3], 1);
+        TextDrawSetShadow(BetGamer[i][3], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        BetGamer[i][4] = TextDrawCreate(597.000000, 210.000000, "[...]");
+        TextDrawBackgroundColor(BetGamer[i][4], 255);
+        TextDrawFont(BetGamer[i][4], 1);
+        TextDrawLetterSize(BetGamer[i][4], 0.240000, 1.000000);
+        TextDrawColor(BetGamer[i][4], -1);
+        TextDrawSetOutline(BetGamer[i][4], 0);
+        TextDrawSetProportional(BetGamer[i][4], 1);
+        TextDrawSetShadow(BetGamer[i][4], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceBetShow[i] = TextDrawCreate(529.000000, 230.000000, "0$");
+        TextDrawBackgroundColor(DiceBetShow[i], 255);
+        TextDrawFont(DiceBetShow[i], 3);
+        TextDrawLetterSize(DiceBetShow[i], 0.340000, 1.000000);
+        TextDrawColor(DiceBetShow[i], -1);
+        TextDrawSetOutline(DiceBetShow[i], 0);
+        TextDrawSetProportional(DiceBetShow[i], 1);
+        TextDrawSetShadow(DiceBetShow[i], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        DiceBankShow[i] = TextDrawCreate(535.000000, 245.000000, "0$");
+        TextDrawBackgroundColor(DiceBankShow[i], 255);
+        TextDrawFont(DiceBankShow[i], 3);
+        TextDrawLetterSize(DiceBankShow[i], 0.340000, 1.000000);
+        TextDrawColor(DiceBankShow[i], -1);
+        TextDrawSetOutline(DiceBankShow[i], 0);
+        TextDrawSetProportional(DiceBankShow[i], 1);
+        TextDrawSetShadow(DiceBankShow[i], 1);
+    }
+    for(new i = 0; i < sizeof(DiceTables); i++)
+    {
+        for(new s = 0; s < 5; s++)
+        {
+            DiceMoneyShow[i][s] = TextDrawCreate(545.000000, 260.000000, "0$");
+            TextDrawBackgroundColor(DiceMoneyShow[i][s], 255);
+            TextDrawFont(DiceMoneyShow[i][s], 3);
+            TextDrawLetterSize(DiceMoneyShow[i][s], 0.340000, 1.000000);
+            TextDrawColor(DiceMoneyShow[i][s], -1);
+            TextDrawSetOutline(DiceMoneyShow[i][s], 0);
+            TextDrawSetProportional(DiceMoneyShow[i][s], 1);
+            TextDrawSetShadow(DiceMoneyShow[i][s], 1);
+        }
+    }
+    RouleBox = TextDrawCreate(185.000000, 360.000000, "_");
+    TextDrawBackgroundColor(RouleBox, 255);
+    TextDrawFont(RouleBox, 2);
+    TextDrawLetterSize(RouleBox, 0.479999, 7.999998);
+    TextDrawColor(RouleBox, -1);
+    TextDrawSetOutline(RouleBox, 1);
+    TextDrawSetProportional(RouleBox, 1);
+    TextDrawUseBox(RouleBox, 1);
+    TextDrawBoxColor(RouleBox, 152);
+    TextDrawTextSize(RouleBox, 465.000000, 1.000000);
+
+    RouleBorder[0] = TextDrawCreate(308.000000, 340.000000, "l");
+    TextDrawBackgroundColor(RouleBorder[0], 255);
+    TextDrawFont(RouleBorder[0], 1);
+    TextDrawLetterSize(RouleBorder[0], 0.100000, 11.499989);
+    TextDrawColor(RouleBorder[0], -1);
+    TextDrawSetOutline(RouleBorder[0], 0);
+    TextDrawSetProportional(RouleBorder[0], 1);
+    TextDrawSetShadow(RouleBorder[0], 1);
+
+    RouleBorder[1] = TextDrawCreate(388.000000, 340.000000, "l");
+    TextDrawBackgroundColor(RouleBorder[1], 255);
+    TextDrawFont(RouleBorder[1], 1);
+    TextDrawLetterSize(RouleBorder[1], 0.099999, 11.499994);
+    TextDrawColor(RouleBorder[1], -1);
+    TextDrawSetOutline(RouleBorder[1], 0);
+    TextDrawSetProportional(RouleBorder[1], 1);
+    TextDrawSetShadow(RouleBorder[1], 1);
+
+    RouleGamersTitle = TextDrawCreate(219.000000, 348.000000, "Gamers");
+    TextDrawBackgroundColor(RouleGamersTitle, 255);
+    TextDrawFont(RouleGamersTitle, 1);
+    TextDrawLetterSize(RouleGamersTitle, 0.449999, 1.799999);
+    TextDrawColor(RouleGamersTitle, -16776961);
+    TextDrawSetOutline(RouleGamersTitle, 0);
+    TextDrawSetProportional(RouleGamersTitle, 1);
+    TextDrawSetShadow(RouleGamersTitle, 1);
+
+    RouleNumberTitle = TextDrawCreate(324.000000, 348.000000, "Number");
+    TextDrawBackgroundColor(RouleNumberTitle, 255);
+    TextDrawFont(RouleNumberTitle, 1);
+    TextDrawLetterSize(RouleNumberTitle, 0.449999, 1.799999);
+    TextDrawColor(RouleNumberTitle, -16776961);
+    TextDrawSetOutline(RouleNumberTitle, 0);
+    TextDrawSetProportional(RouleNumberTitle, 1);
+    TextDrawSetShadow(RouleNumberTitle, 1);
+
+    RouleBetTitle = TextDrawCreate(417.000000, 348.000000, "Bet");
+    TextDrawBackgroundColor(RouleBetTitle, 255);
+    TextDrawFont(RouleBetTitle, 1);
+    TextDrawLetterSize(RouleBetTitle, 0.449999, 1.799999);
+    TextDrawColor(RouleBetTitle, -16776961);
+    TextDrawSetOutline(RouleBetTitle, 0);
+    TextDrawSetProportional(RouleBetTitle, 1);
+    TextDrawSetShadow(RouleBetTitle, 1);
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleGamerShow[i][0] = TextDrawCreate(190.000000, 366.000000, "1. -------");
+        TextDrawBackgroundColor(RouleGamerShow[i][0], 255);
+        TextDrawFont(RouleGamerShow[i][0], 2);
+        TextDrawLetterSize(RouleGamerShow[i][0], 0.229999, 1.200000);
+        TextDrawColor(RouleGamerShow[i][0], -1);
+        TextDrawSetOutline(RouleGamerShow[i][0], 1);
+        TextDrawSetProportional(RouleGamerShow[i][0], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleGamerShow[i][1] = TextDrawCreate(190.000000, 378.000000, "2. -------");
+        TextDrawBackgroundColor(RouleGamerShow[i][1], 255);
+        TextDrawFont(RouleGamerShow[i][1], 2);
+        TextDrawLetterSize(RouleGamerShow[i][1], 0.239998, 1.200000);
+        TextDrawColor(RouleGamerShow[i][1], -1);
+        TextDrawSetOutline(RouleGamerShow[i][1], 1);
+        TextDrawSetProportional(RouleGamerShow[i][1], 1);
+        TextDrawSetShadow(RouleGamerShow[i][1], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleGamerShow[i][2] = TextDrawCreate(190.000000, 390.000000, "3. -------");
+        TextDrawBackgroundColor(RouleGamerShow[i][2], 255);
+        TextDrawFont(RouleGamerShow[i][2], 2);
+        TextDrawLetterSize(RouleGamerShow[i][2], 0.239999, 1.200000);
+        TextDrawColor(RouleGamerShow[i][2], -1);
+        TextDrawSetOutline(RouleGamerShow[i][2], 1);
+        TextDrawSetProportional(RouleGamerShow[i][2], 1);
+        TextDrawSetShadow(RouleGamerShow[i][2], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleGamerShow[i][3] = TextDrawCreate(189.000000, 402.000000, "4. -------");
+        TextDrawBackgroundColor(RouleGamerShow[i][3], 255);
+        TextDrawFont(RouleGamerShow[i][3], 2);
+        TextDrawLetterSize(RouleGamerShow[i][3], 0.239999, 1.200000);
+        TextDrawColor(RouleGamerShow[i][3], -1);
+        TextDrawSetOutline(RouleGamerShow[i][3], 1);
+        TextDrawSetProportional(RouleGamerShow[i][3], 1);
+        TextDrawSetShadow(RouleGamerShow[i][3], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleGamerShow[i][4] = TextDrawCreate(189.000000, 414.000000, "5. -------");
+        TextDrawBackgroundColor(RouleGamerShow[i][4], 255);
+        TextDrawFont(RouleGamerShow[i][4], 2);
+        TextDrawLetterSize(RouleGamerShow[i][4], 0.239999, 1.200000);
+        TextDrawColor(RouleGamerShow[i][4], -1);
+        TextDrawSetOutline(RouleGamerShow[i][4], 1);
+        TextDrawSetProportional(RouleGamerShow[i][4], 1);
+        TextDrawSetShadow(RouleGamerShow[i][4], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleNumberShow[i][0] = TextDrawCreate(318.000000, 366.000000, "-------");
+        TextDrawBackgroundColor(RouleNumberShow[i][0], 255);
+        TextDrawFont(RouleNumberShow[i][0], 2);
+        TextDrawLetterSize(RouleNumberShow[i][0], 0.239999, 1.200000);
+        TextDrawColor(RouleNumberShow[i][0], -1);
+        TextDrawSetOutline(RouleNumberShow[i][0], 1);
+        TextDrawSetProportional(RouleNumberShow[i][0], 1);
+        TextDrawSetShadow(RouleNumberShow[i][0], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleNumberShow[i][1] = TextDrawCreate(318.000000, 378.000000, "-------");
+        TextDrawBackgroundColor(RouleNumberShow[i][1], 255);
+        TextDrawFont(RouleNumberShow[i][1], 2);
+        TextDrawLetterSize(RouleNumberShow[i][1], 0.239999, 1.200000);
+        TextDrawColor(RouleNumberShow[i][1], -1);
+        TextDrawSetOutline(RouleNumberShow[i][1], 1);
+        TextDrawSetProportional(RouleNumberShow[i][1], 1);
+        TextDrawSetShadow(RouleNumberShow[i][1], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleNumberShow[i][2] = TextDrawCreate(318.000000, 390.000000, "-------");
+        TextDrawBackgroundColor(RouleNumberShow[i][2], 255);
+        TextDrawFont(RouleNumberShow[i][2], 2);
+        TextDrawLetterSize(RouleNumberShow[i][2], 0.239999, 1.200000);
+        TextDrawColor(RouleNumberShow[i][2], -1);
+        TextDrawSetOutline(RouleNumberShow[i][2], 1);
+        TextDrawSetProportional(RouleNumberShow[i][2], 1);
+        TextDrawSetShadow(RouleNumberShow[i][2], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleNumberShow[i][3] = TextDrawCreate(318.000000, 402.000000, "-------");
+        TextDrawBackgroundColor(RouleNumberShow[i][3], 255);
+        TextDrawFont(RouleNumberShow[i][3], 2);
+        TextDrawLetterSize(RouleNumberShow[i][3], 0.239999, 1.200000);
+        TextDrawColor(RouleNumberShow[i][3], -1);
+        TextDrawSetOutline(RouleNumberShow[i][3], 1);
+        TextDrawSetProportional(RouleNumberShow[i][3], 1);
+        TextDrawSetShadow(RouleNumberShow[i][3], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleNumberShow[i][4] = TextDrawCreate(318.000000, 414.000000, "-------");
+        TextDrawBackgroundColor(RouleNumberShow[i][4], 255);
+        TextDrawFont(RouleNumberShow[i][4], 2);
+        TextDrawLetterSize(RouleNumberShow[i][4], 0.239999, 1.200000);
+        TextDrawColor(RouleNumberShow[i][4], -1);
+        TextDrawSetOutline(RouleNumberShow[i][4], 1);
+        TextDrawSetProportional(RouleNumberShow[i][4], 1);
+        TextDrawSetShadow(RouleNumberShow[i][4], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleBetShow[i][0] = TextDrawCreate(414.000000, 366.000000, "-------");
+        TextDrawBackgroundColor(RouleBetShow[i][0], 255);
+        TextDrawFont(RouleBetShow[i][0], 2);
+        TextDrawLetterSize(RouleBetShow[i][0], 0.280000, 1.200000);
+        TextDrawColor(RouleBetShow[i][0], -1);
+        TextDrawSetOutline(RouleBetShow[i][0], 1);
+        TextDrawSetProportional(RouleBetShow[i][0], 1);
+        TextDrawSetShadow(RouleBetShow[i][0], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleBetShow[i][1] = TextDrawCreate(414.000000, 378.000000, "-------");
+        TextDrawBackgroundColor(RouleBetShow[i][1], 255);
+        TextDrawFont(RouleBetShow[i][1], 2);
+        TextDrawLetterSize(RouleBetShow[i][1], 0.280000, 1.200000);
+        TextDrawColor(RouleBetShow[i][1], -1);
+        TextDrawSetOutline(RouleBetShow[i][1], 1);
+        TextDrawSetProportional(RouleBetShow[i][1], 1);
+        TextDrawSetShadow(RouleBetShow[i][1], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleBetShow[i][2] = TextDrawCreate(414.000000, 390.000000, "-------");
+        TextDrawBackgroundColor(RouleBetShow[i][2], 255);
+        TextDrawFont(RouleBetShow[i][2], 2);
+        TextDrawLetterSize(RouleBetShow[i][2], 0.280000, 1.200000);
+        TextDrawColor(RouleBetShow[i][2], -1);
+        TextDrawSetOutline(RouleBetShow[i][2], 1);
+        TextDrawSetProportional(RouleBetShow[i][2], 1);
+        TextDrawSetShadow(RouleBetShow[i][2], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleBetShow[i][3] = TextDrawCreate(414.000000, 402.000000, "-------");
+        TextDrawBackgroundColor(RouleBetShow[i][3], 255);
+        TextDrawFont(RouleBetShow[i][3], 2);
+        TextDrawLetterSize(RouleBetShow[i][3], 0.280000, 1.200000);
+        TextDrawColor(RouleBetShow[i][3], -1);
+        TextDrawSetOutline(RouleBetShow[i][3], 1);
+        TextDrawSetProportional(RouleBetShow[i][3], 1);
+        TextDrawSetShadow(RouleBetShow[i][3], 1);
+    }
+    for(new i = 0; i < sizeof(RouleTables); i++)
+    {
+        RouleBetShow[i][4] = TextDrawCreate(414.000000, 414.000000, "-------");
+        TextDrawBackgroundColor(RouleBetShow[i][4], 255);
+        TextDrawFont(RouleBetShow[i][4], 2);
+        TextDrawLetterSize(RouleBetShow[i][4], 0.280000, 1.200000);
+        TextDrawColor(RouleBetShow[i][4], -1);
+        TextDrawSetOutline(RouleBetShow[i][4], 1);
+        TextDrawSetProportional(RouleBetShow[i][4], 1);
+        TextDrawSetShadow(RouleBetShow[i][4], 1);
+    }
+    BlackJackBox[0] = TextDrawCreate(125.000000, 105.000000, "_");
+    TextDrawBackgroundColor(BlackJackBox[0], 255);
+    TextDrawFont(BlackJackBox[0], 0);
+    TextDrawLetterSize(BlackJackBox[0], 0.520000, 27.000000);
+    TextDrawColor(BlackJackBox[0], -1);
+    TextDrawSetOutline(BlackJackBox[0], 0);
+    TextDrawSetProportional(BlackJackBox[0], 1);
+    TextDrawSetShadow(BlackJackBox[0], 1);
+    TextDrawUseBox(BlackJackBox[0], 1);
+    TextDrawBoxColor(BlackJackBox[0], 190909336);
+    TextDrawTextSize(BlackJackBox[0], 505.000000, 100.000000);
+    TextDrawSetPreviewModel(BlackJackBox[0], 19474);
+    TextDrawSetPreviewRot(BlackJackBox[0], -90.000000, 0.000000, 90.000000, 1.000000);
+    TextDrawSetSelectable(BlackJackBox[0], 0);
+
+    BlackJackTitle = TextDrawCreate(228.000000, 202.000000, "BlackJack");
+    TextDrawBackgroundColor(BlackJackTitle, 255);
+    TextDrawFont(BlackJackTitle, 0);
+    TextDrawLetterSize(BlackJackTitle, 1.440000, 4.000000);
+    TextDrawColor(BlackJackTitle, -16776961);
+    TextDrawSetOutline(BlackJackTitle, 0);
+    TextDrawSetProportional(BlackJackTitle, 1);
+    TextDrawSetShadow(BlackJackTitle, 1);
+    TextDrawSetSelectable(BlackJackTitle, 0);
+
+    BlackJackChip[0] = TextDrawCreate(114.000000, 262.000000, "_");
+    TextDrawBackgroundColor(BlackJackChip[0], 0xFFFFFF00);
+    TextDrawFont(BlackJackChip[0], 5);
+    TextDrawLetterSize(BlackJackChip[0], 0.300000, 4.099998);
+    TextDrawColor(BlackJackChip[0], -1);
+    TextDrawSetOutline(BlackJackChip[0], 0);
+    TextDrawSetProportional(BlackJackChip[0], 1);
+    TextDrawSetShadow(BlackJackChip[0], 1);
+    TextDrawTextSize(BlackJackChip[0], 80.000000, 70.000000);
+    TextDrawSetPreviewModel(BlackJackChip[0], 1938);
+    TextDrawSetPreviewRot(BlackJackChip[0], 0.000000, 0.000000, 0.000000, 1.000000);
+    TextDrawSetSelectable(BlackJackChip[0], 0);
+
+    BlackJackChip[1] = TextDrawCreate(278.000000, 262.000000, "_");
+    TextDrawBackgroundColor(BlackJackChip[1], 0xFFFFFF00);
+    TextDrawFont(BlackJackChip[1], 5);
+    TextDrawLetterSize(BlackJackChip[1], 0.500000, 1.000000);
+    TextDrawColor(BlackJackChip[1], -1);
+    TextDrawSetOutline(BlackJackChip[1], 0);
+    TextDrawSetProportional(BlackJackChip[1], 1);
+    TextDrawSetShadow(BlackJackChip[1], 1);
+    TextDrawTextSize(BlackJackChip[1], 80.000000, 70.000000);
+    TextDrawSetPreviewModel(BlackJackChip[1], 1938);
+    TextDrawSetPreviewRot(BlackJackChip[1], 0.000000, 0.000000, 0.000000, 1.000000);
+    TextDrawSetSelectable(BlackJackChip[1], 0);
+
+    BlackJackBorder[0] = TextDrawCreate(510.000000, 102.000000, "_");
+    TextDrawBackgroundColor(BlackJackBorder[0], 255);
+    TextDrawFont(BlackJackBorder[0], 1);
+    TextDrawLetterSize(BlackJackBorder[0], 0.500000, 0.000000);
+    TextDrawColor(BlackJackBorder[0], -1);
+    TextDrawSetOutline(BlackJackBorder[0], 0);
+    TextDrawSetProportional(BlackJackBorder[0], 1);
+    TextDrawSetShadow(BlackJackBorder[0], 1);
+    TextDrawUseBox(BlackJackBorder[0], 1);
+    TextDrawBoxColor(BlackJackBorder[0], 255);
+    TextDrawTextSize(BlackJackBorder[0], 121.000000, 30.000000);
+    TextDrawSetSelectable(BlackJackBorder[0], 0);
+
+    BlackJackBorder[1] = TextDrawCreate(510.000000, 350.000000, "_");
+    TextDrawBackgroundColor(BlackJackBorder[1], 255);
+    TextDrawFont(BlackJackBorder[1], 1);
+    TextDrawLetterSize(BlackJackBorder[1], 0.500000, 0.000000);
+    TextDrawColor(BlackJackBorder[1], -1);
+    TextDrawSetOutline(BlackJackBorder[1], 0);
+    TextDrawSetProportional(BlackJackBorder[1], 1);
+    TextDrawSetShadow(BlackJackBorder[1], 1);
+    TextDrawUseBox(BlackJackBorder[1], 1);
+    TextDrawBoxColor(BlackJackBorder[1], 255);
+    TextDrawTextSize(BlackJackBorder[1], 121.000000, -2.000000);
+    TextDrawSetSelectable(BlackJackBorder[1], 0);
+
+    BlackJackBorder[2] = TextDrawCreate(122.000000, 102.000000, "_");
+    TextDrawBackgroundColor(BlackJackBorder[2], 255);
+    TextDrawFont(BlackJackBorder[2], 1);
+    TextDrawLetterSize(BlackJackBorder[2], 0.500000, 27.600000);
+    TextDrawColor(BlackJackBorder[2], -1);
+    TextDrawSetOutline(BlackJackBorder[2], 0);
+    TextDrawSetProportional(BlackJackBorder[2], 1);
+    TextDrawSetShadow(BlackJackBorder[2], 1);
+    TextDrawUseBox(BlackJackBorder[2], 1);
+    TextDrawBoxColor(BlackJackBorder[2], 255);
+    TextDrawTextSize(BlackJackBorder[2], 122.000000, 0.000000);
+    TextDrawSetSelectable(BlackJackBorder[2], 0);
+
+    BlackJackBorder[3] = TextDrawCreate(509.000000, 102.000000, "_");
+    TextDrawBackgroundColor(BlackJackBorder[3], 255);
+    TextDrawFont(BlackJackBorder[3], 1);
+    TextDrawLetterSize(BlackJackBorder[3], 0.500000, 27.600000);
+    TextDrawColor(BlackJackBorder[3], -1);
+    TextDrawSetOutline(BlackJackBorder[3], 0);
+    TextDrawSetProportional(BlackJackBorder[3], 1);
+    TextDrawSetShadow(BlackJackBorder[3], 1);
+    TextDrawUseBox(BlackJackBorder[3], 1);
+    TextDrawBoxColor(BlackJackBorder[3], 255);
+    TextDrawTextSize(BlackJackBorder[3], 509.000000, 0.000000);
+    TextDrawSetSelectable(BlackJackBorder[3], 0);
+
+    BlackJackBox[1] = TextDrawCreate(116.000000, 327.000000, "ld_beat:chit");
+    TextDrawBackgroundColor(BlackJackBox[1], 255);
+    TextDrawFont(BlackJackBox[1], 4);
+    TextDrawLetterSize(BlackJackBox[1], 0.500000, 1.000000);
+    TextDrawColor(BlackJackBox[1], 255);
+    TextDrawSetOutline(BlackJackBox[1], 0);
+    TextDrawSetProportional(BlackJackBox[1], 1);
+    TextDrawSetShadow(BlackJackBox[1], 1);
+    TextDrawUseBox(BlackJackBox[1], 1);
+    TextDrawBoxColor(BlackJackBox[1], 255);
+    TextDrawTextSize(BlackJackBox[1], 150.000000, 46.000000);
+    TextDrawSetSelectable(BlackJackBox[1], 0);
+
+    BlackJackBox[2] = TextDrawCreate(239.000000, 327.000000, "ld_beat:chit");
+    TextDrawBackgroundColor(BlackJackBox[2], 255);
+    TextDrawFont(BlackJackBox[2], 4);
+    TextDrawLetterSize(BlackJackBox[2], 0.500000, 1.000000);
+    TextDrawColor(BlackJackBox[2], 255);
+    TextDrawSetOutline(BlackJackBox[2], 0);
+    TextDrawSetProportional(BlackJackBox[2], 1);
+    TextDrawSetShadow(BlackJackBox[2], 1);
+    TextDrawUseBox(BlackJackBox[2], 1);
+    TextDrawBoxColor(BlackJackBox[2], 255);
+    TextDrawTextSize(BlackJackBox[2], 150.000000, 46.000000);
+    TextDrawSetSelectable(BlackJackBox[2], 0);
+
+    BlackJackBox[3] = TextDrawCreate(364.000000, 327.000000, "ld_beat:chit");
+    TextDrawBackgroundColor(BlackJackBox[3], 255);
+    TextDrawFont(BlackJackBox[3], 4);
+    TextDrawLetterSize(BlackJackBox[3], 0.500000, 1.200000);
+    TextDrawColor(BlackJackBox[3], 255);
+    TextDrawSetOutline(BlackJackBox[3], 0);
+    TextDrawSetProportional(BlackJackBox[3], 1);
+    TextDrawSetShadow(BlackJackBox[3], 1);
+    TextDrawUseBox(BlackJackBox[3], 1);
+    TextDrawBoxColor(BlackJackBox[3], 255);
+    TextDrawTextSize(BlackJackBox[3], 150.000000, 46.000000);
+    TextDrawSetSelectable(BlackJackBox[3], 0);
+
+    BlackJackBox[4] = TextDrawCreate(119.000000, 331.000000, "ld_beat:chit");
+    TextDrawBackgroundColor(BlackJackBox[4], 255);
+    TextDrawFont(BlackJackBox[4], 4);
+    TextDrawLetterSize(BlackJackBox[4], 0.500000, 0.799998);
+    TextDrawColor(BlackJackBox[4], 421097616);
+    TextDrawSetOutline(BlackJackBox[4], 0);
+    TextDrawSetProportional(BlackJackBox[4], 1);
+    TextDrawSetShadow(BlackJackBox[4], 1);
+    TextDrawUseBox(BlackJackBox[4], 1);
+    TextDrawBoxColor(BlackJackBox[4], 255);
+    TextDrawTextSize(BlackJackBox[4], 144.000000, 38.000000);
+    TextDrawSetSelectable(BlackJackBox[4], 0);
+
+    BlackJackBox[5] = TextDrawCreate(242.000000, 331.000000, "ld_beat:chit");
+    TextDrawBackgroundColor(BlackJackBox[5], 255);
+    TextDrawFont(BlackJackBox[5], 4);
+    TextDrawLetterSize(BlackJackBox[5], 0.500000, 1.000000);
+    TextDrawColor(BlackJackBox[5], 421097616);
+    TextDrawSetOutline(BlackJackBox[5], 0);
+    TextDrawSetProportional(BlackJackBox[5], 1);
+    TextDrawSetShadow(BlackJackBox[5], 1);
+    TextDrawUseBox(BlackJackBox[5], 1);
+    TextDrawBoxColor(BlackJackBox[5], 255);
+    TextDrawTextSize(BlackJackBox[5], 145.000000, 38.000000);
+    TextDrawSetSelectable(BlackJackBox[5], 0);
+
+    BlackJackBox[6] = TextDrawCreate(366.000000, 331.000000, "ld_beat:chit");
+    TextDrawBackgroundColor(BlackJackBox[6], 255);
+    TextDrawFont(BlackJackBox[6], 4);
+    TextDrawLetterSize(BlackJackBox[6], 0.500000, 1.000000);
+    TextDrawColor(BlackJackBox[6], 421097642);
+    TextDrawSetOutline(BlackJackBox[6], 0);
+    TextDrawSetProportional(BlackJackBox[6], 1);
+    TextDrawSetShadow(BlackJackBox[6], 1);
+    TextDrawUseBox(BlackJackBox[6], 1);
+    TextDrawBoxColor(BlackJackBox[6], 255);
+    TextDrawTextSize(BlackJackBox[6], 145.000000, 38.000000);
+    TextDrawSetSelectable(BlackJackBox[6], 0);
+
+    BlackJackDealerTitle = TextDrawCreate(284.000000, 180.000000, "Dealer");
+    TextDrawBackgroundColor(BlackJackDealerTitle, 255);
+    TextDrawFont(BlackJackDealerTitle, 2);
+    TextDrawLetterSize(BlackJackDealerTitle, 0.280000, 1.399999);
+    TextDrawColor(BlackJackDealerTitle, -1);
+    TextDrawSetOutline(BlackJackDealerTitle, 1);
+    TextDrawSetProportional(BlackJackDealerTitle, 1);
+    TextDrawSetSelectable(BlackJackDealerTitle, 0);
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][0] = TextDrawCreate(180.000000, 258.000000, "ld_card:cdback");
+        TextDrawBackgroundColor(BlackJackCardShow[i][0], 255);
+        TextDrawFont(BlackJackCardShow[i][0], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][0], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][0], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][0], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][0], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][0], 1);
+        TextDrawUseBox(BlackJackCardShow[i][0], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][0], 255);
+        TextDrawTextSize(BlackJackCardShow[i][0], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][0], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][1] = TextDrawCreate(195.000000, 258.000000, "ld_card:cdback");
+        TextDrawBackgroundColor(BlackJackCardShow[i][1], 255);
+        TextDrawFont(BlackJackCardShow[i][1], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][1], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][1], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][1], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][1], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][1], 1);
+        TextDrawUseBox(BlackJackCardShow[i][1], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][1], 255);
+        TextDrawTextSize(BlackJackCardShow[i][1], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][1], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][2] = TextDrawCreate(210.000000, 258.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][2], 255);
+        TextDrawFont(BlackJackCardShow[i][2], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][2], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][2], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][2], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][2], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][2], 1);
+        TextDrawUseBox(BlackJackCardShow[i][2], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][2], 255);
+        TextDrawTextSize(BlackJackCardShow[i][2], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][2], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][3] = TextDrawCreate(225.000000, 258.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][3], 255);
+        TextDrawFont(BlackJackCardShow[i][3], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][3], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][3], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][3], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][3], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][3], 1);
+        TextDrawUseBox(BlackJackCardShow[i][3], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][3], 255);
+        TextDrawTextSize(BlackJackCardShow[i][3], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][3], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][4] = TextDrawCreate(240.000000, 258.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][4], 255);
+        TextDrawFont(BlackJackCardShow[i][4], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][4], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][4], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][4], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][4], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][4], 1);
+        TextDrawUseBox(BlackJackCardShow[i][4], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][4], 255);
+        TextDrawTextSize(BlackJackCardShow[i][4], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][4], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][5] = TextDrawCreate(342.000000, 258.000000, "ld_card:cdback");
+        TextDrawBackgroundColor(BlackJackCardShow[i][5], 255);
+        TextDrawFont(BlackJackCardShow[i][5], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][5], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][5], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][5], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][5], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][5], 1);
+        TextDrawUseBox(BlackJackCardShow[i][5], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][5], 255);
+        TextDrawTextSize(BlackJackCardShow[i][5], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][5], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][6] = TextDrawCreate(357.000000, 258.000000, "ld_card:cdback");
+        TextDrawBackgroundColor(BlackJackCardShow[i][6], 255);
+        TextDrawFont(BlackJackCardShow[i][6], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][6], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][6], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][6], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][6], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][6], 1);
+        TextDrawUseBox(BlackJackCardShow[i][6], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][6], 255);
+        TextDrawTextSize(BlackJackCardShow[i][6], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][6], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][7] = TextDrawCreate(372.000000, 258.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][7], 255);
+        TextDrawFont(BlackJackCardShow[i][7], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][7], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][7], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][7], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][7], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][7], 1);
+        TextDrawUseBox(BlackJackCardShow[i][7], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][7], 255);
+        TextDrawTextSize(BlackJackCardShow[i][7], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][7], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][8] = TextDrawCreate(387.000000, 258.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][8], 255);
+        TextDrawFont(BlackJackCardShow[i][8], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][8], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][8], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][8], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][8], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][8], 1);
+        TextDrawUseBox(BlackJackCardShow[i][8], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][8], 255);
+        TextDrawTextSize(BlackJackCardShow[i][8], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][8], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][9] = TextDrawCreate(402.000000, 258.000000, "_");
+        TextDrawBackgroundColor(BlackJackCardShow[i][9], 255);
+        TextDrawFont(BlackJackCardShow[i][9], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][9], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][9], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][9], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][9], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][9], 1);
+        TextDrawUseBox(BlackJackCardShow[i][9], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][9], 255);
+        TextDrawTextSize(BlackJackCardShow[i][9], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][9], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][10] = TextDrawCreate(268.000000, 124.000000, "ld_card:cdback");
+        TextDrawBackgroundColor(BlackJackCardShow[i][10], 255);
+        TextDrawFont(BlackJackCardShow[i][10], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][10], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][10], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][10], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][10], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][10], 1);
+        TextDrawUseBox(BlackJackCardShow[i][10], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][10], 255);
+        TextDrawTextSize(BlackJackCardShow[i][10], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][10], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {
+        BlackJackCardShow[i][11] = TextDrawCreate(283.000000, 124.000000, "ld_card:cdback");
+        TextDrawBackgroundColor(BlackJackCardShow[i][11], 255);
+        TextDrawFont(BlackJackCardShow[i][11], 4);
+        TextDrawLetterSize(BlackJackCardShow[i][11], 0.500000, 1.000000);
+        TextDrawColor(BlackJackCardShow[i][11], -1);
+        TextDrawSetOutline(BlackJackCardShow[i][11], 0);
+        TextDrawSetProportional(BlackJackCardShow[i][11], 1);
+        TextDrawSetShadow(BlackJackCardShow[i][11], 1);
+        TextDrawUseBox(BlackJackCardShow[i][11], 1);
+        TextDrawBoxColor(BlackJackCardShow[i][11], 255);
+        TextDrawTextSize(BlackJackCardShow[i][11], 45.000000, 55.000000);
+        TextDrawSetSelectable(BlackJackCardShow[i][11], 0);
+    }
+    for(new i = 0; i < sizeof(BlackJackTables); i++)
+    {

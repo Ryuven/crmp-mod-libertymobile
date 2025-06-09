@@ -1,0 +1,1000 @@
+    return 1;
+}
+cmd:vips(playerid) {
+    if(PI[playerid][pDonateRank] < 1) return 1;
+    new string[144], j = 0;
+    foreach(Player, i) {
+        if(PI[i][pDonateRank] < 1 || playerid == i) continue;
+        format(string, sizeof(string), "%s[%d] - %d донат ранг", PI[i][pNames], i, PI[i][pDonateRank]);
+        SendClientMessage(playerid, COLOR_YELLOW, string), j++;
+    }
+    if(j < 1) SendClientMessage(playerid, COLOR_YELLOW, "Игроков с VIP статусом, нет в игре!");
+    return 1;
+}
+cmd:amembers(playerid,params[])
+{
+    if(PI[playerid][pAdmin] < 5) return 1;
+    if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /amembers [1-28]");
+    if(params[0] > 28 || params[0] < 0) return SendClientMessage(playerid, COLOR_GREY, "Нельзя меньше 1 или больше 28");
+    SendClientMessage(playerid, 0x059BD3FF, "Члены организации Online:");
+    foreach(Player,i)
+    {
+        if(PI[i][pLeader] == params[0]) format(stringer1, sizeof(stringer1), " [%d] %s  ранг: Лидер",i,PI[i][pNames]),SendClientMessage(playerid, 0x059BD3FF, stringer1);
+        else if(PI[i][pMember] == params[0]) format(stringer1, sizeof(stringer1), " [%d] %s  ранг: %d",i,PI[i][pNames], PI[i][pRank]),SendClientMessage(playerid, 0x059BD3FF, stringer1);
+    }
+    return 1;
+}
+cmd:slap(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 3) return 1;
+    if(PI[playerid][pVigs] > 2) return SendClientMessage(playerid, -1, "{FF6600}На вашем аккаунте выговор, некоторые команды были заблокированы. Снимите выговор — {FFFFFF}/adonate, {FF6600}чтобы снять блокировку команд.");
+    if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /slap [id]");
+    new Float:shealth;
+    new Float:slx, Float:sly, Float:slz;
+    if(!IsPlayerConnected(params[0])) return 1;
+    GetPlayerHealth(params[0], shealth);
+    SetPlayerHealth(params[0], shealth-5);
+    GetPlayerPos(params[0], slx, sly, slz);
+    SetPPos(params[0], slx, sly, slz+5);
+    PlayerPlaySound(params[0], 1130, slx, sly, slz+5);
+    format(stringer1, sizeof(stringer1), "[A] %s дал пинка %s",PI[playerid][pNames], PI[params[0]][pNames]);
+    SendAdminMessage(COLOR_GREY,stringer1);
+    return 1;
+}
+
+cmd:me(playerid, params[])
+{
+    if(PI[playerid][pMuteTime] > gettime()) return SendMes(playerid, COLOR_LIGHTRED, "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+    if(sscanf(params, "s[128]", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /me [действие]");
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, -1, "Подозрения в рекламе!");
+        return 0;
+    }
+    format(stringer1, sizeof(stringer1), "{ea8df7}%s %s", PI[playerid][pNames], params[0]);
+    ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+    SetPlayerChatBubble(playerid,params[0],COLOR_PURPLE,30.0,10000);
+    return 1;
+}
+
+cmd:shout(playerid, params[])
+{
+    if(gag[playerid] == 1) return   SendClientMessage(playerid, COLOR_LIGHTRED, "У Вас кляп, вы не можете говорить!");
+    if(PI[playerid][pMuteTime] > gettime()) return SendMes(playerid, COLOR_LIGHTRED, "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+    if(sscanf(params, "s[128]", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: (/s)hout [текст]");
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, -1, "Подозрения в рекламе!");
+        return 0;
+    }
+    format(stringer1, sizeof(stringer1), "%s[%d] кричит: %s",PI[playerid][pNames],playerid,params[0]);
+    ProxDetector(playerid, 60.0, COLOR_WHITE, stringer1);
+    if(GetPlayerState(playerid) == PLAYER_STATE_ONFOOT)
+    {
+        if(PlayerCuffed[playerid] == 0) FIXES_ApplyAnimation(playerid, "ON_LOOKERS", "shout_01",1000.0,0,0,0,0,0,1);
+    }
+    SetPlayerChatBubble(playerid,params[0],COLOR_YELLOW,60.0,10000);
+    return 1;
+}
+alias:shout("s");
+
+cmd:try(playerid, params[])
+{
+    if(sscanf(params, "s[128]", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /try [текст]");
+    if(gag[playerid] == 1) return   SendClientMessage(playerid, COLOR_LIGHTRED, "У Вас кляп, вы не можете говорить!");
+    if(PI[playerid][pMuteTime] > gettime()) return SendMes(playerid, COLOR_LIGHTRED, "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, -1, "Подозрения в рекламе!");
+        return 0;
+    }
+    new temptryrand = random(2);
+    if(temptryrand == 1) format(stringer1, 90, "%s %s {1CEF00}| Удачно",PI[playerid][pNames],params[0]);
+    else format(stringer1, 90, "%s %s {FF4500}| Неудачно",PI[playerid][pNames],params[0]);
+    ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+    return 1;
+}
+cmd:do(playerid, params[])
+{
+    if(sscanf(params, "s[128]", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /do [текст]");
+    if(PI[playerid][pMuteTime] > gettime()) return SendMes(playerid, COLOR_LIGHTRED, "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+    if(strlen(params[0]) > 100) return SendClientMessage(playerid,COLOR_GREY,"Сообщение слишком длинное!");
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, -1, "Подозрения в рекламе!");
+        return 0;
+    }
+    format(stringer1, sizeof(stringer1), "%s (( %s ))",params[0],PI[playerid][pNames]);
+    ProxDetector(playerid, 30.0, COLOR_PURPLE, stringer1);
+    SetPlayerChatBubble(playerid,params[0],COLOR_YELLOW,60.0,10000);
+    return 1;
+}
+cmd:todo(playerid, params[])
+{
+    if(PI[playerid][pMuteTime] > gettime()) return SendMes(playerid, COLOR_LIGHTRED, "У Вас бан чата! До снятия: %d секунд(ы)",PI[playerid][pMuteTime]-gettime());
+    if(sscanf(params, "s[128]", params[0])) return SendClientMessage(playerid, 0xB4B5B7FF, "Используйте /todo [фраза*действие]");
+    if(strfind(params[0], "*") == -1) return SendClientMessage(playerid, 0xB4B5B7FF, "Используйте /todo [фраза*действие]");
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, -1, "Подозрения в рекламе!");
+        return 0;
+    }
+    new arrCoords[2][64];
+    sscanf(params[0],"p<*>s[64]s[64]",arrCoords[0],arrCoords[1]);
+    format(stringer1, sizeof(stringer1), "\"%s\", - сказал(а) %s,{C2A2DA} %s",arrCoords[0],PI[playerid][pNames],arrCoords[1]);
+    SetPlayerChatBubble(playerid, stringer1, 0x6495EDFF, 20.0, 10000);
+    ProxDetector(playerid, 20.0, 0xE6E6E6E6, stringer1);
+    return 1;
+}
+cmd:mainmenu(playerid) return MainMenuPl(playerid);
+alias:mainmenu("mm", "help", "mn");
+
+stock youtube_message(text[])
+{
+    foreach(new i : Player)
+    {
+        if ( PI[i][pYtADM] == 0 )continue;
+        SendClientMessage ( i, 0xCD5C5CFF, text ) ;
+    }
+    return 1;
+}
+
+CMD:yt(playerid, params[])
+{
+    if(!PI[playerid][pYtADM])return SendClientMessage(playerid, -1, "Вы не блогер!");
+    if( sscanf(params, "s[128]", params [0]))return SendClientMessage(playerid, -1, "Введите: /yt [текст]" ) ;
+    new text_string [ 144 ];
+    format(text_string,sizeof(text_string),"[YT-%d] %s[%d]: %s", PI[playerid][pYtADM], PI[playerid][pNames], playerid, params[0]);
+    youtube_message(text_string);
+    return 1;
+}
+
+CMD:makeyt(playerid, params[])
+{
+    if(!FD(playerid)) return 1;
+    if(sscanf(params, "dd", params[0], params[1])) return SendClientMessage(playerid, COLOR_WHITE, !"Используйте: /makeyt [id игрока] [уровень]");
+    if(!IsPlayerConnected(params[0])) return SendClientMessage(playerid, COLOR_WHITE, !"Игрок не найден.");
+    if(params[1] > 2 || params[1] < 0) return SendClientMessage(playerid, COLOR_WHITE, !"Уровень может быть от 0 до 2.");
+
+    new scm_string[144];
+    if(params[1] == 0)
+    {
+        format(scm_string, sizeof(scm_string), "%s[%d] отобрал у Вас блогерскую адмиинку.", PI[playerid][pNames], playerid);
+        SendClientMessage(params[0], COLOR_WHITE, scm_string);
+
+        PI[params[0]][pYtADM] = 0;
+        UpdatePlayerData(params[0], "pYTADM", PI[params[0]][pYtADM]);
+    }
+    else
+    {
+        format(scm_string, sizeof(scm_string), "%s[%d] назначил Вас блогером (Уровень: %d).", PI[playerid][pNames], playerid, params[1]);
+        SendClientMessage(params[0], COLOR_WHITE, scm_string);
+
+        PI[params[0]][pYtADM] = params[1];
+        UpdatePlayerData(params[0], "pYTADM", PI[params[0]][pYtADM]);
+    }
+    return 1;
+}
+
+cmd:namestore(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 5) return 1;
+    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /namestore [ID]");
+    if(params[0] <= 0) return 1;
+    format(mysql_query_, sizeof(mysql_query_), "SELECT * FROM  `setname` WHERE `account` = '%d'", PI[params[0]][pID]);
+    mysql_function_query(connects, mysql_query_, true, "Logs", "ddd", playerid, 5, 0);
+    return 1;
+}
+
+/*
+cmd:hcheck(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 11 && PI[playerid][pHelper] < 7) return 1;
+    mysql_function_query(connects, "SELECT `Name`, `pHelper`, `pHotvet` FROM  `"TABLE_ACCOUNT"` WHERE `pHelper` != '0' AND `pOnline` = '1001'", true, "Logs", "ddd", playerid,4, 0);
+    return 1;
+}
+*/
+
+cmd:setcmd(playerid, params[]) {
+    if(FD(playerid)) {
+        new Namets[24], CMD_name[32], CMD_allow, query[144];
+        if(sscanf(params, "s[24]s[32]d", Namets, CMD_name, CMD_allow)) return SendClientMessage(playerid, 0xCECECEFF, "Используйте: /setcmd [Имя] [Команда] [1/0]\n Посмотреть список команд которые можно выдать - /cmdinfo");
+        //      SendClientMessage(playerid, 0xCECECEFF, "Посмотреть список команд которые можно выдать - /cmdinfo");
+        new CMD_i;
+        for (CMD_i = 0; CMD_i < CMD_NUM; CMD_i++)
+        {
+            if(!strcmp(CMD_names[CMD_i], CMD_name, true)) break;
+        }
+        if (CMD_i >= CMD_NUM) return SendClientMessage(playerid, -1, "{ffffff}Введёной команды не существует");
+        format(query, sizeof(query), "SELECT * FROM `accounts` WHERE `Name` = '%s'", Namets);
+        mysql_function_query(connects, query, true, "setcmd_SQL_callback" ,"dsdd", playerid, Namets, CMD_i, CMD_allow);
+    }
+    return 1;
+}
+cmd:cmdinfo(playerid, params[])
+{
+    new str[256],sctring[2000];
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"{ffffff}Команды:\n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"1. /setadmin - {FF6600}Команда для выдачи админки | Не выдавать без ведома владельца{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"2. /setleader - {FF6600}Команда для выдачи лидерки{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"3. /banip - {FF6600}Команда для выдачи бана по IP адресу{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"4. /gzcolor - {FF6600}Команда для перекраски территорий банд{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"5. /ghetto {FF6600}Команда для Запрета/Разрешения каптов бандам{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"6. /avig {FF6600}Команда для выдачи Админ-Выговоров{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"7. /aunvig {FF6600}Команда для снятия Админ-Выговоров{ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"8. /ban {FF6600}Команда для выдачи бана (Вместе с ней дается /offban){ffffff} \n"); strcat(sctring,str);
+    if(PI[playerid][pAdmin] >= 12) format(str,sizeof(str),"9. /warn {FF6600}Команда для выдачи предупреждения(Вместе с ней дается /offwarn){ffffff} \n"); strcat(sctring,str);
+    SPD(playerid,0000,DIALOG_STYLE_MSGBOX,"{65c8ff}Список команд которые можно выдавать | >>",sctring,"Принять","");
+    return 1;
+}
+cmd:setadmin(playerid,params[])
+{
+    if(PI[playerid][pAdmin] < 7) return 1;
+    new NameA[24], lvl;
+    if(sscanf(params,"s[24]d",NameA,lvl)) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /setadmin [Имя] [Уровень]");
+    if(!strcmp(NameA, "Paphsheia")) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы не можете изменить лвл ему.");
+    if(lvl > 12 || lvl < 0) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: Нельзя меньше 1 и больше 12 ");
+    new query[144];
+    format(query, sizeof(query), "SELECT * FROM `accounts` WHERE `Name` = '%s' LIMIT 1", NameA);
+    mysql_function_query(connects, query, true, "SetAdmin", "dds", playerid, lvl, NameA);
+    return 1;
+}
+
+
+forward SetYouTube(playerid, lvl, name[]);
+public SetYouTube(playerid, lvl, name[])
+{
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows)
+    {
+        new query[256], string[144];
+        format(query, sizeof(query), "UPDATE `accounts` SET `youtube` = '%d' WHERE `Name` = '%s'",lvl, name);
+        mysql_function_query(connects, query, false, "", "");
+        print(query);
+
+        PI[playerid][youtube] = lvl;
+
+        format(string, sizeof(string), "%s был %s пост ютубера",lvl ? ("Поставлен на") : ("Снят с"), name);
+        SendClientMessage(playerid, COLOR_WHITE, string);
+    }
+    else return SendClientMessage(playerid, COLOR_WHITE, "Данный игрок не зарегестрирован на этом сервере!");
+    return 1;
+}
+stock YouTube(playerid)
+{
+    if(PI[playerid][youtube])
+    return 1;
+    else
+    return 0;
+}
+forward SetAdmin(playerid, level, name[]);
+public SetAdmin(playerid, level, name[]) {
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(rows) {
+        new lvl = cache_get_field_content_int(0, "pAdmin", connects);
+        if(lvl < 1 && level < 1) return SendClientMessage(playerid, COLOR_WHITE, "Игрок не администратор!");
+        new query[256], string[144];
+        format(query, sizeof(query), "UPDATE `accounts` SET `pAdmin` = '%d' WHERE `Name` = '%s'", level, name);
+        mysql_function_query(connects, query, false, "", "");
+        if(lvl < 1 && level > 0) {
+            format(string, sizeof(string), "%s был назначен на пост администратора %d уровня", name, level);
+            SendClientMessage(playerid, COLOR_WHITE, string);
+            format(string, sizeof(string), ""SERVER"%s назначил Вас администратором %d уровня. Введите - /alogin.", PI[playerid][pNames], level);
+        } else if(lvl > 0 && level > 0) {
+            format(string, sizeof(string), "Вы изменили уровень админ прав с %d на %d у %s", lvl, level, name);
+            SendClientMessage(playerid, COLOR_WHITE, string);
+            format(string, sizeof(string), ""SERVER"%s изменил Вам уровень админ прав с %d на %d.", PI[playerid][pNames], lvl, level);
+        } else if(level == 0) {
+            format(string, sizeof(string), "Вы сняли админ права с %s", name);
+            SendClientMessage(playerid, COLOR_WHITE, string);
+            format(string, sizeof(string), ""SERVER"%s снял Вас c должности администратора сервера.", PI[playerid][pNames]);
+        }
+
+        Admin_Log(playerid, string, name, gettime());
+
+        foreach(Player, i) {
+            if(!IsPlayerConnected(i)) continue;
+            if(strcmp(PI[i][pNames], name, true) != 0) continue;
+            if(level == 0) {
+                SendClientMessage(i, COLOR_WHITE, string);
+                DelAdmin(i);
+                break;
+            }
+            PI[i][pAdmin] = level;
+            SendClientMessage(i, COLOR_WHITE, string);
+            break;
+        }
+    } else return SendClientMessage(playerid, COLOR_WHITE, "Данный игрок не зарегестрирован на этом сервере!");
+    return 1;
+}
+
+cmd:donate(playerid) {
+    new string[144];
+    format(string,sizeof(string),""SERVER"Донат панель {FFFFFF}| Баланс: %d доната",PI[playerid][pDonatemoney2]);
+    SPD(playerid, 10054, DIALOG_STYLE_LIST, string, "\
+        {FFCD00}[TOP] >>>>> Дополнительно (Wipe - Coins)\
+        \n1. Конвертирование доната на игровую валюту\
+        \n2. + 1000 наркозависимости (1000)\
+        \n3. - 1000 наркозависимости (1000)\
+        \n4. Получить все лицензии (500)\
+        \n5. Получить все навыки владения оружием (500)\
+        \n6. Получить или повысить VIP статус\
+        \n7. + 10 законопослушности (100)\
+        \n8. Анти баннихоп (5000)\
+        \n9. Снять все предупреждения (1000)\
+        \n10. Снять все уровни розыска (200)\
+        \n11. Получить 20 масок >  (500)\
+        \n12. Получить 50 аптечек > (500)", "Готово", "Назад");
+    return 1;
+}
+alias:donaterub("drub");
+cmd:donaterub(playerid) {
+    OnCheckDonations(playerid);
+    return 1;
+}
+
+cmd:roulette_priz(playerid) {
+    format(mysql_query_, sizeof(mysql_query_),"SELECT * FROM `ucp_drop_roulette` WHERE `p_user` = '%e' AND `p_status` = 0 LIMIT 10", PI[playerid][pNames]);
+    mysql_tquery(connects, mysql_query_, "OnCheckRoulette", "d", playerid);
+    return 1;
+}
+cmd:adonate(playerid) {
+    if(PI[playerid][pAdmin] < 1) return 1;
+    format(stringer1, sizeof(stringer1), "{ffffff}Админ-донат | "SERVER"%d F - Coins |{FF4500} СКИДКИ !", PI[playerid][pDonateRubNew]);
+    ShowPlayerDialog(playerid, 7421, DIALOG_STYLE_LIST, stringer1, "\
+    {FF4500}1. Повысить свой уровень админ-прав >>\
+    \n2. Снять выговор\t\t{9994EB}49 F - Coins\
+    \n3. Изменить свой админ-пароль\t{9994EB}49 F - Coins\
+    \n4. Функция 'Скрытность'\t{9994EB}299 F - Coins\
+    \n5. {ffffff}Радужный {FF4500}К{ffff00}Л{00ff00}И{00ffff}С{ff00ff}Т{31ff31}\t\t{9994EB}35 F - Coins\
+    \n6. Префикс\t\t\t{9994EB}299 F - Coins\
+    \n{FFFFFF}Пополнить свой счет можно у нас на сайте > > {FF4500}"SERVER_WEBSITE"\
+    \n"SERVER"Информация перед покупкой >> CLICK", "Выбрать", "Назад");
+    return 1;
+}
+
+cmd:dadm(playerid, params[])
+{
+    if(GetPlayerAdmin(playerid))
+    {
+        extract params -> new to_player; else return SendClientMessage(playerid, 0xCECECEFF, "Используйте: /daadm [id игрока]");
+        if(!IsPlayerConnected(to_player)) return 1;
+
+        format(stringer1, sizeof(stringer1), "[%s]: %s[%d] для %s[%d]: Пополните счёт аккаунта на сайте "SERVER_WEBSITE" и купите в /mm > Дополнительно",PI[playerid][pAdmin] ? ("A"): ("H") ,PI[playerid][pNames], playerid, PI[params[0]][pNames],params[0]);
+        SendClientMessage(to_player, 0xff9945FF, stringer1);
+        SendAdminMessage(0xff9945FF, stringer1);
+    }
+    return 1;
+}
+
+cmd:gohelp(playerid, params[])
+{
+    if(PI[playerid][pPayDayHad] < 10) return SendClientMessage(playerid,-1,"Вы ещё не отыграли {FF4500}10 {ffffff}часов на нашем сервере, для получения хелперки!");
+    if(PI[playerid][pPayDayHad] > 10) return SendClientMessage(playerid,-1,"Для получения привилегии подайте заявку написав в ЛС оф.сообщества > #ОТЫГРАЛХЕЛПЕРКА, и далее вам выдадут форму, заполните ее и ожидайте ! =)");
+    return 1;
+}
+cmd:setsrvpass(playerid, params[])
+{
+    if(FD(playerid))
+    {
+        if(isnull(params)) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /setsrvpass [Пароль] ");
+        SendClientMessage(playerid, COLOR_RED, "[Успешно] {FFFFFF}Пароль от сервера изменён");
+        new strpass[64];
+        format(strpass, sizeof(strpass), "password %s", params);
+        SendRconCommand(strpass);
+     }
+    return 1;
+}
+cmd:asl(playerid, params[]) {
+    if(GetPlayerAdmin(playerid)) {
+        if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /asl [id]");
+        if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+        if(PI[playerid][pAdmin] > 0) format(stringer1, sizeof(stringer1), "Администратор: %s[%d] для %s[%d]: Начал работать по вашей жалобе, спасибо за помощь ! | Приятной игры на "SERVER_NAME"",PI[playerid][pNames], playerid, PI[params[0]][pNames], params[0]);
+        else format(stringer1, sizeof(stringer1), "{FF9945}Ответ от %s: Начал работать по вашей жалобе, спасибо за помощь !",PI[playerid][pNames]), PI[playerid][pHotvet] ++;
+        SendClientMessage(params[0], 0xff9945FF, stringer1);
+        if(PI[playerid][pAdmin] > 0) { format(stringer1, sizeof(stringer1), "Администратор: %s[%d] для %s[%d]: Передал администрации проекта, ожидайте ! | Приятной игры на "SERVER_NAME"",PI[playerid][pNames], playerid, PI[params[0]][pNames], params[0]); }
+        else { format(stringer1, sizeof(stringer1), "{FF9945}[H] %s: Передал администрации проекта, ожидайте ! | Для %s[%d]",PI[playerid][pNames],PI[params[0]][pNames], params[0]); }
+        SendAdminMessage(0xff9945FF, stringer1);
+    }
+    return 1;
+}
+cmd:kk(playerid, params[]) {
+    if(GetPlayerAdmin(playerid)) {
+        if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /kk [id]");
+        if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+        if(PI[playerid][pAdmin] > 0) format(stringer1, sizeof(stringer1), "Администратор: %s[%d] для %s[%d]: Оставьте жалобу на форуме - forum.WIPE PROJECT",PI[playerid][pNames], playerid, PI[params[0]][pNames], params[0]);
+        else format(stringer1, sizeof(stringer1), "{FF9945}Ответ от %s: Оставьте жалобу на форуме - forum.WIPE PROJECT",PI[playerid][pNames]), PI[playerid][pHotvet] ++;
+        SendClientMessage(params[0], 0xff9945FF, stringer1);
+        if(PI[playerid][pAdmin] > 0) { format(stringer1, sizeof(stringer1), "Администратор: %s[%d] для %s[%d]: Оставьте жалобу на форуме - forum.WIPE PROJECT",PI[playerid][pNames], playerid, PI[params[0]][pNames], params[0]); }
+        else { format(stringer1, sizeof(stringer1), "{FF9945}[H] %s: Оставьте жалобу на форуме - forum.WIPE PROJECT | Для %s[%d]",PI[playerid][pNames],PI[params[0]][pNames], params[0]); }
+        SendAdminMessage(0xff9945FF, stringer1);
+    }
+    return 1;
+}
+cmd:mpwin(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 4) return 1;
+
+    if(sscanf(params,"dd",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /mpwin [ID] [Очки]");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+    if(params[1] > 1000 || params[1] < 50) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: Нельзя меньше 50 и больше 1000!");
+    PI[params[0]][pDonatemoney2] += params[1];
+    format(stringer1, sizeof(stringer1), "Администратор %s: МП окончено, победил %s! Он получает %d DonateMoney (/donate)", PI[playerid][pNames],PI[params[0]][pNames], params[1]);
+    SendClientMessageToAll(0xFFCD00ff, stringer1);
+    SendMes(params[0],COLOR_WHITE, "Ваш донатный счёт: %d DonatMoney {FFFFFF}(( Используйте /donate ))", PI[params[0]][pDonatemoney2]);
+
+    return 1;
+}
+cmd:mpfd(playerid, params[])
+{
+    if(!FD(playerid)) return 1;
+
+    if(sscanf(params,"dd",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /mpfd [ID] [Количество]");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+    if(params[1] > 50 || params[1] < 5) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: Нельзя меньше 5 и больше 50!");
+    PI[params[0]][pDonateRubNew] += params[1];
+    format(stringer1, sizeof(stringer1), "Основатель %s: МП окончено, победил %s! Он получает %d F - Coins (/donaterub)", PI[playerid][pNames],PI[params[0]][pNames], params[1]);
+    SendClientMessageToAll(0xFFCD00ff, stringer1);
+    SendMes(params[0],COLOR_WHITE, "Ваш донатный счёт: %d F - Coins {FFFFFF}(( Используйте /donaterub ))", PI[params[0]][pDonateRubNew]);
+
+    return 1;
+}
+cmd:ceject(playerid, params[])
+{
+    if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /ceject [id игрока]");
+    if(!ProxDetectorS(8.0, playerid, params[0])) return SendClientMessage(playerid, COLOR_GREY, "Игрок не рядом с вами!");
+    if(PI[playerid][pMember] == 1 || PI[playerid][pMember] == 2 || PI[playerid][pMember] == 10 || PI[playerid][pMember] == 21 || PI[playerid][pMember] == 25) {
+        if(IsPlayerInRangeOfPoint(playerid, 10.0,1568.2023,-1694.1594,5.8906)) {
+            SetPlayerInteriorEx(params[0],6);
+            SetPPos(params[0],253.9933,86.9706,1002.4453);
+            SetPlayerFacingAngle(params[0], 278.0311); }
+        else if(IsPlayerInRangeOfPoint(playerid, 10.0,-1590.8289,716.0479,-5.2422)) {
+            SetPlayerInteriorEx(params[0],10);
+            SetPPos(params[0],217.3147,121.3382,999.0156);
+            SetPlayerFacingAngle(params[0], 272.8898); }
+        else if(IsPlayerInRangeOfPoint(playerid, 10.0,2295.1934,2451.8459,10.8203)) {
+            SetPlayerInteriorEx(params[0],3);
+            SetPlayerVirtualWorldEx(params[0], 122);
+            SetPPos(params[0],238.5033,141.1578,1003.0234);
+            SetPlayerFacingAngle(params[0], 359.1617); }
+        else return SendClientMessage(playerid, 0x6ab1ffaa, "Вы затолкали приступника в участок."); }
+    return 1;
+}
+cmd:withdraw(playerid, params[])
+{
+    if(!IsPlayerInRangeOfPoint(playerid, 10.0,2308.8201,-13.2660,26.7422))
+    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /withdraw [Сумма]");
+    if(params[0] < 1 || params[0] > 10000000) { SendClientMessage(playerid, COLOR_GREY, "Нельзя снять 1 руб.а и более 10000000!"); return 1; }
+    if(PI[playerid][pBank] < params[0]) return SendClientMessage(playerid, COLOR_GRAD1, "У вас нет столько денег!");
+    GiveMoney(playerid, params[0]);
+    PI[playerid][pBank] -= params[0];
+    UpdatePlayerData(playerid, "pBank", PI[playerid][pBank]);
+    format(stringer1, sizeof(stringer1), "Вы сняли %s руб.. Остаток: %s руб.",formatInt(params[0]), formatInt(PI[playerid][pBank]));
+    SendClientMessage(playerid, COLOR_YELLOW, stringer1);
+    return 1;
+}
+cmd:newswithdraw(playerid, params[])
+{
+    if(PI[playerid][pMember] != 16 || PI[playerid][pRank] < 12) return 1;
+    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /newswithdraw [Сумма]");
+    if(params[0] < 1 || params[0] > 10000000) return SendClientMessage(playerid, COLOR_GREY, "Нельзя снять меньше 1 и более 1000000 руб.!");
+    if(FracBank[0][fLsnews] < params[0]) return SendClientMessage(playerid, COLOR_GREY, "В банке Россия 24 нет столько денег");
+    FracBank[0][fLsnews] -= params[0];
+    GiveMoney(playerid, params[0]);
+    SendMes(playerid, 0x6ab1ffaa, "Вы сняли с банка Россия 24: %s руб.", formatInt(params[0]));
+    SetOtherInt("FracBank[0][fLsnews]", FracBank[0][fLsnews]);
+    return 1;
+}
+cmd:shield(playerid)
+{
+    if(TeamPain[playerid] != 0 && StartPaintBall == 2) return SendClientMessage(playerid,COLOR_GREY,"Использовать щит на PaintBall запрещено.");
+    if(IsACop(playerid) || IsAArm(playerid))
+    {
+        if(shield[playerid] == 0)
+        {
+            SetPlayerHealth(playerid, 999), shield[playerid] = 1;
+            SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы надели щит. Ваше здоровье увеличено до 999.");
+        }
+        else { SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Вы сняли щит. Ваше здоровье уменьшено до 50."), SetPlayerHealth(playerid, 50), shield[playerid] = 0; }
+    }
+    else return SendClientMessage(playerid, COLOR_GREY, "Вы не Полицейский/Военный/ФБР");
+    return 1;
+}
+cmd:gomp(playerid)
+{
+    if(TeleportInfo_players <= 0) return SendClientMessage(playerid, COLOR_WHITE, !"Места на мероприятие закончились!");
+
+    if(Teleport == 0) return SendClientMessage(playerid, -1, "{AC0000}[Ошибка] {ffffff}На данный момент мероприятий нет.");
+    else ShowPlayerDialog(playerid, 3333, DIALOG_STYLE_MSGBOX, "{FFCD00}Телепортация", "{ffffff}Вы уверены, что хотите попасть в место проведения мероприятия?", "Да", "Нет");
+    return 1;
+}
+cmd:news(playerid, params[])
+{
+    if(gag[playerid] == 1) return   SendClientMessage(playerid, COLOR_LIGHTRED, "У Вас кляп, вы не можете говорить!");
+    if(PI[playerid][pMuteTime] > gettime()) return SendClientMessage(playerid, TEAM_CYAN_COLOR, "У Вас бан чата!");
+    if(sscanf(params, "s[128]", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /news [текст]");
+    if(gag[playerid] == 1) return SendClientMessage(playerid, COLOR_LIGHTRED, "У Вас кляп, вы не можете говорить!");
+    switch(PI[playerid][pMember])
+    {
+    case 16:
+        {
+            new newcar = GetPlayerVehicleID(playerid);
+            if(GetVehicleData(newcar, V_ACTION_TYPE) == VEHICLE_ACTION_TYPE_NEWS || IsPlayerInRangeOfPoint(playerid, 60.0, -2662.6042,-1820.9193,4.1045)) { } else { SendClientMessage(playerid, COLOR_GRAD1, "Вы не в репортёрской машине / вертолёте / офисе!"); return 1;}
+            format(stringer1, sizeof(stringer1), "<  > %s[%d]: %s",PI[playerid][pNames], playerid, params[0]);
+            SendClientMessageToAll(0x0073b7AA, stringer1);
+        }
+    }
+    return 1;
+}
+
+cmd:live(playerid, params[])
+{
+    if(PI[playerid][pMuteTime] > gettime()) return SendClientMessage(playerid, TEAM_CYAN_COLOR, "У Вас бан чата!");
+    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /live [id/name]");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Этого игрока нет, или вы указали свой ид");
+    if(!ProxDetectorS(5.0, playerid, params[0])) return SendClientMessage(playerid, COLOR_GREY, "Человек далеко от вас!");
+    new newcar = GetPlayerVehicleID(playerid);
+    switch(PI[playerid][pMember])
+    {
+    case 16:
+        {
+            if(GetVehicleData(newcar, V_ACTION_TYPE) == VEHICLE_ACTION_TYPE_NEWS || IsPlayerInRangeOfPoint(playerid, 60.0, -2662.6042,-1820.9193,4.1045)) { } else { SendClientMessage(playerid, COLOR_GREY, "Вы не в репортёрской машине / вертолёте / офисе!"); return 1;}
+            if(TalkingLivels[playerid] != INVALID_PLAYER_ID)
+            {
+                SendClientMessage(playerid, 0x6495EDFF, "Прямой эфир завершён");
+                SendClientMessage(TalkingLivels[playerid], 0x6495EDFF, "Прямой эфир завершён");
+                TogglePlayerControllable(playerid, 1);
+                TogglePlayerControllable(TalkingLivels[playerid], 1);
+                TalkingLivels[TalkingLivels[playerid]] = INVALID_PLAYER_ID;
+                TalkingLivels[playerid] = INVALID_PLAYER_ID;
+                return 1;
+            }
+            format(stringer1, sizeof(stringer1), "Вы предложили %s снять интервью",PI[params[0]][pNames]);
+            SendClientMessage(playerid, 0x6495EDFF, stringer1);
+            format(stringer1, sizeof(stringer1), "%s предлагает вам снять интервью",PI[playerid][pNames]);
+            SendClientMessage(params[0], 0x6495EDFF, stringer1);
+            SendClientMessage(params[0], COLOR_WHITE, "Введите /accept livels, чтобы согласиться");
+            LiveOfferls[params[0]] = playerid;
+        }
+    }
+    return 1;
+}
+alias:live("l");
+
+cmd:npanel(playerid, params[])
+{
+    if(GetVehicleModel(GetPlayerVehicleID(playerid)) == 582 || GetVehicleModel(GetPlayerVehicleID(playerid)) == 488 || IsPlayerInRangeOfPoint(playerid, 60.0,-2662.6042,-1820.9193,4.1045)) {
+        if(PI[playerid][pMember] == 16) SPD(playerid,2224, DIALOG_STYLE_LIST, ""SERVER"Россия 24 | {FFFFFF}Бортовой компьютер", "{B8B8B8}Обьявления\n [ 1 ] Прямой эфир\n [ 2 ] Выйти из прямого эфира\n [ 3 ] Начать принимать звонки / смс\n [ 4 ] Завершить принимать звонки / смс\n [ 5 ] Установить цену за звонки и смс\n [ 6 ] Установить цену за объявления", "Принять", "Отмена"); }
+    else return SendClientMessage(playerid, COLOR_GREY, "Вы не в служебном транспорте/офисе!");
+    return 1;
+}
+cmd:advertise(playerid, params[])
+{
+    if(sscanf(params, "s[128]",params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: (/ad)vertise [текст]");
+    new len = strlen(params[0]);
+    if(len > 100) return SendClientMessage(playerid,COLOR_GREY,"Максимальная длина объявления - 100 символов");
+    if(PI[playerid][pMuteTime] > gettime()) return SendClientMessage(playerid, TEAM_CYAN_COLOR, "У Вас бан чата!");
+    if(gAdvertCount >= MAX_ADVERT_COUNT) return SendClientMessage(playerid,COLOR_GREY,"К сожалению, очередь на объявления занята, попробуйте позже");
+    if(adverttime > gettime()) return SendClientMessage(playerid,COLOR_WHITE,"Нельзя посылать больше одного сообщения в 30 секунд!");
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, -1, "Подозрения в рекламе!");
+        return 0;
+    }
+    SetPVarString(playerid,"advert",params[0]);
+    format(stringer,sizeof(stringer),"{B8B8B8}Цена объявления: {00FF5E}$%d.\n{B8B8B8}Вы действительно хотите отправить объявление?",len*addd);
+    SPD(playerid,8454,0,"Объявление",stringer,"Да","Нет");
+    return 1;
+}
+
+cmd:vipad(playerid, params[])
+{
+    if(PI[playerid][pDonateRank] == 0) return SendClientMessage(playerid,COLOR_WHITE,"У вас нет VIP аккаунта!");
+    if(sscanf(params, "s[128]",params[0])) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Используйте: /v(ip)ad [текст]");
+    new len = strlen(params[0]);
+    if(len > 100) return SendClientMessage(playerid,COLOR_GREY,"Максимальная длина объявления - 100 символов");
+    if(PI[playerid][pMuteTime] > gettime()) return SendClientMessage(playerid, TEAM_CYAN_COLOR, "У Вас бан чата!");
+    if(gVipAdvertCount >= MAX_VIP_ADVERT_COUNT) return SendClientMessage(playerid,COLOR_GREY,"К сожалению, очередь на объявления занята, попробуйте позже");
+    if(vipadverttime > gettime()) return SendClientMessage(playerid,COLOR_WHITE,"Нельзя посылать больше одного VIP-объявления в 1 минуту!");
+    if(IsAIP(params[0])) {
+        SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Обнаружено подозрение в рекламе!");
+        return 0;
+    }
+    SetPVarString(playerid,"advert",params[0]);
+    format(stringer,sizeof(stringer),"{FFFFFF}Текст объявления: "SERVER"%s\n{FFFFFF}Количество символов: "SERVER"%d\n\n{afafaf}Вы действительно желаете отправить объявление?", params[0], len);
+    SPD(playerid, 8455, DIALOG_STYLE_MSGBOX, !""SERVER"VIP-Объявление", stringer, !"Отправить", !"Отменить");
+    return 1;
+}
+alias:vipad("vad");
+
+cmd:edit(playerid)
+{
+    if(PI[playerid][pAdmin] < 5) return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Редактировать VIP-объявления можно с 5 уровня админки.");
+    return ShowVipAdvertList(playerid);
+}
+
+stock ShowVipAdvertList(playerid)
+{
+    stringer[0] = EOS;
+    new data[3][30],index;
+    format(data[0],30,"[{33AA33}Проверено{FFFFFF}]");
+    format(data[1],30,"[{FFFF00}Проверяется{FFFFFF}]");
+    for(new i = 0; i < MAX_VIP_ADVERT_COUNT; i++)
+    {
+        if(!gVipAdvert[i][vadBusy]) format(stringer,sizeof(stringer),"%s%d. -\n",stringer,i+1);
+        else
+        {
+            if(gVipAdvert[i][vadCheking]) index = 1;
+            else if(gVipAdvert[i][vadCheked]) index = 0;
+            else index = 2;
+            format(stringer,sizeof(stringer),"%s%d. %s %s\n",stringer,i+1,gVipAdvert[i][vadSender],data[index]);
+        }
+    }
+    return SPD(playerid, 11550, DIALOG_STYLE_LIST, !""SERVER"VIP-объявления",stringer, !"Далее", !"Закрыть");
+}
+
+cmd:viphelp(playerid)
+{
+    stringer[0] = 0;
+    strcat(stringer,"{FFFF00}1. Bronze VIP{FFFFFF} - Выдается навсегда:\n\n{32CD32}Команды:\n{FFFFFF}- /togphone\n\n");
+    strcat(stringer,"{32CD32}Привилегии:\n{FFFFFF}- Максимальная блокировка аккаунта на 5 дней;\n- Возможно подавать объявления в /vipad три раза в час.\n\n");
+    strcat(stringer,"{FFFF00}Silver VIP{FFFFFF} - Выдается на 10 дней:\n\n{32CD32}Команды:\n{FFFFFF}- /togphone\n- /admins\n\n");
+    strcat(stringer,"{32CD32}Привилегии:\n{FFFFFF}- Максимальная блокировка аккаунта на 4 дня;\n- Возможно подавать объявления в /vipad семь раза в час.\n\n");
+    strcat(stringer,"{FFFF00}Gold VIP{FFFFFF} - Выдается на 7 дней:\n\n{32CD32}Команды:\n{FFFFFF}- /togphone\n- /admins\n- /leave\n\n");
+    strcat(stringer,"{32CD32}Привилегии:\n{FFFFFF}- Максимальная блокировка аккаунта на 2 дня;\n- Безлимитная подача обьявлений;\n");
+    strcat(stringer,"- Полная сытость при спавне;\n- Двойной EXP при зарплате.");
+    SPD(playerid, 0, 0, ""SERVER"Помощь по управлению VIP статусом", stringer, "Закрыть", "");
+    return 1;
+}
+cmd:skin(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 7)
+    {
+        if(!YouTube(playerid))
+        return 1;
+    }
+    if(sscanf(params, "d", params[0])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /skin [id скина]");
+    if(params[0] > 289 || params[0] < 1) { SendClientMessage(playerid, COLOR_GREY, "Неправильный ID скина!"); return 1; }
+    PI[playerid][pChar] = params[0];
+    SetPlayerSkinEx(playerid, PI[playerid][pChar], true);
+    return 1;
+}
+
+cmd:buyadm(playerid)
+{
+    new fstring[129],big_fmt[599];
+    if(PI[playerid][pAdmin] >= 12) return SendClientMessage(playerid, COLOR_WHITE, "У вас максимальный уровень админ-прав.");
+    for(new i = PI[playerid][pAdmin]; i < 11; i++)
+    {
+        format(fstring, sizeof(fstring), "{ffffff}%i уровень\t{8BD032}%i F - Coins{FFFFFF}\n", i + 1, ((i + 1) - PI[playerid][pAdmin]) * adminprice);
+        strcat(big_fmt, fstring);
+
+    }
+    /*
+    for(new i = PI[playerid][pAdmin]; i =< 12; i++)
+    {
+        if(!i) format(fstring, sizeof(fstring), "{ffffff}%i уровень\t{8BD032}%i F - Coins{FFFFFF}", i + 1, ((i + 1) - PI[playerid][pAdmin]) * adminprice);
+        else format(fstring, sizeof(fstring), "%s\n%i уровень\t{8BD032}%i F - Coins", fstring, i + 1, ((i + 1) - PI[playerid][pAdmin]) * adminprice);
+    }
+    */
+    strcat(big_fmt, "{FF4500}12 уровень\t{8BD032} 2500 F - Coins");
+    //format(fstring, sizeof(fstring), "%s\n{FF4500}12 уровень\t{8BD032} 2500 F - Coins", fstring);
+    SPD(playerid, 9641, DIALOG_STYLE_LIST, ""SERVER"Покупка админки", big_fmt, "Выбор", "Отмена");
+    return 1;
+}
+
+cmd:voice(playerid, params[]) {
+    SPD(playerid, 8291, DIALOG_STYLE_LIST, ""SERVER"Выберите акцент", "Американский акцент\nИтальянский акцент\nРусский акцент\nЯпонский акцент\nНемецкий акцент\nАрмянский акцент\nБез акцента", "Выбрать", "Отмена");
+    return 1;
+}
+
+cmd:setskin(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 7) return 1;
+    if(sscanf(params, "dd", params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /setskin [id игрока/ник] [id скина]");
+    if(params[1] > 289 || params[1] < 1) { SendClientMessage(playerid, COLOR_GREY, "Неправильный ID скина!"); return 1; }
+    if(!IsPlayerConnected(params[0])) return 1;
+    PI[params[0]][pChar] = params[1];
+    format(stringer1, sizeof(stringer1), "Ваш скин был изменен администратором %s", PI[playerid][pNames]);
+    SendClientMessage(params[0], 0x6495EDFF, stringer1);
+    format(stringer1, sizeof(stringer1), "Вы изменили скин %s на номер: %i",PI[params[0]][pNames],params[1]);
+    SendClientMessage(playerid, 0x6495EDFF, stringer1);
+    SetPlayerSkinEx(params[0], PI[params[0]][pChar], true);
+    return 1;
+}
+cmd:pay(playerid, params[])
+{
+    if(sscanf(params, "dd", params[0],params[1])) return    SendClientMessage(playerid, COLOR_WHITE, "Введите: /pay [id] [сумма]");
+    if(params[1] < 1 || params[1] > 100000) return SendClientMessage(playerid, COLOR_GRAD1, "Нельзя передать меньше 1 руб.а и больше 99999 руб..");
+    if(PI[playerid][pPayDayHad] < 3) return SendClientMessage(playerid, COLOR_GREY, "Вы должны пробыть в игре ещё 2 часа (/mm - Статистика персонажа).");
+    if(!IsPlayerConnected(params[0])) return 1;
+    if(!ProxDetectorS(5.0, playerid, params[0])) return SendClientMessage(playerid, COLOR_GRAD1, "Вы слишком далеко.");
+    if(PI[playerid][pCash] < params[1]) return 1;
+    GiveMoney(params[0], params[1]);
+    PI[playerid][pCash] -= params[1];
+    format(stringer1, sizeof(stringer1), "Вы передали %s[%i], %s руб..",PI[params[0]][pNames],params[0],formatInt(params[1]));
+    PlayerPlaySound(playerid, 1052, 0.0, 0.0, 0.0);
+    SendClientMessage(playerid, COLOR_GRAD1, stringer1);
+    format(stringer1, sizeof(stringer1), "Вы получили %s руб. от %s[%i].",formatInt(params[1]),PI[playerid][pNames], playerid);
+    SendClientMessage(params[0], COLOR_GRAD1, stringer1);
+    PlayerPlaySound(params[0], 1052, 0.0, 0.0, 0.0);
+    format(stringer1,sizeof(stringer1), "достал бумажник и передал деньги %s",PI[params[0]][pNames]);
+    SetPlayerChatBubble(playerid,stringer1,COLOR_PURPLE,30.0,10000);
+    return 1;
+}
+cmd:mxpell(playerid, params[])
+{
+    if(PI[playerid][pMember] != 7 && PI[playerid][pMember] != 16) return SendClientMessage(playerid,COLOR_WHITE,"Вы не сотрудник мэрии / новостей!");
+    if(sscanf(params, "ds[128]",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /mxpell [id] [причина]");
+    if(!ProxDetectorS(15.0, playerid, params[0])) return SendClientMessage(playerid, COLOR_GREY, "Игрок слишком далеко!");
+    if(IsACop(params[0]) || IsAArm(params[0]) || PI[params[0]][pMember] == 4 || PI[params[0]][pMember] == 7) return SendClientMessage(playerid, COLOR_RED, "Вы не можете выгнать Госсударственного работника!");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+    if(PI[playerid][pMember] == 7)
+    {
+        if(!IsPlayerInRangeOfPoint(playerid, 60.0, 688.8973,-27.8779,1201.8580)) return SendClientMessage(playerid, COLOR_GREY, "Необходимо находится в мэрии!");
+        SetPlayerInteriorEx(params[0],0);
+        SetPPos(params[0],1480.8832,-1769.0471,18.7958);
+        SetPlayerFacingAngle(params[0], 0.3133);
+        DisablePlayerCheckpoint(params[0]);
+        CP[params[0]] = 0;
+        SetPVarInt(params[0],"MerEnter",gettime()+300);
+        format(stringer1,100,"Сотрудник: %s выставил вас за дверь мэрии. Причина: %s",PI[playerid][pNames],params[1]);
+        SendClientMessage(params[0],COLOR_WHITE,stringer1);
+        format(stringer1,100,"Вы выставили %s за дверь.",PI[params[0]][pNames]);
+        SendClientMessage(playerid,COLOR_WHITE,stringer1);
+    }
+    else
+    {
+        if(!IsPlayerInRangeOfPoint(playerid, 60.0,1745.7302,-1915.4186,1961.1769)) return SendClientMessage(playerid, COLOR_GREY, "Необходимо находится в студии!");
+        SetPlayerInteriorEx(params[0],0);
+        SetPPos(params[0],1658.2383,-1693.4553,15.6094);
+        SetPlayerFacingAngle(params[0], 175.8234);
+        SetPlayerVirtualWorldEx(params[0], 0);
+        DisablePlayerCheckpoint(params[0]);
+        CP[params[0]] = 0;
+        SetPVarInt(params[0],"NewsEnter",gettime()+300);
+        format(stringer1,100,"Сотрудник: %s выставил вас за дверь студии. Причина: %s",PI[playerid][pNames],params[1]);
+        SendClientMessage(params[0],COLOR_WHITE,stringer1);
+        format(stringer1,100,"Вы выставили %s за дверь.",PI[params[0]][pNames]);
+        SendClientMessage(playerid,COLOR_WHITE,stringer1);
+    }
+    return 1;
+}
+cmd:axpell(playerid, params[])
+{
+    if(PI[playerid][pMember] != 11) return SendClientMessage(playerid,COLOR_WHITE,"Вы не сотрудник автошколы!");
+    if(sscanf(params, "ds[128]",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /axpell [id] [причина]");
+    if(!ProxDetectorS(15.0, playerid, params[0])) return SendClientMessage(playerid, COLOR_GREY, "Игрок слишком далеко!");
+    if(IsACop(params[0]) || IsAArm(params[0]) || PI[params[0]][pMember] == 4 || PI[params[0]][pMember] == 7) return SendClientMessage(playerid, COLOR_RED, "Вы не можете выгнать Госсударственного работника!");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+    if(IsPlayerInRangeOfPoint(playerid, 30.0,-790.2884,1546.5732,1139.2369))
+    {
+        SetPlayerInteriorEx(params[0],0);
+        SetPlayerVirtualWorldEx(params[0], 0);
+        SetPPos(params[0],-2026.9436,-99.6266,35.1641);
+        SetPlayerFacingAngle(params[0], 355.8038);
+        SetPVarInt(params[0],"AvtoEnter",gettime()+300);
+        format(stringer1,100,"Сотрудник: %s выставил вас за дверь автошколы. Причина: %s",PI[playerid][pNames],params[1]);
+        SendClientMessage(params[0],COLOR_WHITE,stringer1);
+        format(stringer1,100,"Вы выставили %s за дверь.",PI[params[0]][pNames]);
+        SendClientMessage(playerid,COLOR_WHITE,stringer1);
+    }
+    return 1;
+}
+cmd:mdpell(playerid, params[])
+{
+    if(PI[playerid][pMember] != 4) return SendClientMessage(playerid,COLOR_WHITE,"Вы не врач!");
+    if(sscanf(params, "ds[128]",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /mdpell [id] [причина]");
+    if(!ProxDetectorS(15.0, playerid, params[0])) return SendClientMessage(playerid, COLOR_GREY, "Игрок слишком далеко!");
+    if(IsACop(params[0]) || IsAArm(params[0]) || PI[params[0]][pMember] == 4 || PI[params[0]][pMember] == 7) return SendClientMessage(playerid, COLOR_RED, "Вы не можете выгнать Госсударственного работника!");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return 1;
+    if(!IsPlayerInRangeOfPoint(playerid, 50.0,347.8218,400.8753,1022.8019)) return SendClientMessage(playerid, COLOR_GREY, "Вы находитесь не на территории больницы.");
+    PI[params[0]][pHospital] = 0;
+    UpdatePlayerData(params[0], "pHospital", PI[params[0]][pHospital]);
+    SetPPos(params[0],1177.1721,-1323.3220,14.0576);
+    SetPlayerInteriorEx(params[0],0);
+    SetPlayerFacingAngle(params[0], 270);
+    SetPlayerVirtualWorldEx(params[0], 0);
+    SetPVarInt(params[0],"MdEnter",gettime()+300);
+    format(stringer1,100,"Сотрудник: %s выставил вас за дверь больницы. Причина: %s",PI[playerid][pNames],params[1]);
+    SendClientMessage(params[0],COLOR_WHITE,stringer1);
+    format(stringer1,100,"Вы выставили %s за дверь.",PI[params[0]][pNames]);
+    SendClientMessage(playerid,COLOR_WHITE,stringer1);
+    return 1;
+}
+cmd:money(playerid, params[])
+{
+    if(FD(playerid))
+    {
+        if(sscanf(params, "dd",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /money [ид] [сумма]");
+        if(!IsPlayerConnected(params[0])) return 1;
+        format(stringer1, sizeof(stringer1), "%s руб. переведены на счёт игроку %s",formatInt(params[1]),PI[params[0]][pNames]);
+        SendClientMessage(playerid, COLOR_WHITE, stringer1);
+        GiveBank(params[0], params[1]);
+        format(stringer1, sizeof(stringer1), "Пополнение счёта на сумму: %s руб.", formatInt(params[1]));
+        SendClientMessage(params[0], COLOR_WHITE, stringer1);
+        format(stringer1, sizeof(stringer1), "Новый баланс в банке: %s руб.", formatInt(PI[params[0]][pBank]));
+        SendClientMessage(params[0], COLOR_WHITE, stringer1);
+        return 1;
+    }
+    SendClientMessage(playerid, -1, "Команда изъята из доступа");
+    return 1;
+}
+
+cmd:avig(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 7) return 1;
+    new nicks[24];
+    if(sscanf(params, "s[24]s[100]",nicks, params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Используйте: /avig [ник] [причина]");
+
+    new ids = GetPlayerID(nicks);
+    if(IsPlayerConnected(ids))
+    {
+        if(!PI[ids][pLeader] && !PI[ids][pAdmin]) return SendClientMessage(playerid, COLOR_WHITE, "Игрок не является администратором / лидером");
+        if(playerid == ids) return SendClientMessage(playerid, COLOR_WHITE, "Невозможно выдать выговор самому себе.");
+        PI[ids][pVigs] ++;
+        if(PI[ids][pVigs] >= 3)
+        {
+            if(PI[ids][pLeader] && !PI[ids][pAdmin])
+            {
+                format(stringer1, sizeof(stringer1), "Администратор %s снял лидера фракции %s: %s (3/3). Причина: %s", PI[playerid][pNames], GetPlayerFracName[PI[ids][pMember]], PI[ids][pNames], params[1]);
+                SendClientMessageToAll(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "снял лидеры фракции %s по причине (3/3): %s", GetPlayerFracName[PI[ids][pMember]], params[1]);
+                Admin_Log(playerid, stringer1, nicks, gettime());
+                SetPlayerSkinEx(ids, PI[ids][pChar], true);
+                SetPlayerArmour(ids,0);
+                SetPlayerHealth(ids,100);
+                ResetWeapons(ids);
+                PI[ids][pLeader] = 0;
+                PI[ids][pMember] = 0;
+                PI[ids][pRank] = 0;
+                PI[ids][pVigs] = 0;
+                PI[ids][pOdet] = 0;
+                SetPlayerToTeamColor(ids);
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pLeader` = '0', `pRank` = '0', `odet` = '0' , `vigs` = '0' WHERE `pID` = '%d'",PI[ids][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+            else if(PI[ids][pAdmin])
+            {
+                format(stringer1, sizeof(stringer1), "Главный администратор %s снял с %s права администратора (3/3). Причина: %s", PI[playerid][pNames], PI[ids][pNames], params[1]);
+                SendAdminMessage(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "снял права администратора (3/3), по причине: %s", params[1]);
+                Admin_Log(playerid, stringer1, nicks, gettime());
+                DelAdmin(ids);
+            }
+        }
+        else
+        {
+            if(PI[ids][pLeader] && !PI[ids][pAdmin])
+            {
+                format(stringer1, sizeof(stringer1), "Администратор %s выдал выговор лидеру фракции %s: %s (%d/3). Причина: %s", PI[playerid][pNames], GetPlayerFracName[PI[ids][pMember]], PI[ids][pNames],PI[ids][pVigs], params[1]);
+                SendClientMessageToAll(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "выдал выговор лидеру фракции %s (%d/3) по причине: %s", GetPlayerFracName[PI[ids][pMember]],PI[ids][pVigs], params[1]);
+                Admin_Log(playerid, stringer1, nicks, gettime());
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'",PI[ids][pVigs], PI[ids][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+            else if(PI[ids][pAdmin])
+            {
+                format(stringer1, sizeof(stringer1), "Главный администратор %s выдал администратору %s выговор (%d/3). Причина: %s", PI[playerid][pNames], PI[ids][pNames],PI[ids][pVigs], params[1]);
+                SendAdminMessage(COLOR_LIGHTRED, stringer1);
+                format(stringer1, sizeof(stringer1), "выдал выговор (%d/3), по причине: %s", PI[ids][pVigs], params[1]);
+                Admin_Log(playerid, stringer1, nicks, gettime());
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'",PI[ids][pVigs],PI[ids][pID]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+        }
+        return 1;
+    }
+    format(mysql_query_,sizeof(mysql_query_), "SELECT `pAdmin`, `pLeader`, `vigs` FROM `"TABLE_ACCOUNT"` WHERE `Name` = '%s'", nicks);
+    mysql_function_query(connects, mysql_query_, true, "SetVig_Date", "dssd", playerid,nicks,params[1],2);
+    return 1;
+}
+cmd:aunvig(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 7) return 1;
+    new nicks[24];
+    if(sscanf(params, "s[24]s[100]",nicks, params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Используйте: /aunvig [ник] [причина]");
+
+
+
+    new ids = GetPlayerID(nicks);
+    if(IsPlayerConnected(ids))
+    {
+        if(!PI[ids][pLeader] && !PI[ids][pAdmin]) return SendClientMessage(playerid, COLOR_WHITE, "Игрок не является администратором / лидером");
+        if(playerid == ids && !FD(playerid)) return SendClientMessage(playerid, COLOR_WHITE, "Невозможно снять выговор самому себе.");
+        if(PI[ids][pVigs] <= 0) return SendClientMessage(playerid, COLOR_WHITE, "Выговоры отсутствуют.");
+        PI[ids][pVigs] --;
+        if(PI[ids][pLeader] && !PI[ids][pAdmin])
+        {
+            format(stringer1, sizeof(stringer1), "Администратор %s снял выговор лидеру фракции %s: %s (%d/3). Причина: %s", PI[playerid][pNames], GetPlayerFracName[PI[ids][pMember]], PI[ids][pNames],PI[ids][pVigs], params[1]);
+            SendClientMessageToAll(COLOR_LIGHTRED, stringer1);
+            format(stringer1, sizeof(stringer1), "снял выговор лидеру фракции (%s) (%d/3) по причине: %s", GetPlayerFracName[PI[ids][pMember]],PI[ids][pVigs], params[1]);
+            Admin_Log(playerid, stringer1, nicks, gettime());
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'",PI[ids][pVigs], PI[ids][pID]);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+        }
+        else if(PI[ids][pAdmin])
+        {
+            format(stringer1, sizeof(stringer1), "Главный администратор %s снял администратору %s выговор (%d/3). Причина: %s", PI[playerid][pNames], PI[ids][pNames],PI[ids][pVigs], params[1]);
+            SendAdminMessage(COLOR_LIGHTRED, stringer1);
+            format(stringer1, sizeof(stringer1), "снял выговор (%d/3), по причине: %s", PI[ids][pVigs], params[1]);
+            Admin_Log(playerid, stringer1, nicks, gettime());
+            format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'",PI[ids][pVigs],PI[ids][pID]);
+            mysql_function_query(connects, mysql_query_, false, "", "");
+        }
+        return 1;
+    }
+    format(mysql_query_,sizeof(mysql_query_), "SELECT `pAdmin`, `pLeader`, `vigs` FROM `"TABLE_ACCOUNT"` WHERE `Name` = '%s'", nicks);
+    mysql_function_query(connects, mysql_query_, true, "SetVig_Date", "dssd", playerid,nicks,params[1],1);
+    return 1;
+}
+cmd:fvig(playerid, params[])
+{
+    if(!PI[playerid][pMember]) return 1;
+    if(PI[playerid][pRank] < gFractionRank[PI[playerid][pMember]-1][3]) return SendMes(playerid, -1, "Доступно с %i ранга", gFractionRank[PI[playerid][pMember]-1][3]);
+    if(sscanf(params, "ds[100]",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /fvig [id] [причина]");
+    if(!IsPlayerConnected(params[0])) return 1;
+    if(PI[params[0]][pMember] != PI[playerid][pMember] || PI[params[0]][pAdmin] || PI[params[0]][pRank] >= gFractionRank[PI[playerid][pMember]-1][3]) return SendClientMessage(playerid,COLOR_GREY,"Игрок не в вашей фракции / администратор / лидер / зам");
+    PI[params[0]][pVigs] ++;
+    if(PI[params[0]][pVigs] >= 3)
+    {
+        format(stringer1, sizeof(stringer1), "[F] %s уволил игрока %s (3/3). Причина: %s", PI[playerid][pNames], PI[params[0]][pNames], params[1]);
+        SendFamilyMessage(PI[playerid][pMember],COLOR_LIGHTRED, stringer1);
+        SetPlayerSkinEx(params[0], PI[params[0]][pChar], true);
+        SetPlayerArmour(params[0],0);
+        SetPlayerHealth(params[0],100);
+        ResetWeapons(params[0]);
+        PI[params[0]][pMember] = 0;
+        PI[params[0]][pRank] = 0;
+        PI[params[0]][pVigs] = 0;
+        PI[params[0]][pOdet] = 0;
+        SetPlayerToTeamColor(params[0]);
+        format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pMember` = '0', `pRank` = '0', `odet` = '0' , `vigs` = '0' WHERE `pID` = '%d'",PI[params[0]][pID]);
+        mysql_function_query(connects, mysql_query_, false, "", "");
+    }
+    format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'",PI[params[0]][pVigs],PI[params[0]][pID]);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    format(stringer1, sizeof(stringer1), "[F] %s выдал выговор игроку %s (%d/3). Причина: %s", PI[playerid][pNames], PI[params[0]][pNames], PI[params[0]][pVigs], params[1]);
+    SendFamilyMessage(PI[playerid][pMember],COLOR_LIGHTRED, stringer1);
+    return 1;
+}
+cmd:funvig(playerid, params[])
+{
+    if(!PI[playerid][pMember]) return 1;
+    if(PI[playerid][pRank] < gFractionRank[PI[playerid][pMember]-1][3]) return SendMes(playerid, -1, "Доступно с %i ранга", gFractionRank[PI[playerid][pMember]-1][3]);
+    if(sscanf(params, "ds[100]",params[0],params[1])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /funvig [id] [причина]");
+    if(!IsPlayerConnected(params[0])) return 1;
+    if(PI[params[0]][pMember] != PI[playerid][pMember] || PI[params[0]][pAdmin] || PI[params[0]][pRank] >= gFractionRank[PI[playerid][pMember]-1][3]) return SendClientMessage(playerid,COLOR_GREY,"Игрок не в вашей фракции / администратор / лидер / зам");
+    if(PI[params[0]][pVigs] <= 0) return 1;
+    PI[params[0]][pVigs] --;
+    format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `vigs` = '%d' WHERE `pID` = '%d'",PI[params[0]][pVigs],PI[params[0]][pID]);
+    mysql_function_query(connects, mysql_query_, false, "", "");
+    format(stringer1, sizeof(stringer1), "[F] %s снял выговор игроку %s (%d/3). Причина: %s", PI[playerid][pNames], PI[params[0]][pNames], PI[params[0]][pVigs], params[1]);
+    SendFamilyMessage(PI[playerid][pMember],COLOR_LIGHTRED, stringer1);
+    return 1;
+}
+alias:jail("prison");
+cmd:jail(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 4) return 1;
+    if(PI[playerid][pVigs] > 2) return SendClientMessage(playerid, -1, "{FF6600}На вашем аккаунте выговор, некоторые команды были заблокированы. Снимите выговор — {FFFFFF}/adonate, {FF6600}чтобы снять блокировку команд.");
+    if(sscanf(params, "dds[128]",params[0],params[1],params[2])) return SendClientMessage(playerid, COLOR_WHITE, "Введите: /jail [id] [минуты] [причина]");
+    if(!IsPlayerConnected(params[0])) return 1;
+    if(params[1] > 70 || params[1] <= 0) return SendClientMessage(playerid,COLOR_WHITE,"Ошибка: Нельзя меньше 1 и больше 70");
+   // if((FD(params[0]) && !FD(playerid)) || IsIpFound(params[2])) return 1;
+    //RemoveBadWords(params[2]);
+    ResetWeapons(params[0]);
+    SetPlayerInteriorEx(params[0], 0);
+    switch(random(2)) {
+    case 0: SetPPos(params[0],524.0659,333.5089,1201.8594), SetPlayerFacingAngle(params[0], 120.3213);
+    case 1: SetPPos(params[0],523.9069,339.0927,1201.8594), SetPlayerFacingAngle(params[0], 102.7743);
+    }
+    TogglePlayerControllable(params[0], false);
+    SetTimerEx("UnFreez", 2900, 0, "d", params[0]);
+    PI[params[0]][pJailed] = 4;
+    PI[params[0]][pMestoJail] = 0;
+    PI[params[0]][pJailTime] = gettime() + params[1]*60;
+    PI[playerid][pJailAdm]++;
+    format(stringer1, sizeof(stringer1), "Администратор %s посадил вас в деморган на %i минут(ы). Причина: %s",PI[playerid][pNames],params[1], params[2]);
+    SendClientMessage(params[0], COLOR_LIGHTRED, stringer1);
+    format(stringer1, sizeof(stringer1), "[A] %s посадил игрока %s в деморган на %i минут(ы). Причина: %s", PI[playerid][pNames],PI[params[0]][pNames], params[1], params[2]);
+    SendAdminMessage(COLOR_GREY,stringer1);
+    Admin_Log(playerid, stringer1, PI[params[0]][pNames], gettime());
+    return 1;

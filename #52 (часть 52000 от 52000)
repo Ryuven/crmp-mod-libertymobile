@@ -1,0 +1,551 @@
+        {FFFFFF}Дата запроса: {afafaf}%s\n \n\
+        {FFFFFF}Ваш запрос №%d:\n\
+        {afafaf}| {afafaf}%s\n \n\
+        {FFFFFF}Ответ от администрации:\n\
+        {afafaf}| "SERVER"%s",
+        TempReportInfo[playerid][reportDate], report_id, TempReportInfo[playerid][reportText], inputtext
+    );
+    ShowPlayerDialog(targetid, 0000, DIALOG_STYLE_MSGBOX, !""SERVER"Ответ администрации", stringer, !"Спасибо", !"");
+
+    format(stringer, sizeof (stringer), ""SERVER"Ваш запрос №%d: {FFFFFF}%s", report_id, TempReportInfo[playerid][reportText]);
+    SendClientMessage(targetid, COLOR_YELLOW, stringer);
+    format(stringer, sizeof (stringer), ""SERVER"Ответ от администратора %s[%d]: {FFFFFF}%s", PI[playerid][pNames], playerid, inputtext);
+    SendClientMessage(targetid, COLOR_YELLOW, stringer), stringer[0] = EOS;
+
+    format(stringer1, sizeof(stringer1), "{afafaf}[A] %s[%d] ответил игроку %s[%d]: %s",
+        PI[playerid][pNames], playerid, PI[targetid][pNames], targetid, inputtext
+    );
+    SendAdminMessage(0xFfa500AA, stringer1);
+
+    if(PI[playerid][pAdmin]) PI[playerid][pRepAdm]++;
+    else PI[playerid][pHotvet] ++;
+
+    return 1;
+}
+CMD:tpk(playerid, params[])
+{
+    if(PI[playerid][pAdmin] < 6) return 1;
+    new Float:x, Float:y, Float:z;
+    if(sscanf(params, "p<,>fff", x, y, z)) return SendClientMessage(playerid, -1, "Введи /тпк [X] [Y] [Z]. Можно с запятыми."); // Проверка, введены ли все координаты
+    SetPlayerPos(playerid, x, y, z); // Выставление позиции игрока по заданным кординатами
+    return true;
+}
+forward Skin(playerid);
+public Skin(playerid)
+{
+    if(PI[playerid][pAdmin] >= 1)
+	{
+		SetPlayerSkin(playerid, 107);
+		SendClientMessage(playerid, COLOR_GREY, "Вы получили скин администратора!");
+	}
+   	return 1;
+}
+CMD:coord(playerid)
+{
+    if(PI[playerid][pAdmin] < 6) return 1;
+	new Float:x,Float:y,Float:z,Float:a,string[90];
+	GetPlayerFacingAngle(playerid,a);
+	GetPlayerPos(playerid,x,y,z);
+
+	format(string, sizeof(string),"X: %f | Y: %f | Z: %f | A: %f",x,y,z,a);
+	SendClientMessage(playerid,0xFFFFFFFF,string);
+	return true;
+}
+forward RazgruzFurui(playerid);
+public RazgruzFurui(playerid)
+{
+	TogglePlayerControllable(playerid,1);
+	SendClientMessage(playerid, COLOR_WHITE,"(Информация){FFFFFF} Разгрузка фуры завершена...");
+    SendClientMessage(playerid, COLOR_WHITE,"(Информация){FFFFFF} Верните прицеп обратно где взяли, там же вам выдадут зарплату за рейс");
+ 	Checkpoint[playerid] = 2;
+	SetPlayerCheckpoint(playerid,1847.384521,2870.180908,12.564512,8.0);
+	return true;
+}
+CMD:quitdelivery(playerid)
+{
+	Checkpoint[playerid] = 0;
+    DisablePlayerCheckpoint(playerid);
+    SetVehicleToRespawn(GetVehicleTrailer(GetPlayerVehicleID(playerid)));
+}
+CMD:delivery(playerid)
+{
+	if(IsPlayerConnected(playerid))
+	{
+	    {
+            new model = GetVehicleModel(GetPlayerVehicleID(playerid));
+			if(GetPlayerState(playerid) != PLAYER_STATE_DRIVER && model==515 || GetPlayerState(playerid) != PLAYER_STATE_DRIVER && model==514 || GetPlayerState(playerid) != PLAYER_STATE_DRIVER && model==403)
+			{
+		    	SendClientMessage(playerid,COLOR_ORANGE,"(Информация){FFFFFF} Вы должны быть в Фуре за рулём!");
+		    	return true;
+			}
+			if(!IsTrailerAttachedToVehicle(GetPlayerVehicleID(playerid)))
+			{
+		    	SendClientMessage(playerid,COLOR_ORANGE,"(Информация){FFFFFF} Вы не подцепили прицеп!");
+		    	return true;
+			}
+			DisablePlayerCheckpoint(playerid);
+		 	GameTextForPlayer(playerid, "~r~Goto redmarker", 2500, 1);
+			Checkpoint[playerid] = 1;
+			new traileid = GetVehicleTrailer(GetPlayerVehicleID(playerid));
+			if(traileid == Pricep[5] || traileid == Pricep[6] || traileid == Pricep[7]) // Стройки
+			{
+ 		    	new rand666=random(4);
+		    	switch (rand666)
+		    	{
+			    	case 0:SetPlayerCheckpoint(playerid,-2101.1555,208.4684,34.8973,8.0);
+			    	case 1:SetPlayerCheckpoint(playerid,2801.4639,-2436.1069,13.2421,8.0);
+			    	case 2:SetPlayerCheckpoint(playerid,2619.9587,833.6466,4.9254,8.0);
+			    	case 3:SetPlayerCheckpoint(playerid,680.4613,896.6621,-40.3721,8.0);
+		    	}
+			}
+			if(traileid == Pricep[3] || traileid == Pricep[9]) // Заправки
+			{
+ 		    	new rand666=random(4);
+		    	switch (rand666)
+		    	{
+			    	case 0:SetPlayerCheckpoint(playerid,2193.5149,2476.3335,10.8203,8.0);
+			    	case 1:SetPlayerCheckpoint(playerid,-2442.1062,953.0255,45.2969,8.0);
+			    	case 2:SetPlayerCheckpoint(playerid,-1624.4644,-2697.6082,48.5391,8.0);
+			    	case 3:SetPlayerCheckpoint(playerid,1918.5468,-1792.2303,13.3828,8.0);
+		    	}
+			}
+			if(traileid == Pricep[8] || traileid == Pricep[4]) // Продукты +
+			{
+ 		    	new rand666=random(4);
+		    	switch (rand666)
+		    	{
+			    	case 0:SetPlayerCheckpoint(playerid,-320.741210,447.800659,12.823649,8.0);
+			    	case 1:SetPlayerCheckpoint(playerid,16.256748,910.539733,12.150400,8.0);
+			    	case 2:SetPlayerCheckpoint(playerid,293.988037,1517.688720,11.998137,8.0);
+			    	case 3:SetPlayerCheckpoint(playerid,177.320098,743.018920,12.161949,8.0);
+		    	}
+			}
+			if(traileid == Pricep[2]) // Одежда +
+			{
+ 		    	new rand666=random(4);
+		    	switch (rand666)
+		    	{
+			    	case 0:SetPlayerCheckpoint(playerid,308.441284,1661.488281,11.998137,8.0); //+
+			    	case 1:SetPlayerCheckpoint(playerid,259.447967,1053.459838,12.160900,8.0); //+
+			    	case 2:SetPlayerCheckpoint(playerid,214.731582,832.547363,12.167430,8.0); // +
+			    	case 3:SetPlayerCheckpoint(playerid,132.849563,639.502319,11.986743,8.0); // +
+		    	}
+			}
+			if(traileid == Pricep[1]) // Закуска +
+			{
+ 		    	new rand666=random(4);
+		    	switch (rand666)
+		    	{
+			    	case 0:SetPlayerCheckpoint(playerid,-320.741210,447.800659,12.823649,8.0); //+
+			    	case 1:SetPlayerCheckpoint(playerid,16.256748,910.539733,12.150400,8.0);//+
+			    	case 2:SetPlayerCheckpoint(playerid,293.988037,1517.688720,11.998137,8.0);//+
+			    	case 3:SetPlayerCheckpoint(playerid,177.320098,743.018920,12.161949,8.0);//+
+		    	}
+			}
+			if(traileid == Pricep[0]) // Амуниция +
+			{
+ 		    	new rand666=random(4);
+		    	switch (rand666)
+		    	{
+			    	case 0:SetPlayerCheckpoint(playerid,102.497825,391.729064,10.544574,8.0); //1 +
+			    	case 1:SetPlayerCheckpoint(playerid,1941.512329,2099.600097,15.698137,8.0);//2 +
+			    	case 2:SetPlayerCheckpoint(playerid,-2244.068359,157.951080,24.798036,8.0);//3 +
+			    	case 3:SetPlayerCheckpoint(playerid,-2539.188232,2943.120849,37.637039,8.0);//4 +
+		    	}
+			}
+		}
+		{
+	    	SendClientMessage(playerid,COLOR_ORANGE,"(Информация){FFFFFF} Вы не находитесь на дальнобое или у вас уже есть груз!");
+		}
+	}
+	return true;
+}
+CMD:pesnya(playerid)
+{
+	PlayAudioStreamForPlayer(playerid, "http://wh4064.web1.maze-host.ru/pesnya.mp3");
+}
+StartSweeperWork(playerid)
+{
+        if(GetPVarInt(playerid, "sweeper_work")) return;
+        SetPVarInt(playerid, "sweeper_work", 1);
+        ShowNotification(playerid, 3, "Работа уборщика началась", 6, " ", " ");
+        SetPlayerCheckpoint(playerid, sweeper_way[0][0], sweeper_way[0][1], sweeper_way[0][2], 3.0);
+}
+
+StopSweeperWork(playerid, bool:success = false)
+{
+        if(!GetPVarInt(playerid, "sweeper_work")) return;
+        DeletePVar(playerid, "sweeper_work");
+        DeletePVar(playerid, "sweeper_check");
+        SendClientMessage(playerid, 0x00FF00FF, "Работа уборщика закончилась");
+        ShowNotification(playerid, 3, "Работа уборщика закончилась", 6, " ", " ");
+        if(success)
+        {
+        if(PI[playerid][pDonateRank] > 0)
+        {
+        		GiveMoney(playerid, 300000);
+                SendClientMessage(playerid, 0xFF0000FF, "Вы заработали 300000Р");
+        }
+            else
+            {
+            	GiveMoney(playerid, 200000);
+                SendClientMessage(playerid, 0xFF0000FF, "Вы заработали 300000Р");
+                }
+        }
+        DisablePlayerCheckpoint(playerid);
+}
+
+NextSweeperCheck(playerid)
+{
+        if(!GetPVarInt(playerid, "sweeper_work")) return;
+        new check = GetPVarInt(playerid, "sweeper_check");
+        check++;
+        if(check >= sizeof sweeper_way) StopSweeperWork(playerid, true);
+        else {
+                SetPlayerCheckpoint(playerid, sweeper_way[check][0], sweeper_way[check][1], sweeper_way[check][2], 3.0);
+                SetPVarInt(playerid, "sweeper_check", check);
+        }
+}
+ShowSweeperDialog(playerid)
+{
+        ShowPlayerDialog(playerid,SWEEPER_DIALOG_ID,DIALOG_STYLE_MSGBOX,"Работа уборщика","Начать работу уборщика?","Да","Нет");
+}
+stock ShowNotification(playerid, type, const text[], duration, const actionforBtn[], const textBtn[])
+{
+    new BitStream:bitstream = BS_New();
+    BS_WriteValue(bitstream, PR_UINT8, PACKET_CUSTOMRPC);
+    BS_WriteValue(bitstream, PR_UINT32, RPC_SHOW_NOTIFICATION);
+
+    BS_WriteValue(bitstream, PR_INT32, type);
+
+    BS_WriteValue(bitstream, PR_UINT16, strlen(text));
+    BS_WriteValue(bitstream, PR_STRING, text);
+
+    BS_WriteValue(bitstream, PR_INT32, duration);
+
+    BS_WriteValue(bitstream, PR_UINT16, strlen(actionforBtn));
+    BS_WriteValue(bitstream, PR_STRING, actionforBtn);
+
+    BS_WriteValue(bitstream, PR_UINT16, strlen(textBtn));
+    BS_WriteValue(bitstream, PR_STRING, textBtn);
+
+    BS_Send(bitstream, playerid, PR_HIGH_PRIORITY, PR_RELIABLE);
+
+    BS_Delete(bitstream);
+
+	return true;
+}
+stock GivePlayerMoneyEx(playerid, money, description[]="None", bool:save=true, bool:game_text=true)
+{
+	if(money < 0 && GetPlayerMoneyEx(playerid) < money) return -1;
+
+	new fmt_str[185];
+	AddPlayerData(playerid, pCash, +, money);
+	GivePlayerMoney(playerid, money);
+
+	format(fmt_str, sizeof fmt_str, "INSERT INTO money_log (uid,uip,time,money,description) VALUES (%d,'%s',%d,%d,'%s')", GetPlayerAccountID(playerid), GetPlayerIpEx(playerid), gettime(), money, description);
+	mysql_query(mysql, fmt_str, false);
+
+
+	if(save)
+	{
+		format(fmt_str, sizeof fmt_str, "UPDATE accounts SET money=%d WHERE id=%d LIMIT 1", GetPlayerMoneyEx(playerid), GetPlayerAccountID(playerid));
+		mysql_query(mysql, fmt_str, false);
+	}
+	if(game_text)
+	{
+		format(fmt_str, sizeof fmt_str, "%s%d rub", money < 0 ? ("~r~") : ("~g~+"), money);
+		GameTextForPlayer(playerid, fmt_str, 4000, 1);
+	}
+
+	return 1;
+}
+CMD:windov(playerid,params[])
+{
+        if(GetPlayerState(playerid) != 2) return SendClientMessage(playerid,-1,"Ты не на водительском месте.");
+        if(IsNoWindowsCar(GetPlayerVehicleID(playerid))) return SendClientMessage(playerid, COLOR_RED, "На этом транспортом средстве нельзя открыть окна!");
+        if(sscanf(params, "d", params[0]))
+        {
+                SendClientMessage(playerid,-1,"/window [id окна]");
+                SendClientMessage(playerid,-1,"1 - водительское | 2 - пассажир(перед) | 3 - зад(левое) | 4 - зад(правое)");
+                return 1;
+        }
+        if(params[0] > 4 || params[0] < 1) return SendClientMessage(playerid,-1,"1 - водительское | 2 - пассажир(перед) | 3 - зад(левое) | 4 - зад(правое)");
+        new driver, passenger, backleft, backright;
+        GetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, passenger, backleft, backright);
+        switch(params[0])
+        {
+            case 1: driver = !driver ? (1) : (0);
+            case 2: passenger = !passenger ? (1) : (0);
+            case 3: backleft = !backleft ? (1) : (0);
+            case 4: backright = !backright ? (1) : (0);
+        }
+        SetVehicleParamsCarWindows(GetPlayerVehicleID(playerid), driver, passenger, backleft, backright);
+        return 1;
+}
+stock IsNoWindowsCar(vehicleid)
+{
+    new car = GetVehicleModel(vehicleid);
+    switch(car)
+    {
+        case 481, 510, 509,424,448,457,461,462,463,464,465,468,471,501,521,522,523,530,531,539,568,571,572,581,586,594: return true;
+    }
+    return false;
+}
+CMD:plveh(playerid, params[])
+{
+    if(sscanf(params,"dddd", params[0], params[1], params[2], params[3])) return SendClientMessage(playerid, -1, "Используйте: /plveh [Ид игрока] [Ид машины] [цвет 1] [цвет 2]");
+    if(params[1] < 400 || params[1] > 611) return SendClientMessage(playerid, -1, "Номер машины не может быть меньше 400 и больше чем 611!");
+    if((params[2] < 0 || params[2] > 255) || (params[3] < 0 || params[3] > 126)) return SendClientMessage(playerid, -1, "Номер цвета не может быть меньше 0 и больше 255!");
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(params[0], x, y, z);
+    new Float:Angle;
+    GetPlayerFacingAngle(playerid, Angle);
+    admcar[params[0]] = AddStaticVehicle(params[1], x, y, z, Angle, params[2], params[3], -1);
+    PutPlayerInVehicle(params[0], admcar[params[0]], 0);
+    return 1;
+}
+CMD:online(playerid)
+{
+    new query[70];
+    format(query, sizeof query, "Запрос: "c_b"Текущий онлайн: {FFFF00}%d "c_b"человек",online);
+	SendClientMessage(playerid, COR_SERVER, query);
+}
+stock CreateSpeedometr(playerid)
+{
+    sr_carspeed_PTD[playerid][0] = CreatePlayerTextDraw(playerid, 270.2001, 318.7687, "sr_carspeed:speedbg"); // Основа спидометра
+    PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][0], 95.0000, 119.0000);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][0], 1);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][0], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][0], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][0], 4);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][0], 0);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][0], 0);
+    PlayerTextDrawSetSelectable(playerid, sr_carspeed_PTD[playerid][0], true);
+
+    sr_carspeed_PTD[playerid][1] = CreatePlayerTextDraw(playerid, 176.6000, 351.6221, "sr_carspeed:sr_leftarrow"); // поворотник налево
+    PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][1], 62.0000, 77.0000);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][1], 1);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][1], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][1], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][1], 4);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][1], 0);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][1], 0);
+    PlayerTextDrawSetSelectable(playerid, sr_carspeed_PTD[playerid][1], true);
+
+    sr_carspeed_PTD[playerid][2] = CreatePlayerTextDraw(playerid, 312.5997, 343.6575, "sr_carspeed:sr_signal"); // Иконка аварийки
+    PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][2], 11.0000, 13.0000);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][2], 1);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][2], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][2], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][2], 4);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][2], 0);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][2], 0);
+
+    sr_carspeed_PTD[playerid][3] = CreatePlayerTextDraw(playerid, 317.9999, 419.4754, "59L"); // кол-во топлива
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][3], 0.1796, 1.3710);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][3], 1);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][3], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][3], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][3], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][3], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][3], 0);
+
+    sr_carspeed_PTD[playerid][4] = CreatePlayerTextDraw(playerid, 397.3999, 351.6221, "sr_carspeed:sr_rightarrow"); // поворотник направо
+    PlayerTextDrawTextSize(playerid, sr_carspeed_PTD[playerid][4], 62.0000, 77.0000);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][4], 1);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][4], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][4], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][4], 4);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][4], 0);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][4], 0);
+    PlayerTextDrawSetSelectable(playerid, sr_carspeed_PTD[playerid][4], true);
+
+    sr_carspeed_PTD[playerid][5] = CreatePlayerTextDraw(playerid, 319.5997, 357.2532, "253"); // кол-во скорость
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][5], 0.4514, 2.9639);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][5], 2);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][5], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][5], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][5], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][5], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][5], 0);
+
+    sr_carspeed_PTD[playerid][6] = CreatePlayerTextDraw(playerid, 308.7998, 386.6221, "KM/Ќ"); // -
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][6], 0.2132, 1.2963);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][6], 1);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][6], -147);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][6], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][6], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][6], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][6], 0);
+
+    sr_carspeed_PTD[playerid][7] = CreatePlayerTextDraw(playerid, 301.1997, 404.5422, "0"); // пробег 1 цифра
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][7], 0.1810, 1.2565);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][7], 2);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][7], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][7], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][7], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][7], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][7], 0);
+
+    sr_carspeed_PTD[playerid][8] = CreatePlayerTextDraw(playerid, 309.2998, 404.5422, "0"); // пробег 2 цифра
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][8], 0.1810, 1.2565);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][8], 2);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][8], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][8], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][8], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][8], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][8], 0);
+
+    sr_carspeed_PTD[playerid][9] = CreatePlayerTextDraw(playerid, 318.0996, 404.5422, "0"); // пробег 3 цифра
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][9], 0.1810, 1.2565);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][9], 2);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][9], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][9], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][9], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][9], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][9], 0);
+
+    sr_carspeed_PTD[playerid][10] = CreatePlayerTextDraw(playerid, 326.8995, 404.5422, "0"); // пробег 4 цифра
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][10], 0.1810, 1.2565);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][10], 2);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][10], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][10], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][10], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][10], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][10], 0);
+
+    sr_carspeed_PTD[playerid][11] = CreatePlayerTextDraw(playerid, 335.2994, 404.5422, "0"); // пробег 5 цифра
+    PlayerTextDrawLetterSize(playerid, sr_carspeed_PTD[playerid][11], 0.1810, 1.2565);
+    PlayerTextDrawAlignment(playerid, sr_carspeed_PTD[playerid][11], 2);
+    PlayerTextDrawColor(playerid, sr_carspeed_PTD[playerid][11], -1);
+    PlayerTextDrawBackgroundColor(playerid, sr_carspeed_PTD[playerid][11], 255);
+    PlayerTextDrawFont(playerid, sr_carspeed_PTD[playerid][11], 2);
+    PlayerTextDrawSetProportional(playerid, sr_carspeed_PTD[playerid][11], 1);
+    PlayerTextDrawSetShadow(playerid, sr_carspeed_PTD[playerid][11], 0);
+
+    return 1;
+}
+
+cmd:lic(playerid,params[])
+{
+    if(sscanf(params, "d",params[0])) return SendClientMessage(playerid, -1, "Введите: /lic [ID]");
+    if(!IsPlayerConnected(params[0]) || params[0] == playerid) return SendClientMessage(playerid, COLOR_WHITE, "Ошибка: Игрока не существует или это Вы");
+    if(GetDistanceBetweenPlayers(playerid, params[0]) > 2) return SendClientMessage(playerid, COLOR_WHITE, "Игрок должен находится рядом с вами.");
+    new text1[20],text4[20],text5[20],text6[20],text7[20];
+    if(PI[playerid][pVodPrava]) { text1 = "{33ff33}Обычные"; } else { text1 = "{ff0000}Отсутствует"; }
+    if(PI[playerid][pFlyLic]) { text4 = "{33ff33}Обычная"; } else { text4 = "{ff0000}Отсутствует"; }
+    if(PI[playerid][pBoatLic]) { text5 = "{33ff33}Обычная"; } else { text5 = "{ff0000}Отсутствует"; }
+    if(PI[playerid][pFishLic]) { text6 = "{33ff33}Обычная"; } else { text6 = "{ff0000}Отсутствует"; }
+    if(PI[playerid][pGunLic]) { text7 = "{33ff33}Обычная"; } else { text7 = "{ff0000}Отсутствует"; }
+    if(sscanf(params, "d",params[0]))
+    {
+        new str[166],sctring[1450];
+        format(str,sizeof(str),"{ffffff}Водительские права: %s \n",text1);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия на воздушный транспорт: %s \n",text4);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия на водный транспорт: %s \n",text5);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия рыболова: %s \n",text6);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия на оружие: %s \n",text7);
+        strcat(sctring,str);
+    format(stringer1,sizeof(stringer1),"{ff0000}"SERVER_NAME" {FFFFFF}| Лицензии");
+    SPD(playerid, 1932, 0, stringer1, sctring,"Закрыть","");
+    return 1;
+    }
+    if(!ProxDetectorS(8.0, playerid, params[0])) return SendClientMessage(playerid,COLOR_GREY,"Игрок не рядом с вами");
+    new str[166],sctring[1450];
+        format(str,sizeof(str),"{ffffff}Водительские права: %s \n",text1);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия на воздушный транспорт: %s \n",text4);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия на водный транспорт: %s \n",text5);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия рыболова: %s \n",text6);
+        strcat(sctring,str);
+        format(str,sizeof(str),"{ffffff}Лицензия на оружие: %s \n",text7);
+        strcat(sctring,str);
+    format(stringer1,sizeof(stringer1),"{ff0000}"SERVER_NAME" {FFFFFF}| Лицензии");
+    ShowPlayerDialog(params[0],7587,DIALOG_STYLE_MSGBOX,"{FF0000}"SERVER_NAME" {FFFFFF}| Лицензии",stringer1,"Закрыть","");
+    return 1;
+}
+
+CMD:helpabot(playerid)
+{
+    if(PI[playerid][pAdmin] < 1) return 1;
+    {
+		   ShowPlayerDialog
+		   (
+		   playerid, DIALOG_HELPABOT, DIALOG_STYLE_LIST,
+		   "Помощник администраторам",
+           "1. Информация о посте администратора\n"\
+		   "2. Информации о обновлениях\n",
+		   "Выбрать", "Закрыть"
+		   );
+	}
+    return 1;
+}
+
+CMD:askin(playerid, params[])
+{
+	if(PI[playerid][pAdmin] < 1) return SendClientMessage(playerid, -1, "{ff2400}| {ffffff}Вам не доступна данная команда!");
+
+ 	SetPlayerSkin(playerid, 107);
+  	SendClientMessage(playerid, COLOR_WHITE, "{ffff00}|{ffffff} Вы успешно надели скин администратора!");
+    return 1;
+}
+
+stock ShowAdminInfo(playerid)
+{
+    SPD(playerid,0000,DIALOG_STYLE_MSGBOX,"Информация:","\
+    {FFFFFF}Информация о посте администрации:\n\n\
+    {FFFFFF}Здраствуй уважаемый администратор проекта: {FF0000}"SERVER_NAME"!\n\
+    {FFFFFF}Данная тема создана чтобы вы узнали о посте администратора.\n\
+    И так, во-первых: администратор должен следить за порядком на сервере.\n\
+	Во-вторых: администратор получает зарплату в размере 48.000 игровой валюты!\n\
+	В третих: администратор должен общаться с игроком только в нон-рп чате!\n\
+	Если администратор данное правило нарушает и разговаривает в рп чате\n\
+	То администратор получит устное предупреждение, если он будет продолжать нарушать\n\
+	Он получит выговор, в последствии уже будет снятие с административных прав\n\
+	Так же, администратору запрещено помогать игроку а именно: передавать деньги на покупки\n\
+	Или с просьбой починить машину, в данный момент у игрока RolePlay ситуация.\n\
+	Так же, нельзя помогать своей игровой семье или друзьям и близким за это последствует выговор/снятие\n\
+	Но так же, администратору есть и плюсы: хорошая зарплата, отличный и дружелюбный коллектив.\n\
+	И много всего другого, администратору всегда рады! Не нарушайте правила.","Закрыть","");
+    return 1;
+}
+
+stock ShowAdminNew(playerid)
+{
+    SPD(playerid,0000,DIALOG_STYLE_MSGBOX,"Информация:","\
+    {FFFFFF}Информация о новых обновлений:\n\n\
+	{FFFFFF}Здраствуй уважаемый администратор проекта: {FF0000}"SERVER_NAME"!\n\
+    {FFFFFF}Данная тема создана чтобы вы узнали о новых обновлений.\n\
+	Во-первых: был поменят айди административного скина, и улучшена зарплата админа\n\
+	Так же, администраторам был поставлен помощник, которым вы сейчас пользуетесь!\n\
+	И много всего другого, на этом всё, удачной работы! Не нарушайте правила.","Закрыть","");
+    return 1;
+}
+
+CMD:pos(playerid, params[])
+{
+	if(GetPlayerAdmin(playerid) == 0) return 1;
+
+	new Float: x, Float: y, Float: z, interior, virtual_world;
+
+	if(sscanf(params, "P<,>fff", x, y, z))
+		return SendClientMessage(playerid, 0xCECECEFF, "Используйте: /pos [x y z]");
+
+	sscanf(params, "P<,>{fff}dd", interior, virtual_world);
+
+	return SetPlayerPosEx(playerid, x, y, z, interior, virtual_world);
+}
+
+CMD:az(playerid, params[])
+{
+	if(GetPlayerAdmin(playerid) < 1) return 1;
+	SetPlayerPos(playerid,2128.619384,-1957.410278,188.249954);
+	SetPlayerVirtualWorld(playerid,0);
+}

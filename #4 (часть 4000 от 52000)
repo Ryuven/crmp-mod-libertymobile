@@ -1,0 +1,1000 @@
+    //===========
+    {250},//SF NEWS1
+    {261},//SF NEWS2
+    {211},//SF NEWS3
+    {217},//SF NEWS4
+    //===========
+    {171},//Kazino1
+    {11},//Kazino2
+    //===========
+    {59},//Instructors1
+    {172},//Instructors2
+    {189},//Instructors3
+    {240},//Instructors4
+    //==========
+    {280},//LVPD1
+    {281},//LVPD2
+    {282},//LVPD3
+    {283},//LVPD4
+    {284},//LVPD5
+    {285},//LVPD6
+    {288},//LVPD7
+    {76},//LVPD8
+    //==========
+    {112},//Ореховская ОПГ1
+    {111},//Ореховская ОПГ2
+    {125},//Ореховская ОПГ4
+    {272},//Ореховская ОПГ3
+    {214},//Ореховская ОПГ5
+    //==========
+    {105},//GROOVE1
+    {106},//GROOVE2
+    {107},//GROOVE3
+    {269},//GROOVE4
+    {270},//GROOVE5
+    {271},//GROOVE6
+    //==========
+    {114},//Aztecas1
+    {115},//Aztecas2
+    {116},//Aztecas3
+    //==========
+    {102},//BALLAS1
+    {103},//BALLAS2
+    {104},//BALLAS3
+    //==========
+    {173},//RIFA2
+    {174},//RIFA1
+    {175},//RIFA3
+    //==========
+    {108},//VAGOS1
+    {109},//vagospic[1]
+    {110},//VAGOS3
+    //==========
+    {287},//Army LV1
+    {191},//Army LV2
+    //==========
+    {60},//Россия 241
+    {170},//Россия 242
+    {188},//Россия 243
+    {186},//Россия 244
+    {287},//=========Гермаия
+    {287},
+    {191},
+    {287},
+    {287},///===========Россия
+    {191},
+    {287},
+    {154},//=========Бомжи мужики
+    {97},
+    {96},
+    {146},
+    {252},
+    {45},
+    {96},///===========Бомжи бабы
+    {90},
+    {75},
+    {185},//хитманы
+    {186},//хитманы
+    {250},//хитманы
+    {295},// Хитманы
+    {294},//хитманы
+    {60},//street rasers
+    {60},//street rasers
+    {47},//street rasers
+    {217},//street rasers
+    {67},//street rasers
+    {240},//street rasers
+    {170},//street rasers
+    {29},//street rasers
+    {98},//охранник казино ричь
+    {195},//Женский скин Ballas
+    {226},//Женский скин Rifa
+    {190},//Женский скин Vagos
+    {56},//Женский скин Gruv
+    {41},//Женский скин Aztec
+    {117},//Якудза
+    {118},//Якудза
+    {233},
+    {55},// Женский скин Street
+    {91},// Женский скин Street
+    {216},// Женский скин Street
+    {19},// Скин бомжа (М)
+    {18},// Скин бомжа (М)
+    {35},// Скин бомжа (М)
+    {36},// Скин бомжа (М)
+    {92},// Скин бомжа (Ж)
+    {169},//хитманы
+    {85},//хитманы
+    {138},
+    {139},
+    {140},
+    {145},
+    {251},
+    {61}, // Армия
+    {255},
+    {265},
+    {266},
+    {267},
+    {187},
+    {141},
+    {211},
+    {179}
+};
+stock NoNalog(playerid)
+{
+    if(IsPlayerConnected(playerid))
+    {
+        new leader = PI[playerid][pLeader];
+        new member = PI[playerid][pMember];
+        new job = PI[playerid][pJob];
+        if(member==13 || member==15 || member==12 || member==17 || member==18|| member==5|| member==6 || member==14) return 1;
+        if(leader==13 || leader==15 || leader==12 || leader==17|| leader==18 || leader==5 || leader==6 || leader==14) return 1;
+        if(member==0 && job == 0) return 1;
+    }
+    return 0;
+}
+IsNumericc(const text[])
+{
+    for (new i = 0, j = strlen(text); i < j; i++)
+    {
+        if (text[i] > '9' || text[i] < '0') return 0;
+    }
+    return 1;
+}
+stock ISAMAFIA(playerid)
+{
+    if(IsPlayerConnected(playerid))
+    {
+        new leader = PI[playerid][pLeader];
+        new member = PI[playerid][pMember];
+        if(member==5 || member==6 || member==14 ) return 1;
+        if(leader==5|| leader==6 || leader==14) return 1;
+    }
+    return 0;
+}
+stock MessageCriminal(color, string_massive[], bool:type)
+{
+    foreach(new i: Player)
+    {
+        if( (!type && !ISAMAFIA(i)) ) continue;
+        SendClientMessage(i, color, string_massive);
+    }
+    return 1;
+}
+stock BizzStats(playerid, idx)
+{
+    new mafiatext[20];
+    if(BizzInfo[idx][bMafia] == 6) { mafiatext = "Тамбовская ОПГ"; }
+    else if(BizzInfo[idx][bMafia] == 14) { mafiatext = "Ореховская ОПГ"; }
+    else if(BizzInfo[idx][bMafia] == 5) { mafiatext = "Курганская ОПГ"; }
+    else if(BizzInfo[idx][bMafia] == 0) { mafiatext = "Нет"; }
+    if(BizzInfo[idx][bType] != 2)
+    {
+        format(stringer, 512, "= = = = = = = = = = = = = [ %s ] = = = = = = = = = = = = =\n\nВладелец:\t\t\t\t\t%s\nКонтролирует мафия:\t\t\t\t%s\n\nНа счету бизнеса:\t\t\t\t%s\nВ этом часу заработано:\t\t\t%s\nЦена за товар (в процентах):\t\t\t%i %%\nПродуктов:\t\t\t\t\t%i / 20000\nСтатус:\t\t\t\t\t\t%s\nЧасы простоя:\t\t\t\t\t%i час(а/ов)",
+        BizzInfo[idx][bName], BizzInfo[idx][bOwner],mafiatext, formatInt(BizzInfo[idx][bMoney]), formatInt(BizzPay[idx]), BizzInfo[idx][bTill], BizzInfo[idx][bProduct]
+        ,(!BizzInfo[idx][bLock])?("Открыт") : ("Закрыт"),BizzInfo[idx][bLockTime]);
+    }
+    else//{0eaa07}Бизнес продаётся
+    {
+        format(stringer, 512, "= = = = = = = = = = = = = [ %s ] = = = = = = = = = = = = =\n\nВладелец:\t\t\t\t\t%s\nКонтролирует мафия:\t\t\t\t%s\nНа счету бизнеса:\t\t\t\t%s руб.\nВ этом часу заработано:\t\t\t%s руб.\nЦена за 1 литр:\t\t\t\t\t%i руб.\nТоплива:\t\t\t\t\t%i / 50000\nСтатус:\t\t\t\t\t\t%s\nЧасы простоя:\t\t\t\t\t%i час(а/ов)",
+        BizzInfo[idx][bName], BizzInfo[idx][bOwner],mafiatext, formatInt(BizzInfo[idx][bMoney]), formatInt(BizzPay[idx]), BizzInfo[idx][bTill] / 3, BizzInfo[idx][bProduct]
+        ,(!BizzInfo[idx][bLock])?("Открыт") : ("Закрыт"),BizzInfo[idx][bLockTime]);
+    }
+    ShowPlayerDialog(playerid, 000, 0, "Бизнес", stringer, "Закрыть", "");
+    return 1;
+}
+stock UpdateBizz(idx)
+{
+    if(BizzInfo[idx][bType] != 2 && BizzInfo[idx][bType] != 8)
+    {
+        if(!strcmp(BizzInfo[idx][bOwner],"None",true)) format(stringer, sizeof(stringer), "{33aa33}%s (№%d)\n{FFFFFF}Бизнес находится на продаже\nЦена бизнеса: %s\n\n{FFFF00}Купить бизнес: /buybiz", BizzInfo[idx][bName], idx, formatInt(BizzInfo[idx][bPrice]));
+        else if(BizzInfo[idx][bEnter] > 0) format(stringer, sizeof(stringer), "{33aa33}%s (№%d)\n{ffffff}Владелец: {FFFF00}%s\n{FFFFFF}Крышует: {%s}%s\n{FFFFFF}Вход: {33aa33}%d руб.", BizzInfo[idx][bName], idx, BizzInfo[idx][bOwner], colorchat(BizzInfo[idx][bMafia], 2), GetPlayerFracName[BizzInfo[idx][bMafia]], formatInt(BizzInfo[idx][bEnter]));
+        else format(stringer, sizeof(stringer), "{33aa33}%s (№%d)\n{ffffff}Владелец: {FFFF00}%s\n{FFFFFF}Крышует: {%s}%s", BizzInfo[idx][bName], idx, BizzInfo[idx][bOwner], colorchat(BizzInfo[idx][bMafia], 2), GetPlayerFracName[BizzInfo[idx][bMafia]]);
+    }
+    else
+    {
+        if(!strcmp(BizzInfo[idx][bOwner],"None",true))
+        {
+            if(BizzInfo[idx][bType] == 2) format(stringer, sizeof(stringer), "Заправить авто - /fill\nКупить канистру - /get fuel\n\nАвтозаправочная станция\n{afafaf}Бизнес находится на продаже\n{FFFFFF}Цена бизнеса: %s\n{FFFFFF}Цена за 1 литр - {33aa33}%s", formatInt(BizzInfo[idx][bPrice]), formatInt(BizzInfo[idx][bTill] / 3));
+            else format(stringer, sizeof(stringer), "{AFAFAF}Бизнес находится на продаже\n{FFFFFF}Название: %s\nИспользуйте гудок для вьезда (/tune)", BizzInfo[idx][bName]);
+        }
+        else
+        {
+            if(BizzInfo[idx][bType] == 2) format(stringer, sizeof(stringer), "Заправить авто - /fill\nКупить канистру - /get fuel\n\nАвтозаправочная станция\n{FFFFFF}Владелец: {FFFF00}%s\n{FFFFFF}Цена за 1 литр - {33aa33}%s",  BizzInfo[idx][bOwner], BizzInfo[idx][bName], formatInt(BizzInfo[idx][bTill] / 3));
+            else format(stringer, sizeof(stringer), "Владелец: %s\nНазвание: %s\nКрыша: {%s}%s\nИспользуйте гудок для вьезда (/tune)",  BizzInfo[idx][bOwner], BizzInfo[idx][bName], colorchat(BizzInfo[idx][bMafia], 2), GetPlayerFracName[BizzInfo[idx][bMafia]]);
+        }
+    }
+    UpdateDynamic3DTextLabelText(LABELBIZZ[idx], 0xFFFFFFF, stringer);
+    return 1;
+}
+
+forward AUsePromocode(playerid, code[]);
+public AUsePromocode(playerid, code[]) {
+    new rows, fields;
+    cache_get_data(rows, fields);
+    if(!rows) {
+        new query[144];
+        format(query, sizeof(query), "SELECT * FROM `promocodes` WHERE `Name` = '%s'", code);
+        mysql_function_query(connects, query, true, "CheckPromocode", "ds", playerid, code);
+    } else SendClientMessage(playerid, 0xafafafff, "Вы уже использовали данный промокод!");
+    return 1;
+}
+
+stock GetPlayerBizz(playerid)
+{
+    new bizz = 0;
+    for(new i = 1; i <= TOTALBIZZ;i++)
+    {
+        if(!strcmp(BizzInfo[i][bOwner],PI[playerid][pNames],false) && strcmp(BizzInfo[i][bOwner],"None",true) != 0) bizz++, SetPVarInt(playerid, "PlayerBizz", i);
+    }
+    return bizz;
+}
+stock BuyHouse(h)
+{
+    if(HouseInfo[h][hOwned] == 0)
+    {
+        DestroyDynamicMapIcon(HouseInfo[h][hMIcon]);
+        DestroyPickup(HouseInfo[h][hPickup]);
+        AddStaticPickup(1273, 23, HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez]);
+        HouseInfo[h][hMIcon] = CreateDynamicMapIcon(HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez], 31, COLOR_WHITE, 0, -1, -1, 200.0);
+    }
+    if(HouseInfo[h][hOwned] == 1)
+    {
+        DestroyDynamicMapIcon(HouseInfo[h][hMIcon]);
+        DestroyPickup(HouseInfo[h][hPickup]);
+        AddStaticPickup(1272, 23, HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez]);
+        HouseInfo[h][hMIcon] = CreateDynamicMapIcon(HouseInfo[h][hEntrancex], HouseInfo[h][hEntrancey], HouseInfo[h][hEntrancez], 32, COLOR_WHITE, 0, -1, -1, 200.0);
+    }
+
+    HouseInfo[h][hNark] =
+    HouseInfo[h][hMoney] =
+    HouseInfo[h][hMatel] =
+    HouseInfo[h][hduggl] =
+    HouseInfo[h][hak47] =
+    HouseInfo[h][hshotgun] =
+    HouseInfo[h][hm4] =
+    HouseInfo[h][hsdpist] =
+    HouseInfo[h][hrifle] =
+    HouseInfo[h][hsmg] = 0;
+
+    return 1;
+}
+
+
+stock PlayerText:CreatePlayerTextDrawBeta(playerid, Float:x, Float:y, text[])
+{
+    //new buffer[40+1];
+    //gpci(playerid, buffer);
+    //if(!strcmp(buffer, "3952314F524834355456464955525858554F3353") || !strcmp(buffer, "4458465947454248504B51425156534F4738384F"))
+
+    /*
+    if(PI[playerid][P_PLAYER_DEVICE] != 0)
+        x = x-225.0;
+    */
+
+    return CreatePlayerTextDraw(playerid, x, y, text);
+}
+
+// people system
+#if defined _SYSTEM_VEHICLE
+    #endinput
+#endif
+#define _SYSTEM_VEHICLE
+
+// ------------------------------------
+#define GetVehicleInfo(%0,%1)		g_vehicle_info[%0][%1]
+#define GetVehicleName(%0)			GetVehicleInfo(GetVehicleData(%0, V_MODELID)-400, VI_NAME)
+
+// ------------------------------------
+#define GetVehicleData(%0,%1)		g_vehicle_data[%0][%1]
+#define SetVehicleData(%0,%1,%2)	g_vehicle_data[%0][%1] = %2
+#define ClearVehicleData(%0)		g_vehicle_data[%0] = g_vehicle_default_values
+#define IsValidVehicleID(%0)		(1 <= %0 < MAX_VEHICLES)
+
+// ------------------------------------
+#define GetVehicleParamEx(%0,%1) g_vehicle_params[%0][%1]
+
+// ------------------------------------
+#define VEHICLE_ACTION_TYPE_NONE 	-1
+#define VEHICLE_ACTION_ID_NONE 		-1
+#define VEHICLE_ACTION_RANK_NONE    -1
+
+// ------------------------------------
+#define VEHICLE_PARAM_ON	(1)
+#define VEHICLE_PARAM_OFF	(0)
+
+native IsValidVehicle(vehicleid);
+
+// ------------------------------------
+enum E_VEHICLE_STRUCT
+{
+    V_MODELID,
+    Float: V_SPAWN_X,
+    Float: V_SPAWN_Y,
+    Float: V_SPAWN_Z,
+    Float: V_SPAWN_ANGLE,
+    V_COLOR_1,
+    V_COLOR_2,
+    V_RESPAWN_DELAY,
+    V_ADDSIREN,
+    // -------------
+    V_ACTION_TYPE,
+    V_ACTION_ID,
+    V_ACTION_RANK, // Only Family
+    // -------------
+    V_DRIVER_ID,
+    // -------------
+    V_LIMIT,
+    V_ALARM,
+    Float: V_FUEL,
+    Float: V_MILEAGE,
+    // -------------
+    Text3D: V_LABEL,
+    // -------------
+    Float: V_HEALTH,
+    V_LAST_LOAD_TIME,
+    V_BAGAGE_AMOUNT_GUN
+};
+
+// ------------------------------------
+enum E_VEHICLE_PARAMS_STRUCT
+{
+    V_ENGINE, 	// двигатель
+    V_LIGHTS, 	// фары
+    V_ALARM,	// сигнализация
+    V_LOCK, 	// закрыто ли
+    V_BONNET, 	// капот
+    V_BOOT, 	// багажник
+    V_OBJECTIVE, // отображене стрелки над автоqa
+    vStrobTimer,
+    vStrobState,
+    bool: vStrobStatus
+};
+
+// ------------------------------------
+
+// ------------------------------------
+new g_vehicle_data[MAX_VEHICLES][E_VEHICLE_STRUCT];
+new
+    g_vehicle_default_values[E_VEHICLE_STRUCT] =
+{
+    0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0,
+    0,
+    0,
+    0,
+    VEHICLE_ACTION_TYPE_NONE,
+    VEHICLE_ACTION_ID_NONE,
+    VEHICLE_ACTION_RANK_NONE,
+    INVALID_PLAYER_ID,
+    false,
+    false,
+    40.0,
+    0.0,
+    Text3D:-1,
+    1000.0,
+    0
+};
+new g_vehicle_params[MAX_VEHICLES][E_VEHICLE_PARAMS_STRUCT];
+
+enum E_VEHICE_INFO_STRUCT
+{
+    VI_NAME[32],				// название
+    VI_PRICE,					// гос. стоимость
+};
+
+new const
+    g_vehicle_info[211][E_VEHICE_INFO_STRUCT] =
+{
+    {"tesla",				    170000		},	// 400
+    {"BMW m3",					50000		},	// 401
+    {"Honda Civic",			550000		},	// 402
+    {"Linerunner", 				0 			},	// 403
+    {"Mitsubishi Lancer",				165000		},	// 404
+    {"BMW M5",				8000000		},	// 405
+    {"Dumper", 					0 			},	// 406
+    {"Firetruck", 				0			},	// 407
+    {"Trashmaster", 			0			},	// 408
+    {"Stretch",					13000000	},	// 409
+    {"Nissan GTR",		6000000		},	// 410
+    {"Bugatti Chiron",				400000000		},	// 411
+    {"BMW",					230000		},	// 412
+    {"Pony",					0			},	// 413
+    {"Mule", 					0			},	// 414
+    {"Lamborghini Huracan",	750000		},	// 415
+    {"Ambulance", 				0			},	// 416
+    {"Leviathan",				0			},	// 417
+    {"Moonbeam", 				640000		},	// 418
+    {"Bentley Continental",				750000		},	// 419
+    {"VAZ 2104", 					0			},	// 420
+    {"BMW",				220000		},	// 421
+    {"Bobcat",					320000		},	// 422
+    {"Mr Whoopee", 				0			},	// 423
+    {"BF Injection",			10000		},	// 424
+    {"Hunter", 					0			},	// 425
+    {"Mersedes s500",					3800000		},	// 426
+    {"Enforcer", 				0			},	// 427
+    {"Securicar", 				0			},	// 428
+    {"Porshe Panamera", 			600000		},	// 429
+    {"Predator", 				0			},	// 430
+    {"Bus", 					0			},	// 431
+    {"Rhino", 					0			},	// 432
+    {"Barracks", 				0			},	// 433
+    {"Hotknife",				700000		},	// 434
+    {"Article Trailer", 		0			},	// 435
+    {"Volkswagen",					12300		},	// 436
+    {"Coach", 					7000000		},	// 437
+    {"Lada", 					0			},	// 438
+    {"Stallion",				130000		},	// 439
+    {"Rumpo", 					600000		},	// 440
+    {"RC Bandit", 				0			},	// 441
+    {"Romero", 					60000		},	// 442
+    {"Packer", 					0			},	// 443
+    {"Monster", 				0			},	// 444
+    {"Acura TSX V6",			230000		},	// 445
+    {"Squalo", 					1750000		},	// 446
+    {"Seasparrow", 				2300000		},	// 447
+    {"Pizzaboy", 				0			},
+    {"Tram", 					0			},	// 449
+    {"Article Trailer 2", 		0			},	// 450
+    {"Turismo",					950000		},	// 451
+    {"Speeder", 				1500000		},	// 452
+    {"Reefer", 					1500000		},	// 453
+    {"Tropic", 					3500000		},	// 454
+    {"Flatbed", 				0			},	// 455
+    {"Yankee", 					0			},	// 456
+    {"Caddy", 					0			},	// 457
+    {"BMW X5 M",			    1100000		},	// 458
+    {"Berkley's RC", 			650000		},	// 459
+    {"Skimmer", 				0			},	// 460
+    {"PCJ-600",					105000		},	// 461
+    {"Faggio",			    	3000		},	// 462
+    {"Freeway",					93500		},	// 463
+    {"RC Baron", 				0			},	// 464
+    {"RC Raider", 				0			},	// 465
+    {"Tesla Model S",				    6000000		},	// 466
+    {"Lada Priora",				115000		},	// 467
+    {"Sanchez",					56000		},	// 468
+    {"Sparrow", 				2500000		},	// 469
+    {"Volvo XC90", 				0			},	// 470
+    {"Quad",					35000		},	// 471
+    {"Coastguard", 				0			},	// 472
+    {"Dinghy",					25000		},	// 473
+    {"Niva",					60000		},	// 474
+    {"Mersedes Retro",	            	370000		},	// 475
+    {"Rustler", 				0			},	// 476
+    {"Rolls-Royce Phantom",					750000		},	// 477
+    {"Walton",					22000		},	// 478
+    {"Skoda Octavia",					450000		},	// 479
+    {"Lexus LFA",					670000		},	// 480
+    {"BMX",		            	6000		},	// 481
+    {"Burrito", 				225000		},	// 482
+    {"Camper", 					0			},	// 483
+    {"Marquis", 				670000		},	// 484
+    {"Baggage", 				0			},	// 485
+    {"Dozer", 					0			},	// 486
+    {"Maverick", 				9100000		},	// 487
+    {"SAN News Maverick", 		0			},	// 488
+    {"Mersedes 6x6",				220000		},	// 489
+    {"Range Rover", 			7300000		},	// 490
+    {"Virgo",					970000		},	// 491
+    {"CAR",				190000		},	// 492
+    {"Jetmax", 					7300000		},	// 493
+    {"BMW I8", 			        4300000		},	// 494
+    {"Ford Raptor 6x6", 				1300000		},	// 495
+    {"Blista Compact",			350000		},	// 496
+    {"Police Maverick", 		0			},	// 497
+    {"Boxville", 				0			},	// 498
+    {"Benson", 					0			},	// 499
+    {"Mesa",					180000		},	// 500
+    {"RC Goblin", 				0			}, // 501
+    {"Nissan GTR", 		        13500000	}, // 502
+    {"Ford SRT", 		        1300000		}, // 503
+    {"Bloodring Banger", 		0			}, // 504
+    {"Jeep Grand Cheeroke",		4800000		},	// 505
+    {"Super GT",				12400000	},	// 506
+    {"Audi RS4",					500000		}, 	// 507
+    {"Journey",					490000		}, 	// 508
+    {"Bike",					5000		}, 	// 509
+    {"Mountain Bike",			5000		}, 	// 510
+    {"Beagle", 					5000000		}, 	// 511
+    {"Cropduster", 				4000000		}, 	// 512
+    {"Stuntplane", 				3500000		}, 	// 513
+    {"Tanker",					0			}, 	// 514
+    {"Roadtrain", 				0			}, 	// 515
+    {"Audi RS6",		900000		}, 	// 516
+    {"Mercedes Vision AVTR",				12400		}, 	// 517
+    {"Copeika",				23000		}, 	// 518
+    {"Shamal", 					7500000		}, 	// 519
+    {"Hydra", 					0			}, 	// 520
+    {"FCR-900",					110000		}, 	// 521
+    {"NRG-500", 				354000		}, 	// 522
+    {"HPV1000",					32000		}, 	// 523
+    {"Cement Truck", 			0			}, 	// 524
+    {"Towtruck", 				0			}, 	// 525
+    {"Subaru",				14200		}, 	// 526
+    {"Lada Vesta",					13300		}, 	// 527
+    {"FBI Truck", 				0			},	// 528
+    {"Mersedes 190e",				250000		},	// 529
+    {"Forklift", 				0			}, 	// 530
+    {"Tractor", 				10000000	}, 	// 531
+    {"Combine Harvester", 		0			}, 	// 532
+    {"Audi I8",					140000		}, 	// 533
+    {"Range Rover Sport",			        187000		}, 	// 534
+    {"Slamvan",					210000		}, 	// 535
+    {"Volvo Turbo",				200000		}, 	// 536
+    {"Freight (Train)", 		0			}, 	// 537
+    {"Brownstreak (Train)", 	0			}, 	// 538
+    {"Vortex", 					0			}, 	// 539
+    {"Mazda",					780000		}, 	// 540
+    {"Ferrari La Ferrari",					950000		}, 	// 541
+    {"NIVA",					10500		}, 	// 542
+    {"Gelendwagen", 					16400		}, 	// 543
+    {"Firetruck LA", 			0			}, 	// 544
+    {"Hustler", 				11500 		}, 	// 545
+    {"Mersedes AMG",				15400		}, 	// 546
+    {"Audi RS7",					13500		}, 	// 547
+    {"Cargobob", 				0 			},	// 548
+    {"OKA",					    9600		},	// 549
+    {"Toyota",					270000		}, 	// 550
+    {"BMW M4",		1300000		}, 	// 551
+    {"Utility Van", 			210000		}, 	// 552
+    {"Nevada", 					0			}, 	// 553
+    {"Yosemite", 				360000		}, 	// 554
+    {"ZAZ",					    25000		}, 	// 555
+    {"Monster A", 				0			}, 	// 556
+    {"Monster B", 				0			}, 	// 557
+    {"Rolls-Royce Kulinan",					4000000		}, 	// 558
+    {"Toyota Mark II",			550000		}, 	// 559
+    {"Subaru AWO",				500000		}, 	// 560
+    {"Toyota Land Cruiser 200",					210000		}, // 561
+    {"Nissan GT R",				450000	    }, 	// 562
+    {"Raindance", 				0			}, 	// 563
+    {"RC Tiger", 				0			}, 	// 564
+    {"Mersedes AMG A45",		145000		}, 	// 565
+    {"Mercedes C63",					270000		}, 	// 566
+    {"Savanna",					210000		}, 	// 567
+    {"Bandito",					50000		},	// 568
+    {"Freight Flat Trailer", 	0			}, 	// 569
+    {"Streak Trailer", 			0			}, 	// 570
+    {"Kart", 					0			}, 	// 571
+    {"Mower", 					0			}, 	// 572
+    {"Dune", 					18000000	}, 	// 573
+    {"Sweeper", 				0			},	// 574
+    {"Broadway",				60000		}, 	// 575
+    {"Tesla Cybertruck",					50000		}, 	// 576
+    {"AT400", 					0			}, 	// 577
+    {"DFT-30", 					0			}, 	// 578
+    {"Lamborghini Urus",		340000		},	// 579
+    {"Stafford",				2000000		}, 	// 580
+    {"BF-400",					1400000		}, 	// 581
+    {"Newsvan",					0			}, 	// 582
+    {"Tug", 					0			}, 	// 583
+    {"Petrol Trailer", 			0			}, 	// 584
+    {"VAZ 2115",				1800000		}, 	// 585
+    {"Wayfarer",				96000		}, 	// 586
+    {"Audi RS8",					420000		}, 	// 587
+    {"Hotdog", 					0			}, 	// 588
+    {"OKA",			300000	    }, 	// 589
+    {"Freight Box Trailer", 	0			}, 	// 590
+    {"Article Trailer 3", 		0			}, 	// 591
+    {"Andromada", 				0			}, 	// 592
+    {"Dodo", 					0			}, 	// 593
+    {"RC Cam", 					0			}, 	// 594
+    {"Launch", 					0			}, 	// 595
+    {"Police Car (LSPD)", 		12000000	}, 	// 596
+    {"Police Car (SFPD)", 		12000000	}, 	// 597
+    {"Police Car (LVPD)", 		12000000	}, 	// 598
+    {"Police Ranger", 			0			}, 	// 599
+    {"Picador",					50000		}, 	// 600
+    {"S.W.A.T.", 				0			}, 	// 601
+    {"Alpha",					3400000		}, 	// 602
+    {"BMW M8", 				550000		}, 	// 603
+    {"Mersedes", 			12000000	}, 	// 604
+    {"Sadler Shit", 			0			},	// 605
+    {"Baggage Trailer A", 		0			},	// 606
+    {"Baggage Trailer B", 		0			},	// 607
+    {"Tug Stairs Trailer", 		0			},	// 608
+    {"Boxville", 				0			},	// 609
+    {"Farm Trailer", 			0			}	// 610
+};
+
+// ------------------------------------
+
+stock SetVehicleDataAll(vehicleid, modelid, Float:x, Float:y, Float:z, Float:angle, color1, color2, respawn_delay, addsiren=0, action_type, action_id, action_rank = 0)
+{
+    if(IsValidVehicleID(vehicleid))
+    {
+        SetVehicleData(vehicleid, V_MODELID, modelid);
+
+        SetVehicleData(vehicleid, V_SPAWN_X, 		x);
+        SetVehicleData(vehicleid, V_SPAWN_Y, 		y);
+        SetVehicleData(vehicleid, V_SPAWN_Z, 		z);
+        SetVehicleData(vehicleid, V_SPAWN_ANGLE, 	angle);
+
+        SetVehicleData(vehicleid, V_COLOR_1, 	color1);
+        SetVehicleData(vehicleid, V_COLOR_2, 	color2);
+
+        SetVehicleData(vehicleid, V_RESPAWN_DELAY, 	respawn_delay);
+        SetVehicleData(vehicleid, V_ADDSIREN, 		addsiren);
+
+        SetVehicleData(vehicleid, V_ACTION_TYPE, 	action_type);
+        SetVehicleData(vehicleid, V_ACTION_ID, 		action_id);
+        SetVehicleData(vehicleid, V_ACTION_RANK, 	action_rank); // only family
+
+        SetVehicleData(vehicleid, V_DRIVER_ID, 		INVALID_PLAYER_ID);
+
+        SetVehicleData(vehicleid, V_FUEL, 40.0);
+        SetVehicleData(vehicleid, V_MILEAGE, 0.0);
+        SetVehicleData(vehicleid, V_LIMIT, true);
+
+        SetVehicleData(vehicleid, V_HEALTH, 1000.0);
+
+        SetVehicleNumberPlate(vehicleid, "HARSHRUSSIA");
+
+        SetVehicleParamsEx(vehicleid, IsABike(vehicleid) ? VEHICLE_PARAM_ON : VEHICLE_PARAM_OFF, VEHICLE_PARAM_OFF, VEHICLE_PARAM_OFF, VEHICLE_PARAM_OFF, VEHICLE_PARAM_OFF, VEHICLE_PARAM_OFF, VEHICLE_PARAM_OFF);
+    }
+}
+
+stock n_veh_AddStaticVehicleEx(modelid, Float:x, Float:y, Float:z, Float:angle, color1, color2, respawn_delay, addsiren=0, action_type=VEHICLE_ACTION_TYPE_NONE, action_id=VEHICLE_ACTION_ID_NONE, action_rank = 0)
+{
+    static n_veh_vehicleid = INVALID_VEHICLE_ID;
+
+    n_veh_vehicleid = AddStaticVehicleEx(modelid, x, y, z, angle, color1, color2, respawn_delay);
+    SetVehicleDataAll(n_veh_vehicleid, modelid, x, y, z, angle, color1, color2, respawn_delay, addsiren, action_type, action_id, action_rank);
+
+    return n_veh_vehicleid;
+
+    // The vehicle ID of the vehicle created (1 - MAX_VEHICLES).
+    // INVALID_VEHICLE_ID (65535) if vehicle was not created (vehicle limit reached or invalid vehicle model ID passed).
+}
+#if defined _ALS_AddStaticVehicleEx
+    #undef AddStaticVehicleEx
+#else
+    #define _ALS_AddStaticVehicleEx
+#endif
+#define AddStaticVehicleEx n_veh_AddStaticVehicleEx
+
+stock n_veh_AddStaticVehicle(modelid, Float:x, Float:y, Float:z, Float:angle, color1, color2, action_type=VEHICLE_ACTION_TYPE_NONE, action_id=VEHICLE_ACTION_ID_NONE)
+{
+    static n_veh_vehicleid = INVALID_VEHICLE_ID;
+
+    n_veh_vehicleid = AddStaticVehicle(modelid, x, y, z, angle, color1, color2);
+    SetVehicleDataAll(n_veh_vehicleid, modelid, x, y, z, angle, color1, color2, 0, 0, action_type, action_id);
+
+    return n_veh_vehicleid;
+
+    // The vehicle ID of the vehicle created (1 - MAX_VEHICLES).
+    // INVALID_VEHICLE_ID (65535) if vehicle was not created (vehicle limit reached or invalid vehicle model ID passed).
+}
+#if defined _ALS_AddStaticVehicle
+    #undef AddStaticVehicle
+#else
+    #define _ALS_AddStaticVehicle
+#endif
+#define AddStaticVehicle n_veh_AddStaticVehicle
+
+stock n_veh_CreateVehicle(modelid, Float:x, Float:y, Float:z, Float:angle, color1, color2, respawn_delay, addsiren=0, action_type=VEHICLE_ACTION_TYPE_NONE, action_id=VEHICLE_ACTION_ID_NONE)
+{
+    static n_veh_vehicleid = INVALID_VEHICLE_ID;
+
+    n_veh_vehicleid = CreateVehicle(modelid, x, y, z, angle, color1, color2, respawn_delay);
+    SetVehicleDataAll(n_veh_vehicleid, modelid, x, y, z, angle, color1, color2, respawn_delay, addsiren, action_type, action_id);
+
+    return n_veh_vehicleid;
+}
+#if defined _ALS_CreateVehicle
+    #undef CreateVehicle
+#else
+    #define _ALS_CreateVehicle
+#endif
+
+#define CreateVehicle n_veh_CreateVehicle
+
+stock n_veh_DestroyVehicle(vehicleid)
+{
+    if(IsValidVehicleID(vehicleid))
+    {
+        ClearVehicleData(vehicleid);
+        DestroyVehicleLabel(vehicleid);
+    }
+    return DestroyVehicle(vehicleid);
+}
+#if defined _ALS_DestroyVehicle
+    #undef DestroyVehicle
+#else
+    #define _ALS_DestroyVehicle
+#endif
+#define DestroyVehicle n_veh_DestroyVehicle
+
+public OnGameModeInit()
+{
+    for(new idx = 0; idx < MAX_VEHICLES; idx ++)
+    {
+        ClearVehicleData(idx);
+    }
+
+#if defined n_veh_OnGameModeInit
+    n_veh_OnGameModeInit();
+#endif
+    return 1;
+}
+#if defined _ALS_OnGameModeInit
+    #undef OnGameModeInit
+#else
+    #define _ALS_OnGameModeInit
+#endif
+#define OnGameModeInit n_veh_OnGameModeInit
+#if defined n_veh_OnGameModeInit
+forward n_veh_OnGameModeInit();
+#endif
+
+// ---------------------------------------------------
+stock SetVehicleParamsInit(vehicleid)
+{
+    GetVehicleParamsEx
+    (
+        vehicleid,
+        g_vehicle_params[vehicleid][V_ENGINE],
+        g_vehicle_params[vehicleid][V_LIGHTS],
+        g_vehicle_params[vehicleid][V_ALARM],
+        g_vehicle_params[vehicleid][V_LOCK],
+        g_vehicle_params[vehicleid][V_BONNET],
+        g_vehicle_params[vehicleid][V_BOOT],
+        g_vehicle_params[vehicleid][V_OBJECTIVE]
+    );
+}
+
+stock GetVehicleParam(vehicleid, E_VEHICLE_PARAMS_STRUCT:paramid)
+{
+    SetVehicleParamsInit(vehicleid);
+    return g_vehicle_params[vehicleid][paramid];
+}
+
+stock SetVehicleParam(vehicleid, E_VEHICLE_PARAMS_STRUCT:paramid, set_value)
+{
+    SetVehicleParamsInit(vehicleid);
+    g_vehicle_params[vehicleid][paramid] = bool: set_value;
+
+    SetVehicleParamsEx
+    (
+        vehicleid,
+        g_vehicle_params[vehicleid][V_ENGINE],
+        g_vehicle_params[vehicleid][V_LIGHTS],
+        g_vehicle_params[vehicleid][V_ALARM],
+        g_vehicle_params[vehicleid][V_LOCK],
+        g_vehicle_params[vehicleid][V_BONNET],
+        g_vehicle_params[vehicleid][V_BOOT],
+        g_vehicle_params[vehicleid][V_OBJECTIVE]
+    );
+}
+
+stock CreateVehicleLabel(vehicleid, text[], color, Float:x, Float:y, Float:z, Float:drawdistance, testlos = 0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_3D_TEXT_LABEL_SD)
+{
+    if(IsValidVehicle(vehicleid))
+    {
+        SetVehicleData(vehicleid, V_LABEL, CreateDynamic3DTextLabel(text, color, x, y, z, drawdistance, INVALID_PLAYER_ID, vehicleid, testlos, worldid, interiorid, playerid, streamdistance));
+    }
+    return 1;
+}
+
+stock UpdateVehicleLabel(vehicleid, color, text[])
+{
+    if(IsValidVehicleID(vehicleid))
+    {
+        if(IsValidDynamic3DTextLabel(GetVehicleData(vehicleid, V_LABEL)))
+        {
+            UpdateDynamic3DTextLabelText(GetVehicleData(vehicleid, V_LABEL), color, text);
+        }
+    }
+    return 1;
+}
+
+stock DestroyVehicleLabel(vehicleid)
+{
+    if(IsValidVehicleID(vehicleid))
+    {
+        if(IsValidDynamic3DTextLabel(GetVehicleData(vehicleid, V_LABEL)))
+        {
+            DestroyDynamic3DTextLabel(GetVehicleData(vehicleid, V_LABEL));
+            SetVehicleData(vehicleid, V_LABEL, Text3D: -1);
+        }
+    }
+    return 1;
+}
+
+#if defined CreateVehicle
+     #undef CreateVehicle
+#endif
+
+#define CreateVehicle n_veh_CreateVehicle
+//#include "../include/system/timerfix.pwn"
+
+public OnPlayerEnterVehicle(playerid, vehicleid, ispassenger)
+{
+    VehicleID[playerid] = vehicleid;
+    return 1;
+}
+stock IsAMedic(playerid)
+{
+    if(IsPlayerConnected(playerid))
+    {
+        new leader = PI[playerid][pLeader];
+        new member = PI[playerid][pMember];
+        if(member==4) return 1;
+        if(leader==4) return 1;
+    }
+    return 0;
+}
+stock IsAMayor(playerid)
+{
+    if(IsPlayerConnected(playerid))
+    {
+        if(PI[playerid][pMember] == 7) return 1;
+        else if(PI[playerid][pLeader] == 7) return 1;
+    }
+    return 0;
+}
+stock IsACop(playerid)
+{
+    if(IsPlayerConnected(playerid))
+    {
+        new leader = PI[playerid][pLeader];
+        new member = PI[playerid][pMember];
+        if(member==1 || member==2 || member==21 || member ==25 || member==10 || member==26) return 1;
+        if(leader==21 || leader==2 || leader == 10 || leader == 1 || leader==25 || leader==26) return 1;
+    }
+    return 0;
+}
+stock IsAArm(playerid)
+{
+    if(IsPlayerConnected(playerid))
+    {
+        new leader = PI[playerid][pLeader];
+        new member = PI[playerid][pMember];
+        if(member==3 || member==19 || member==1 || member==2 || member==21 || member==10) return 1;
+        else if(leader==3 || leader==19) return 1;
+    }
+    return 0;
+}
+stock SetPPos( playerid, Float:x, Float:y, Float:z )
+{
+    PI[ playerid ][ pPos_x ] = x;
+    PI[ playerid ][ pPos_y ] = y;
+    PI[ playerid ][ pPos_z ] = z;
+    return SetPlayerPos( playerid, x, y, z );
+}
+new Float:Atms[5][3] = {
+    {-86.6996,719.4373,1600.1958},
+    {-86.6996,717.8354,1600.1958},
+    {-92.8656,719.5131,1600.1958},
+    {-92.3303,712.0253,1600.1958},
+    {2909.59,2515.18,1051.00}
+};
+stock IsABankomat(playerid)
+{
+    for(new i = 0; i < sizeof(Atms); i++) {
+        if(IsPlayerInRangeOfPoint(playerid, 3.0, Atms[i][0], Atms[i][1], Atms[i][2])) return 1;
+    }
+    return 0;
+}
+stock IsAFoods(playerid)
+{
+    if(IsPlayerInRangeOfPoint(playerid, 2, -2420.219, 984.578, 44.297)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2420.180, 985.945, 44.297)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2225.203, -1153.422, 1025.906)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2576.703, -1284.430, 1061.094)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2155.906, 1606.773, 1000.055)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2209.906, 1607.195, 1000.055)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2222.203, 1606.773, 1000.055)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 495.969, -24.320, 1000.734)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 501.828, -1.430, 1000.734)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 373.828, -178.141, 1000.734)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 330.680, 178.500, 1020.070)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 331.922, 178.500, 1020.070)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 350.906, 206.086, 1008.477)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 361.563, 158.617, 1008.477)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 371.594, 178.453, 1020.070)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 374.891, 188.977, 1008.477)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2155.844, 1607.875, 1000.063)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2202.453, 1617.008, 1000.063)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2209.242, 1621.211, 1000.063)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2222.367, 1602.641, 1000.063)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 500.563, -1.367, 1000.734)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 379.039, -178.883, 1000.734)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2480.86,-1959.27,12.9609)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1634.11,-2237.53,12.8906)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2139.52,-1161.48,23.3594)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2153.23,-1016.15,62.2344)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -1350.12,493.859,10.5859)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2229.19,286.414,34.7031)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1659.46,1722.86,10.2188)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2647.7,1129.66,10.2188)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2845.73,1295.05,10.7891)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1398.84,2222.61,10.4219)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -1455.12,2591.66,55.2344)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -76.0312,1227.99,19.125)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 662.43,-552.164,15.7109)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -253.742,2599.76,62.2422)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2271.73,-76.4609,25.9609)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1789.21,-1369.27,15.1641)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1729.79,-1943.05,12.9453)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2060.12,-1897.64,12.9297)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1928.73,-1772.45,12.9453)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2325.98,-1645.13,14.2109)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2352.18,-1357.16,23.7734)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1154.73,-1460.89,15.1562)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -1350.12,492.289,10.5859)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2118.97,-423.648,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2118.62,-422.414,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2097.27,-398.336,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2092.09,-490.055,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2063.27,-490.055,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2005.65,-490.055,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2034.46,-490.055,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2068.56,-398.336,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2039.85,-398.336,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -2011.14,-398.336,34.7266)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -1980.79,142.664,27.0703)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2319.99,2532.85,10.2188)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1520.15,1055.27,10.00)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2503.14,1243.7,10.2188)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 2085.77,2071.36,10.4531)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -862.828,1536.61,21.9844)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -14.7031,1175.36,18.9531)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, -253.742,2597.95,62.2422)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 201.016,-107.617,0.898438)) return 1;
+    else if(IsPlayerInRangeOfPoint(playerid, 2, 1277.84,372.516,18.9531)) return 1;
+    else return 0;
+}
+stock IsABoat(carid){switch(GetVehicleModel(carid)){case 472,473,493,595,484,430,452..454,446:return 1;}return 0;}
+stock IsABike(carid){switch(GetVehicleModel(carid)){case 510,509,481:return 1;}return 0;}
+//==============================================================================
+new PlayerText:CaptureTD[MAX_PLAYERS][5];
+stock SendDead(ids,whoids,killerid,playerid,reason)
+{
+    foreach (new m : Player)
+    {
+        if(PI[m][pAdmin]) continue;
+        if(PI[m][pMember] == ids || PI[m][pMember] == whoids)
+        {
+            SendDeathMessageToPlayer(m, killerid, playerid, reason);
+        }
+    }
+    return 1;
+}
+Convert(number)
+{
+    new hours = 0, mins = 0, secs = 0, string[100];
+    hours = floatround(number / 3600);
+    mins = floatround((number / 60) - (hours * 60));
+    secs = floatround(number - ((hours * 3600) + (mins * 60)));
+    if(hours > 0)
+    {
+        format(string, 100, "%i:%02dm:%02ds", hours, mins, secs);
+    }
+    else
+    {
+        format(string, 100, "%i:%02d", mins, secs);
+    }
+    return string;
+}
+stock IsInAllowed(playerid)
+{
+    for(new i =0;i<sizeof(allowedfactions);i++) { if(PI[playerid][pMember] == allowedfactions[i]&&PI[playerid][pRank] >= 7) return 1; }
+    return 0;
+}
+stock IsAPlane(carid)
+{
+    switch(GetVehicleModel(carid)) {
+    case 592,577,511,512,593,520,553,476,519,460,513,548,417,487,488,497,563,447,469,425: return 1;
+    }
+    return 0;
+}
+stock IsANoSpeed(carid)
+{
+    switch(GetVehicleModel(carid)){

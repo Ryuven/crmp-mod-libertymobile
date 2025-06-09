@@ -1,0 +1,1000 @@
+        SetVehicleParam(vehicleid, V_LOCK, false);
+
+        SetVehicleData(vehicleid, V_MILEAGE, 0.0);
+        SetVehicleData(vehicleid, V_FUEL, 50.0);
+        PI[playerid][P_OWNABLE_CAR] = vehicleid;
+    }
+
+    new Cache:result;
+    stringer[0] = EOS;
+    format(stringer, sizeof(stringer), "INSERT INTO ownable_cars (owner_id,model_id,color_1,color_2,pos_x,pos_y,pos_z,angle,create_time) VALUES ('%d','%d','%d','%d','%f','%f','%f','%f','%d')", PI[playerid][pID], modelid, GetOwnableCarData(idx, OC_COLOR_1), GetOwnableCarData(idx, OC_COLOR_2), pos_x, pos_y, pos_z, angle, gettime());
+    result = mysql_query(connects, stringer, true);
+
+    SetOwnableCarData(idx, OC_SQL_ID, cache_insert_id());
+    cache_delete(result);
+
+    SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Поздравляем с покупкой нового транспорта! {afafaf}(Автомобиль был доставлен к автосалону)");
+    SendClientMessage(playerid, COLOR_WHITE, !""SERVER"Транспорт можно припарковать в любом доступном месте. {afafaf}(Команда -> /park)");
+    return 1;
+}
+stock GetFreeOwnableCarID()
+{
+    for(new idx; idx < sizeof g_ownable_car; idx ++)
+    {
+        if(GetOwnableCarData(idx, OC_CREATE)) continue;
+
+        // printf("free ownable car slot %d", idx);
+        return idx;
+    }
+
+    return -1;
+}
+
+stock GetPlayerOwnableCars(playerid)
+{
+    new count,
+    query[150],
+Cache: result;
+
+    mysql_format(connects, query, sizeof query, "SELECT * FROM `ownable_cars` WHERE `owner_id`='%d'", GetPlayerAccountID(playerid));
+    result = mysql_query(connects, query, true);
+
+    count = cache_num_rows();
+
+    cache_delete(result);
+
+    return count;
+}
+
+stock UnloadPlayerOwnableCar(playerid)
+{
+    new vehicleid = GetPlayerOwnableCar(playerid);
+
+    if(vehicleid == INVALID_VEHICLE_ID)
+    {
+        print("invalid");
+        return -1;
+    }
+
+ /*   if((GetVehicleData(vehicleid, V_LAST_LOAD_TIME) > gettime() - 120) && !ignore_time)
+    {
+        print("time error");
+        return 0;
+    }*/
+
+    print("start destroy");
+    new index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+
+
+    SetOwnableCarData(index, OC_PT_ENGINE,    0);
+    SetOwnableCarData(index, OC_PT_BRAKE,     0);
+    SetOwnableCarData(index, OC_PT_STABILITY, 0);
+
+    SetOwnableCarData(index, OC_SKIN, 0);
+
+    DeleteVehicleTune(playerid, GetPlayerOwnableCar(playerid));
+
+    SetOwnableCarData(index, OC_CREATE, 0);
+
+    SetOwnableCarData(index, OC_SOZDAL, 0);
+
+    DestroyVehicleLabel(vehicleid);
+
+    DestroyVehicle(vehicleid);
+
+    SetVehicleData(vehicleid, V_LAST_LOAD_TIME, 0);
+
+    SetPlayerData(playerid, P_OWNABLE_CAR, INVALID_VEHICLE_ID);
+
+    return 1;
+}
+publics: SaveOwnableCar(vehicleid)
+{
+    if(IsAOwnableCar(vehicleid))
+    {
+        new query[512];
+        new index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+        new Float: health;
+
+        GetVehicleHealth(vehicleid, health);
+
+        mysql_format(connects, query, sizeof query,
+            "UPDATE `ownable_cars` SET "\
+            "`pos_x` = '%f',"\
+            "`pos_y` = '%f',"\
+            "`pos_z` = '%f',"\
+            "`angle` = '%f',"\
+            "`world` = '%i',"\
+            "`inter` = '%i',"\
+            "`status` = '%d',"\
+            "`key_in` = '%d',"\
+            "`mileage` = '%f',"\
+            "`health` = '%f',"\
+            "`fuel` = '%f',"\
+            "`number` = '%s'"\
+            " WHERE `id` = '%d' LIMIT 1",
+            GetOwnableCarData(index, OC_POS_X),
+            GetOwnableCarData(index, OC_POS_Y),
+            GetOwnableCarData(index, OC_POS_Z),
+            GetOwnableCarData(index, OC_ANGLE),
+            GetOwnableCarData(index, OC_World),
+            GetOwnableCarData(index, OC_Int),
+            GetVehicleParam(vehicleid, V_LOCK),
+            GetOwnableCarData(index, OC_KEY_IN),
+            GetVehicleData(vehicleid, V_MILEAGE),
+            GetVehicleData(vehicleid, V_HEALTH),
+            GetVehicleData(vehicleid, V_FUEL),
+            GetOwnableCarData(index, OC_NUMBER),
+            GetOwnableCarData(index, OC_SQL_ID)
+        );
+        mysql_tquery(connects, query);
+        /*
+        printf("SQL %s", query);
+        printf("%d",mysql_errno(connects));
+        */
+
+        return 1;
+    }
+    return -1;
+}
+
+stock ShowOwnableCarPass(playerid, vehicleid)
+{
+    new model_id = GetVehicleData(vehicleid, V_MODELID);
+
+    if(model_id && IsAOwnableCar(vehicleid))
+    {
+        new fmt_str[300];
+        new Float: health;
+        new index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+        new description[48];
+
+        format(description, sizeof description, ""SERVER"Документы на ТС №%d", GetOwnableCarData(index, OC_SQL_ID));
+
+        GetVehicleHealth(vehicleid, health);
+
+        format
+        (
+        fmt_str, sizeof fmt_str,
+        "{FFFFFF}Название:\t\t{1E90FF}%s\n\n"\
+        "{FFFFFF}Модель:\t\t{1E90FF}%d\n"\
+        "{FFFFFF}Состояние:\t\t{1E90FF}%d\n"\
+        "{FFFFFF}Пробег:\t\t{1E90FF}%07i\n"\
+        "{FFFFFF}Топливо:\t\t{1E90FF}%.1f\n"\
+        "{FFFFFF}Цвет:\t\t\t{1E90FF}ID %d, %d\n"\
+        "{FFFFFF}Гос. стоимость:\t{1E90FF}$%d\n"\
+        "{FFFFFF}Номерные знаки:\t{1E90FF}%s",
+        GetVehicleInfo(model_id-400, VI_NAME),
+        model_id,
+        floatround(health),
+        floatround(GetVehicleData(vehicleid, V_MILEAGE), floatround_ceil),
+        GetOwnableCarData(index, OC_FUEL),
+        GetOwnableCarData(index, OC_COLOR_1),
+        GetOwnableCarData(index, OC_COLOR_2),
+        GetVehicleInfo(model_id-400, VI_PRICE)*10,
+        GetOwnableCarData(index, OC_NUMBER)
+        );
+        ShowPlayerDialog(playerid, 0, DIALOG_STYLE_MSGBOX, description, fmt_str, "Закрыть", "");
+
+        return 1;
+    }
+    return 0;
+}
+
+stock ShowOwnableCarLoadKvartDialog(playerid, id_car, bool: show_menu = false)
+{
+    SetPVarInt(playerid, "ownablecar_id", id_car);
+
+    if(show_menu)
+    SetPVarInt(playerid, "show_menu", 1);
+
+    ShowPlayerDialog
+    (
+    playerid, 2153, DIALOG_STYLE_LIST,
+    !""SERVER"Система управления транспортом",
+    !"1. Загрузить транспорт",
+    !"Выбрать", !"Закрыть"
+    );
+}
+
+stock ShowOwnableCarLoadDialog(playerid, id_car, bool: show_menu = false)
+{
+    SetPVarInt(playerid, "ownablecar_id", id_car);
+
+    if(show_menu)
+    SetPVarInt(playerid, "show_menu", 1);
+
+    ShowPlayerDialog
+    (
+    playerid, DIALOG_OWNABLE_CAR_LOAD, DIALOG_STYLE_LIST,
+    !""SERVER"Система управления транспортом",
+    "1. Отметить транспорт на GPS {33aa33}(300 руб.)\n"\
+    "2. Загрузить транспорт",
+    !"Выбрать", !"Закрыть"
+    );
+}
+
+publics: PlayerOwnableCarInit(playerid)
+{
+    new index;
+    new vehicleid = -1;
+    while(vehicleid < MAX_VEHICLES-1)
+    {
+        vehicleid ++;
+        index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+        if(GetVehicleData(vehicleid, V_ACTION_TYPE) != VEHICLE_ACTION_TYPE_OWNABLE_CAR) continue;
+        if(GetOwnableCarData(index, OC_OWNER_ID) != GetPlayerAccountID(playerid)) continue;
+
+        SetPlayerData(playerid, P_OWNABLE_CAR, vehicleid);
+        SetVehicleData(vehicleid, V_FUEL, GetOwnableCarData(index, OC_FUEL));
+        break;
+    }
+}
+
+stock LoadOwnableCarKvart(playerid, oc_id)
+{
+    new query[128],sql_perem[74],
+Cache: result,
+    vehicleid;
+
+    mysql_format(connects, query, sizeof query, "SELECT * FROM `ownable_cars` WHERE `id` = '%d' LIMIT 1", oc_id);
+    result = mysql_query(connects, query, true);
+
+    new idx = GetFreeOwnableCarID();
+
+    SetOwnableCarData(idx, OC_SQL_ID,       cache_get_field_content_int(0, "id"));
+    SetOwnableCarData(idx, OC_OWNER_ID,     cache_get_field_content_int(0, "owner_id"));
+
+    SetOwnableCarData(idx, OC_MODEL_ID,     cache_get_field_content_int(0, "model_id"));
+    SetOwnableCarData(idx, OC_COLOR_1,      cache_get_field_content_int(0, "color_1"));
+    SetOwnableCarData(idx, OC_COLOR_2,      cache_get_field_content_int(0, "color_2"));
+
+    new randomt = RandomEx(0, 7);
+    g_ownable_car[idx][OC_POS_X] = car_random_spawn_kvart[randomt][0];
+    g_ownable_car[idx][OC_POS_Y] = car_random_spawn_kvart[randomt][1];
+    g_ownable_car[idx][OC_POS_Z] = car_random_spawn_kvart[randomt][2];
+    g_ownable_car[idx][OC_ANGLE] = car_random_spawn_kvart[randomt][3];
+
+    cache_get_field_content(0, "number", g_ownable_car[idx][OC_NUMBER], connects, 8);
+    cache_get_field_content(0,  "tuning", sql_perem, connects, 74), sscanf(sql_perem, "p<,>a<i>[15]",g_ownable_car[idx][OC_TUNING]);
+
+
+    SetOwnableCarData(idx, OC_KEY_IN,       bool: cache_get_field_content_int(0, "key_in"));
+
+    SetOwnableCarData(idx, OC_CREATE,       cache_get_field_content_int(0, "create_time"));
+
+    SetOwnableCarData(idx, OC_FUEL,         cache_get_field_content_float(0, "fuel"));
+
+    SetOwnableCarData(idx, OC_PT_ENGINE,    cache_get_field_content_int(0, "pt_engine"));
+    SetOwnableCarData(idx, OC_PT_BRAKE,     cache_get_field_content_int(0, "pt_brake"));
+    SetOwnableCarData(idx, OC_PT_STABILITY, cache_get_field_content_int(0, "pt_stability"));
+
+    SetOwnableCarData(idx, OC_SKIN, cache_get_field_content_int(0, "oc_skin"));
+
+    SetOwnableCarData(idx, OC_SOZDAL, 1);
+
+    vehicleid = CreateVehicle
+    (
+    GetOwnableCarData(idx, OC_MODEL_ID),
+    GetOwnableCarData(idx, OC_POS_X),
+    GetOwnableCarData(idx, OC_POS_Y),
+    GetOwnableCarData(idx, OC_POS_Z),
+    GetOwnableCarData(idx, OC_ANGLE),
+    GetOwnableCarData(idx, OC_COLOR_1),
+    GetOwnableCarData(idx, OC_COLOR_2),
+    -1,
+    0,
+    VEHICLE_ACTION_TYPE_OWNABLE_CAR,
+    idx
+    );
+
+    SetPlayerData(playerid, P_OWNABLE_CAR, vehicleid);
+
+    SetVehicleParam(vehicleid, V_ENGINE, IsABike(vehicleid) ? VEHICLE_PARAM_ON : VEHICLE_PARAM_OFF);
+
+    LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
+    SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
+
+    // printf("WORLD %i Int %i",GetOwnableCarData(idx, OC_World),GetOwnableCarData(idx, OC_Int));
+
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        format(stringer1, 64, "\n{FFFF00}%s", PI[playerid][pNames]);
+        strcat(GetOwnableCarData(idx, OC_NUMBER), stringer1);
+
+        CreateVehicleLabel(vehicleid, GetOwnableCarData(idx, OC_NUMBER), 0x6666CCEE, 0.0, 0.0, 1.3, 20.0);
+        SetVehicleParam(vehicleid, V_LOCK, bool: cache_get_field_content_int(0, "status"));
+
+        SetVehicleData(vehicleid, V_MILEAGE, cache_get_field_content_float(0, "mileage"));
+
+        SetVehicleData(vehicleid, V_FUEL, cache_get_field_content_float(0, "fuel"));
+
+        SetVehicleData(vehicleid, V_LAST_LOAD_TIME, gettime());
+        SetVehicleData(vehicleid, V_HEALTH, cache_get_field_content_float(0, "health"));
+    }
+
+
+
+    cache_delete(result);
+
+
+    return 1;
+}
+
+stock LoadOwnableCar(playerid, oc_id)
+{
+    new query[128],sql_perem[74],
+Cache: result,
+    vehicleid;
+
+    mysql_format(connects, query, sizeof query, "SELECT * FROM ownable_cars WHERE id = '%d' LIMIT 1", oc_id);
+    result = mysql_query(connects, query, true);
+
+    new idx = GetFreeOwnableCarID();
+
+    SetOwnableCarData(idx, OC_SQL_ID,       cache_get_field_content_int(0, "id"));
+    SetOwnableCarData(idx, OC_OWNER_ID,     cache_get_field_content_int(0, "owner_id"));
+
+    SetOwnableCarData(idx, OC_MODEL_ID,     cache_get_field_content_int(0, "model_id"));
+    SetOwnableCarData(idx, OC_COLOR_1,      cache_get_field_content_int(0, "color_1"));
+    SetOwnableCarData(idx, OC_COLOR_2,      cache_get_field_content_int(0, "color_2"));
+
+    SetOwnableCarData(idx, OC_POS_X,        cache_get_field_content_float(0, "pos_x"));
+    SetOwnableCarData(idx, OC_POS_Y,        cache_get_field_content_float(0, "pos_y"));
+    SetOwnableCarData(idx, OC_POS_Z,        cache_get_field_content_float(0, "pos_z"));
+    SetOwnableCarData(idx, OC_ANGLE,        cache_get_field_content_float(0, "angle"));
+
+    cache_get_field_content(0, "number", g_ownable_car[idx][OC_NUMBER], connects, 8);
+    cache_get_field_content(0,  "tuning", sql_perem, connects, 74), sscanf(sql_perem, "p<,>a<i>[15]",g_ownable_car[idx][OC_TUNING]);
+
+
+    SetOwnableCarData(idx, OC_KEY_IN,       bool: cache_get_field_content_int(0, "key_in"));
+
+    SetOwnableCarData(idx, OC_CREATE,       cache_get_field_content_int(0, "create_time"));
+
+    SetOwnableCarData(idx, OC_FUEL,         cache_get_field_content_float(0, "fuel"));
+
+    SetOwnableCarData(idx, OC_PT_ENGINE,    cache_get_field_content_int(0, "pt_engine"));
+    SetOwnableCarData(idx, OC_PT_BRAKE,     cache_get_field_content_int(0, "pt_brake"));
+    SetOwnableCarData(idx, OC_PT_STABILITY, cache_get_field_content_int(0, "pt_stability"));
+
+    SetOwnableCarData(idx, OC_World, cache_get_field_content_int(0, "world"));
+    SetOwnableCarData(idx, OC_Int, cache_get_field_content_int(0, "inter"));
+    SetOwnableCarData(idx, OC_SKIN, cache_get_field_content_int(0, "oc_skin"));
+
+    SetOwnableCarData(idx, OC_SOZDAL, 1);
+
+    vehicleid = CreateVehicle
+    (
+    GetOwnableCarData(idx, OC_MODEL_ID),
+    GetOwnableCarData(idx, OC_POS_X),
+    GetOwnableCarData(idx, OC_POS_Y),
+    GetOwnableCarData(idx, OC_POS_Z),
+    GetOwnableCarData(idx, OC_ANGLE),
+    GetOwnableCarData(idx, OC_COLOR_1),
+    GetOwnableCarData(idx, OC_COLOR_2),
+    -1,
+    0,
+    VEHICLE_ACTION_TYPE_OWNABLE_CAR,
+    idx
+    );
+
+    SetPlayerData(playerid, P_OWNABLE_CAR, vehicleid);
+
+    SetVehicleParam(vehicleid, V_ENGINE, IsABike(vehicleid) ? VEHICLE_PARAM_ON : VEHICLE_PARAM_OFF);
+
+    LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
+    SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
+
+    // printf("WORLD %i Int %i",GetOwnableCarData(idx, OC_World),GetOwnableCarData(idx, OC_Int));
+
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        format(stringer1, 64, "\n{FFFF00}%s", PI[playerid][pNames]);
+        strcat(GetOwnableCarData(idx, OC_NUMBER), stringer1);
+
+        CreateVehicleLabel(vehicleid, GetOwnableCarData(idx, OC_NUMBER), 0x6666CCEE, 0.0, 0.0, 1.3, 20.0);
+        SetVehicleParam(vehicleid, V_LOCK, bool: cache_get_field_content_int(0, "status"));
+
+        SetVehicleData(vehicleid, V_MILEAGE, cache_get_field_content_float(0, "mileage"));
+
+        SetVehicleData(vehicleid, V_FUEL, cache_get_field_content_float(0, "fuel"));
+
+        SetVehicleData(vehicleid, V_LAST_LOAD_TIME, gettime());
+        SetVehicleData(vehicleid, V_HEALTH, cache_get_field_content_float(0, "health"));
+    }
+
+    cache_delete(result);
+
+    return 1;
+}
+stock Float: GetVehicleSpeed(vehicleid)
+{
+    new Float: speed = -1;
+
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        new Float: x,
+Float: y,
+Float: z,
+Float: angle;
+
+        GetVehicleVelocity(vehicleid, x, y, z);
+        GetVehicleZAngle(vehicleid, angle);
+
+        speed = x / floatsin(-angle, degrees);
+
+        speed *= 100.0;
+    }
+
+    return speed;
+}
+stock IsPlayerDriver(playerid) // сидит ли игрок за рулем ТС
+{
+    return (IsPlayerInAnyVehicle(playerid) && GetPlayerState(playerid) == PLAYER_STATE_DRIVER);
+}
+stock GetVehicleRotation(vehicleid,&Float:rx,&Float:ry,&Float:rz){
+    new Float:qw,Float:qx,Float:qy,Float:qz;
+    GetVehicleRotationQuat(vehicleid,qw,qx,qy,qz ) ;
+    rx = asin(2*qy*qz-2*qx*qw ) ;
+    ry = -atan2(qx*qz+qy*qw,0.5-qx*qx-qy*qy ) ;
+    rz = -atan2(qx*qy+qz*qw,0.5-qx*qx-qz*qz ) ;
+}
+stock IsVehicleDrivingBackwards ( vehicleid )
+{
+    new Float:float_var [ 3 ] ;
+    if(GetVehicleVelocity(vehicleid, float_var [ 1 ], float_var [ 2 ], float_var [ 0 ] ) )
+    {
+        GetVehicleZAngle ( vehicleid, float_var[0] ) ;
+        if(float_var[0] < 90) {
+            if(float_var[1] > 0 && float_var[2] < 0) return 1;
+        }
+        else if(float_var[0] < 180) {
+            if(float_var[1] > 0 && float_var[2] > 0) return 1;
+        }
+        else if(float_var[0] < 270) {
+            if(float_var[1] < 0 && float_var[2] > 0) return 1;
+        }
+        else if(float_var[1] < 0 && float_var[2] < 0) return 1;
+    }
+    return 0;
+}
+stock SetVehicleSpeed(vehicleid, Float: speed)
+{
+
+    if(vehicleid != INVALID_VEHICLE_ID)
+    {
+        new Float: x,
+        Float: y,
+        Float: z,
+        Float: angle;
+
+        GetVehicleVelocity(vehicleid, x, y, z);
+        GetVehicleZAngle(vehicleid, angle);
+
+        speed /= 100.0;
+        x = speed * floatsin(-angle, degrees);
+        y = speed * floatcos(-angle, degrees);
+
+        return SetVehicleVelocity(vehicleid, x, y, z - speed / 1000.0);
+
+        /*
+        speed = floatsqroot(x*x+y*y+z*z);
+
+        if(speed > 0)
+        {
+            multiple = (kmh / (speed * 100));
+
+            return SetVehicleVelocity(vehicleid, x * multiple, y * multiple, z * multiple);
+        }
+        */
+    }
+
+    return 0;
+}
+stock GenerateCarNumber()
+{
+    static const chars[11] = {'A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X'};
+    new number[6];
+
+    number[0] = chars[random(sizeof chars)];
+    number[1] = random('9' - '0') + '0';
+    number[2] = random('9' - '0') + '0';
+    number[3] = random('9' - '0') + '0';
+
+    if(number[1] == number[2] && number[2] == number[3] && number[3] == '0')
+    number[3] = random('9' - '0') + '1';
+
+    number[4] = chars[random(sizeof chars)];
+    number[5] = chars[random(sizeof chars)];
+
+    return number;
+}
+stock GetCarNumberPrice(number[])
+{
+    if(strlen(number) != 6) return 0;
+
+    new chars[4],
+    price = 10;
+
+    format(chars, sizeof chars, "%c%c%c", number[0], number[4], number[5]);
+
+    if(!strcmp(chars, "amp", true)) price += 800;
+    else if(!strcmp(chars, "ooo", true)) price += 700;
+    else if(!strcmp(chars, "aaa", true)) price += 700;
+    else if(!strcmp(chars, "ekx", true)) price += 600;
+    else if(!strcmp(chars, "xam", true)) price += 600;
+    else if(!strcmp(chars, "bop", true)) price += 300;
+    else if(!strcmp(chars, "xep", true)) price += 200;
+    else if(!strcmp(chars, "hax", true)) price += 200;
+    else if(!strcmp(chars, "bbb", true)) price += 700;
+    else if(!strcmp(chars, "ttt", true)) price += 700;
+    else
+    {
+        if(chars[0] == chars[1] && chars[0] != chars[2]) price += 50;
+        else if(chars[0] == chars[1] && chars[0] == chars[2]) price += 200;
+        else if(chars[0] == chars[2] && chars[0] != chars[1]) price += 100;
+    }
+
+    if(number[1] == 0 && number[1] == 0) price += 200;
+    else if(number[1] == number[2] && number[1] != number[3]) price += 150;
+    else if(number[1] == number[2] && number[1] == number[3]) price += 250;
+
+    return price*2;
+}
+stock IsACarNumber(text[])
+{
+    new length = strlen(text);
+
+    if(length != 6)
+    {
+        return 0;
+    }
+
+    for(new i; i < length; i ++)
+    {
+        switch(i)
+        {
+        case 0, 4, 5:
+            {
+                switch(text[i])
+                {
+                case 'A', 'B', 'C', 'E', 'H', 'K', 'M', 'O', 'P', 'T', 'X': continue;
+                default: return 0;
+                }
+            }
+        case 1..3:
+            {
+                switch(text[i])
+                {
+                case '0'..'9': continue;
+                default: return 0;
+                }
+            }
+        }
+    }
+
+    if(text[1] == text[2] && text[2] == text[3] && text[3] == '0')
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+stock DestroyOwnableCar(vehicleid)
+{
+    if(IsAOwnableCar(vehicleid))
+    {
+        new query[128];
+        new index = GetVehicleData(vehicleid, V_ACTION_ID);
+
+        mysql_format(connects, query, sizeof query, "DELETE FROM `ownable_cars` WHERE `id` = '%d'", GetOwnableCarData(index, OC_SQL_ID));
+        mysql_tquery(connects, query);
+
+        // printf("ownable_car: %d / owner_id : %d", GetOwnableCarData(index, OC_SQL_ID), GetOwnableCarData(index, OC_OWNER_ID));
+
+        if(!mysql_errno(connects))
+        {
+            SetOwnableCarData(index, OC_SQL_ID,     0);
+            SetOwnableCarData(index, OC_OWNER_ID,   0);
+
+            DestroyVehicleLabel(vehicleid);
+            DestroyVehicle(vehicleid);
+            return 1;
+        }
+        else {
+            printf("[Error]: [OwnableCars]: Ошибка удаления личного ТС: %d", GetOwnableCarData(index, OC_SQL_ID));
+        }
+    }
+    return 0;
+}
+stock SendPlayerOffer(playerid, to_player, type, value_1 = 0, value_2 = 0)
+{
+   // if(GetPlayerOfferInfo(playerid, O_OUTCOMIG_PLAYER) == INVALID_PLAYER_ID)
+   // {
+    new fmt_str[144];
+    switch(type)
+    {
+    case OFFER_TYPE_SELL_OWNABLE_CAR:
+        {
+            new model_id = GetVehicleData(value_2, V_MODELID);
+
+            format(fmt_str, sizeof fmt_str, "{FFFFFF}%s предлагает Вам купить транспорт {33FF66}\"%s\" {1E90FF}по цене $%d", PI[playerid][pNames], GetVehicleInfo(model_id-400, VI_NAME), value_1);
+            ShowPlayerDialog(to_player, DIALOG_OFFER_TOPLAYER, DIALOG_STYLE_MSGBOX, "Предложение", fmt_str, "Согласиться", "Отказаться");
+
+            format(fmt_str, sizeof fmt_str, "Вы предложили игроку {6666CC}%s {1E90FF}купить Ваш транспорт \"%s\" за $%d", PI[to_player][pNames], GetVehicleInfo(model_id-400, VI_NAME), value_1);
+            SendClientMessage(playerid, 0x1E90FFFF, fmt_str);
+        }
+    }
+
+    SetPlayerOfferInfo(playerid, O_OUTCOMIG_PLAYER, to_player);
+
+    SetPlayerOfferInfo(to_player, O_INCOMING_PLAYER, playerid);
+    SetPlayerOfferInfo(to_player, O_INCOMING_TYPE, type);
+
+    SetPlayerOfferValue(to_player, 0, value_1);
+    SetPlayerOfferValue(to_player, 1, value_2);
+
+//    }
+ //   else SendClientMessage(playerid, 0xFFFFFFF, "Используйте {FF9900}/cancel {FFFFFF}чтобы отозвать предыдущее предложение");
+    return 1;
+}
+
+stock ChangeView(playerid, oldstate, newstate)
+{
+    new Float: X[3], Float: Y[3], Float: Z[3];
+    if(GetPlayerVehicleID(playerid) > 0)
+    {
+        GetVehicleModelInfo(GetVehicleModel(GetPlayerVehicleID(playerid)), 1, X[0], Y[0], Z[0]);
+        GetVehicleModelInfo(GetVehicleModel(GetPlayerVehicleID(playerid)), 2, X[1], Y[1], Z[1]);
+        GetVehicleModelInfo(GetVehicleModel(GetPlayerVehicleID(playerid)), 3, X[2], Y[2], Z[2]);
+    }
+    if(oldstate == newstate) AttachCameraToObject(playerid, FirstPerson[playerid]);
+    switch(newstate)
+    {
+    case 1: AttachObjectToPlayer(FirstPerson[playerid], playerid, 0.0, 0.13, 0.65, 0, 0, 0), AttachCameraToObject(playerid, FirstPerson[playerid]);
+    case 2, 3:
+        {
+            switch(GetPlayerVehicleSeat(playerid))
+            {
+            case 0: { X[1] -= (X[0] / 2.43), Y[1] -= 0.1, Z[1] += 0.6; AttachObjectToVehicle(FirstPerson[playerid], GetPlayerVehicleID(playerid), X[1], Y[1], Z[1], 0, 0, 0); }
+            case 1: { X[1] += 0.0, Y[1] -= 0.1, Z[1] += 0.55; AttachObjectToVehicle(FirstPerson[playerid], GetPlayerVehicleID(playerid), X[1], Y[1], Z[1], 0, 0, 0); }
+            case 2: { X[2] -= (X[0] / 2.43), Y[2] += 0.0, Z[2] += 0.6; AttachObjectToVehicle(FirstPerson[playerid], GetPlayerVehicleID(playerid), X[2], Y[2], Z[2], 0, 0, 0); }
+            case 3: { X[2] += 0.0, Y[2] += 0.0, Z[2] += 0.55; AttachObjectToVehicle(FirstPerson[playerid], GetPlayerVehicleID(playerid), X[2], Y[2], Z[2], 0, 0, 0); }
+            default:
+                {
+                    switch(GetPlayerVehicleSeat(playerid))
+                    {
+                    case 0: AttachObjectToVehicle(FirstPerson[playerid], GetPlayerVehicleID(playerid), X[1], Y[1] + 0.45, Z[1] + 0.6, 0, 0, 0);
+                    case 1: AttachObjectToVehicle(FirstPerson[playerid], GetPlayerVehicleID(playerid), X[2], Y[2] + 0.4, Z[2] + 0.5, 0, 0, 0);
+                    }
+                }
+            }
+            AttachCameraToObject(playerid, FirstPerson[playerid]);
+        }
+    }
+    return 0;
+}
+
+stock GetVehicleFreeSeat(vehicleid) {
+    if(!vehicleid) return -1;
+    new model = GetVehicleModel(vehicleid), maxs = GetVehicleMaxSeat(model) - 1, bool: seat[3], cnt;
+    foreach(new i:Player) {
+        if(GetPlayerVehicleID(i) != vehicleid) continue;
+        new pseat = GetPlayerVehicleSeat(i);
+        if(pseat < 1 || pseat > 3) continue;
+        seat[pseat-1] = true;
+        cnt ++;
+        if(cnt >= maxs) {
+            return -1;
+        }
+    }
+    for(new i; i < 3; i ++) {
+        if(!seat[i]) return i + 1;
+    }
+    return -1;
+}
+stock GetVehicleMaxSeat(modelid) {
+    switch(modelid){
+        case 596..598, 427, 490: {
+            return 4;
+        }
+        case 599, 497, 528: {
+            return 2;
+        }
+    }
+    return -1;
+}
+
+cmd:vid(playerid, params[])
+{
+    if(!IsPlayerConnected(playerid)) return 1;
+    switch(switch_fp[playerid])
+    {
+    case false:
+        {
+            switch_fp[playerid] = true, SendClientMessage(playerid, -1, "Ты включил вид от первого лица");
+            // FirstPerson[playerid] = CreateObject(19300, 0, 0, 0, 0, 0, 0);
+            ChangeView(playerid, 0, GetPlayerState(playerid));
+        }
+    case true: switch_fp[playerid] = false, SetCameraBehindPlayer(playerid), SendClientMessage(playerid, -1, "Ты выключил вид от первого лица");
+    }
+    return 1;
+}
+cmd:everyprize(playerid)
+{
+    /*
+    if(PI[playerid][P_PRIZE_EVERY]) return SendClientMessage(playerid, -1, ""error" Вы забрали свой приз уже!");
+    format(stringer, sizeof(stringer), "Добро пожаловать {FFFF00}%s {FFFFFF}\n\n\t\tСегодня вы входите %d день подряд, и получаете приз {FFFF00}%s{FFFFFF} Следующий приз {FFFF00} %s",PI[playerid][pNames], PI[playerid][every_enter], enter_prize[PI[playerid][every_enter]][Name], enter_prize[PI[playerid][every_enter]+1][Name]);
+    return ShowPlayerDialog(playerid, DIALOG_every_ENTER_PRIZE, DIALOG_STYLE_MSGBOX, "Ежедневные призы", stringer, "Забрать", "");
+    */
+    return SendClientMessage(playerid, COLOR_WHITE, !"{afafaf}Команда находится на доработке.");
+}
+cmd:prizeday(playerid, params[])
+{
+    if(PI[playerid][pDayOnline] / 60 >= 3 && !PI[playerid][P_PRIZE_DAY])
+    {
+        PI[playerid][P_PRIZE_DAY] = 1;
+        UpdatePlayerData(playerid, "prize_day", 1);
+        new lucky;
+        lucky = random(106);
+
+        switch(lucky)
+        {
+        case 0..49:
+            {
+                SendClientMessage(playerid, -1, ""inform" К сожалению, Вам сегодня не повезло, попробуйте завтра!");
+                GameTextForPlayer(playerid, "~r~LOSE", 3000, 1);
+                return 1;
+            }
+        case 50..80:
+            {
+                SendClientMessage(playerid, -1, ""inform" Поздравляем Вы выйграли 10.000.000$ Деньги начислены вам на банковский счёт!");
+                GiveBank(playerid, 10000000);
+                GameTextForPlayer(playerid, "~g~+10.000.000$", 3000, 1);
+                return 1;
+            }
+        case 81..91:
+            {
+                // SendClientMessage(playerid, -1, ""inform" Поздравляем Вы выйграли 5 F - Coins!");
+                // AddPlayerData(playerid, pRub, +, 5);
+                // UpdatePlayerData(playerid, "pRubNAX", PI[playerid][pRub]);
+                // GameTextForPlayer(playerid, "~g~+5RUB", 3000, 1);
+                return 1;
+            }
+        case 92..96:
+            {
+                new rand_skin;
+                rand_skin = random(4);
+
+                mysql_format(connects, stringer, sizeof(stringer), "INSERT INTO `prize_day`(`user_id`, `type`, `value`, `status`) VALUES ('%d', '1' , '%d', '1')", GetPlayerAccountID(playerid), skin_day[rand_skin]);
+                mysql_tquery(connects, stringer);
+                SCMF(playerid, -1, ""inform" Поздравляем Вы выйграли скин %s[id%d] используйте комманду /listprize", skin_name_day[rand_skin], skin_day[rand_skin]);
+                GameTextForPlayer(playerid, "~g~+SKIN", 3000, 1);
+                return 1;
+            }
+        case 97..105:
+            {
+                new rand_car;
+                rand_car = random(5);
+
+                mysql_format(connects, stringer, sizeof(stringer), "INSERT INTO `prize_day`(`user_id`, `type`, `value`, `status`) VALUES ('%d', '0' , '%d', '1')", GetPlayerAccountID(playerid), car_day[rand_car]);
+                mysql_tquery(connects, stringer);
+                SCMF(playerid, -1, ""inform" Поздравляем Вы выйграли Автомобиль %s[id%d] используйте комманду /listprize",  g_vehicle_info[car_day[rand_car]-400][VI_NAME], car_day[rand_car]);
+                GameTextForPlayer(playerid, "~g~+CAR", 3000, 1);
+                return 1;
+            }
+
+        }
+
+    }
+    else
+    SCMF(playerid, -1, ""error" Вы не отыграли 3 часа сегодня, или уже получили приз сегодня! (%dч.%dминут/3ч)", PI[playerid][pDayOnline] / 60, PI[playerid][pDayOnline] % 60);
+    return 1;
+}
+cmd:listprize(playerid) {
+    OnCheckListPrize(playerid);
+    return 1;
+}
+publics:OnCheckListPrize(playerid)
+{
+    new mystring[256],fmt_str[164],big_fmt[568],Cache:result;
+    mysql_format(connects, mystring, sizeof(mystring), "SELECT * FROM `prize_day` WHERE `user_id` = '%d' AND `status` = 1 LIMIT 10", GetPlayerAccountID(playerid));
+    result = mysql_query(connects, mystring, true);
+    if(cache_num_rows())
+    {
+
+        for(new i=0; i < cache_num_rows(); i++)
+        {
+            prize_info[playerid][sCategory][i] = cache_get_field_content_int(i, "type");
+            prize_info[playerid][sValue][i] = cache_get_field_content_int(i, "value");
+            prize_info[playerid][sID][i] = cache_get_field_content_int(i, "id");
+
+            format(fmt_str, 164, "{ffffff}ID %d | %s | Значение %d\n",i+1, prize_info[playerid][sCategory][i] ? ("Одежда") : ("Автомобиль"), prize_info[playerid][sValue][i]);
+            strcat(big_fmt, fmt_str);
+        }
+        ShowPlayerDialog(playerid, DIALOG_PRIZE_DAY_LIST, DIALOG_STYLE_LIST, "Ежедневный приз", big_fmt, "Забрать", "Закрыть");
+        cache_delete(result);
+    }
+    else SendClientMessage(playerid, -1, "Призов не найдено!");
+    return 1;
+}
+stock RandomReklama(text)
+{
+    switch(text)
+    {
+        default:
+        {
+            if(Config[sDonPower] != 1)
+            {
+                format(stringer1, sizeof(stringer1), "{FFFFFF}Не пропускай свежих новостей в наших соцсетях.", Config[sDonPower]);
+                SendClientMessageToAll(COLOR_WHITE, stringer1);
+
+                SendClientMessageToAll(COLOR_WHITE, "{FFFFFF}Наш телеграмм канал ---> {ffff00}"SERVER_TELEGRAM"");
+            }
+        }
+    }
+    return 1;
+}
+publics: ClearPlayerChatAnim(playerid)
+{
+    return FIXES_ApplyAnimation(playerid,"CARRY","crry_prtial",4.0,0,0,0,0,0,1);
+}
+stock RentHouse()
+{
+    for(new h = 0; h < sizeof(HouseInfo); h++)
+    {
+        if(HouseInfo[h][hKlass] == 0 && HouseInfo[h][hOwned] == 1)//Классы домов
+        {
+            HouseInfo[h][hTakings] -=300; kazna += 300;
+            if(HouseInfo[h][hTakings] > 9000) HouseInfo[h][hTakings] = 9000;
+        }
+        if(HouseInfo[h][hKlass] == 1 && HouseInfo[h][hOwned] == 1)//Классы домов
+        {
+            HouseInfo[h][hTakings] -=600; kazna += 600;
+            if(HouseInfo[h][hTakings] > 18000) HouseInfo[h][hTakings] = 18000;
+        }
+        if(HouseInfo[h][hKlass] == 2 && HouseInfo[h][hOwned] == 1)//Классы домов
+        {
+            HouseInfo[h][hTakings] -=900; kazna += 900;
+            if(HouseInfo[h][hTakings] > 27000) HouseInfo[h][hTakings] = 27000;
+        }
+        if(HouseInfo[h][hKlass] == 3 && HouseInfo[h][hOwned] == 1)//Классы домов
+        {
+            HouseInfo[h][hTakings] -=1200; kazna += 1200;
+            if(HouseInfo[h][hTakings] > 36000) HouseInfo[h][hTakings] = 36000;
+        }
+        if(HouseInfo[h][hKlass] == 4 && HouseInfo[h][hOwned] == 1)//Классы домов
+        {
+            HouseInfo[h][hTakings] -=1500; kazna += 1500;
+            if(HouseInfo[h][hTakings] > 45000) HouseInfo[h][hTakings] = 45000;
+        }
+        if(HouseInfo[h][hTakings] <= 0 && HouseInfo[h][hOwned] == 1)
+        {
+            new housecash = HouseInfo[h][hValue];
+            new playeridd = GetPlayerID(HouseInfo[h][hOwner]);
+            if(IsPlayerConnected(playeridd))
+            {
+                PI[playeridd][pPhousekey] = 255;
+
+                SendClientMessage(playeridd, COLOR_LIGHTRED, "Ваш дом был продан за неуплату государтсву.");
+            }
+            else if(!IsPlayerConnected(playeridd))
+            {
+                format(mysql_query_, sizeof(mysql_query_), "UPDATE `"TABLE_ACCOUNT"` SET `pPhousekey` = '255', `pHousecash` = '%d' WHERE `Name` = '%s'",housecash, HouseInfo[h][hOwner]);
+                mysql_function_query(connects, mysql_query_, false, "", "");
+            }
+            HouseInfo[h][hHel] = 0;
+            HouseInfo[h][hLock] = 1;
+            HouseInfo[h][hOwned] = 0;
+            strmid(HouseInfo[h][hOwner], "The State", 0, strlen("The State"), 255);
+            SaveHouse(h);
+            BuyHouse(h);
+        }
+        HouseInfo[h][hRobhouse] = false;
+    }
+    return 1;
+}
+
+//
+
+publics: podezds_loading ( )
+{
+    new fields, time = GetTickCount ( ) ;
+    cache_get_data ( pod_count, fields ) ;
+    if ( pod_count )
+    {
+        for ( new i = 0; i < pod_count; i++ )
+        {
+            pod_info [ i ] [ pod_id ] = cache_get_field_content_int ( i, "pod_id", connects ) ;
+
+            pod_info [ i ] [ pod_pos ] [ 0 ] = cache_get_field_content_float ( i,"pod_pos_x", connects ) ;
+            pod_info [ i ] [ pod_pos ] [ 1 ] = cache_get_field_content_float ( i,"pod_pos_y", connects ) ;
+            pod_info [ i ] [ pod_pos ] [ 2 ] = cache_get_field_content_float ( i,"pod_pos_z", connects ) ;
+            pod_info [ i ] [ pod_pos ] [ 3 ] = cache_get_field_content_float ( i,"pod_pos_c", connects ) ;
+
+            pod_info [ i ] [ pod_park_pos ] [ 0 ] = cache_get_field_content_float ( i,"pod_park_x", connects ) ;
+            pod_info [ i ] [ pod_park_pos ] [ 1 ] = cache_get_field_content_float ( i,"pod_park_y", connects ) ;
+            pod_info [ i ] [ pod_park_pos ] [ 2 ] = cache_get_field_content_float ( i,"pod_park_z", connects ) ;
+            pod_info [ i ] [ pod_park_pos ] [ 3 ] = cache_get_field_content_float ( i,"pod_park_a", connects ) ;
+
+            pod_info [ i ] [ pod_floor ] = cache_get_field_content_int ( i,"pod_floor", connects ) ;
+            pod_info [ i ] [ pod_world ] = cache_get_field_content_int ( i,"pod_world", connects ) ;
+
+            pod_info [ i ] [ pod_pickup ] = CreateDynamicPickup ( 1318, 23, pod_info [ i ] [ pod_pos ] [ 0 ], pod_info [ i ] [ pod_pos ] [ 1 ], pod_info [ i ] [ pod_pos ] [ 2 ], 0, 0 ) ;
+            pod_info [ i ] [ pod_text ] = CreateDynamic3DTextLabel(""SERVER"Подъезд", -1, pod_info [ i ] [ pod_pos ] [ 0 ], pod_info [ i ] [ pod_pos ] [ 1 ], pod_info [ i ] [ pod_pos ] [ 2 ], 9.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID);
+
+            pod_info [ i ] [ pod_icon ] = CreateDynamicMapIcon ( pod_info [ i ] [ pod_pos ] [ 0 ], pod_info [ i ] [ pod_pos ] [ 1 ], pod_info [ i ] [ pod_pos ] [ 2 ], 40, 0, 0, 0, -1, 200.0 ) ;
+
+        }
+    }
+    printf ( "[SERVER] Загружено %d подъездов. (%d ms)", pod_count, GetTickCount ( ) - time ) ;
+    return 1 ;
+}
+
+publics: apartments_loading ( )
+{
+    new fields, time = GetTickCount ( ) ;
+    cache_get_data ( apartment_count, fields ) ;
+    if ( apartment_count )
+    {
+        for ( new i = 0; i < apartment_count; i++ )
+        {
+            ap_info [ i ] [ ap_id ] = cache_get_field_content_int ( i, "a_id", connects ) ;
+
+            ap_info [ i ] [ ap_owner ] = cache_get_field_content_int ( i, "a_owner", connects ) ;
+            cache_get_field_content ( i, "a_ownername", ap_info [ i ] [ ap_owner_name ], connects, MAX_PLAYER_NAME ) ;
+
+            ap_info [ i ] [ ap_type ] = cache_get_field_content_int ( i, "a_type", connects ) ;
+            ap_info [ i ] [ ap_vw ] = cache_get_field_content_int ( i, "a_vw", connects ) ;
+            ap_info [ i ] [ ap_floor ] = cache_get_field_content_int ( i, "a_floor", connects ) ;
+            ap_info [ i ] [ ap_podezd ] = cache_get_field_content_int ( i, "a_podezd", connects ) ;
+
+            ap_info [ i ] [ ap_price ] = cache_get_field_content_int ( i, "a_price", connects ) ;
+            ap_info [ i ] [ ap_closed ] = cache_get_field_content_int ( i, "a_closed", connects ) ;
+
+            ap_info [ i ] [ ap_pos ] [ 0 ] = cache_get_field_content_float ( i,"a_pos_x", connects ) ;
+            ap_info [ i ] [ ap_pos ] [ 1 ] = cache_get_field_content_float ( i,"a_pos_y", connects ) ;
+            ap_info [ i ] [ ap_pos ] [ 2 ] = cache_get_field_content_float ( i,"a_pos_z", connects ) ;
+            ap_info [ i ] [ ap_pos ] [ 3 ] = cache_get_field_content_float ( i,"a_pos_c", connects ) ;
+
+            ap_info [ i ] [ ap_radio_status ] = cache_get_field_content_int ( i, "a_radio_status", connects ) ;
+            cache_get_field_content ( i, "a_radio_url", ap_info [ i ] [ ap_radio_url ], connects, MAX_PLAYER_NAME ) ;
+
+            ap_info [ i ] [ ap_safe_code ] = cache_get_field_content_int ( i, "a_safe_code", connects ) ;
+            ap_info [ i ] [ ap_prods ] = cache_get_field_content_int ( i, "a_prods", connects ) ;
+
+            new sscanf_delimit [ 48 ] ;
+            cache_get_field_content ( i, "a_improve", sscanf_delimit, connects, 48 ) ;
+            sscanf ( sscanf_delimit, "p<|>dddddddd", ap_info [ i ] [ ap_improve ] [ 0 ], ap_info [ i ] [ ap_improve ] [ 1 ], ap_info [ i ] [ ap_improve ] [ 2 ],
+            ap_info [ i ] [ ap_improve ] [ 3 ], ap_info [ i ] [ ap_improve ] [ 4 ], ap_info [ i ] [ ap_improve ] [ 5 ], ap_info [ i ] [ ap_improve ] [ 6 ], ap_info [ i ] [ ap_improve ] [ 7 ] ) ;
+
+            cache_get_field_content ( i, "a_safe_data", sscanf_delimit, connects, 36 ) ;
+            sscanf ( sscanf_delimit, "p<|>dddddddd", ap_info [ i ] [ ap_safe_data ] [ 0 ], ap_info [ i ] [ ap_safe_data ] [ 1 ],
+            ap_info [ i ] [ ap_safe_guns ] [ 0 ],	ap_info [ i ] [ ap_safe_guns ] [ 1 ], ap_info [ i ] [ ap_safe_guns ] [ 2 ],
+            ap_info [ i ] [ ap_safe_guns ] [ 3 ],	ap_info [ i ] [ ap_safe_guns ] [ 4 ], ap_info [ i ] [ ap_safe_guns ] [ 5 ] ) ;
+
+            ap_info [ i ] [ ap_seed ] = cache_get_field_content_int ( i, "a_seed", connects ) ;
+            ap_info [ i ] [ ap_seed_result ] = cache_get_field_content_int ( i, "a_seed_result", connects ) ;
+
+            ap_info [ i ] [ ap_heal ] = cache_get_field_content_int ( i, "a_heal", connects ) ;
+
+            ap_info [ i ] [ ap_sell_status ] = cache_get_field_content_int ( i, "a_sell_status", connects ) ;
+
+            if(ap_info [ i ] [ ap_owner ] == -1) ap_info [ i ] [ ap_pickup ] = CreateDynamicPickup ( 1273, 23, ap_info [ i ] [ ap_pos ] [ 0 ], ap_info [ i ] [ ap_pos ] [ 1 ], ap_info [ i ] [ ap_pos ] [ 2 ], ap_info [ i ] [ ap_vw ], 0 ) ;
+            else ap_info [ i ] [ ap_pickup ] = CreateDynamicPickup ( 1272, 23, ap_info [ i ] [ ap_pos ] [ 0 ], ap_info [ i ] [ ap_pos ] [ 1 ], ap_info [ i ] [ ap_pos ] [ 2 ], ap_info [ i ] [ ap_vw ], 0 ) ;
+            /*
+            switch(ap_info [ i ] [ ap_type ])
+            {
+                case 1:
+                {
+                    ap_info [ i ] [ ap_exit_pickup ] = CreateDynamicPickup ( 1318, 23, apartment_exit_bich [ 0 ], apartment_exit_bich [ 1 ], apartment_exit_bich [ 2 ], -1, -1 ) ;
+                }
+                case 2:
+                {
+                    // ap_info [ i ] [ ap_exit_pickup ] = CreateDynamicPickup ( 1318, 23, apartment_exit_medium [ 0 ], apartment_exit_medium [ 1 ], apartment_exit_medium [ 2 ],  -1, -1 ) ;
